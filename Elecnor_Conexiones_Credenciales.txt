@@ -1,0 +1,30 @@
+
+
+	+ VPN		
+		- Servidor: gwgp.elecnor.es
+		- Usuario: jlgarcia@ipartek.com
+		- Contraseña: mismo pasword de Ipartek (Marzo@gp@2026)
+		
+	+ WEB_1 (Informes)
+		- Servidor: 172.24.16.171
+		- Usuario: ELNR\certifica
+		- Contraseña: IPARTEK1
+		- PassMaster: Eagle999
+		
+	+ WEB_2 (RPSIC)
+		- Servidor: 172.24.16.51
+		- Usuario: ELNR\certifica
+		- Contraseña: IPARTEK1
+		- PassMaster: Eagle999
+			
+	+ SQL	
+		- Server: 172.24.16.51
+		- BD: RP_SIC
+		- Usuario: certificaciones
+		- Contraseña: ipartek1		
+		
+	+ GIT
+		- ipartek-cloud/elecnor_informes_comerciales
+		
+		
+	

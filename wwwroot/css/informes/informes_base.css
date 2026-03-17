@@ -1,0 +1,365 @@
+/* Estilos base para el sistema de informes Elecnor */
+
+/* Colores Corporativos Reutilizados */
+.text-primary, .rpt-text-corporate { color: #00468B !important; }
+.bg-primary, .rpt-bg-corporate { background-color: #00468B !important; }
+.border-primary { border-color: #00468B !important; }
+
+/* 1. Contenedor "Papel" del Informe */
+.rpt-paper {
+    background-color: white;
+    min-height: 100vh;
+    font-family: Arial, sans-serif !important;
+    color: #000000 !important; /* Forzar negro puro para máxima legibilidad */
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    border: 1px solid #ccc;
+    margin: 20px auto !important;
+    padding: 2rem !important; /* Reducido de 3rem para mejor aprovechamiento */
+    max-width: 1050px;
+    position: relative;
+    z-index: 10;
+}
+
+/* 2. Cabeceras y Banners */
+.rpt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+}
+
+.rpt-header-corporate-text {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.rpt-header-logo {
+    height: 50px;
+    width: auto;
+}
+
+.rpt-banner-top {
+    background-color: #00468B !important;
+    color: white !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 38px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 0;
+}
+
+.rpt-subtitle {
+    color: #00468B !important;
+    font-size: 0.85rem;
+    text-align: right;
+    margin-top: 2px;
+    margin-bottom: 3rem;
+}
+
+/* 3. Títulos de Secciones */
+.rpt-gerente-name {
+    color: #E38631;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* 4. Estructura de Tablas */
+.rpt-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-family: Arial, sans-serif;
+    margin-bottom: 0;
+}
+
+.rpt-table th, .rpt-table td {
+    border: none;
+    padding: 0; /* Por defecto sin padding vertical */
+}
+
+/* Encabezados Azules */
+.rpt-th-blue {
+    color: #00468B !important;
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 3px !important;
+    font-weight: bold;
+}
+
+.rpt-label-blue {
+    color: #00468B !important;
+    font-weight: bold;
+}
+
+/* Totales y Subtotales */
+.rpt-td-total {
+    border-top: 2px solid #00468B !important;
+    color: #00468B !important;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* Distintivo de Dirección de Negocio (Recuadro Azul) */
+.rpt-group-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-weight: bold;
+    margin: 0 5px;
+    padding: 2px 0;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* =============================================================================
+   ANCHOS DE COLUMNA (Genéricos)
+   Para anchos específicos de un informe, usar su propio fichero .css
+   ============================================================================= */
+.rpt-col-width-auto { width: auto; }
+
+/* Alerta Informativa Sin Datos */
+.rpt-info-alert {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.rpt-info-alert-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #17a2b8;
+}
+
+.rpt-info-alert-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.rpt-info-alert-text {
+    margin-bottom: 0;
+    color: #0c5460;
+}
+
+/* Detalle */
+.rpt-detail-row td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    line-height: 1.4;
+}
+
+/* Alineación vertical para encabezados de tabla */
+.rpt-th-middle {
+    vertical-align: middle !important;
+}
+
+/* Utilidades de Alineación y Color */
+.rpt-text-corporate { color: #00468B !important; }
+.rpt-text-dark { color: #000000 !important; }
+
+.rpt-detail-row {
+    color: #000000 !important;
+}
+
+/* Alineación financiera para celdas numéricas */
+.rpt-number-cell {
+    text-align: right !important;
+    padding-right: 5px !important; /* Compacto como en Access */
+}
+
+/* Modal Background */
+.modal-body-reports {
+    background-color: #666e76 !important;
+    padding: 0 !important;
+}
+
+/* =============================================================================
+   CAPA TEMPORAL DE IMPRESIÓN (usada por JS antes de window.print())
+   Oculta en pantalla, visible solo durante la impresión.
+   ============================================================================= */
+.rpt-print-layer {
+    display: none;
+}
+
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF
+   Técnica: Estructura de tabla (thead/tfoot) para repetir cabeceras.
+   ============================================================================= */
+@media print {
+    /* 1. Reset de página (sin textitos automáticos del navegador) */
+    @page {
+        size: A4 portrait !important;
+        margin: 0 !important;
+    }
+
+    /* 2. Ocultar ABSOLUTAMENTE TODO excepto la capa de impresión */
+    body > *:not(.rpt-print-layer) {
+        display: none !important;
+    }
+
+    /* 3. Mostrar la capa de impresión como bloque y resetear body */
+    .rpt-print-layer {
+        display: block !important;
+    }
+
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* 4. Estructura de repetición (Thead/Tfoot) */
+    .rpt-print-table {
+        width: 210mm !important; /* Ancho A4 exacto */
+        table-layout: fixed;
+        border-collapse: collapse;
+        margin: 0 auto !important;
+    }
+
+    .rpt-print-header {
+        display: table-header-group; /* Repetir encabezado en cada página de impresión */
+    }
+
+    .rpt-print-footer {
+        display: table-footer-group; /* Añade espacio al final de cada página de impresión */
+    }
+
+    /* 5. Simulador de Márgenes Físicos del PDF */
+    /* El margen lateral se aplica solo al contenedor principal del contenido */
+    .rpt-print-header td {
+        padding-left: 10mm !important;
+        padding-right: 10mm !important;
+    }
+
+    .rpt-print-header td {
+        padding-top: 13mm !important;
+    }
+
+    .rpt-print-footer td {
+        height: 10mm !important;
+    }
+
+    /* 6. El papel ocupa el 100% del contenedor sin overrides innecesarios */
+    .rpt-paper, .rpt-paper--print {
+        width: 100% !important;
+        min-height: auto !important; /* CRÍTICO: Eliminar 100vh que causaba hojas vacías */
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: white !important;
+    }
+
+    /* 6. Salto de página entre gerencias
+          La clase .rpt-page-break se aplica a todos menos al último bloque */
+    .rpt-page-break {
+        page-break-after: always;
+    }
+
+    /* 7. Permitir cortes dentro de un bloque de Dirección de Negocio para evitar hojas vacías */
+    .dn-block {
+        page-break-inside: auto !important;
+    }
+
+    /* 8. Evitar cortes dentro de filas de detalle (centros individuales) */
+    .rpt-detail-row {
+        page-break-inside: avoid;
+    }
+
+    /* 9. No cortar justo después del header corporativo o banner */
+    .rpt-header,
+    .rpt-banner-top,
+    .rpt-subtitle {
+        page-break-after: avoid;
+    }
+
+    /* 10. Forzar renderizado de fondos y colores corporativos en impresión
+           (por defecto los navegadores eliminan background-color en @media print) */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* ==========================================================================
+       CORRECCIONES CRÍTICAS - PARIDAD VISUAL CON ACCESS (2026-03-12)
+       Estas reglas transforman el diseño "moderno" de pantalla en el diseño
+       "industrial compacto" requerido para el PDF impreso.
+       ========================================================================== */
+
+    /* 10.1 REDUCCIÓN DE FUENTE (Crítico #2): De 0.85rem (~13px) a 8pt */
+    .rpt-table {
+        font-size: 8pt !important;
+    }
+
+    /* 10.2 COMPACTACIÓN DE INTERLINEADO (Crítico #3): De 1.4 a 1.05 */
+    .rpt-detail-row td {
+        line-height: 1.05 !important;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+    }
+
+    /* 10.3 BORDES FINOS ESTILO ACCESS (Alto #5): De 2px a 0.5pt */
+    .rpt-th-blue, .rpt-td-total {
+        border-bottom-width: 0.5pt !important;  /* CORREGIDO: border-width → border-bottom-width */
+    }
+
+    /* 10.4 BANNER COMPACTO (Alto #6): De 38px a 25px */
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* 10.5 LOGOTIPO REDUCIDO (Alto #7): De 50px a 35px */
+    .rpt-header-logo {
+        height: 35px !important;
+    }
+
+    /* 10.6 COLUMNA CENTRO COMO CELDA SÓLIDA (Alto #8): Eliminar márgenes y border-radius */
+    .rpt-group-badge {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        display: block;
+        padding: 3px 0 !important;
+    }
+
+    /* 10.7 PADDING NUMÉRICO REDUCIDO (Alto #9): De 1.2rem (~19px) a 5px */
+    .rpt-number-cell {
+        padding-right: 5px !important;
+        text-align: right !important; /* Asegurar alineación a la derecha en impresión */
+    }
+
+    /* 10.8 COMPACTACIÓN DE HEADERS (Medio #11): De 3px a 2px */
+    .rpt-th-blue {
+        padding-bottom: 2px !important;
+    }
+
+    /* 10.9 HEADER COMPACTO: Reducir margen inferior */
+    .rpt-header {
+        margin-bottom: 1rem !important;
+    }
+
+    /* 10.10 TEXTO CORPORATIVO COMPACTO: Reducir fuente */
+    .rpt-header-corporate-text {
+        font-size: 0.95rem !important;
+    }
+
+    /* 10.11 SUBTÍTULO COMPACTO: Reducir fuente y margen */
+    .rpt-subtitle {
+        font-size: 0.75rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+}

@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Informes Consejo";
+}
+
+<div class="container-fluid">
+    <!-- El contenido principal se mostrará aquí tras el login -->
+    <div id="mainContent" class="d-none">
+        <!-- Sección de Filtros -->
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-filter"></i> Filtros de Informe</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="txtAnno" class="col-form-label fw-bold">Año</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" class="form-control" id="txtAnno" name="txtAnno" min="2000" max="2100"
+                            value="@DateTime.Now.Year" aria-label="Seleccionar año de consulta">
+                    </div>
+                    <div class="col-auto">
+                        <label for="txtMes" class="col-form-label fw-bold">Mes</label>
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-control" id="txtMes" name="txtMes" aria-label="Seleccionar mes de consulta">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Informes: Elecnor SyP SR. CRUCES -->
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> Elecnor SyP - SR. CRUCES</h5>
+            </div>
+            <div class="card-body">
+                <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary" onclick="cargarInforme('gerencias_totales_cruces')" 
+                            aria-label="Ver informe de Gerencias Totales Cruces">
+                        <i class="fas fa-chart-pie me-2" aria-hidden="true"></i> Gerencias Totales Cruces
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aquí irán los componentes de informes que me indiques -->
+    </div>
+</div>
+
+<!-- Modal Login Rediseñado -->
+<div class="modal" id="formLogin" tabindex="-1" role="dialog" aria-labelledby="formLoginLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content login-custom-container p-3">
+            <form id="loginForm">
+                <div class="modal-body">
+                    <div id="loginErrorMsg" class="alert alert-danger d-none" role="alert">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="txtUser" class="login-label">Usuario:</label>
+                        <input type="text" class="form-control login-input" id="txtUser" name="Username" value="anruiz" required
+                               aria-label="Nombre de usuario" aria-required="true">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="txtPassword" class="login-label">Contraseña:</label>
+                        <input type="password" class="form-control login-input" id="txtPassword" name="Password" required
+                               placeholder="Contraseña"
+                               aria-label="Contraseña" aria-required="true">
+                    </div>
+
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-login-custom" aria-label="Entrar al sistema">
+                            Entrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Único para Visualización de Informes -->
+<div class="modal fade" id="modalInforme" tabindex="-1" aria-labelledby="modalInformeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-primary text-white shadow-sm py-2 px-4 modal-header-report">
+                <!-- Columna IZQUIERDA: Título + Botón PDF -->
+                <div class="d-flex align-items-center gap-2 modal-header-left">
+                    <h5 class="modal-title mb-0" id="modalInformeTitulo">Cargando Informe...</h5>
+                    <button type="button" class="btn btn-sm btn-outline-light" id="btnExportarPdf"
+                            aria-label="Imprimir informe en PDF">
+                        <i class="fas fa-file-pdf me-1" aria-hidden="true"></i> Imprimir PDF
+                    </button>
+                </div>
+
+                <!-- Columna CENTRAL: Controles de paginación (centrados absolutamente) -->
+                <div class="d-flex align-items-center justify-content-center modal-header-center">
+                    <div class="d-flex align-items-center d-none" id="ctrlPaginacion">
+                        <button type="button" class="btn btn-sm btn-outline-light"
+                                id="btnPagAnterior" disabled
+                                aria-label="Ir a gerencia anterior" aria-disabled="true">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <span id="lblEstadoPaginacion" class="modal-pag-label mx-2"></span>
+                        <button type="button" class="btn btn-sm btn-outline-light"
+                                id="btnPagSiguiente" disabled
+                                aria-label="Ir a siguiente gerencia" aria-disabled="true">
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Columna DERECHA: Botón cerrar -->
+                <div class="d-flex align-items-center justify-content-end modal-header-right">
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal" aria-label="Cerrar modal de informe"></button>
+                </div>
+            </div>
+            <div class="modal-body modal-body-reports" id="modalInformeContenido">
+                <!-- El contenido dinámico del informe se inyectará aquí -->
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/informes/informes_base.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script type="module" src="~/js/index.js" asp-append-version="true"></script>
+    <script src="~/js/informes/informes_manager.js" type="module" asp-append-version="true"></script>
+}

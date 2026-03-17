@@ -1,0 +1,57 @@
+/**
+ * Gestor Central de Informes
+ * Se encarga de la carga dinámica de módulos de informes para mantener el Index ligero.
+ *
+ * PATRÓN: Registro de módulos (Module Registry).
+ * Cada módulo se importa UNA SOLA VEZ y se reutiliza en sucesivas llamadas.
+ * Esto evita la multiplicación de event listeners cuando el usuario abre/cierra
+ * el modal varias veces, ya que el import() dinámico con cache-buster generaría
+ * un contexto de módulo nuevo (y por tanto variables de estado nuevas) en cada llamada.
+ */
+import { GlobalUI } from '../site.js';
+
+// Registro interno: { [nombreInforme]: moduloImportado }
+const _registroModulos = {};
+
+window.cargarInforme = async function (nombreInforme) {
+
+    const anio = document.getElementById('txtAnno').value;
+    const mes  = document.getElementById('txtMes').value;
+
+    try {
+        GlobalUI.showLoading();
+
+        // 1. Cargar CSS específico del informe (si no se ha cargado ya)
+        const idCss = `css-informe-${nombreInforme}`;
+        if (!document.getElementById(idCss)) {
+            const link = document.createElement('link');
+            link.id   = idCss;
+            link.rel  = 'stylesheet';
+            link.href = `/css/informes/${nombreInforme}.css?v=${Date.now()}`;
+            // No bloqueamos por el CSS, que cargue en paralelo
+            document.head.appendChild(link);
+        }
+
+        // 2. Cargar módulo solo si no está ya en el registro
+        if (!_registroModulos[nombreInforme]) {
+            // Primera carga: incluir versión de build para cache-busting inicial
+            const path = `./${nombreInforme}.js?v=${Date.now()}`;
+            _registroModulos[nombreInforme] = await import(path);
+        }
+
+        const modulo = _registroModulos[nombreInforme];
+
+        if (modulo && modulo.ejecutar) {
+            await modulo.ejecutar(anio, mes);
+        } else {
+            console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
+            GlobalUI.showAlert('Error en la estructura del informe', 'error');
+        }
+
+    } catch (error) {
+        console.error('Error al cargar el módulo del informe:', error);
+        GlobalUI.showAlert('No se pudo cargar el componente del informe', 'error');
+    } finally {
+        GlobalUI.hideLoading();
+    }
+};

@@ -1,0 +1,38 @@
+/* Estilos específicos para el informe Gerencias Totales Cruces */
+
+/* Columna Central de Tabla (Centro/Dirección) */
+.rpt-col-centro {
+    min-width: 220px;
+}
+
+/* =============================================================================
+   ANCHOS DE COLUMNA ESPECÍFICOS
+   Ajustados para A4 Portrait (~716px disponibles)
+   ============================================================================= */
+.rpt-col-60  { width: 50px; }
+.rpt-col-70  { width: 60px; }
+.rpt-col-80  { width: 70px; }
+.rpt-col-90  { width: 75px; }
+.rpt-col-250 { width: 220px; }
+
+/* Posibles overrides únicos para este reporte */
+.rpt-gerente-name {
+    color: #E38631;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Clases de utilidad para limpieza de HTML (Audit Frontend) */
+.rpt-print-td-flat {
+    padding: 0 !important;
+    border: none !important;
+}
+
+.rpt-print-td-main {
+    padding-left: 10mm !important;
+    padding-right: 10mm !important;
+    border: none !important;
+    vertical-align: top !important;
+}
