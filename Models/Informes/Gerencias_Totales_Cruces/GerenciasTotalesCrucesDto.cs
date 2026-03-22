@@ -4,12 +4,13 @@ namespace Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 
 /// <summary>
 /// Objeto raíz que devuelve la API para el informe de Gerencias Totales Cruces.
+/// Usa TotalesEstandarDto para homogeneizar el payload JSON (unificación frontend).
 /// </summary>
 public class GerenciasTotalesCrucesDto
 {
     public MetaInformeDto Meta { get; set; } = new();
     public List<GerenteSeccionDto> Gerentes { get; set; } = new();
-    public TotalesSeccionDto PieTotal { get; set; } = new();
+    public TotalesEstandarDto PieTotal { get; set; } = new();
     public List<SubinformeDto> SubinformesAnexos { get; set; } = new();
 }
 
@@ -20,7 +21,7 @@ public class GerenteSeccionDto
 {
     public string NombreGerente { get; set; } = string.Empty;
     public List<DireccionNegocioDto> DireccionesNegocio { get; set; } = new();
-    public TotalesSeccionDto TotalesGerente { get; set; } = new();
+    public TotalesEstandarDto TotalesGerente { get; set; } = new();
 }
 
 /// <summary>
@@ -31,7 +32,7 @@ public class DireccionNegocioDto
     public string NombreDirNegocio { get; set; } = string.Empty;
     public string NotaAclaratoriaDG { get; set; } = string.Empty;
     public List<GerenciaCentroDetalleDto> Centros { get; set; } = new();
-    public TotalesSeccionDto TotalesDireccion { get; set; } = new();
+    public TotalesEstandarDto TotalesDireccion { get; set; } = new();
 }
 
 /// <summary>
@@ -52,22 +53,6 @@ public class GerenciaCentroDetalleDto
     public decimal Ip { get; set; }
 
     // Variaciones (Formateadas desde el Service)
-    public string VariacionContratacion { get; set; } = string.Empty;
-    public string VariacionCartera { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Estructura común para los totales de Pie de Grupo y Pie de Informe.
-/// </summary>
-public class TotalesSeccionDto
-{
-    public decimal TotalObjetivoMensual { get; set; }
-    public decimal TotalContratacionMensual { get; set; }
-    public decimal TotalObjetivoAcumulado { get; set; }
-    public decimal TotalContratacionAcumulada { get; set; }
-    public decimal IpMedia { get; set; }
-
-    // Variaciones (Cálculo de negocio del Service)
     public string VariacionContratacion { get; set; } = string.Empty;
     public string VariacionCartera { get; set; } = string.Empty;
 }

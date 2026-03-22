@@ -63,6 +63,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Toggle visibilidad contraseña
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput  = document.getElementById('txtPassword');
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Cambiar icono
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
     // Salir / Logout
     const btnLogout = document.getElementById('btnLogout');
     if (btnLogout) {

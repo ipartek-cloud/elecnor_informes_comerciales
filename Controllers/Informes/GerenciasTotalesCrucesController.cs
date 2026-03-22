@@ -25,12 +25,12 @@ public class GerenciasTotalesCrucesController : ControllerBase
     /// Obtiene el informe estructurado por jerarquías para ser renderizado en el frontend.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes)
+    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
     {
         if (anio > DateTime.Now.Year) return BadRequest("El año de consulta no puede ser superior al año actual.");
         if (mes < 1 || mes > 12) return BadRequest("Mes inválido.");
 
-        var resultado = await _service.ObtenerInformeAsync(anio, mes);
+        var resultado = await _service.ObtenerInformeAsync(anio, mes, nroPagina);
         return Ok(resultado);
     }
 }

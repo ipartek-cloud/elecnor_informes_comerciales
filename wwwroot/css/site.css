@@ -306,6 +306,22 @@ body.modal-open {
     margin-bottom: 1.5rem;
 }
 
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    z-index: 10;
+    transition: color 0.2s;
+    font-size: 1.1rem;
+}
+
+.password-toggle-icon:hover {
+    color: #00468B;
+}
+
 /* --- Layout de Informes (CSS Grid) --- */
 .report-grid {
   display: grid;

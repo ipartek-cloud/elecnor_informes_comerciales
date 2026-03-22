@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
@@ -43,6 +43,7 @@ Console.WriteLine("[AUTH] Servicios de autenticación registrados.");
 // Informes
 builder.Services.AddScoped<InformeRepository>();
 builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
+builder.Services.AddScoped<InformeContratacionMercadosAIService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // 5. Configurar Autenticación JWT

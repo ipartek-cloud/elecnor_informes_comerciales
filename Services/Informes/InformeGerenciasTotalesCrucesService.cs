@@ -1,12 +1,14 @@
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 using Elecnor_Informes_Comerciales.Repositories.Informes;
 using Elecnor_Informes_Comerciales.DTOs.Informes.Response;
+using Elecnor_Informes_Comerciales.Services.Informes.Utils;
 
 namespace Elecnor_Informes_Comerciales.Services.Informes;
 
 /// <summary>
 /// Servicio para el informe Gerencias Totales Cruces.
 /// Orquesta la agrupación jerárquica y los cálculos de negocio.
+/// Usa InformeCalculosUtils para cálculos compartidos (DRY principle).
 /// </summary>
 public class InformeGerenciasTotalesCrucesService
 {
@@ -17,7 +19,7 @@ public class InformeGerenciasTotalesCrucesService
         _repository = repository;
     }
 
-    public async Task<GerenciasTotalesCrucesDto> ObtenerInformeAsync(int anio, int mes)
+    public async Task<GerenciasTotalesCrucesDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina)
     {
         var datosPlanos = await _repository.ObtenerGerenciasTotalesCrucesAsync(anio, mes);
 
@@ -30,12 +32,12 @@ public class InformeGerenciasTotalesCrucesService
                 {
                     Titulo = "Gerencias Totales Cruces",
                     Descripcion = "Informe de Contratación por Gerencias",
-                    Filtros = new { Anio = anio, Mes = mes },
+                    Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                     FechaGeneracion = DateTime.Now,
                     Usuario = "Sistema"
                 },
                 Gerentes = new List<GerenteSeccionDto>(),
-                PieTotal = new TotalesSeccionDto()
+                PieTotal = new TotalesEstandarDto()
             };
         }
 
@@ -45,7 +47,7 @@ public class InformeGerenciasTotalesCrucesService
             {
                 Titulo = "Gerencias Totales Cruces",
                 Descripcion = "Informe de Contratación por Gerencias",
-                Filtros = new { Anio = anio, Mes = mes },
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema" // En producción se obtendría del User claim
             },
@@ -78,9 +80,9 @@ public class InformeGerenciasTotalesCrucesService
                                 ContratacionMensual = Math.Round(c.ImporteContratadoS / 1000, 2, MidpointRounding.AwayFromZero),
                                 ObjetivosAcumulado = Math.Round(c.Objetivos, 2, MidpointRounding.AwayFromZero),
                                 ContratacionAcumulada = Math.Round(c.ImporteContratadoAcumuladoS / 1000, 2, MidpointRounding.AwayFromZero),
-                                Ip = CalcularIp(c.ImporteContratadoAcumuladoS / 1000, c.Objetivos / 12, mes),
-                                VariacionContratacion = fnContratacion(c.ImporteContratadoAcumuladoAñoAnteriorS / 1000, c.ImporteContratadoAcumuladoS / 1000),
-                                VariacionCartera = fnCartera(c.CarteraPdteAñoAnteriorS, c.CarteraPdteAñoActualS)
+                                Ip = InformeCalculosUtils.CalcularIp(c.ImporteContratadoAcumuladoS / 1000, c.Objetivos / 12, mes),
+                                VariacionContratacion = InformeCalculosUtils.CalcularVariacionContratacion(c.ImporteContratadoAcumuladoAñoAnteriorS / 1000, c.ImporteContratadoAcumuladoS / 1000),
+                                VariacionCartera = InformeCalculosUtils.CalcularVariacionCartera(c.CarteraPdteAñoAnteriorS, c.CarteraPdteAñoActualS)
                             }).ToList(),
                             TotalesDireccion = CalcularTotales(gDN, mes)
                         })
@@ -94,56 +96,32 @@ public class InformeGerenciasTotalesCrucesService
         return response;
     }
 
-    private TotalesSeccionDto CalcularTotales(IEnumerable<GerenciasTotalesCrucesPoco> datos, int mes)
+    /// <summary>
+    /// Calcula totales para un grupo de datos.
+    /// Retorna TotalesEstandarDto para homogeneizar el payload JSON.
+    /// </summary>
+    private TotalesEstandarDto CalcularTotales(IEnumerable<GerenciasTotalesCrucesPoco> datos, int mes)
     {
         var lista = datos.ToList();
-        
-        if (!lista.Any())
-        {
-            return new TotalesSeccionDto();
-        }
-        
+
+        if (!lista.Any()) return new TotalesEstandarDto();
+
         var totalObjAnual = lista.Sum(x => x.Objetivos);
         var totalContrActual = lista.Sum(x => x.ImporteContratadoAcumuladoS) / 1000;
         var totalContrAnterior = lista.Sum(x => x.ImporteContratadoAcumuladoAñoAnteriorS) / 1000;
-        
+
         var totalCartActual = lista.Sum(x => x.CarteraPdteAñoActualS);
         var totalCartAnterior = lista.Sum(x => x.CarteraPdteAñoAnteriorS);
 
-        return new TotalesSeccionDto
+        return new TotalesEstandarDto
         {
-            TotalObjetivoMensual = Math.Round(totalObjAnual / 12, 2, MidpointRounding.AwayFromZero),
-            TotalContratacionMensual = Math.Round(lista.Sum(x => x.ImporteContratadoS) / 1000, 2, MidpointRounding.AwayFromZero),
-            TotalObjetivoAcumulado = Math.Round(totalObjAnual, 2, MidpointRounding.AwayFromZero),
-            TotalContratacionAcumulada = Math.Round(totalContrActual, 2, MidpointRounding.AwayFromZero),
-            IpMedia = CalcularIp(totalContrActual, totalObjAnual / 12, mes),
-            VariacionContratacion = fnContratacion(totalContrAnterior, totalContrActual),
-            VariacionCartera = fnCartera(totalCartAnterior, totalCartActual)
+            ObjetivoMensual = Math.Round(totalObjAnual / 12, 2, MidpointRounding.AwayFromZero),
+            ContratacionMensual = Math.Round(lista.Sum(x => x.ImporteContratadoS) / 1000, 2, MidpointRounding.AwayFromZero),
+            ObjetivoAnual = Math.Round(totalObjAnual, 2, MidpointRounding.AwayFromZero),
+            ContratacionAcumulada = Math.Round(totalContrActual, 2, MidpointRounding.AwayFromZero),
+            IndiceProduccion = InformeCalculosUtils.CalcularIp(totalContrActual, totalObjAnual / 12, mes),
+            VariacionContratacion = InformeCalculosUtils.CalcularVariacionContratacion(totalContrAnterior, totalContrActual),
+            VariacionCartera = InformeCalculosUtils.CalcularVariacionCartera(totalCartAnterior, totalCartActual)
         };
-    }
-
-    private decimal CalcularIp(decimal contrAcum, decimal objetivoMensualCalculado, int mes)
-    {
-        if (objetivoMensualCalculado == 0 || mes == 0) return 0;
-        decimal resultado = contrAcum / (objetivoMensualCalculado * mes);
-        return Math.Round(resultado, 2, MidpointRounding.AwayFromZero);
-    }
-
-    private string fnContratacion(decimal acumuladoAnterior, decimal acumuladoActual)
-    {
-        if (acumuladoAnterior == 0) return "-";
-        decimal vContr = (acumuladoActual - acumuladoAnterior) / acumuladoAnterior;
-        if (vContr > 10 || acumuladoAnterior < 0) return ">1000%";
-        if (vContr < -10) return "<-1000%";
-        return $"{(vContr * 100):N0}%";
-    }
-
-    private string fnCartera(decimal acumuladoAnterior, decimal acumuladoActual)
-    {
-        if (acumuladoAnterior == 0) return "-";
-        decimal vCart = (acumuladoActual - acumuladoAnterior) / acumuladoAnterior;
-        if (vCart > 10 || acumuladoAnterior < 0) return "-*%";
-        if (vCart < -10) return "<-100%";
-        return $"{(vCart * 100):N0}%";
     }
 }

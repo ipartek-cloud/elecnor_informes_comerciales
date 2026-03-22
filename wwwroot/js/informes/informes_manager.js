@@ -13,10 +13,20 @@ import { GlobalUI } from '../site.js';
 // Registro interno: { [nombreInforme]: moduloImportado }
 const _registroModulos = {};
 
-window.cargarInforme = async function (nombreInforme) {
+window.cargarInforme = async function (btn, nombreInforme) {
+
+    // Mantener compatibilidad si se llama solo con nombreInforme
+    if (typeof btn === 'string') {
+        nombreInforme = btn;
+        btn = null;
+    }
 
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
+    
+    // Capturar nro de página si el botón indica un input de origen
+    const idInputPag = btn?.dataset?.inputPag;
+    const nroPagina  = idInputPag ? document.getElementById(idInputPag)?.value : null;
 
     try {
         GlobalUI.showLoading();
@@ -42,7 +52,7 @@ window.cargarInforme = async function (nombreInforme) {
         const modulo = _registroModulos[nombreInforme];
 
         if (modulo && modulo.ejecutar) {
-            await modulo.ejecutar(anio, mes);
+            await modulo.ejecutar(anio, mes, nroPagina);
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');

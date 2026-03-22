@@ -1,0 +1,307 @@
+/* Estilos específicos para Contratación Mercados AI */
+/* Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_base.css */
+
+/* =============================================================================
+   LAYOUT TRIPLE BLOQUE - OVERRIDES ESPECÍFICOS PARA CMAI
+   La estructura base (.rpt-triple-container, .rpt-block-*) está en informes_base.css
+   Aquí solo definimos variaciones específicas de este informe
+   ============================================================================= */
+.rpt-triple-container {
+    align-items: flex-start; /* CMAI usa flex-start en lugar de flex-end (base) */
+}
+
+/* Etiquetas específicas de este informe */
+.rpt-label-text-header {
+    color: #00468B !important;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.rpt-text-grey {
+    color: #888 !important;
+}
+
+
+
+/* =============================================================================
+   TABLA TRIPLE - ESTRUCTURA PROPIA DE CMAI
+   Esta estructura NO está en informes_base.css, es única de este informe
+   ============================================================================= */
+.rpt-table-triple {
+    width: 770px;
+    margin-left: auto;
+    margin-right: auto; /* Centrado horizontal */
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.rpt-table-triple th, .rpt-table-triple td {
+    padding: 0px 4px;
+    font-size: 0.85rem;
+    vertical-align: bottom;
+    height: 19px;
+    line-height: normal;
+}
+
+.rpt-table-triple thead tr:first-child th {
+    color: #00468B;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    padding-bottom: 2px;
+}
+
+.rpt-table-triple thead tr.rpt-border-header th {
+    border-bottom: 2px solid #00468B;
+    padding-bottom: 1px;
+}
+
+/* Override específico: .rpt-label-blue-header dentro de .rpt-table-triple */
+.rpt-table-triple .rpt-label-blue-header {
+    padding: 1px 7px; /* CMAI usa 1px en lugar de 2px (base) */
+}
+
+
+
+/* =============================================================================
+   SUBINFORMES CMAI - ANCHO DE CONTENEDOR Y CENTRADO
+   La tabla triple mide 770px, el contenedor debe ser al menos igual
+   ============================================================================= */
+.rpt-sub-report-container {
+    width: 770px; /* Ajustado para coincidir con .rpt-table-triple (770px) */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =============================================================================
+   SUBINFORMES CMAI - BORDES EN TOTALES
+   Eliminar bordes laterales e inferior en celdas de totales de subinformes
+   Solo mantener border-top que indica que es fila de totales
+   ============================================================================= */
+.rpt-table-triple tfoot .rpt-td-total {
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+}
+
+
+
+/* =============================================================================
+   FOOTER ESPECÍFICO CARTERA DIFERIDA
+   ============================================================================= */
+.rpt-cma-footer-container {
+    margin-top: 2.5rem; /* Margen normal en pantalla */
+}
+
+.rpt-cma-footer-note {
+    margin-left: 110px; /* Aligned roughly under "Nuevos *" column */
+    color: #000 !important;
+    font-weight: normal;
+}
+
+.rpt-cma-footer-total {
+    margin-right: 145px; /* Aligned roughly under "2025" column */
+}
+
+/* =============================================================================
+   MÁRGENES ESPECÍFICOS PARA EVITAR CONFLICTOS CON BOOTSTRAP (PANTALLA)
+   ============================================================================= */
+.rpt-cmai-mt-medium {
+    margin-top: 2.5rem !important; /* Recuperar el hueco asignado en origen */
+}
+.rpt-cmai-mt-huge {
+    margin-top: 2.5rem !important; /* Recuperar el hueco asignado en origen */
+}
+/* =============================================================================
+   IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
+   Las reglas generales de impresión están en informes_base.css
+   Aquí solo definimos overrides específicos para este informe
+   ============================================================================= */
+@media print {
+    /* -------------------------------------------------------------------------
+     * BLOQUE PRINCIPAL: proporciones fluidas para A4
+     * Overrides específicos de CMAI sobre la base de informes_base.css
+     * ------------------------------------------------------------------------- */
+    .rpt-block-mensual  { width: 18% !important; min-width: 0 !important; }
+    .rpt-block-acumulado { width: 51% !important; min-width: 0 !important; }
+
+    /* -------------------------------------------------------------------------
+     * SUBINFORMES CMAI: preservar proporción relativa (78% del ancho usable)
+     * 770px / 986px = 78% → sobre A4 usable (~745px) = ~581px
+     * ------------------------------------------------------------------------- */
+    .rpt-sub-report-wrapper {
+        margin-top: 2.5rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    .rpt-sub-report-container {
+        width: 78%; /* Sin !important para permitir override con w-100 */
+    }
+
+
+    /* -------------------------------------------------------------------------
+     * TABLA TRIPLE: eliminar overflow de anchos fijos (770px > 745px A4)
+     * ------------------------------------------------------------------------- */
+    .rpt-table-triple {
+        width: 100% !important;
+        table-layout: auto !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    /* -------------------------------------------------------------------------
+     * ESPACIADO VERTICAL: quirúrgico para A4 (Aisla de Bootstrap)
+     * ------------------------------------------------------------------------- */
+    .rpt-cmai-mt-medium { margin-top: 2.0rem !important; } /* Equivalente a 2-3 filas vacías */
+    
+    .rpt-cmai-mt-huge {
+        margin-top: 8.0rem !important; /* Espacio verdaderamente masivo antes de Ventas */
+    }
+
+    /* -------------------------------------------------------------------------
+     * FOOTER ESPECÍFICO CARTERA DIFERIDA - AJUSTES PARA A4
+     * ------------------------------------------------------------------------- */
+    .rpt-cma-footer-container {
+        margin-top: 0.15rem !important; /* El footer va muy pegado a la tabla en Access */
+    }
+
+    .rpt-cma-footer-note {
+        margin-left: 11% !important; /* Maintain relative position on A4 */
+    }
+    .rpt-cma-footer-total {
+        margin-right: 15% !important; /* Maintain relative position on A4 */
+    }
+}
+
+
+
+/* =============================================================================
+   SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
+   ============================================================================= */
+
+.rpt-ventas-container {
+    width: 100%;
+}
+
+.rpt-ventas-unit {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.rpt-ventas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 5px;
+}
+
+/* Celdas Base */
+.rpt-ventas-table th,
+.rpt-ventas-table td {
+    padding: 2px 8px;
+    font-size: 0.82rem;
+    vertical-align: middle;
+    height: 18px;
+    border: none; /* Eliminamos bordes por defecto */
+}
+
+/* Cabecera de años */
+.rpt-ventas-table thead th {
+    font-weight: bold;
+    color: #555;
+    border-bottom: 1.5px solid #888; /* Línea horizontal debajo de cabecera */
+}
+
+/* Celda del título "Ventas" */
+.rpt-ventas-title-cell {
+    padding-left: 0 !important;
+    text-align: left;
+    width: 120px;
+}
+
+.rpt-ventas-badge {
+    background-color: #7F7F7F;
+    color: white;
+    font-weight: bold;
+    padding: 2px 20px;
+    display: inline-block;
+    border-radius: 2px;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Clasificación por Plan Estratégico (Fondos Difuminados) */
+.rpt-ventas-bg-pe1 { background: linear-gradient(to bottom, #D9D9D9, #F2F2F2) !important; } /* Gris difuminado */
+.rpt-ventas-bg-pe2 { background: linear-gradient(to bottom, #BDD7EE, #DDEBF7) !important; } /* Azul difuminado */
+.rpt-ventas-bg-pe3 { background: linear-gradient(to bottom, #FFF2CC, #FFF9E6) !important; } /* Crema difuminado */
+
+/* Detalle (siempre blanco y texto suave) */
+.rpt-ventas-row-label {
+    padding-left: 10px !important;
+    color: #555;
+    width: 120px;
+}
+
+.rpt-ventas-table tbody td {
+    color: #666;
+    background-color: #fff !important;
+}
+
+/* Fila Total */
+.rpt-ventas-total-row td {
+    border-top: 1.5px solid #888; /* Línea horizontal encima del total */
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-weight: bold;
+    color: #555 !important; /* Color gris técnico para unificar con cabeceras */
+}
+
+.rpt-ventas-total-row .rpt-ventas-row-label {
+    color: #444;
+}
+
+/* Espaciado entre bloques (2020 y 2023) */
+.rpt-ventas-table th:nth-child(5),
+.rpt-ventas-table td:nth-child(5),
+.rpt-ventas-table th:nth-child(8),
+.rpt-ventas-table td:nth-child(8) {
+    border-left: 10px solid white !important;
+}
+
+.rpt-ventas-total {
+    color: #555;
+    font-size: 0.82rem;
+    font-weight: bold;
+}
+
+/* Leyenda */
+.rpt-ventas-legend {
+    font-size: 0.78rem;
+    color: #444;
+    padding-left: 50px;
+    margin-top: 50px !important; /* Separación extra con los totales */
+}
+
+.rpt-ventas-sq {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #ccc;
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+   IMPRESIÓN — AJUSTES SUBINFORME VENTAS
+   ============================================================================= */
+@media print {
+    .rpt-ventas-container {
+        page-break-inside: avoid;
+    }
+    .rpt-ventas-table thead th,
+    .rpt-ventas-total-row td,
+    .rpt-ventas-sq {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+}

@@ -42,6 +42,31 @@
             </div>
         </div>
 
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> Consejo Administración</h5>
+            </div>
+            <div class="card-body">
+                <div id="consejoAdministracionContainer" class="d-flex flex-wrap gap-3 align-items-center">
+                    
+                    <!-- Grupo Unificado: Botón + Página -->
+                    <div class="input-group" style="width: auto;">
+                        <button class="btn btn-outline-primary rpt-btn-index" type="button"
+                                onclick="cargarInforme(this, 'contratacion_mercados_ai')"
+                                data-input-pag="inputPaginaCartera"
+                                aria-label="Ver informe Cartera Diferida">
+                            <i class="fas fa-file-invoice-dollar me-2" aria-hidden="true"></i> Cartera Diferida
+                        </button>
+                        <input type="number" class="form-control rpt-input-page" 
+                               id="inputPaginaCartera" 
+                               name="inputPaginaCartera" value="1" min="1" 
+                               aria-label="Página" title="Página inicial">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <!-- Sección de Informes: Elecnor SyP SR. CRUCES -->
         <div class="card mb-4 rpt-index-card">
             <div class="card-header rpt-index-header">
@@ -49,7 +74,7 @@
             </div>
             <div class="card-body">
                 <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-primary" onclick="cargarInforme('gerencias_totales_cruces')" 
+                    <button class="btn btn-outline-primary" onclick="cargarInforme(this, 'gerencias_totales_cruces')"
                             aria-label="Ver informe de Gerencias Totales Cruces">
                         <i class="fas fa-chart-pie me-2" aria-hidden="true"></i> Gerencias Totales Cruces
                     </button>
@@ -79,9 +104,13 @@
 
                     <div class="mb-4">
                         <label for="txtPassword" class="login-label">Contraseña:</label>
-                        <input type="password" class="form-control login-input" id="txtPassword" name="Password" required
-                               placeholder="Contraseña"
-                               aria-label="Contraseña" aria-required="true">
+                        <div class="position-relative">
+                            <input type="password" class="form-control login-input pe-5" id="txtPassword" name="Password" 
+                                   value="Eagle999" required
+                                   placeholder="Contraseña"
+                                   aria-label="Contraseña" aria-required="true">
+                            <i class="fas fa-eye password-toggle-icon" id="togglePassword" title="Mostrar/Ocultar contraseña"></i>
+                        </div>
                     </div>
 
                     <div class="mt-2">
