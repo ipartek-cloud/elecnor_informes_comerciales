@@ -66,11 +66,23 @@ export async function inicializarInforme(opciones) {
 
         const data = await resp.json();
         
-        // Detección automática de clave de agrupación (o usa la manual si se proporciona)
-        const key = claveAgrupacion || Object.keys(data).find(k => Array.isArray(data[k]));
-        const arr = key ? data[key] : [];
+        // Detección de datos y paginación
+        let paginas = 0;
+        let hayDatos = true;
 
-        if (!arr || arr.length === 0) {
+        if (claveAgrupacion === 'NONE') {
+            // Informe de página única: Forzamos 1 página y dejamos que el informe maneje sus datos.
+            paginas = 1;
+            hayDatos = true; 
+        } else {
+            // Informe con paginación basada en array de agrupación
+            const key = claveAgrupacion || Object.keys(data).find(k => Array.isArray(data[k]));
+            const arr = key ? data[key] : [];
+            paginas = arr.length;
+            hayDatos = (paginas > 0);
+        }
+
+        if (!hayDatos) {
             mostrarSinDatos(data);
             ocultarControlesPaginacion();
             abrirModal(data.meta?.titulo);
@@ -79,9 +91,13 @@ export async function inicializarInforme(opciones) {
 
         estado.informeGlobalData = data;
         estado.paginaActual = 0;
-        estado.paginasTotales = arr.length;
+        estado.paginasTotales = paginas;
 
         renderizarPagina(0);
+
+        // La visibilidad del bloque de paginación se delega ahora íntegramente a 
+        // actualizarEstadoPaginacion (llamada por renderizarPagina o manualmente),
+        // siguiendo el principio de tratamiento común.
 
         if (estado.paginasTotales > 1) {
             mostrarControlesPaginacion();
@@ -157,12 +173,12 @@ export function getHtmlEncabezadoBase(opciones) {
  * @param {string} [opciones.claveAgrupacion=null] - Clave manual de agrupación (igual que en inicializarInforme)
  * @returns {Promise<void>}
  */
-export async function imprimirInformeBase(opciones) {
+export async function imprimirInformeUnificado(opciones) {
     const {
         informeGlobalData,
         getHtmlEncabezado,
         renderContenido,
-        claveAgrupacion = null
+        modoAgrupacion = null
     } = opciones;
 
     if (!informeGlobalData) return;
@@ -170,10 +186,45 @@ export async function imprimirInformeBase(opciones) {
     const capaPrint = document.createElement('div');
     capaPrint.className = 'rpt-print-layer';
 
-    // Usar clave manual si se proporciona; si no, detección automática como fallback.
-    // Esto garantiza que informes con múltiples arrays (p. ej. CMAI) usen el array correcto.
-    const key = claveAgrupacion || Object.keys(informeGlobalData).find(k => Array.isArray(informeGlobalData[k]));
-    const items = key ? informeGlobalData[key] : [];
+    // Normalizar modo de agrupación para chequeos consistentes
+    const modoNormalizado = (typeof modoAgrupacion === 'string') ? modoAgrupacion.trim().toUpperCase() : '';
+    const esPaginaUnica = (modoNormalizado === 'NONE');
+
+    // Caso especial: informe de página única (modoAgrupacion = 'NONE')
+    if (esPaginaUnica) {
+        const html = `
+            <div class="rpt-paper rpt-paper--print" data-informe="una-pagina">
+                ${getHtmlEncabezado()}
+                <div class="report-body">
+                    ${renderContenido()}
+                </div>
+            </div>
+        `;
+        capaPrint.innerHTML = html;
+        document.body.appendChild(capaPrint);
+
+        const originalTitle = document.title;
+        try {
+            await new Promise(resolve => setTimeout(resolve, 200));
+            document.title = '';
+            window.print();
+        } finally {
+            document.title = originalTitle;
+            if (document.body.contains(capaPrint)) {
+                document.body.removeChild(capaPrint);
+            }
+        }
+        return;
+    }
+
+    // Informes con paginación basada en array de agrupación
+    const key = (modoAgrupacion && !esPaginaUnica) 
+        ? modoAgrupacion 
+        : Object.keys(informeGlobalData).find(k => Array.isArray(informeGlobalData[k]));
+    
+    const items = key ? (informeGlobalData[key] || []) : [];
+
+    if (!Array.isArray(items) || items.length === 0) return;
 
     const html = items.map((item, idx) => `
         <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''}">

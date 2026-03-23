@@ -2,6 +2,7 @@ using System.Data;
 using Dapper;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
+using elecnor_informes_comerciales.Models.Informes.Mercados;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 
@@ -267,6 +268,96 @@ public class InformeRepository
             transaction.Commit();
 
             return (principal, mercadoAI, cartera, carteraDiferida, ventas);
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Mercados
+    // └─ Método: ObtenerMercadosAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<MercadosPoco>> ObtenerMercadosAsync(int anio, int mes)
+    {
+        // ─── PASO 1: Vaciar la tabla de trabajo ───
+        const string sqlDelete = "DELETE FROM rptContratacion_DG_SDG_DN_SDNA";
+
+        // ─── PASO 2: Ejecutar Procedimiento Almacenado en Memoria ───
+        const string sqlExec = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
+
+        // ─── PASO 3: Insertar manualmente en tabla de trabajo ───
+        const string sqlInsertManual = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo)
+                                         VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo)";
+
+        // ─── PASO 4: SELECT final con JOIN a objetivos
+        const string sqlSelect = @" SELECT
+                                        rpt.Año,
+                                        MAX(sg.Orden) AS Orden,
+                                        rpt.Pais,
+                                        rpt.NombreSubDirGeneral,
+                                        rpt.NombreDirNegocio,
+                                        SUM(rpt.ImporteContratado) AS ImporteContratado,
+                                        SUM(rpt.ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
+                                        SUM(rpt.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        MAX(ISNULL(rpt.ImporteObjetivo, 0)) AS ImporteObjetivo,
+                                        MAX(ISNULL(obj.Importe, 0)) AS ObjetivoSDGPais,
+                                        MAX(ISNULL(vw_m.Importe, 0)) AS ObjetivoPais
+                                    FROM rptContratacion_DG_SDG_DN_SDNA rpt
+                                    LEFT JOIN ObjetivosSQL obj
+                                        ON obj.Año = rpt.Año
+                                       AND obj.CodSubDirGeneral = rpt.CodSubDirGeneral
+                                       AND obj.Mercado = rpt.Pais
+                                    LEFT JOIN vwObjetivosMercadoSQL vw_m
+                                        ON vw_m.Año = rpt.Año
+                                       AND vw_m.Mercado = rpt.Pais
+                                    LEFT JOIN SubDirGeneral sg
+                                        ON rpt.CodSubDirGeneral = sg.CodSubDirGeneral
+                                    GROUP BY
+                                        rpt.Año,
+                                        rpt.Pais,
+                                        rpt.NombreSubDirGeneral,
+                                        rpt.NombreDirNegocio";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            // Ejecutar SP para conseguir los datos
+            var datosSp = (await _connection.QueryAsync<dynamic>(sqlExec, parametros, transaction: transaction)).ToList();
+            
+            // Vaciar la tabla para la sesión principal
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            
+            // Insertar fila a fila inyectando el periodo actual
+            foreach (var fila in datosSp)
+            {
+                await _connection.ExecuteAsync(sqlInsertManual, new {
+                    Anio = anio,
+                    CodSubDirGeneral = fila.CodSubDirGeneral,
+                    NombreSubDirGeneral = fila.NombreSubDirGeneral,
+                    NombreDirNegocio = fila.NombreDirNegocio,
+                    NombreSubDirNegocioArea = fila.NombreSubDirNegocioArea,
+                    Pais = fila.Pais,
+                    ImporteContratado = fila.ImporteContratado,
+                    ImporteContratadoAcumulado = fila.ImporteContratadoAcumulado,
+                    ImporteContratadoAcumuladoAñoAnterior = fila.ImporteContratadoAcumuladoAñoAnterior,
+                    ImporteObjetivo = fila.ImporteObjetivo
+                }, transaction: transaction);
+            }
+
+            // Consultar datos agrupados de la tabla temporal
+            var resultado = (await _connection.QueryAsync<MercadosPoco>(sqlSelect, parametros, transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
         }
         catch
         {

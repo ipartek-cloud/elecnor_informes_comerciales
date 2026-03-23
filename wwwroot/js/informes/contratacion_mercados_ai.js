@@ -5,7 +5,7 @@
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase, APP_VERSION } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeBase, APP_VERSION as UTILS_VERSION } from './informes_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, APP_VERSION as UTILS_VERSION } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 // ===============================================================================
@@ -126,10 +126,10 @@ function _registrarEventos() {
  * Genera la capa de impresión para todo el informe.
  */
 async function _imprimirInforme() {
-    await imprimirInformeBase({
+    await imprimirInformeUnificado({
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
-        claveAgrupacion: 'agrupaciones', // Evita que la detección automática coja el array equivocado
+        modoAgrupacion: 'agrupaciones', // Evita que la detección automática coja el array equivocado
         renderContenido: (agrupacion) => {
             return _renderTripleBlock(agrupacion) +
                 ((agrupacion.subMercadosAI?.length > 0 || agrupacion.carteraProduccion?.lineas?.length > 0 || agrupacion.carteraDiferida?.lineas?.length > 0) ? `
@@ -189,15 +189,15 @@ function _renderTripleBlock(agrup) {
             <div class="rpt-block-acumulado">
                 <table class="rpt-block-table">
                     <colgroup>
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
                     </colgroup>
                     <tr class="rpt-detail-row">
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleObjetivo(d.objetivoAnual)}</td>
-                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15" style="color: #999 !important;">${d.pais === 'Nacional' ? '-7%' : '4%'}</td>
+                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15" rpt-text-muted-value>${d.pais === 'Nacional' ? '-7%' : '4%'}</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleContratado(d.importeContratadoAcumulado)}</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${formatCurrency(d.indiceProduccion / 1000, 2)}</td>
                         <td class="rpt-number-cell">${d.variacion}</td>
@@ -218,7 +218,7 @@ function _renderTripleBlock(agrup) {
                 </table>
             </div>
             <div class="rpt-block-labels">
-                <table class="rpt-block-table" style="width: 100%; border-collapse: collapse;">
+                <table class="rpt-block-table rpt-table-full-collapse">
                     <tr class="rpt-total-row-blue">
                         <td class="rpt-number-cell">&nbsp;</td>
                     </tr>
@@ -227,15 +227,15 @@ function _renderTripleBlock(agrup) {
             <div class="rpt-block-acumulado">
                 <table class="rpt-block-table">
                     <colgroup>
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
                     </colgroup>
                     <tr class="rpt-total-row-blue">
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleObjetivo(agrup.totales.objetivoAnual)}</td>
-                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15" style="color: #999 !important;">-1%</td>
+                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15" rpt-text-muted-value>-1%</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleContratado(agrup.totales.contratacionAcumulada)}</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${formatCurrency(agrup.totales.indiceProduccion / 1000, 2)}</td>
                         <td class="rpt-number-cell">${agrup.totales.variacionContratacion}</td>
@@ -246,38 +246,38 @@ function _renderTripleBlock(agrup) {
     `;
 
     return `
-        <div class="rpt-triple-container mt-4 mb-0" style="align-items: flex-end;">
+        <div class="rpt-triple-container mt-4 mb-0 rpt-align-flex-end">
             <div class="rpt-block-mensual">
                 <div class="fw-bold rpt-font-small rpt-text-corporate text-center mb-1">Mensual</div>
                 <table class="rpt-block-table">
                     <thead>
-                        <tr class="rpt-th-blue" style="border-top: none;">
-                            <th class="rpt-number-cell w-50 pe-3 pb-1" style="border-top: none;">Objet.</th>
-                            <th class="rpt-number-cell w-50 pe-4 pb-1" style="border-top: none;">Contr.</th>
+                        <tr class="rpt-th-blue" rpt-border-top-none>
+                            <th class="rpt-number-cell w-50 pe-3 pb-1" rpt-border-top-none>Objet.</th>
+                            <th class="rpt-number-cell w-50 pe-4 pb-1" rpt-border-top-none>Contr.</th>
                         </tr>
                     </thead>
                 </table>
             </div>
-            <div class="rpt-block-labels text-center" style="margin-bottom: 2px;">
+            <div class="rpt-block-labels text-center rpt-mb-2">
                 <div class="rpt-label-blue-header">Mercado</div>
             </div>
             <div class="rpt-block-acumulado">
                 <div class="fw-bold rpt-font-small rpt-text-corporate text-center mb-1">Acumulado</div>
                 <table class="rpt-block-table">
                     <colgroup>
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
-                        <col style="width:20%;">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
+                        <col class="rpt-col-width-20">
                     </colgroup>
                     <thead>
-                        <tr class="rpt-th-blue" style="border-top: none;">
-                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" style="border-top: none;">Objet.</th>
-                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" style="border-top: none; color: #999 !important;">Var/${agrup.año - 1}</th>
-                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" style="border-top: none;">Contr.</th>
-                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" style="border-top: none;">Ip</th>
-                            <th class="rpt-number-cell pb-1" style="border-top: none;">Var/${agrup.año - 1}</th>
+                        <tr class="rpt-th-blue" rpt-border-top-none>
+                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" rpt-border-top-none>Objet.</th>
+                            <th class="rpt-number-cell rpt-pad-right-15 pb-1 rpt-border-top-none rpt-text-muted-value">Var/${agrup.año - 1}</th>
+                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" rpt-border-top-none>Contr.</th>
+                            <th class="rpt-number-cell rpt-pad-right-15 pb-1" rpt-border-top-none>Ip</th>
+                            <th class="rpt-number-cell pb-1" rpt-border-top-none>Var/${agrup.año - 1}</th>
                         </tr>
                     </thead>
                 </table>
@@ -303,27 +303,27 @@ function _renderSubsetTripleBlock(agrup) {
     return `
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
-                <col style="width: 100px;">
-                <col style="width: 25px;">
-                <col style="width: 315px;">
-                <col style="width: 30px;">
-                <col style="width: 100px;">
-                <col style="width: 100px;">
-                <col style="width: 100px;">
+                <col class="rpt-col-100px">
+                <col class="rpt-col-25px">
+                <col class="rpt-col-315px">
+                <col class="rpt-col-30px">
+                <col class="rpt-col-100px">
+                <col class="rpt-col-100px">
+                <col class="rpt-col-100px">
             </colgroup>
             <thead>
-                <tr style="height: 20px;">
+                <tr rpt-row-height-20>
                     <th>Mensual</th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th colspan="3">Acumulado</th>
                 </tr>
-                <tr class="rpt-border-header" style="height: 18px;">
+                <tr class="rpt-border-header" rpt-row-height-18>
                     <th class="text-end">Contr.</th>
-                    <th style="border: none !important;"></th>
-                    <th style="text-align: center;">Asociado Inversión</th>
-                    <th style="border: none !important;"></th>
+                    <th rpt-border-none></th>
+                    <th class="rpt-inline-center">Asociado Inversión</th>
+                    <th rpt-border-none></th>
                     <th class="text-end">Contr</th>
                     <th class="text-end">% s/Merc</th>
                     <th class="text-end">Var/2025</th>
@@ -331,11 +331,11 @@ function _renderSubsetTripleBlock(agrup) {
             </thead>
             <tbody>
                 ${subMercados.map(s => `
-                    <tr style="height: 18px;">
+                    <tr rpt-row-height-18>
                         <td class="text-end" data-label="Mensual Contr.">${val(s.importeContratadoMensual)}</td>
-                        <td style="border: none !important;"></td>
+                        <td rpt-border-none></td>
                         <td class="ps-2" data-label="Asociado Inversión">${s.mercado.trim()}</td>
-                        <td style="border: none !important;"></td>
+                        <td rpt-border-none></td>
                         <td class="text-end" data-label="Acum. Contr.">${val(s.importeContratadoAcumulado)}</td>
                         <td class="text-end" data-label="% s/Merc">${formatPercentage(s.porcentajeSobreMercado)}</td>
                         <td class="text-end" data-label="Var/2025">${s.variacion}</td>
@@ -343,11 +343,11 @@ function _renderSubsetTripleBlock(agrup) {
                 `).join('')}
             </tbody>
             <tfoot>
-                <tr class="fw-bold rpt-text-corporate" style="height: 18px;">
+                <tr class="fw-bold rpt-text-corporate" rpt-row-height-18>
                     <td class="text-end rpt-td-total" data-label="Total Mensual">${val(totales.contratacionMensual)}</td>
-                    <td style="border: none !important;"></td>
+                    <td rpt-border-none></td>
                     <td class="rpt-td-total"></td>
-                    <td style="border: none !important;"></td>
+                    <td rpt-border-none></td>
                     <td class="text-end rpt-td-total" data-label="Total Acumulado">${val(totales.contratacionAcumulada)}</td>
                     <td class="text-end rpt-td-total" data-label="Total %">${formatPercentage(totales.porcentajeSobreMercado)}</td>
                     <td class="text-end rpt-td-total" data-label="Total Var.">${totales.variacionCartera || ''}</td>
@@ -371,29 +371,29 @@ function _renderCarteraProduccion(agrup) {
     return `
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
-                <col style="width: 100px;">
-                <col style="width: 25px;">
-                <col style="width: 315px;">
-                <col style="width: 30px;">
-                <col style="width: 150px;">
-                <col style="width: 150px;">
+                <col class="rpt-col-100px">
+                <col class="rpt-col-25px">
+                <col class="rpt-col-315px">
+                <col class="rpt-col-30px">
+                <col class="rpt-col-150px">
+                <col class="rpt-col-150px">
             </colgroup>
 
                     <thead>
-                        <tr style="height: 20px;">
-                            <th class="text-center" style="border: none !important;">Cart.</th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important;"></th>
-                            <th colspan="2" class="text-center" style="border: none !important;">Cartera</th>
+                        <tr rpt-row-height-20>
+                            <th class="text-center" rpt-border-none>Cart.</th>
+                            <th rpt-border-none></th>
+                            <th rpt-border-none></th>
+                            <th rpt-border-none></th>
+                            <th colspan="2" class="text-center" rpt-border-none>Cartera</th>
                         </tr>
-                        <tr class="rpt-border-header" style="height: 18px;">
-                            <th class="text-end" style="border-top: none;">${data.tituloColInicial}</th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important; padding: 0;"><div class="rpt-label-blue-header" style="width: 100%;">Cartera Producción</div></th>
-                            <th style="border: none !important;"></th>
-                            <th class="text-end" style="border-top: none;">${data.tituloColActual}</th>
-                            <th class="text-end" style="border-top: none;">${data.tituloColDelta}</th>
+                        <tr class="rpt-border-header" rpt-row-height-18>
+                            <th class="text-end" rpt-border-top-none>${data.tituloColInicial}</th>
+                            <th rpt-border-none></th>
+                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-w-100">Cartera Producción</div></th>
+                            <th rpt-border-none></th>
+                            <th class="text-end" rpt-border-top-none>${data.tituloColActual}</th>
+                            <th class="text-end" rpt-border-top-none>${data.tituloColDelta}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -408,11 +408,11 @@ function _renderCarteraProduccion(agrup) {
                             const labelClass = isIndented ? 'ps-4 rpt-text-grey' : '';
 
                             return `
-                                <tr style="height: 18px;">
+                                <tr rpt-row-height-18>
                                     <td class="text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColInicial}">${showInitial}</td>
-                                    <td style="border: none !important;"></td>
+                                    <td rpt-border-none></td>
                                     <td class="ps-2 ${labelClass}" data-label="Concepto">${cleanConcept}</td>
-                                    <td style="border: none !important;"></td>
+                                    <td rpt-border-none></td>
                                     <td class="text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColActual}">${showActual}</td>
                                     <td class="text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColDelta}">${showVar}</td>
                                 </tr>
@@ -420,11 +420,11 @@ function _renderCarteraProduccion(agrup) {
                         }).join('')}
                     </tbody>
                     <tfoot>
-                        <tr class="fw-bold fs-7 rpt-text-corporate" style="height: 18px;">
+                        <tr class="fw-bold fs-7 rpt-text-corporate" rpt-row-height-18>
                             <td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(totales.importeInicial)}</td>
-                            <td style="border: none !important;"></td>
+                            <td rpt-border-none></td>
                             <td class="rpt-td-total"></td>
-                            <td style="border: none !important;"></td>
+                            <td rpt-border-none></td>
                             <td class="text-end rpt-td-total" data-label="Total ${data.tituloColActual}">${val(totales.importeActual)}</td>
                             <td class="text-end rpt-td-total" data-label="Variación">${totales.variacionCartera || ''}</td>
                         </tr>
@@ -469,36 +469,36 @@ function _renderCarteraDiferida(agrup) {
         <table class="rpt-table-triple rpt-table-stackable">
 
             <colgroup>
-                <col style="width: 80px;">
-                <col style="width: 80px;">
-                <col style="width: 80px;">
-                <col style="width: 15px;">
-                <col style="width: 390px;">
-                <col style="width: 15px;">
-                <col style="width: 80px;">
-                <col style="width: 45px;">
-                <col style="width: 65px;">
-                <col style="width: 65px;">
-                <col style="width: 65px;">
+                <col class="rpt-col-80px">
+                <col class="rpt-col-80px">
+                <col class="rpt-col-80px">
+                <col class="rpt-col-15px">
+                <col class="rpt-col-390px">
+                <col class="rpt-col-15px">
+                <col class="rpt-col-80px">
+                <col class="rpt-col-45px">
+                <col class="rpt-col-65px">
+                <col class="rpt-col-65px">
+                <col class="rpt-col-65px">
             </colgroup>
 
                     <thead>
-                        <tr style="height: 20px;">
-                            <th colspan="3" class="text-center" style="border: none !important;">Cart.</th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important;"></th>
-                            <th colspan="3" class="text-center" style="border: none !important;">Cartera Pendiente</th>
+                        <tr rpt-row-height-20>
+                            <th colspan="3" class="text-center" rpt-border-none>Cart.</th>
+                            <th rpt-border-none></th>
+                            <th rpt-border-none></th>
+                            <th rpt-border-none></th>
+                            <th rpt-border-none></th>
+                            <th rpt-border-none></th>
+                            <th colspan="3" class="text-center" rpt-border-none>Cartera Pendiente</th>
                         </tr>
-                        <tr class="rpt-border-header" style="height: 18px;">
+                        <tr class="rpt-border-header" rpt-row-height-18>
                             <th class="text-end">1.1.25</th>
                             <th class="text-end">Nuevos *</th>
                             <th class="text-end">Total</th>
-                            <th style="border: none !important;"></th>
-                            <th style="border: none !important; padding: 0;"><div class="rpt-label-blue-header" style="width: 100%;">Cartera Diferida</div></th>
-                            <th style="border: none !important;"></th>
+                            <th rpt-border-none></th>
+                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-w-100">Cartera Diferida</div></th>
+                            <th rpt-border-none></th>
                             <th class="text-end">Contr.</th>
                             <th class="text-end">Ip</th>
                             <th class="text-end">2025</th>
@@ -510,13 +510,13 @@ function _renderCarteraDiferida(agrup) {
                         ${data.lineas.map(l => {
                             const v = getVals(l);
                             return `
-                                <tr style="height: 18px;">
+                                <tr rpt-row-height-18>
                                     <td class="text-end" data-label="1.1.25">${val(v.v1_1)}</td>
                                     <td class="text-end" data-label="Nuevos *">${val(l.nuevos)}</td>
                                     <td class="text-end" data-label="Total">${val(l.total)}</td>
-                                    <td style="border: none !important;"></td>
+                                    <td rpt-border-none></td>
                                     <td class="ps-2" data-label="Cartera Diferida">${l.concepto.trim()}</td>
-                                    <td style="border: none !important;"></td>
+                                    <td rpt-border-none></td>
                                     <td class="text-end" data-label="Contr.">${val(l.contr)}</td>
                                     <td class="text-end" data-label="Ip">${l.total === 0 ? '####' : formatCurrency(l.ip, 2)}</td>
                                     <td class="text-end" data-label="2025">${val(v.v25)}</td>
@@ -527,13 +527,13 @@ function _renderCarteraDiferida(agrup) {
                         }).join('')}
                     </tbody>
                     <tfoot>
-                        <tr class="fw-bold fs-7 rpt-text-corporate" style="height: 18px;">
+                        <tr class="fw-bold fs-7 rpt-text-corporate" rpt-row-height-18>
                             <td class="text-end rpt-td-total" data-label="Total 1.1.25">${val(t.v1_1)}</td>
                             <td class="text-end rpt-td-total" data-label="Total Nuevos">${val(totales.nuevos)}</td>
                             <td class="text-end rpt-td-total" data-label="Total Total">${val(totales.total)}</td>
-                            <td style="border: none !important;"></td>
+                            <td rpt-border-none></td>
                             <td class="rpt-td-total"></td>
-                            <td style="border: none !important;"></td>
+                            <td rpt-border-none></td>
                             <td class="text-end rpt-td-total" data-label="Total Contr.">${val(totales.contr)}</td>
                             <td class="text-end rpt-td-total" data-label="Total Ip">${totales.total === 0 ? '####' : formatCurrency(totales.ip, 2)}</td>
                             <td class="text-end rpt-td-total" data-label="Total 2025">${val(t.v25)}</td>

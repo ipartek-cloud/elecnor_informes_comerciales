@@ -10,6 +10,7 @@ using Elecnor_Informes_Comerciales.Middleware;
 using Elecnor_Informes_Comerciales.DTOs.Errors;
 using Elecnor_Informes_Comerciales.Repositories.Informes;
 using Elecnor_Informes_Comerciales.Services.Informes;
+using elecnor_informes_comerciales.Services.Informes;
 using Serilog;
 using System.Text.Json;
 
@@ -44,6 +45,7 @@ Console.WriteLine("[AUTH] Servicios de autenticación registrados.");
 builder.Services.AddScoped<InformeRepository>();
 builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
 builder.Services.AddScoped<InformeContratacionMercadosAIService>();
+builder.Services.AddScoped<InformeMercadosService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // 5. Configurar Autenticación JWT

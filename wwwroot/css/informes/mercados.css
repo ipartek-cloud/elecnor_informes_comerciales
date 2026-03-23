@@ -1,0 +1,192 @@
+/* =============================================================================
+   ESTILOS ESPECÍFICOS PARA EL INFORME MERCADOS
+   Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_base.css
+   ============================================================================= */
+
+/* Contenedor principal: ajustar solo lo necesario para pantalla */
+.rpt-paper[data-informe="mercados"] {
+    max-width: 1200px;
+    padding: 1rem 1.5rem;
+    margin: 0 auto;
+    box-shadow: none;
+    border: none;
+}
+
+/* Tabla principal */
+.rpt-table {
+    width: 100%;
+}
+
+/* Estilos para el número de página sobre el logo (Imagen 4) */
+.rpt-page-number {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #00468B;
+    margin-right: 8px;
+    margin-bottom: -5px;
+}
+
+/* Ajustes de celdas para evitar scroll */
+.rpt-number-cell {
+    padding: 0 4px;
+    white-space: nowrap;
+}
+
+/* Márgenes de bloques */
+.report-body {
+    margin-top: 1rem;
+}
+
+/* =============================================================================
+   LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
+   Define los anchos para que el informe principal y subinformes cuadren.
+   Basado en colgroup y table-layout: fixed.
+   ============================================================================= */
+
+/* Contenedor de tabla con el layout de Mercados */
+.rpt-mercado-layout {
+    table-layout: fixed;
+}
+
+/* Proporciones de las columnas (suman 100%) */
+.rpt-mercado-col-obj-m   { width: 13.5%; }
+.rpt-mercado-col-contr-m { width: 13.5%; }
+.rpt-mercado-col-desc    { width: 21.0%; }
+.rpt-mercado-col-obj-a   { width: 15.0%; }
+.rpt-mercado-col-contr-a { width: 15.0%; }
+.rpt-mercado-col-ip      { width: 10.0%; }
+.rpt-mercado-col-var     { width: 12.0%; }
+
+/* =============================================================================
+   ENCABEZADOS DE TABLA - MERCADOS
+   Clases para reemplazar estilos inline del JS
+   ============================================================================= */
+
+/* Borde inferior de encabezados */
+.rpt-mercado-th-border {
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 5px !important;
+}
+
+/* Fila separadora de 5px */
+.rpt-mercado-row-spacer {
+    height: 5px;
+}
+
+/* Alineación vertical para celdas de encabezado con badge */
+.rpt-mercado-header-align {
+    vertical-align: bottom;
+    padding: 0;
+}
+
+/* Badge de título central (ej: "Mercado", "Unidades de Negocio") */
+.rpt-mercado-header-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-size: 0.9rem;
+    padding: 2px 0;
+    margin: 0;
+    border-radius: 0;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+/* Fila de totales */
+.rpt-mercado-total-row {
+    border-top: 2.5px solid #00468B;
+    color: #000000;
+    font-weight: bold;
+    padding-top: 5px;
+}
+
+/* Celda total con margen */
+.rpt-mercado-total-cell {
+    border-top: 2.5px solid #00468B;
+    margin: 0 5px;
+    padding-top: 5px;
+}
+
+/* Celda total con margen mayor (línea segmentada) */
+.rpt-mercado-total-line {
+    border-top: 2.5px solid #00468B;
+    margin: 0 10px;
+}
+
+/* Fila de detalle con altura fija */
+.rpt-mercado-detail-row {
+    height: 24px;
+}
+
+/* Ajuste vertical para celdas de totales */
+.rpt-mercado-cell-total {
+    vertical-align: top;
+    padding-top: 0 !important;
+}
+
+/* =============================================================================
+   IMPRESIÓN — AJUSTES ESPECÍFICOS PARA MERCADOS
+   Las reglas generales de impresión están en informes_base.css
+   ============================================================================= */
+@media print {
+    /* Contenedor papel para impresión */
+    .rpt-paper[data-informe="mercados"],
+    .rpt-paper--print {
+        max-width: 100% !important;
+        padding: 6.4mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Proporciones de columnas para A4 (745px útiles) */
+    .rpt-mercado-col-obj-m   { width: 14% !important; }
+    .rpt-mercado-col-contr-m { width: 14% !important; }
+    .rpt-mercado-col-desc    { width: 20% !important; }
+    .rpt-mercado-col-obj-a   { width: 16% !important; }
+    .rpt-mercado-col-contr-a { width: 16% !important; }
+    .rpt-mercado-col-ip      { width: 10% !important; }
+    .rpt-mercado-col-var     { width: 10% !important; }
+
+    /* Reducir márgenes verticales entre bloques */
+    .rpt-mercado-layout {
+        margin-bottom: 1px !important;
+    }
+
+    /* Compactar banners de DG */
+    .rpt-banner-top {
+        margin-top: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Evitar cortes dentro de filas de detalle */
+    .rpt-detail-row {
+        page-break-inside: avoid;
+    }
+
+    /* No cortar justo después de banners */
+    .rpt-banner-top {
+        page-break-after: avoid;
+    }
+
+    /* Permitir cortes dentro de bloques de DG para evitar hojas vacías */
+    .dn-block {
+        page-break-inside: auto !important;
+    }
+
+    /* Reducir fuente para impresión (paridad con Access) */
+    .rpt-table {
+        font-size: 8pt !important;
+    }
+
+    /* Bordes más finos estilo Access */
+    .rpt-th-blue, .rpt-td-total {
+        border-bottom-width: 0.5pt !important;
+    }
+
+    /* Banner compacto */
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 1.1rem !important;
+    }
+}

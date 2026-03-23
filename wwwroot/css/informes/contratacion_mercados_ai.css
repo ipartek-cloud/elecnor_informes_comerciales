@@ -23,6 +23,100 @@
     color: #888 !important;
 }
 
+/* =============================================================================
+   CLASES PARA REEMPLAZAR ESTILOS INLINE DEL JS
+   Transición: de estilos embebidos a clases CSS reutilizables
+   ============================================================================= */
+
+/* Borde ninguno */
+.rpt-border-none {
+    border: none !important;
+}
+
+/* Borde superior none */
+.rpt-border-top-none {
+    border-top: none !important;
+}
+
+/* Alturas de filas */
+.rpt-row-height-20 { height: 20px; }
+.rpt-row-height-18 { height: 18px; }
+
+/* Anchos de columna (para colgroup) */
+.rpt-col-width-20 { width: 20%; }
+.rpt-col-width-100 { width: 100px; }
+.rpt-col-width-25 { width: 25px; }
+.rpt-col-width-315 { width: 315px; }
+.rpt-col-width-30 { width: 30px; }
+.rpt-col-width-80 { width: 80px; }
+.rpt-col-width-15 { width: 15px; }
+.rpt-col-width-390 { width: 390px; }
+.rpt-col-width-45 { width: 45px; }
+.rpt-col-width-65 { width: 65px; }
+.rpt-col-width-150 { width: 150px; }
+
+/* Texto gris muted para variaciones */
+.rpt-text-muted-value {
+    color: #999 !important;
+}
+
+/* Alineación */
+.rpt-align-center {
+    text-align: center;
+}
+.rpt-align-end {
+    text-align: end;
+}
+
+/* Márgenes específicos */
+.rpt-mb-2 {
+    margin-bottom: 2px;
+}
+
+/* Anchos específicos para col (px) */
+.rpt-col-100px { width: 100px; }
+.rpt-col-25px { width: 25px; }
+.rpt-col-315px { width: 315px; }
+.rpt-col-30px { width: 30px; }
+.rpt-col-150px { width: 150px; }
+.rpt-col-15px { width: 15px; }
+.rpt-col-390px { width: 390px; }
+.rpt-col-45px { width: 45px; }
+.rpt-col-65px { width: 65px; }
+.rpt-col-80px { width: 80px; }
+
+/* Tabla con ancho completo */
+.rpt-table-full {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Alineación center inline */
+.rpt-inline-center {
+    text-align: center;
+}
+
+/* Alineación flex-end para triple container */
+.rpt-align-flex-end {
+    align-items: flex-end;
+}
+
+/* Tabla con ancho completo y collapse */
+.rpt-table-full-collapse {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Padding cero */
+.rpt-pad-0 {
+    padding: 0;
+}
+
+/* Width 100% */
+.rpt-w-100 {
+    width: 100%;
+}
+
 
 
 /* =============================================================================

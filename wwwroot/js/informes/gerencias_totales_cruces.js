@@ -7,7 +7,7 @@
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
  */
 import { RPT_CLASSES, formatCurrency, getNombreMes, getMesCorto, actualizarEstadoPaginacion, inicializarEventListenersBase, APP_VERSION } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeBase, APP_VERSION as UTILS_VERSION } from './informes_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, APP_VERSION as UTILS_VERSION } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 // ===============================================================================
@@ -88,7 +88,7 @@ function _getHtmlEncabezado(itemONombre = '') {
         : itemONombre;
 
     const encabezadoBase = getHtmlEncabezadoBase({
-        tituloCorporativo: 'Informe de Contratación',
+        tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo de Administración</span> <span class="ms-3 fs-6">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: 'Gerencias',
         mes,
@@ -117,12 +117,12 @@ function _registrarEventos() {
  * Genera la capa de impresión para todo el informe.
  */
 async function _imprimirInforme() {
-    await imprimirInformeBase({
+    await imprimirInformeUnificado({
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: (gerente) => {
             const mesCorto = getMesCorto(estado.informeGlobalData.meta.filtros.mes - 1);
-            return renderSeccionGerente(gerente, mesCorto, true); // esImpresion = true
+            return renderSeccionGerente(gerente, mesCorto, true);
         }
     });
 }

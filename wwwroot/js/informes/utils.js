@@ -159,21 +159,34 @@ export function abrirModal(titulo) {
  * @param {string} [prefijo] - Prefijo del label (ej: "Gerencia", "Año", "Página")
  */
 export function actualizarEstadoPaginacion(paginaActual, paginasTotales, prefijo = 'Página') {
+    const ctrl = document.getElementById(RPT_CLASSES.CTRL_PAGINACION);
     const btnAnterior = document.getElementById(RPT_CLASSES.BTN_PAG_ANTERIOR);
     const btnSiguiente = document.getElementById(RPT_CLASSES.BTN_PAG_SIGUIENTE);
     const lbl = document.getElementById(RPT_CLASSES.LBL_ESTADO_PAGINACION);
 
+    // TRATAMIENTO COMÚN: Si solo hay una página o ninguna, ocultar todo el bloque de paginación
+    if (paginasTotales <= 1) {
+        if (ctrl) ctrl.classList.add('d-none');
+        return;
+    } 
+    
+    // Si hay más de una, asegurar que se vea
+    if (ctrl) ctrl.classList.remove('d-none');
+
     const label = `${prefijo} ${paginaActual + 1} de ${paginasTotales}`;
+        
     if (lbl) lbl.textContent = label;
     
     if (btnAnterior) {
-        btnAnterior.disabled = (paginaActual === 0);
-        btnAnterior.setAttribute('aria-disabled', (paginaActual === 0).toString());
+        const canGoBack = (paginaActual > 0);
+        btnAnterior.disabled = !canGoBack;
+        btnAnterior.setAttribute('aria-disabled', (!canGoBack).toString());
         btnAnterior.setAttribute('aria-label', `Ir a ${prefijo} anterior`);
     }
     if (btnSiguiente) {
-        btnSiguiente.disabled = (paginaActual === paginasTotales - 1);
-        btnSiguiente.setAttribute('aria-disabled', (paginaActual === paginasTotales - 1).toString());
+        const canGoNext = (paginasTotales && paginaActual < paginasTotales - 1);
+        btnSiguiente.disabled = !canGoNext;
+        btnSiguiente.setAttribute('aria-disabled', (!canGoNext).toString());
         btnSiguiente.setAttribute('aria-label', `Ir a ${prefijo} siguiente`);
     }
 }
