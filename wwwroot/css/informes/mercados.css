@@ -4,9 +4,12 @@
    ============================================================================= */
 
 /* Contenedor principal: ajustar solo lo necesario para pantalla */
+/* Contenedor principal con soporte para Container Queries */
 .rpt-paper[data-informe="mercados"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
     max-width: 1200px;
-    padding: 1rem 1.5rem;
+    padding: clamp(0.5rem, 2vw, 1.5rem); /* Padding fluido */
     margin: 0 auto;
     box-shadow: none;
     border: none;
@@ -79,17 +82,28 @@
     padding: 0;
 }
 
-/* Badge de título central (ej: "Mercado", "Unidades de Negocio") */
+/* Badge de título central con tipografía fluida */
 .rpt-mercado-header-badge {
     background-color: #00468B !important;
     color: white !important;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1cqi + 0.5rem, 0.9rem);
     padding: 2px 0;
     margin: 0;
     border-radius: 0;
     text-align: center;
     display: block;
     width: 100%;
+}
+
+/* Ajustes de compactación para contenedores estrechos (< 700px) */
+@container rpt-paper (max-width: 700px) {
+    .rpt-number-cell {
+        padding: 0 2px !important;
+        font-size: 0.82rem;
+    }
+    .rpt-mercado-header-badge {
+        font-size: 0.75rem;
+    }
 }
 
 /* Fila de totales */

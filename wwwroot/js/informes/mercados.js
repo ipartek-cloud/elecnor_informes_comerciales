@@ -235,8 +235,18 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
 
             <td class="rpt-number-cell pe-2" data-label="Obj. Acum.">${wrapTotal(formatCurrency(acu.importeObjetivo, 0))}</td>
             <td class="rpt-number-cell pe-2" data-label="Real Acum.">${wrapTotal(formatCurrency(acu.importeContratado, 0))}</td>
-            <td class="text-center ${getIpClass(acu.indiceProduccion)}" data-label="IP Acum.">${wrapTotal(formatCurrency(acu.indiceProduccion, 2), 'text-center')}</td>
-            <td class="text-center ${getVarClass(acu.variacion)}" data-label="Var. %">${wrapTotal(acu.variacion || '0%', 'text-center')}</td>
+            <td class="text-center ${getIpClass(acu.indiceProduccion)}" 
+                data-label="IP Acum." 
+                role="img" 
+                aria-label="Índice de producción: ${acu.indiceProduccion ?? 0}">
+                ${wrapTotal(formatCurrency(acu.indiceProduccion, 2), 'text-center')}
+            </td>
+            <td class="text-center ${getVarClass(acu.variacion)}" 
+                data-label="Var. %" 
+                role="img" 
+                aria-label="Variación porcentual: ${acu.variacion || '0%'}">
+                ${wrapTotal(acu.variacion || '0%', 'text-center')}
+            </td>
         </tr>
     `;
 }
