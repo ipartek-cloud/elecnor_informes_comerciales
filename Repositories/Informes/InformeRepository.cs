@@ -3,6 +3,7 @@ using Dapper;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
 using elecnor_informes_comerciales.Models.Informes.Mercados;
+using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 
@@ -360,6 +361,86 @@ public class InformeRepository
             return resultado;
         }
         catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Países (Mercado Internacional)
+    // └─ Método: ObtenerPaisesAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos para el informe de Países (Internacional).
+    /// </summary>
+    public async Task<List<PaisesPoco>> ObtenerPaisesAsync(int anio, int mes)
+    {
+        // ─── PASO 1: Vaciar la tabla de trabajo ───
+        const string sqlDelete = "DELETE FROM rptContratacion_Internacional";
+
+        // ─── PASO 2: Poblado automático vía SP (el SP original de Access) ───
+        // Sincronizado con las 5 columnas que devuelve el SP (según inspección)
+        const string sqlInsertExec = @" 
+            INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
+            EXEC spContratacion_Internacional @Anio, @Mes";
+
+        // Asignamos el Año (campo extra) para que el SELECT lo encuentre
+        const string sqlUpdateAnio = "UPDATE rptContratacion_Internacional SET Año = @Anio WHERE Año IS NULL";
+
+        // ─── PASO 3: Selección optimizada (Año Actual vs Histórico Año Anterior) ───
+        const string sqlSelect = @" SELECT
+                                        @Anio AS Año,
+                                        t.Pais,
+                                        SUM(t.ImpActual) AS ImporteContratadoAcumulado,
+                                        SUM(t.ImpAnterior) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        MAX(t.Ajuste) AS Ajuste,
+                                        CASE WHEN SUM(t.ImpAnterior) = 0 THEN '*' ELSE '' END AS SinContratacionAñoAnterior,
+                                        MAX(t.Orden) AS OrdenAñoAnterior
+                                    FROM (
+               
+                                            SELECT 
+                                                Pais, 
+                                                dbo.fgRedondear(ISNULL(ImporteContratadoAcumulado, 0), 2) AS ImpActual, 
+                                                0 AS ImpAnterior, 
+                                                Ajuste, 
+                                                0 AS Orden
+                                            FROM rptContratacion_Internacional
+                                            WHERE Año = @Anio
+
+                                        UNION ALL
+               
+                                            SELECT 
+                                                ISNULL(p.NMPRO, 'OTROS') AS Pais, 
+                                                0 AS ImpActual, 
+                                                ISNULL(h.Importe, 0) AS ImpAnterior, 
+                                                0 AS Ajuste, 
+                                                ISNULL(h.Orden, 0) AS Orden
+                                            FROM HistoricoContratacionSQL h
+                                            LEFT JOIN ProvinciasInternacional p ON h.CodProv = p.CDPRO
+                                            WHERE h.Año = @Anio - 1
+                                    ) AS t
+                                    GROUP BY t.Pais
+                                    ORDER BY ImporteContratadoAcumulado DESC";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
+            
+            var resultado = (await _connection.QueryAsync<PaisesPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch (Exception)
         {
             transaction.Rollback();
             throw;
