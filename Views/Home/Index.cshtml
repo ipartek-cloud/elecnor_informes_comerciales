@@ -51,11 +51,11 @@
                     
                     <!-- Grupo Unificado: Botón + Página (CARTERA) -->
                     <div class="input-group" style="width: 280px;">
-                        <button class="btn btn-outline-primary rpt-btn-index flex-fill text-start" type="button"
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'contratacion_mercados_ai')"
                                 data-input-pag="inputPaginaCartera"
                                 aria-label="Ver informe Cartera Diferida">
-                            <i class="fas fa-file-invoice-dollar me-2" aria-hidden="true"></i> Cartera Diferida
+                            Cartera Diferida
                         </button>
                         <input type="number" class="form-control rpt-input-page" 
                                id="inputPaginaCartera" 
@@ -65,11 +65,11 @@
 
                     <!-- Grupo Unificado: Botón + Página (MERCADOS) -->
                     <div class="input-group" style="width: 280px;">
-                        <button class="btn btn-outline-primary rpt-btn-index flex-fill text-start" type="button"
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'mercados')"
                                 data-input-pag="inputPaginaMercados"
                                 aria-label="Ver informe Mercados">
-                            <i class="fas fa-globe me-2" aria-hidden="true"></i> Mercados
+                            Mercados
                         </button>
                         <input type="number" class="form-control rpt-input-page" 
                                id="inputPaginaMercados" 
@@ -79,15 +79,29 @@
 
                     <!-- Grupo Unificado: Botón + Página (PAISES) -->
                     <div class="input-group" style="width: 280px;">
-                        <button class="btn btn-outline-primary rpt-btn-index flex-fill text-start" type="button"
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'paises')"
                                 data-input-pag="inputPaginaPaises"
                                 aria-label="Ver informe Paises">
-                            <i class="fas fa-flag me-2" aria-hidden="true"></i> Paises
+                            Paises
                         </button>
                         <input type="number" class="form-control rpt-input-page" 
                                id="inputPaginaPaises" 
                                name="inputPaginaPaises" value="3" min="1" 
+                               aria-label="Página" title="Página inicial">
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (ACTIVIDADES) -->
+                    <div class="input-group" style="width: 280px;">
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                onclick="cargarInforme(this, 'actividades')"
+                                data-input-pag="inputPaginaActividades"
+                                aria-label="Ver informe Actividades">
+                            Actividades
+                        </button>
+                        <input type="number" class="form-control rpt-input-page" 
+                               id="inputPaginaActividades" 
+                               name="inputPaginaActividades" value="4" min="1" 
                                aria-label="Página" title="Página inicial">
                     </div>
 
@@ -102,9 +116,9 @@
             </div>
             <div class="card-body">
                 <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-primary" onclick="cargarInforme(this, 'gerencias_totales_cruces')"
+                    <button class="btn rpt-btn-light" onclick="cargarInforme(this, 'gerencias_totales_cruces')"
                             aria-label="Ver informe de Gerencias Totales Cruces">
-                        <i class="fas fa-chart-pie me-2" aria-hidden="true"></i> Gerencias Totales Cruces
+                        Gerencias Totales Cruces
                     </button>
                 </div>
             </div>

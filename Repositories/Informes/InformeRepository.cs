@@ -4,6 +4,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
 using elecnor_informes_comerciales.Models.Informes.Mercados;
 using Elecnor_Informes_Comerciales.Models.Informes.Paises;
+using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 
@@ -436,6 +437,75 @@ public class InformeRepository
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<PaisesPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Actividades
+    // └─ Método: ObtenerActividadesAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos para el informe de Actividades.
+    /// </summary>
+    public async Task<List<ActividadPoco>> ObtenerActividadesAsync(int anio, int mes)
+    {
+        const string sqlDelete = "DELETE FROM rptContratacion_Actividad";
+
+        const string sqlInsertExec = @" INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
+                                        EXEC spContratacion_Actividades_Ajuste @Anio, @Mes";
+
+        // Inyectamos el Año como campo extra (estándar del proyecto)
+        const string sqlUpdateAnio = "UPDATE rptContratacion_Actividad SET Año = @Anio WHERE Año IS NULL";
+
+        const string sqlSelect = @";WITH vwActividades AS (
+	                                    SELECT DISTINCT
+		                                    p.Pais,
+		                                    a.Agrupacion,
+		                                    a.Orden
+	                                    FROM ActividadesSQL a
+	                                    CROSS JOIN Pais p)
+                                    SELECT
+                                        a.Pais,
+                                        a.Agrupacion                                        AS Actividad,
+                                        MAX(c.Año)                                          AS Año,
+                                        isnull(Sum([ImporteContratadoAcumulado]),           0)  AS ImporteContratadoAcumulados,
+                                        isnull(Sum([ImporteContratadoAcumuladoAñoAnterior]),0)  AS ImporteContratadoAcumuladosAñoAnterior,
+                                        isnull(Sum([ImporteContratadoAcumuladoLastYear]),   0)  AS ImporteContratadoAcumuladosLY,
+                                        a.Orden
+                                    FROM
+                                        vwActividades a
+                                        LEFT JOIN rptContratacion_Actividad c
+                                            ON  a.Pais      = c.Pais
+                                            AND a.Agrupacion = c.Actividad
+                                    GROUP BY
+                                        a.Pais,
+                                        a.Agrupacion,
+                                        a.Orden
+                                    ORDER BY
+                                        ImporteContratadoAcumuladosAñoAnterior DESC";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
+            
+            var resultado = (await _connection.QueryAsync<ActividadPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
 
             transaction.Commit();
             return resultado;

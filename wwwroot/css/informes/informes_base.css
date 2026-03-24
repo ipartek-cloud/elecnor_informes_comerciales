@@ -630,7 +630,7 @@
     width: 65px !important;
     max-width: 65px;
     height: 38px !important; /* Fuerza altura exacta del botón */
-    border: 1px solid #0d6efd !important;
+    border: 1px solid #ced4da !important;
     color: #00468B !important;
     font-weight: bold !important;
     text-align: center;
@@ -644,4 +644,19 @@
 .rpt-btn-index {
     border-radius: 6px 0 0 6px !important; /* Solo redondea esquinas izquierdas */
     height: 38px !important;
+}
+
+.rpt-btn-light {
+    background: #e9ecef !important; /* Gris suave de Bootstrap */
+    color: #495057 !important;     /* Gris oscuro para el texto */
+    border: 1px solid #ced4da !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.rpt-btn-light:hover {
+    background: #ced4da !important; /* Gris un poco más intenso */
+    color: #00468B !important;     /* Resalta el azul corporativo al posar el ratón */
+    border-color: #adb5bd !important;
+    box-shadow: 0 4px 8px rgba(47, 79, 136, 0.15) !important; /* Sombra sutil de profundidad */
+    transform: translateY(-1px);    /* Micro-animación de elevación */
 }

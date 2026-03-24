@@ -25,8 +25,9 @@ builder.Host.UseSerilog((context, configuration) => configuration
     .WriteTo.Console()
     .WriteTo.File("Logs/log_.txt", rollingInterval: RollingInterval.Day));
 
-// 2. Agregar soporte para Controladores con Vistas (MVC)
+// 2. Agregar soporte para Controladores con Vistas (MVC) e Inyectar Caching
 builder.Services.AddControllersWithViews();
+builder.Services.AddResponseCaching();
 
 // 3. Configurar IDbConnection (SqlConnection) para Dapper
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -47,6 +48,7 @@ builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
 builder.Services.AddScoped<InformeContratacionMercadosAIService>();
 builder.Services.AddScoped<InformeMercadosService>();
 builder.Services.AddScoped<InformePaisesService>();
+builder.Services.AddScoped<InformeActividadesService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // 5. Configurar Autenticación JWT
@@ -166,6 +168,7 @@ else
 // 10. Configuración de Redirección y Archivos Estáticos
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseResponseCaching();
 
 // 11. Habilitar Autenticación y Autorización
 app.UseAuthentication();
