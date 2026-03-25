@@ -1,0 +1,105 @@
+/* Estilos específicos para el informe de Contrataciones */
+
+/* Título de sección */
+.rpt-section-title {
+    color: #00468B;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 1.5rem 0 0.8rem 0;
+}
+
+/* Cabecera de mes (barra azul claro) */
+.rpt-month-header {
+    background-color: #D6EAF8;
+    color: #00468B;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    margin-bottom: 0.5rem;
+}
+
+/* Tabla del bloque principal y subinformes genéricos */
+.rpt-table-contrataciones {
+    width: 98% !important; /* Aumentado del 95% para mejor aprovechamiento */
+    margin: 0 auto !important; /* Centrado perfecto respecto a la cabecera */
+    border-collapse: collapse;
+}
+
+/* Bloque de informe con margen inferior */
+.rpt-content-block {
+    margin-bottom: 2rem;
+}
+
+/* Anchos de columna unificados para alineación vertical */
+.rpt-col-ai        { width: 4%; }
+.rpt-col-desc      { width: 42%; }
+.rpt-col-cliente   { width: 29%; }
+.rpt-col-importe   { width: 13%; }
+.rpt-col-dirnegocio { width: 12%; }
+
+/* Padding de celdas y tamaño de fuente afinado (8.4pt aprox) */
+.rpt-table-contrataciones td {
+    padding: 1px 4px !important;
+    font-size: 0.65rem; /* Reducido a petición (0.65rem ≈ 7.8pt) para máxima densidad visual */
+    line-height: 1.1;
+    vertical-align: middle;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .rpt-table-contrataciones {
+        width: 100% !important;
+        font-size: 0.75rem;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* SUBINFORME: Contrataciones Año Nacional Anterior (Meses Anteriores)         */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Asegurar que los títulos de subinformes históricos sean grises */
+.rpt-contrataciones-anno-nacional-anterior-section {
+    margin-top: 1.5rem;
+}
+
+.rpt-contrataciones-anno-nacional-anterior-section .rpt-section-title {
+    color: #8a8a8a !important;
+}
+
+/* Línea separadora genérica: Negra y bien contrastada */
+.rpt-subreport-separator {
+    border: 0;
+    border-top: 1px solid #333; 
+    margin: 0 0 0.5rem 0;
+    width: 100%;
+}
+
+/* Reducción de fuente para subinformes históricos (grises) */
+.rpt-contrataciones-anno-nacional-anterior-section td {
+    color: #8a8a8a !important;
+}
+
+/* ==========================================================================
+   REGLAS DE IMPRESIÓN - Paridad visual PDF (modal → print)
+   ========================================================================== */
+@media print {
+    /* Informe principal: misma fuente que impresión base (8pt) */
+    .rpt-table-contrataciones td {
+        font-size: 7pt !important;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+    }
+
+    /* Subinforme: misma fuente que informe principal (8pt) */
+    .rpt-contrataciones-anno-nacional-anterior-table td,
+    .rpt-contrataciones-anno-nacional-anterior-table span,
+    .rpt-contrataciones-anno-nacional-anterior-table div {
+        font-size: 7pt !important;
+        padding: 1px 4px !important;
+    }
+
+    /* Badge AI en impresión */
+    .rpt-contrataciones-anno-nacional-anterior-table .badge {
+        font-size: 7pt !important;
+    }
+}

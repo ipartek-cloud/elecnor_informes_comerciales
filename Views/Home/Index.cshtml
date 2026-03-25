@@ -48,19 +48,29 @@
             </div>
             <div class="card-body">
                 <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start">
-                    
-                    <!-- Grupo Unificado: Botón + Página (CARTERA) -->
-                    <div class="input-group" style="width: 280px;">
-                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                onclick="cargarInforme(this, 'contratacion_mercados_ai')"
-                                data-input-pag="inputPaginaCartera"
-                                aria-label="Ver informe Cartera Diferida">
-                            Cartera Diferida
-                        </button>
-                        <input type="number" class="form-control rpt-input-page" 
-                               id="inputPaginaCartera" 
-                               name="inputPaginaCartera" value="1" min="1" 
-                               aria-label="Página" title="Página inicial">
+
+                    <!-- Grupo Unificado: Botón + Página (CARTERA) + Checkbox -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group" style="width: 280px;">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contratacion_mercados_ai')"
+                                    data-input-pag="inputPaginaCartera"
+                                    aria-label="Ver informe Cartera Diferida">
+                                Cartera Diferida
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCartera"
+                                   name="inputPaginaCartera" value="1" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <div class="form-check d-flex align-items-center ms-auto">
+                            <input class="form-check-input mt-0" type="checkbox" 
+                                   id="chkGenerarRPTPrincipalesObras" 
+                                   name="chkGenerarRPTPrincipalesObras">
+                            <label class="form-check-label ms-1 mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
+                                Generar Contratación
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (MERCADOS) -->
@@ -102,6 +112,20 @@
                         <input type="number" class="form-control rpt-input-page" 
                                id="inputPaginaActividades" 
                                name="inputPaginaActividades" value="4" min="1" 
+                               aria-label="Página" title="Página inicial">
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (CONTRATACIONES) -->
+                    <div class="input-group" style="width: 280px;">
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                onclick="cargarInforme(this, 'contrataciones')"
+                                data-input-pag="inputPaginaContrataciones"
+                                aria-label="Ver informe Contrataciones">
+                            Contrataciones
+                        </button>
+                        <input type="number" class="form-control rpt-input-page" 
+                               id="inputPaginaContrataciones" 
+                               name="inputPaginaContrataciones" value="5" min="1" 
                                aria-label="Página" title="Página inicial">
                     </div>
 
@@ -218,6 +242,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/informes/informes_base.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/mercados.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/contrataciones.css" asp-append-version="true" />
 }
 
 @section Scripts {

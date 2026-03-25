@@ -49,6 +49,7 @@ builder.Services.AddScoped<InformeContratacionMercadosAIService>();
 builder.Services.AddScoped<InformeMercadosService>();
 builder.Services.AddScoped<InformePaisesService>();
 builder.Services.AddScoped<InformeActividadesService>();
+builder.Services.AddScoped<InformeContratacionesService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // 5. Configurar Autenticación JWT

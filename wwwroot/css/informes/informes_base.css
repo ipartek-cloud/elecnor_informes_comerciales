@@ -160,6 +160,11 @@
     color: #0c5460;
 }
 
+/* Bloque de contenido genérico (margen superior estandarizado) */
+.rpt-content-block {
+    margin-top: 1rem;
+}
+
 /* Detalle compacto estandarizado (Elecnor 2026) */
 .rpt-detail-row td, .rpt-number-cell {
     padding-top: 0.5px !important;

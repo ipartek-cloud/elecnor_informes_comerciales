@@ -1,10 +1,13 @@
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Dapper;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
 using elecnor_informes_comerciales.Models.Informes.Mercados;
 using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
+using Elecnor_Informes_Comerciales.Models.Informes.Contrataciones;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 
@@ -14,10 +17,13 @@ namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 public class InformeRepository
 {
     private readonly IDbConnection _connection;
+    private readonly string _connectionString;
 
-    public InformeRepository(IDbConnection connection)
+    public InformeRepository(IDbConnection connection, IConfiguration configuration)
     {
         _connection = connection;
+        _connectionString = configuration.GetConnectionString("DefaultConnection") 
+            ?? throw new InvalidOperationException("No se encontró la cadena de conexión 'DefaultConnection'.");
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -60,16 +66,16 @@ public class InformeRepository
                                         SUM(ISNULL(vw.importe,0))                      AS Objetivos,
                                         SUM(ISNULL(act.CarteraPdteAñoActual,0))        AS CarteraPdteAñoActualS,
                                         SUM(ISNULL(ant.CarteraPdteAñoAnterior,0))      AS CarteraPdteAñoAnteriorS
-                                    FROM rptContratacion_GerenciaCentro rpt
-                                    INNER JOIN Sumarigrama s
+                                    FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
+                                    INNER JOIN Sumarigrama s WITH (NOLOCK)
                                         ON rpt.CodCentro = s.CodCentro
-                                    LEFT JOIN Orden_CodDDirNegocio o
+                                    LEFT JOIN Orden_CodDDirNegocio o WITH (NOLOCK)
                                         ON s.CodDDirNegocio = o.CodDDirNegocio
                                     LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
                                         ON rpt.CodCentro = act.CodCentro
                                     LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
                                         ON rpt.CodCentro = ant.CodCentro
-                                    INNER JOIN CentrosGerentesSQL cg
+                                    INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
                                         ON rpt.Año = cg.Año
                                        AND rpt.NombreGerente = cg.NombreGerente
                                        AND rpt.CodCentro = cg.CodCentro
@@ -308,15 +314,15 @@ public class InformeRepository
                                         MAX(ISNULL(rpt.ImporteObjetivo, 0)) AS ImporteObjetivo,
                                         MAX(ISNULL(obj.Importe, 0)) AS ObjetivoSDGPais,
                                         MAX(ISNULL(vw_m.Importe, 0)) AS ObjetivoPais
-                                    FROM rptContratacion_DG_SDG_DN_SDNA rpt
-                                    LEFT JOIN ObjetivosSQL obj
+                                    FROM rptContratacion_DG_SDG_DN_SDNA rpt WITH (NOLOCK)
+                                    LEFT JOIN ObjetivosSQL obj WITH (NOLOCK)
                                         ON obj.Año = rpt.Año
                                        AND obj.CodSubDirGeneral = rpt.CodSubDirGeneral
                                        AND obj.Mercado = rpt.Pais
                                     LEFT JOIN vwObjetivosMercadoSQL vw_m
                                         ON vw_m.Año = rpt.Año
                                        AND vw_m.Mercado = rpt.Pais
-                                    LEFT JOIN SubDirGeneral sg
+                                    LEFT JOIN SubDirGeneral sg WITH (NOLOCK)
                                         ON rpt.CodSubDirGeneral = sg.CodSubDirGeneral
                                     GROUP BY
                                         rpt.Año,
@@ -399,26 +405,26 @@ public class InformeRepository
                                         CASE WHEN SUM(t.ImpAnterior) = 0 THEN '*' ELSE '' END AS SinContratacionAñoAnterior,
                                         MAX(t.Orden) AS OrdenAñoAnterior
                                     FROM (
-               
-                                            SELECT 
-                                                Pais, 
-                                                dbo.fgRedondear(ISNULL(ImporteContratadoAcumulado, 0), 2) AS ImpActual, 
-                                                0 AS ImpAnterior, 
-                                                Ajuste, 
+
+                                            SELECT
+                                                Pais,
+                                                dbo.fgRedondear(ISNULL(ImporteContratadoAcumulado, 0), 2) AS ImpActual,
+                                                0 AS ImpAnterior,
+                                                Ajuste,
                                                 0 AS Orden
-                                            FROM rptContratacion_Internacional
+                                            FROM rptContratacion_Internacional WITH (NOLOCK)
                                             WHERE Año = @Anio
 
                                         UNION ALL
-               
-                                            SELECT 
-                                                ISNULL(p.NMPRO, 'OTROS') AS Pais, 
-                                                0 AS ImpActual, 
-                                                ISNULL(h.Importe, 0) AS ImpAnterior, 
-                                                0 AS Ajuste, 
+
+                                            SELECT
+                                                ISNULL(p.NMPRO, 'OTROS') AS Pais,
+                                                0 AS ImpActual,
+                                                ISNULL(h.Importe, 0) AS ImpAnterior,
+                                                0 AS Ajuste,
                                                 ISNULL(h.Orden, 0) AS Orden
-                                            FROM HistoricoContratacionSQL h
-                                            LEFT JOIN ProvinciasInternacional p ON h.CodProv = p.CDPRO
+                                            FROM HistoricoContratacionSQL h WITH (NOLOCK)
+                                            LEFT JOIN ProvinciasInternacional p WITH (NOLOCK) ON h.CodProv = p.CDPRO
                                             WHERE h.Año = @Anio - 1
                                     ) AS t
                                     GROUP BY t.Pais
@@ -471,8 +477,8 @@ public class InformeRepository
 		                                    p.Pais,
 		                                    a.Agrupacion,
 		                                    a.Orden
-	                                    FROM ActividadesSQL a
-	                                    CROSS JOIN Pais p)
+	                                    FROM ActividadesSQL a WITH (NOLOCK)
+	                                    CROSS JOIN Pais p WITH (NOLOCK))
                                     SELECT
                                         a.Pais,
                                         a.Agrupacion                                        AS Actividad,
@@ -483,7 +489,7 @@ public class InformeRepository
                                         a.Orden
                                     FROM
                                         vwActividades a
-                                        LEFT JOIN rptContratacion_Actividad c
+                                        LEFT JOIN rptContratacion_Actividad c WITH (NOLOCK)
                                             ON  a.Pais      = c.Pais
                                             AND a.Agrupacion = c.Actividad
                                     GROUP BY
@@ -515,5 +521,220 @@ public class InformeRepository
             transaction.Rollback();
             throw;
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME PRINCIPAL: Principales Contrataciones del Año
+    // └─ Método: ObtenerContratacionesAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos para el informe de Principales Contrataciones del Año.
+    /// Datos acumulados desde Enero hasta el mes seleccionado.
+    /// </summary>
+    public async Task<List<ContratacionesPoco>> ObtenerContratacionesAsync(int anio, int mes, decimal importe, string pais)
+    {
+        const string sqlSelect = @"SELECT
+                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
+                                    FROM
+                                        rptPrincipalesObras rpt WITH (NOLOCK)
+                                    WHERE rpt.Año = @Anio
+                                      AND rpt.Mes = @Mes
+                                      AND rpt.Ocultar = 0
+                                      AND rpt.Pais = @Pais
+                                    GROUP BY
+                                        rpt.NombreCliente_OK,
+                                        rpt.DescripcionOferta_OK
+                                    HAVING
+                                        SUM(rpt.ImporteContratado_OK) >= @Importe
+                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesPoco>(sqlSelect, new { 
+            Anio = anio,
+            Mes = mes,
+            Importe = importe,
+            Pais = pais
+        }, commandTimeout: 60)).ToList();
+    }
+
+    /// <summary>
+    /// Ejecuta el procedimiento almacenado spContratacion_Obras para actualizar rptPrincipalesObras.
+    /// </summary>
+    public async Task EjecutarSPObrasAsync(int anio, int mes)
+    {
+        const string sqlExec = @"EXEC spContratacion_Obras @Anio, @Mes";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, new {
+            Anio = anio,
+            Mes = mes
+        }, commandTimeout: 120);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Contrataciones Año Nacional Anterior (Meses Anteriores)
+    // └─ Método: ObtenerContratacionesAnnoNacionalAnteriorAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos del subinforme Contrataciones Año Nacional Anterior (solo meses anteriores al seleccionado).
+    /// Umbral: 1.500€
+    /// </summary>
+    public async Task<List<ContratacionesAnnoNacionalAnteriorPoco>> ObtenerContratacionesAnnoNacionalAnteriorAsync(int anio, int mes, decimal importe, string pais)
+    {
+        const string sqlSelect = @"SELECT
+                                        m.Nombre_Mes AS Meses,
+                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                        rpt.NombreDirNegocio_OK,
+                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
+                                        CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
+                                    FROM
+                                        rptPrincipalesObras rpt WITH (NOLOCK)
+                                    INNER JOIN
+                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                    LEFT JOIN
+                                        OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
+                                    WHERE
+                                        rpt.Año = @Anio
+                                        AND rpt.Mes < @Mes
+                                        AND rpt.Ocultar = 0
+                                        AND rpt.Pais = @Pais
+                                    GROUP BY
+                                        m.Nombre_Mes,
+                                        rpt.NombreCliente_OK,
+                                        rpt.NombreDirNegocio_OK,
+                                        rpt.DescripcionOferta_OK,
+                                        oai.JVAYNB
+                                    HAVING
+                                        SUM(rpt.ImporteContratado_OK) >= @Importe
+                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesAnnoNacionalAnteriorPoco>(
+            sqlSelect,
+            new {
+                Anio = anio,
+                Mes = mes,
+                Importe = importe,
+                Pais = pais
+            },
+            commandTimeout: 60
+        )).ToList();
+    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Contrataciones Año Internacional Mes (Subinforme Internacional)
+    // └─ Método: ObtenerContratacionesAnnoInternacionalMesAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos del subinforme Contrataciones Año Internacional Mes (solo el mes seleccionado).
+    /// </summary>
+    public async Task<List<ContratacionesAnnoInternacionalMesPoco>> ObtenerContratacionesAnnoInternacionalMesAsync(int anio, int mes, decimal importe, string pais)
+    {
+        const string sqlSelect = @"SELECT
+                                        m.Nombre_Mes AS Meses,
+                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                        rpt.NombreDirNegocio_OK,
+                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
+                                        CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
+                                    FROM
+                                        rptPrincipalesObras rpt WITH (NOLOCK)
+                                    INNER JOIN
+                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                    LEFT JOIN
+                                        OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
+                                    WHERE
+                                        rpt.Año = @Anio
+                                        AND rpt.Mes = @Mes
+                                        AND rpt.Ocultar = 0
+                                        AND rpt.Pais = @Pais
+                                    GROUP BY
+                                        m.Nombre_Mes,
+                                        rpt.NombreCliente_OK,
+                                        rpt.DescripcionOferta_OK,
+                                        rpt.NombreDirNegocio_OK,
+                                        oai.JVAYNB
+                                    HAVING
+                                        SUM(rpt.ImporteContratado_OK) >= @Importe
+                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesAnnoInternacionalMesPoco>(
+            sqlSelect,
+            new {
+                Anio = anio,
+                Mes = mes,
+                Importe = importe,
+                Pais = pais
+            },
+            commandTimeout: 60
+        )).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Contrataciones Año Internacional Anterior
+    // └─ Método: ObtenerContratacionesAnnoInternacionalAnteriorAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// SubInforme 3: Obtiene el acumulado de contrataciones internacionales de meses anteriores.
+    /// </summary>
+    public async Task<List<ContratacionesAnnoInternacionalAnteriorPoco>> ObtenerContratacionesAnnoInternacionalAnteriorAsync(int anio, int mes, decimal importe, string pais)
+    {
+        const string sqlSelect = @"
+            SELECT
+                m.Nombre_Mes AS Meses,
+                REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
+                CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI,
+                rpt.NombreDirNegocio_OK
+            FROM
+                rptPrincipalesObras rpt WITH (NOLOCK)
+            INNER JOIN
+                Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+            LEFT JOIN
+                OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
+            WHERE
+                rpt.Año = @Anio
+                AND rpt.Mes < @Mes
+                AND rpt.Ocultar = 0
+                AND rpt.Pais = @Pais
+            GROUP BY
+                m.Nombre_Mes,
+                rpt.NombreCliente_OK,
+                rpt.DescripcionOferta_OK,
+                oai.JVAYNB,
+                rpt.NombreDirNegocio_OK
+            HAVING
+                SUM(rpt.ImporteContratado_OK) >= @Importe
+                OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesAnnoInternacionalAnteriorPoco>(
+            sqlSelect,
+            new {
+                Anio = anio,
+                Mes = mes,
+                Importe = importe,
+                Pais = pais
+            },
+            commandTimeout: 60
+        )).ToList();
     }
 }

@@ -411,6 +411,21 @@ body.modal-open {
     margin-right: 10px;
 }
 
+/* --- Checkbox para "Generar Contratación" --- */
+.rpt-checkbox-label {
+    font-size: 0.95rem !important; /* Mismo tamaño que los botones de informe */
+    font-weight: 500 !important;
+    color: #495057 !important;
+    cursor: pointer;
+}
+
+.form-check-input {
+    width: 1.2em !important;
+    height: 1.2em !important;
+    margin-top: 0 !important; /* Centrado vertical con el label */
+    cursor: pointer;
+}
+
 /* -------------------------------------------------------------------
    Modal de Informes: Header con 3 columnas simétricas
    Garantiza que los controles de paginación estén siempre centrados

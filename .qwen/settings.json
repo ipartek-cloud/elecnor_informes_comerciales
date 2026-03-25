@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet *)"
+      "Bash(dotnet *)",
+      "Bash(powershell *)",
+      "Bash(mkdir *)",
+      "Bash(move *)"
     ]
   },
   "$version": 3
