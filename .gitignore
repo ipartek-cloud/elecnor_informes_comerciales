@@ -48,3 +48,4 @@ packages/
 .gemini/
 .memory/
 skills-lock.json
+/nul
