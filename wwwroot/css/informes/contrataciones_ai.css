@@ -1,0 +1,114 @@
+/* 
+   Estilos específicos para el informe ContratacionesAI (Asociadas a Inversión)
+   Hereda de informes_base.css y mantiene la paridad visual con Contrataciones
+*/
+
+/* [ACCIÓN 2] Anchos de columna corregidos (suman 100%) */
+.rpt-col-ai {
+    width: 5%;
+    text-align: center;
+}
+
+.rpt-col-desc {
+    width: 45%;
+    text-align: left;
+}
+
+.rpt-col-cliente {
+    width: 38%;
+    text-align: left;
+}
+
+.rpt-col-importe {
+    width: 12%;
+    text-align: right;
+}
+
+/* [ACCIÓN 5] Tabla del informe AI */
+.rpt-table-contrataciones-ai {
+    width: 98% !important;
+    margin: 0 auto !important;
+    border-collapse: collapse;
+}
+
+/* Paridad de detalle con informe de Contrataciones (0.65rem ≈ 7.8pt) */
+.rpt-table-contrataciones-ai td {
+    padding: 1px 4px !important;
+    font-size: 0.65rem; 
+    line-height: 1.1;
+    vertical-align: middle;
+}
+
+/* Colores corporativos del Consejo de Administración */
+.text-orange-council {
+    color: #E38631 !important;
+}
+
+/* Cabecera de Sección (Asociado a Inversión > 0,3M) 
+   Refinado según Imagen 1: Fondo blanco, texto azul negrita, línea inferior
+*/
+.rpt-section-ai-header {
+    background-color: transparent !important; /* Eliminado fondo azul claro (Imagen 2) */
+    color: #00468B;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 2px 0;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    border-bottom: 1.5px solid #00468B; /* Línea de separación azul */
+}
+
+/* Cabecera de mes (Mantener paridad con Contrataciones) */
+.rpt-month-header {
+    background-color: #D6EAF8;
+    color: #00468B;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    margin-bottom: 0.5rem;
+}
+
+/* [ACCIÓN 4] REGLAS DE IMPRESIÓN - Paridad visual PDF (7pt exactos) */
+@media print {
+    .rpt-table-contrataciones-ai td {
+        font-size: 7pt !important;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+    }
+
+    .rpt-section-ai-header {
+        border-bottom: 1.5pt solid #00468B !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .rpt-month-header {
+        background-color: #D6EAF8 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* SUBINFORME: Contrataciones AI Meses Anteriores (Gris / Histórico)           */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.rpt-subreport-ai-anterior {
+    margin-top: 1.5rem;
+}
+
+/* Cabecera del subinforme en gris según diseño de Access */
+.rpt-subreport-ai-anterior .rpt-section-ai-header {
+    color: #8C8C8C !important;
+    border-bottom: 1px solid #8C8C8C !important;
+}
+
+/* Detalle del subinforme en gris suave (#8C8C8C) */
+.rpt-subreport-ai-anterior td {
+    color: #8C8C8C !important;
+}
+
+/* Asegurar que el badge AI también sea gris en el subinforme */
+.rpt-subreport-ai-anterior .rpt-col-ai {
+    color: #8C8C8C !important;
+}

@@ -6,6 +6,7 @@ namespace Elecnor_Informes_Comerciales.DTOs.Informes.Response;
 public class MetaInformeDto
 {
     public string Titulo { get; set; } = string.Empty;
+    public string? SubTitulo { get; set; }
     public string? Descripcion { get; set; }
     public object Filtros { get; set; } = new { };
     public DateTime FechaGeneracion { get; set; }

@@ -8,6 +8,8 @@ using elecnor_informes_comerciales.Models.Informes.Mercados;
 using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
 using Elecnor_Informes_Comerciales.Models.Informes.Contrataciones;
+using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesAI;
+
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 
@@ -737,4 +739,114 @@ public class InformeRepository
             commandTimeout: 60
         )).ToList();
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SECCIÓN: Contrataciones AI (Asociadas a Inversión)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos del informe ContratacionesAI (mes seleccionado).
+    /// </summary>
+    public async Task<List<ContratacionesAIPoco>> ObtenerContratacionesAIAsync(int anio, int mes, decimal importe)
+    {
+        const string sqlSelect = @"SELECT
+                                        rpt.Año,
+                                        CASE WHEN rpt.Pais = 'InterNacional' THEN 'I' ELSE '' END AS Paises,
+                                        m.Nombre_Mes AS Meses,
+                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
+                                    FROM
+                                        rptPrincipalesObrasAI rpt WITH (NOLOCK)
+                                    INNER JOIN
+                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                    WHERE
+                                        rpt.Año = @Anio
+                                        AND rpt.Mes = @Mes
+                                        AND rpt.Ocultar = 0
+                                    GROUP BY
+                                        rpt.Año,
+                                        rpt.Pais,
+                                        m.Nombre_Mes,
+                                        rpt.DescripcionOferta_OK,
+                                        rpt.NombreCliente_OK
+                                    HAVING
+                                        SUM(rpt.ImporteContratado_OK) > @Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesAIPoco>(
+            sqlSelect,
+            new { Anio = anio, Mes = mes, Importe = importe },
+            commandTimeout: 60
+        )).ToList();
+    }
+
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Contrataciones AI (Generación de Datos)
+    // └─ Método: EjecutarSPObrasAIAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+    /// <summary>
+    /// Ejecuta el PA para generar los datos de Contrataciones AI.
+    /// </summary>
+    public async Task EjecutarSPObrasAIAsync(int anio, int mes)
+    {
+        const string sqlExec = @"EXEC spContratacion_Obras_Asociadas_Inversion @Anio, @Mes";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, new {
+            Anio = anio,
+            Mes = mes
+        }, commandTimeout: 120);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Contrataciones Año AI Anterior
+    // └─ Método: ObtenerContratacionesAnnoAIAnteriorAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+    /// <summary>
+    /// Obtiene los datos para el subinforme de Contrataciones AI (Meses Anteriores).
+    /// </summary>
+    public async Task<List<ContratacionesAIPoco>> ObtenerContratacionesAnnoAIAnteriorAsync(int anio, int mes, decimal importe)
+    {
+        const string sqlSelect = @"SELECT
+                                        rpt.Año,
+                                        CASE
+                                            WHEN rpt.Pais = 'InterNacional' THEN 'I'
+                                            ELSE ''
+                                        END AS Paises,
+                                        'Anterior' AS Meses, 
+                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
+                                    FROM
+                                        rptPrincipalesObrasAI rpt WITH (NOLOCK)
+                                    INNER JOIN
+                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                    WHERE
+                                        rpt.Año = @Anio
+                                        AND rpt.Mes < @Mes
+                                        AND rpt.Ocultar = 0
+                                    GROUP BY
+                                        rpt.Año,
+                                        rpt.Pais,
+                                        rpt.DescripcionOferta_OK,
+                                        rpt.NombreCliente_OK
+                                    HAVING
+                                        SUM(rpt.ImporteContratado_OK) > @Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesAIPoco>(
+            sqlSelect,
+            new { Anio = anio, Mes = mes, Importe = importe },
+            commandTimeout: 60
+        )).ToList();
+    }
 }
+

@@ -63,28 +63,38 @@
                                    name="inputPaginaCartera" value="1" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="form-check d-flex align-items-center ms-auto">
+                        <div class="d-flex align-items-center gap-2 ms-auto">
+                            <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
+                                Generar Contratación
+                            </label>
                             <input class="form-check-input mt-0" type="checkbox" 
                                    id="chkGenerarRPTPrincipalesObras" 
                                    name="chkGenerarRPTPrincipalesObras">
-                            <label class="form-check-label ms-1 mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
-                                Generar Contratación
-                            </label>
                         </div>
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (MERCADOS) -->
-                    <div class="input-group" style="width: 280px;">
-                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                onclick="cargarInforme(this, 'mercados')"
-                                data-input-pag="inputPaginaMercados"
-                                aria-label="Ver informe Mercados">
-                            Mercados
-                        </button>
-                        <input type="number" class="form-control rpt-input-page" 
-                               id="inputPaginaMercados" 
-                               name="inputPaginaMercados" value="2" min="1" 
-                               aria-label="Página" title="Página inicial">
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group" style="width: 280px;">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'mercados')"
+                                    data-input-pag="inputPaginaMercados"
+                                    aria-label="Ver informe Mercados">
+                                Mercados
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" 
+                                   id="inputPaginaMercados" 
+                                   name="inputPaginaMercados" value="2" min="1" 
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <div class="d-flex align-items-center gap-2 ms-auto">
+                            <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObrasAI">
+                                Generar Contratación(AI)
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox" 
+                                   id="chkGenerarRPTPrincipalesObrasAI" 
+                                   name="chkGenerarRPTPrincipalesObrasAI">
+                        </div>
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (PAISES) -->
@@ -126,6 +136,20 @@
                         <input type="number" class="form-control rpt-input-page" 
                                id="inputPaginaContrataciones" 
                                name="inputPaginaContrataciones" value="5" min="1" 
+                               aria-label="Página" title="Página inicial">
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (CONTRATACIONES AI) -->
+                    <div class="input-group mt-2" style="width: 280px;">
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                onclick="cargarInforme(this, 'contrataciones_ai')"
+                                data-input-pag="inputPaginaContratacionesAI"
+                                aria-label="Ver informe Contrataciones AI">
+                            Contrataciones AI
+                        </button>
+                        <input type="number" class="form-control rpt-input-page" 
+                               id="inputPaginaContratacionesAI" 
+                               name="inputPaginaContratacionesAI" value="6" min="1" 
                                aria-label="Página" title="Página inicial">
                     </div>
 
@@ -243,6 +267,7 @@
     <link rel="stylesheet" href="~/css/informes/informes_base.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/mercados.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/contrataciones.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/contrataciones_ai.css" asp-append-version="true" />
 }
 
 @section Scripts {
