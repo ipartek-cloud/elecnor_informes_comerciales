@@ -848,5 +848,134 @@ public class InformeRepository
             commandTimeout: 60
         )).ToList();
     }
+
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Ranking de Contratación por Clientes
+    // └─ Métodos: ObtenerRankingContratacionClientesAsync(), EjecutarSPObrasRankingClientesAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    private class RankingClientesSpResult
+    {
+        public int Row { get; set; }
+        public string? Mercado { get; set; }
+        public string? Pais { get; set; }
+        public string? AI { get; set; }
+        public string? Cliente { get; set; }
+        public decimal? ImporteContratadoAcumulado { get; set; }
+        public decimal? ImporteContratadoAcumuladoAñoAnterior { get; set; }
+        public decimal? ImporteContratadoAcumulado_Ajuste { get; set; }
+    }
+
+    /// <summary>
+    /// Ejecuta el PA para generar los datos de Ranking de Clientes.
+    /// </summary>
+    public async Task EjecutarSPObrasRankingClientesAsync(string mercado, int anio, int mes)
+    {
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+        using var transaction = await conn.BeginTransactionAsync();
+
+        try
+        {
+            // 1. Limpiar tabla de trabajo
+            await conn.ExecuteAsync("DELETE FROM rptContratacion_Clientes", transaction: transaction);
+
+            // 2. Ejecutar SP (3 parámetros: Mercado, Año, Mes) y obtener resultados en memoria
+            // El SP devuelve ImporteContratadoAcumuladoAñoAnterior en Real Euros.
+            var resultadosSp = (await conn.QueryAsync<RankingClientesSpResult>(
+                "EXEC spContratacion_Clientes @Mercado, @Anio, @Mes",
+                new { Mercado = mercado, Anio = anio, Mes = mes },
+                transaction: transaction,
+                commandTimeout: 300
+            )).ToList();
+
+            // 3. Volcar a tabla aplicando el patrón Access: Redondeo -> /1000m (k€)
+            const string sqlInsert = @"INSERT INTO [dbo].[rptContratacion_Clientes] 
+                                        (idContratacionActividad, Año, Row, Mercado, Pais, AI, Cliente, ImporteContratadoAcumulado, ImporteContratadoAcumulado_AñoAnterior, ImporteContratadoAcumulado_Ajuste) 
+                                        VALUES (@Id, @Anio, @Row, @Mercado, @Pais, @AI, @Cliente, @Importe, @Anterior, @Ajuste)";
+
+            int currentId = 1;
+            foreach (var fila in resultadosSp)
+            {
+                await conn.ExecuteAsync(sqlInsert, new {
+                    Id = currentId++,
+                    Anio = anio,
+                    Row = fila.Row,
+                    Mercado = mercado,
+                    Pais = fila.Pais,
+                    AI = fila.AI,
+                    Cliente = fila.Cliente?.Trim(),
+                    // El SP ya devuelve el año actual escalado, no dividir. (según imagen 783)
+                    Importe = fila.ImporteContratadoAcumulado ?? 0,
+                    // El histórico viene en Euros Reales en el SP, escalar a k€ (según patrón Access)
+                    Anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0, 0) / 1000m,
+                    Ajuste = Math.Round(fila.ImporteContratadoAcumulado_Ajuste ?? 0, 0) / 1000m
+                }, transaction: transaction);
+            }
+
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Obtiene los 30 primeros clientes del ranking filtrando por el importe mínimo.
+    /// </summary>
+    public async Task<List<Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes.RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(int anio, int mes, decimal importe)
+    {
+        const string sqlSelect = @"SELECT TOP 30
+                                        rpt.[Año],
+                                        rpt.[Row],
+                                        rpt.[Mercado],
+                                        rpt.[Pais],
+                                        rpt.[AI],
+                                        rpt.[Cliente],
+                                        rpt.[ImporteContratadoAcumulado],
+                                        rpt.[ImporteContratadoAcumulado_AñoAnterior],
+                                        MAX(CASE 
+                                            WHEN ant.[NomAgrupado] IS NOT NULL THEN 1 
+                                            ELSE 0 
+                                        END) AS [VerAñoAnterior]
+                                    FROM [dbo].[rptContratacion_Clientes] rpt WITH (NOLOCK)
+                                    INNER JOIN [dbo].[ClientesSQL] csql WITH (NOLOCK)
+                                        ON rpt.[Cliente] = csql.[NomAgrupado]
+                                    LEFT JOIN [dbo].[ClientesSQL_MostrarContratacion_AñoAnterior] ant WITH (NOLOCK)
+                                        ON rpt.[Cliente] = ant.[NomAgrupado]
+                                        AND rpt.[Año] = ant.[Año]
+                                    WHERE csql.[Visible] = 1
+                                      AND rpt.[Cliente] <> ''
+                                      AND rpt.[ImporteContratadoAcumulado] > @Importe
+                                    GROUP BY
+                                        rpt.[Año], rpt.[Row], rpt.[Mercado], rpt.[Pais], rpt.[AI], rpt.[Cliente],
+                                        rpt.[ImporteContratadoAcumulado], rpt.[ImporteContratadoAcumulado_AñoAnterior]
+                                    ORDER BY rpt.[Row] ASC";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes.RankingContratacionClientesPoco>(
+            sqlSelect,
+            new { Anio = anio, Mes = mes, Importe = importe },
+            commandTimeout: 60
+        )).ToList();
+    }
+
+    /// <summary>
+    /// Obtiene la suma total de todo el mercado para el informe de Ranking de Clientes.
+    /// </summary>
+    public async Task<decimal> ObtenerSumaTotalMercadoClientesAsync()
+    {
+        const string sqlSum = "SELECT ISNULL(Sum(ImporteContratadoAcumulado), 0) FROM rptContratacion_Clientes";
+        
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+        
+        return await conn.ExecuteScalarAsync<decimal>(sqlSum, commandTimeout: 30);
+    }
 }
 

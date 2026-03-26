@@ -1,0 +1,138 @@
+/* 
+   Estilos específicos para el informe: Ranking de Contratación por Clientes
+   Basado en el diseño "industrial compacto" para paridad con Access.
+*/
+
+.rpt-ranking-subtitle {
+    color: #00468B;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0 auto 0.5rem auto;
+    width: 80%;
+    display: block;
+    border: none;
+    padding: 0;
+}
+
+.rpt-ranking-table {
+    width: 80%;
+    margin: 0 auto !important;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    font-family: Arial, sans-serif !important;
+}
+
+.rpt-ranking-table thead th {
+    color: #00468B;
+    padding: 4px 5px;
+    font-weight: bold;
+    border-bottom: none; /* Eliminamos la línea continua */
+}
+
+/* Bordes de cabecera segmentados (aplicados a un span/div interno para margen) */
+.rpt-th-border-blue {
+    border-bottom: 2px solid #00468B;
+    display: inline-block;
+}
+
+.rpt-th-border-gray {
+    border-bottom: 2px solid #888;
+    display: inline-block;
+}
+
+/* Cabecera Agrupada */
+.rpt-header-grouping th {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+}
+
+.rpt-header-label {
+    font-size: 0.85rem;
+    color: #00468B;
+    padding-bottom: 2px !important;
+}
+
+/* Título Cliente Azul */
+.rpt-header-blue {
+    background-color: #00468B;
+    color: #ffffff !important;
+    padding: 4px 10px !important;
+    font-weight: bold;
+    text-align: left;
+}
+
+.rpt-ranking-table tbody td {
+    padding-top: 5.5px !important; 
+    padding-bottom: 5.5px !important;
+    border-bottom: none;
+    vertical-align: middle;
+}
+
+/* Anchos de columna específicos */
+.rpt-col-row     { width: 26px; text-align: right; padding-right: 12px !important; color: #333; }
+.rpt-col-cliente { width: auto; font-weight: normal; padding-left: 8px !important; } /* Punto de compacidad máxima: 8px */
+.rpt-col-num     { width: 100px; text-align: right; font-weight: normal; } 
+.rpt-col-pct     { width: 90px; text-align: right; font-weight: normal; }
+.rpt-ranking-table tbody td.rpt-col-ant, 
+.rpt-col-ant { 
+    width: 100px; 
+    text-align: right; 
+    color: #999 !important; 
+    font-weight: normal; 
+}
+.rpt-ranking-table .rpt-col-ai { width: 15px; text-align: center; color: #999 !important; }
+
+/* Filas de totales */
+.rpt-ranking-total-row td {
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+    border-bottom: none !important;
+}
+
+.rpt-ranking-grand-total-row td {
+    padding-top: 15px !important;
+    border-bottom: none !important;
+    font-size: 1rem;
+}
+
+.rpt-total-border-blue {
+    border-top: 2px solid #00468B !important;
+}
+
+.rpt-asterisk-legend {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: normal;
+    font-style: italic;
+    white-space: nowrap !important;
+}
+
+/* Ajustes de Impresión */
+@media print {
+    .rpt-ranking-table {
+        font-size: 8.5pt !important;
+    }
+    
+    .rpt-ranking-subtitle {
+        font-size: 10pt !important;
+        margin-top: 5mm;
+    }
+
+    .rpt-ranking-table thead th {
+        border-bottom-width: 0.5pt !important;
+        padding: 2pt 5pt !important;
+    }
+
+    .rpt-ranking-table tbody td {
+        padding-top: 4pt !important;
+        padding-bottom: 4pt !important;
+        border-bottom: none !important;
+    }
+
+    .rpt-col-ai  { width: 14pt !important; color: #999 !important; }
+    .rpt-col-row { width: 28pt !important; padding-right: 8pt !important; text-align: right; }
+    .rpt-col-cliente { padding-left: 6pt !important; }
+    .rpt-col-num { width: 75pt !important; text-align: right; }
+    .rpt-col-pct { width: 65pt !important; text-align: right; }
+    .rpt-col-ant { width: 75pt !important; color: #999 !important; text-align: right; }
+}

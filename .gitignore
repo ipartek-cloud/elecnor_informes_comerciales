@@ -30,7 +30,7 @@ ipch/
 [Dd]ebug*/
 [Rr]elease*/
 Ankh.NoLoad
-/nul
+
 
 #Project files
 [Bb]uild/
@@ -40,6 +40,8 @@ Ankh.NoLoad
 *.md
 Documentacion/
 Access/
+tmp/
+sql/
 
 # NuGet packages
 packages/
