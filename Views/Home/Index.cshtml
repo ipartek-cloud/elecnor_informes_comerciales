@@ -51,7 +51,7 @@
 
                     <!-- Grupo Unificado: Botón + Página (CARTERA) + Checkbox -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group" style="width: 360px;">
+                        <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contratacion_mercados_ai')"
                                     data-input-pag="inputPaginaCartera"
@@ -75,7 +75,7 @@
 
                     <!-- Grupo Unificado: Botón + Página (MERCADOS) -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group" style="width: 360px;">
+                        <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'mercados')"
                                     data-input-pag="inputPaginaMercados"
@@ -98,7 +98,7 @@
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (PAISES) -->
-                    <div class="input-group" style="width: 360px;">
+                    <div class="input-group rpt-input-group-index">
                         <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'paises')"
                                 data-input-pag="inputPaginaPaises"
@@ -112,7 +112,7 @@
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (ACTIVIDADES) -->
-                    <div class="input-group" style="width: 360px;">
+                    <div class="input-group rpt-input-group-index">
                         <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'actividades')"
                                 data-input-pag="inputPaginaActividades"
@@ -126,7 +126,7 @@
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (CONTRATACIONES) -->
-                    <div class="input-group" style="width: 360px;">
+                    <div class="input-group rpt-input-group-index">
                         <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'contrataciones')"
                                 data-input-pag="inputPaginaContrataciones"
@@ -140,7 +140,7 @@
                     </div>
 
                     <!-- Grupo Unificado: Botón + Página (CONTRATACIONES AI) -->
-                    <div class="input-group mt-2" style="width: 360px;">
+                    <div class="input-group mt-2 rpt-input-group-index">
                         <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'contrataciones_ai')"
                                 data-input-pag="inputPaginaContratacionesAI"
@@ -153,17 +153,33 @@
                                aria-label="Página" title="Página inicial">
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (RANKING CONTRATACION CLIENTES) -->
-                    <div class="input-group mt-2" style="width: 360px;">
+                    <!-- Grupo Unificado: Botón + Página (RANKING CONTRATACION CLIENTES NACIONAL) -->
+                    <div class="input-group mt-2 rpt-input-group-index">
                         <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
-                                data-input-pag="inputPaginaRankingClientes"
-                                aria-label="Ver informe Ranking Contratación Clientes">
-                            Ranking Contratación Clientes
+                                data-input-pag="inputPaginaRankingClientesNacionales"
+                                data-mercado="Nacional"
+                                aria-label="Ver informe Ranking Contratación Clientes Nacionales">
+                            Contrataciones Significativas Nacionales
                         </button>
                         <input type="number" class="form-control rpt-input-page" 
-                               id="inputPaginaRankingClientes" 
+                               id="inputPaginaRankingClientesNacionales" 
                                name="inputPaginaRankingClientes" value="7" min="1" 
+                               aria-label="Página" title="Página inicial">
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (RANKING CONTRATACION CLIENTES INTERNACIONAL) -->
+                    <div class="input-group mt-2 rpt-input-group-index">
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                data-input-pag="inputPaginaRankingClientesInternacionales"
+                                data-mercado="Internacional"
+                                aria-label="Ver informe Ranking Contratación Clientes Internacionales">
+                            Contrataciones Significativas Internacionales
+                        </button>
+                        <input type="number" class="form-control rpt-input-page"
+                               id="inputPaginaRankingClientesInternacionales"
+                               name="inputPaginaRankingClientes" value="8" min="1"
                                aria-label="Página" title="Página inicial">
                     </div>
 
@@ -178,7 +194,8 @@
             </div>
             <div class="card-body">
                 <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">
-                    <button class="btn rpt-btn-light" onclick="cargarInforme(this, 'gerencias_totales_cruces')"
+                    <button class="btn rpt-btn-light" 
+                            onclick="Swal.fire({ title: 'Próximamente', text: 'El informe de Gerencias Totales Cruces está actualmente en desarrollo.', icon: 'info', confirmButtonColor: '#00468B' })"
                             aria-label="Ver informe de Gerencias Totales Cruces">
                         Gerencias Totales Cruces
                     </button>

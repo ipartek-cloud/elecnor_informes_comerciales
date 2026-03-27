@@ -28,6 +28,9 @@ window.cargarInforme = async function (btn, nombreInforme) {
     const idInputPag = btn?.dataset?.inputPag;
     const nroPagina  = idInputPag ? document.getElementById(idInputPag)?.value : null;
 
+    // Capturar mercado si existe (para informes duales como Ranking Clientes)
+    const mercado = btn?.dataset?.mercado;
+
     try {
         GlobalUI.showLoading();
 
@@ -52,7 +55,7 @@ window.cargarInforme = async function (btn, nombreInforme) {
         const modulo = _registroModulos[nombreInforme];
 
         if (modulo && modulo.ejecutar) {
-            await modulo.ejecutar(anio, mes, nroPagina);
+            await modulo.ejecutar(anio, mes, nroPagina, mercado);
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');

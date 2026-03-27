@@ -11,9 +11,9 @@ const estado = crearEstadoInforme();
 /**
  * Función principal de ejecución del informe.
  */
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mercado) {
     try {
-        const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=Nacional&_=${Date.now()}`;
+        const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
 
         await inicializarInforme({
@@ -26,6 +26,7 @@ export async function ejecutar(anio, mes, nroPagina) {
 
     } catch (error) {
         console.error("Error al ejecutar informe Ranking de Clientes:", error);
+        GlobalUI.showAlert?.("Error al cargar los datos del informe", "danger");
     }
 }
 
@@ -78,38 +79,64 @@ function _renderCuerpoInforme() {
 
     const filtros = data?.meta?.filtros || {};
     const anioAnterior = (filtros.anio || 0) - 1;
+    const esInternacional = filtros.mercado === 'Internacional';
 
-    const filasHtml = data.datos.map(item => `
-        <tr class="${RPT_CLASSES.DETAIL_ROW}">
-            <td class="rpt-col-ai text-center small">${item.ai || ''}</td>
-            <td class="rpt-col-row">${item.row}</td>
-            <td class="rpt-col-cliente">${escapeHtml(item.cliente)}</td>
-            <td class="rpt-col-num font-monospace">${formatCurrency((item.importe || 0) / 1000, 0)}</td>
-            <td class="rpt-col-pct font-monospace text-primary">${formatPercentage(item.porcentajeSobreTotal, 1)}</td>
-            <td class="rpt-col-ant font-monospace">
-                ${item.importeAnterior ? formatCurrency(item.importeAnterior, 0) : ''}
-            </td>
-        </tr>
-    `).join('');
+    const filasHtml = data.datos.map(item => {
+        // Fila principal del cliente
+        let html = `
+            <tr class="${RPT_CLASSES.DETAIL_ROW}">
+                ${!esInternacional ? `<td class="rpt-col-ai text-center small">${item.ai || ''}</td>` : ''}
+                <td class="rpt-col-row">${item.row}</td>
+                <td class="rpt-col-cliente">${escapeHtml(item.cliente)}</td>
+                <td class="rpt-col-num font-monospace">${formatCurrency((item.importe || 0) / 1000, 0)}</td>
+                <td class="rpt-col-pct font-monospace text-primary">${formatPercentage(item.porcentajeSobreTotal, 1)}</td>
+                ${!esInternacional ? `
+                    <td class="rpt-col-ant font-monospace">
+                        ${item.importeAnterior ? formatCurrency(item.importeAnterior / 1000, 0) : ''}
+                    </td>
+                ` : ''}
+            </tr>
+        `;
+
+        // Filas de desglose (si existen)
+        if (item.desglose && item.desglose.length > 0) {
+            item.desglose.forEach(sub => {
+                html += `
+                    <tr class="rpt-desglose-row">
+                        ${!esInternacional ? `<td class="rpt-col-ai text-center small opacity-50">${sub.ai || ''}</td>` : ''}
+                        <td class="rpt-col-row"></td>
+                        <td class="rpt-col-cliente ps-4 small">${escapeHtml(sub.clienteDesglose)}</td>
+                        <td class="rpt-col-num font-monospace small">${formatCurrency(sub.importeContratadoAcumulado / 1000, 0)}</td>
+                        <td class="rpt-col-pct font-monospace small">${formatPercentage(sub.porcentajeSobreTotal, 1)}</td>
+                        ${!esInternacional ? `
+                            <td class="rpt-col-ant font-monospace small">${sub.importeContratadoAnterior ? formatCurrency(sub.importeContratadoAnterior / 1000, 0) : ''}</td>
+                        ` : ''}
+                    </tr>
+                `;
+            });
+        }
+
+        return html;
+    }).join('');
 
     return `
         <div class="rpt-content-block">
-            <div class="rpt-ranking-subtitle">Mercado Nacional - 30 primeros</div>
+            <div class="rpt-ranking-subtitle">Mercado ${filtros.mercado || 'Nacional'} - 30 primeros</div>
             
             <table class="rpt-ranking-table">
                 <thead>
                     <tr class="rpt-header-grouping">
-                        <th colspan="3"></th>
+                        <th colspan="${esInternacional ? 2 : 3}"></th>
                         <th colspan="2" class="text-center rpt-header-label">Acumulado</th>
-                        <th></th>
+                        ${!esInternacional ? '<th></th>' : ''}
                     </tr>
                     <tr>
-                        <th class="rpt-col-ai"></th>
+                        ${!esInternacional ? '<th class="rpt-col-ai"></th>' : ''}
                         <th class="rpt-col-row"></th>
                         <th class="rpt-header-blue">Cliente</th>
                         <th class="rpt-col-num"><div class="rpt-th-border-blue w-100">Contr</div></th>
-                        <th class="rpt-col-pct text-center"><div class="rpt-th-border-blue w-90">s/Nacional</div></th>
-                        <th class="rpt-col-ant"><div class="rpt-th-border-gray w-100">${anioAnterior || '----'} *</div></th>
+                        <th class="rpt-col-pct text-center"><div class="rpt-th-border-blue w-90">s/${filtros.mercado || 'Nacional'}</div></th>
+                        ${!esInternacional ? `<th class="rpt-col-ant"><div class="rpt-th-border-gray w-100">${anioAnterior || '----'} *</div></th>` : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -117,20 +144,20 @@ function _renderCuerpoInforme() {
                 </tbody>
                 <tfoot>
                     <tr class="rpt-ranking-total-row rpt-text-corporate fw-bold">
-                        <td colspan="3"></td>
+                        <td colspan="${esInternacional ? 2 : 3}"></td>
                         <td class="text-end font-monospace rpt-total-border-blue">${formatCurrency((data.sumaTop30 || 0) / 1000, 0)}</td>
                         <td class="text-end font-monospace rpt-total-border-blue">${data.porcentajeTop30 ? data.porcentajeTop30.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '0%'}</td>
-                        <td class="rpt-col-ant"></td>
+                        ${!esInternacional ? '<td class="rpt-col-ant"></td>' : ''}
                     </tr>
                     <tr class="rpt-ranking-grand-total-row">
-                        <td colspan="3" class="pb-2">
-                            <div class="d-flex justify-content-between align-items-center w-100">
-                                <span class="rpt-asterisk-legend ms-2">* Acumulado mismo mes año anterior</span>
-                                <span class="rpt-text-corporate fw-bold pe-4">Total Nacional</span>
+                        <td colspan="${esInternacional ? 2 : 3}" class="pb-2 px-0" style="vertical-align: bottom;">
+                            <div class="d-flex ${esInternacional ? 'justify-content-end' : 'justify-content-between'} align-items-baseline w-100">
+                                ${!esInternacional ? '<span class="rpt-asterisk-legend ms-2">* Acumulado mismo mes año anterior</span>' : ''}
+                                <span class="rpt-text-corporate fw-bold pe-3">Total ${filtros.mercado || 'Nacional'}</span>
                             </div>
                         </td>
-                        <td class="text-end font-monospace rpt-text-corporate fw-bold">${formatCurrency((data.totalMercado || 0) / 1000, 0)}</td>
-                        <td colspan="2" class="ps-3 rpt-text-corporate fw-bold">Miles de Euros</td>
+                        <td class="text-end font-monospace rpt-text-corporate fw-bold pb-2" style="vertical-align: bottom;">${formatCurrency((data.totalMercado || 0) / 1000, 0)}</td>
+                        <td colspan="${esInternacional ? 1 : 2}" class="ps-3 rpt-text-corporate fw-bold pb-2" style="vertical-align: bottom; white-space: nowrap !important;">Miles de Euros</td>
                     </tr>
                 </tfoot>
             </table>

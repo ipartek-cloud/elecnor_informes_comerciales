@@ -89,6 +89,21 @@
     border-bottom: none !important;
 }
 
+/* Filas de desglose (Sub-informe) */
+.rpt-desglose-row td {
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+    font-size: 0.85rem !important;
+    line-height: 1.2;
+    vertical-align: middle;
+    color: #999 !important; /* Mismo gris que rpt-col-ant */
+}
+
+.rpt-desglose-row .rpt-col-cliente {
+    padding-left: 32px !important; /* Indentación visual clara */
+    color: #999 !important;
+}
+
 .rpt-ranking-grand-total-row td {
     padding-top: 15px !important;
     border-bottom: none !important;
@@ -129,6 +144,16 @@
         border-bottom: none !important;
     }
 
+    .rpt-desglose-row td {
+        font-size: 7.5pt !important;
+        padding-top: 1pt !important;
+        padding-bottom: 1pt !important;
+    }
+    
+    .rpt-desglose-row .rpt-col-cliente {
+        padding-left: 20pt !important;
+    }
+
     .rpt-col-ai  { width: 14pt !important; color: #999 !important; }
     .rpt-col-row { width: 28pt !important; padding-right: 8pt !important; text-align: right; }
     .rpt-col-cliente { padding-left: 6pt !important; }
@@ -136,3 +161,4 @@
     .rpt-col-pct { width: 65pt !important; text-align: right; }
     .rpt-col-ant { width: 75pt !important; color: #999 !important; text-align: right; }
 }
+

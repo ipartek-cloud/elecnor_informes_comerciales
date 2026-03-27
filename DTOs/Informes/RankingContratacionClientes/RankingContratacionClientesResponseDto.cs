@@ -39,4 +39,7 @@ public class RankingContratacionClientesDetalleDto
     // Cálculo del porcentaje sobre el total del mercado (no solo sobre el top 30)
     // Se asignará en el Mapper o el Service
     public decimal PorcentajeSobreTotal { get; set; }
+
+    // Sub-informe de desglose anidado
+    public List<RankingContratacionClientesDesgloseDto> Desglose { get; set; } = new();
 }

@@ -1,6 +1,5 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Dapper;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
@@ -9,7 +8,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
 using Elecnor_Informes_Comerciales.Models.Informes.Contrataciones;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesAI;
-
+using Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
 
@@ -850,10 +849,12 @@ public class InformeRepository
     }
 
 
-    // ═══════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
     // INFORME: Ranking de Contratación por Clientes
-    // └─ Métodos: ObtenerRankingContratacionClientesAsync(), EjecutarSPObrasRankingClientesAsync()
-    // ═══════════════════════════════════════════════════════════════════════════
+    // └─ Métodos: ObtenerRankingContratacionClientesAsync(), EjecutarSPObrasRankingClientesAsync(),
+    //             ObtenerRankingContratacionClientesDesgloseAsync(), EjecutarSPObrasRankingClientesDesgloseAsync(),
+    //             ObtenerSumaTotalMercadoClientesAsync
+    // ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
 
     private class RankingClientesSpResult
     {
@@ -865,6 +866,16 @@ public class InformeRepository
         public decimal? ImporteContratadoAcumulado { get; set; }
         public decimal? ImporteContratadoAcumuladoAñoAnterior { get; set; }
         public decimal? ImporteContratadoAcumulado_Ajuste { get; set; }
+    }
+
+    private class RankingClientesDesgloseSpResult
+    {
+        public string? Pais { get; set; }
+        public string? AI { get; set; }
+        public string? Cliente { get; set; }
+        public string? ClienteDesglose { get; set; }
+        public decimal? ImporteContratadoAcumulado { get; set; }
+        public decimal? ImporteContratadoAcumuladoAñoAnterior { get; set; }
     }
 
     /// <summary>
@@ -883,36 +894,32 @@ public class InformeRepository
 
             // 2. Ejecutar SP (3 parámetros: Mercado, Año, Mes) y obtener resultados en memoria
             // El SP devuelve ImporteContratadoAcumuladoAñoAnterior en Real Euros.
-            var resultadosSp = (await conn.QueryAsync<RankingClientesSpResult>(
-                "EXEC spContratacion_Clientes @Mercado, @Anio, @Mes",
-                new { Mercado = mercado, Anio = anio, Mes = mes },
-                transaction: transaction,
-                commandTimeout: 300
-            )).ToList();
+            var resultadosSp = (await conn.QueryAsync<RankingClientesSpResult>( "EXEC spContratacion_Clientes @Mercado, @Anio, @Mes",
+                                                                                    new { Mercado = mercado, Anio = anio, Mes = mes },
+                                                                                    transaction: transaction,
+                                                                                    commandTimeout: 300
+                                                                                )).ToList();
 
-            // 3. Volcar a tabla aplicando el patrón Access: Redondeo -> /1000m (k€)
-            const string sqlInsert = @"INSERT INTO [dbo].[rptContratacion_Clientes] 
-                                        (idContratacionActividad, Año, Row, Mercado, Pais, AI, Cliente, ImporteContratadoAcumulado, ImporteContratadoAcumulado_AñoAnterior, ImporteContratadoAcumulado_Ajuste) 
-                                        VALUES (@Id, @Anio, @Row, @Mercado, @Pais, @AI, @Cliente, @Importe, @Anterior, @Ajuste)";
+            // 3. Volcar a tabla aplicando el patrón Access: Prepara bloque para inserción masiva (Batch Insert)
+            const string sqlInsert = @"INSERT INTO [dbo].[rptContratacion_Clientes] (idContratacionActividad, Año, Row, Mercado, Pais, AI, Cliente, ImporteContratadoAcumulado, ImporteContratadoAcumulado_AñoAnterior, ImporteContratadoAcumulado_Ajuste) 
+                                       VALUES (@Id, @Anio, @Row, @Mercado, @Pais, @AI, @Cliente, @Importe, @Anterior, @Ajuste)";
 
-            int currentId = 1;
-            foreach (var fila in resultadosSp)
-            {
-                await conn.ExecuteAsync(sqlInsert, new {
-                    Id = currentId++,
-                    Anio = anio,
-                    Row = fila.Row,
-                    Mercado = mercado,
-                    Pais = fila.Pais,
-                    AI = fila.AI,
-                    Cliente = fila.Cliente?.Trim(),
-                    // El SP ya devuelve el año actual escalado, no dividir. (según imagen 783)
-                    Importe = fila.ImporteContratadoAcumulado ?? 0,
-                    // El histórico viene en Euros Reales en el SP, escalar a k€ (según patrón Access)
-                    Anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0, 0) / 1000m,
-                    Ajuste = Math.Round(fila.ImporteContratadoAcumulado_Ajuste ?? 0, 0) / 1000m
-                }, transaction: transaction);
-            }
+            var datosParaInsertar = resultadosSp.Select((fila, index) => new {
+                Id = index + 1,
+                Anio = anio,
+                Row = fila.Row,
+                Mercado = mercado,
+                Pais = fila.Pais,
+                AI = fila.AI,
+                Cliente = fila.Cliente?.Trim(),
+                // El SP devuelve el importe en Euros Reales, JS dividirá por 1000 (según GEMINI.md)
+                Importe = fila.ImporteContratadoAcumulado ?? 0,
+                // El histórico viene en Euros Reales en el SP, mantener en Reales (será el JS quien divida por 1000)
+                Anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0, 0),
+                Ajuste = Math.Round(fila.ImporteContratadoAcumulado_Ajuste ?? 0, 0)
+            }).ToList();
+
+            await conn.ExecuteAsync(sqlInsert, datosParaInsertar, transaction: transaction);
 
             await transaction.CommitAsync();
         }
@@ -924,9 +931,58 @@ public class InformeRepository
     }
 
     /// <summary>
-    /// Obtiene los 30 primeros clientes del ranking filtrando por el importe mínimo.
+    /// Ejecuta el PA para generar los datos de Desglose de Clientes.
     /// </summary>
-    public async Task<List<Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes.RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(int anio, int mes, decimal importe)
+    public async Task EjecutarSPObrasRankingClientesDesgloseAsync(string mercado, int anio, int mes)
+    {
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+        using var transaction = await conn.BeginTransactionAsync();
+
+        try
+        {
+            // 1. Limpiar tabla de trabajo de desglose
+            await conn.ExecuteAsync("DELETE FROM rptContratacion_Clientes_Desglose", transaction: transaction);
+
+            // 2. Ejecutar SP de desglose (3 parámetros: Mercado, Año, Mes)
+            var resultadosSp = (await conn.QueryAsync<RankingClientesDesgloseSpResult>( "EXEC spContratacion_Clientes_Desglose @Mercado, @Anio, @Mes",
+                                                                                            new { Mercado = mercado, Anio = anio, Mes = mes },
+                                                                                            transaction: transaction,
+                                                                                            commandTimeout: 300
+                                                                                        )).ToList();
+
+            // 3. Volcar a tabla aplicando el patrón de paridad: Prepara bloque para inserción masiva (Batch Insert)
+            // Nota: idContratacionActividad es IDENTITY en esta tabla, se omite en el INSERT
+            const string sqlInsert = @"INSERT INTO [dbo].[rptContratacion_Clientes_Desglose] (Año, Mercado, Pais, AI, Cliente, ClienteDesglose, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior) 
+                                       VALUES (@Anio, @Mercado, @Pais, @AI, @Cliente, @ClienteDesglose, @Importe, @Anterior)";
+
+            var datosParaInsertar = resultadosSp.Select(fila => new {
+                Anio = anio,
+                Mercado = mercado,
+                Pais = fila.Pais,
+                AI = fila.AI,
+                Cliente = fila.Cliente?.Trim(),
+                ClienteDesglose = fila.ClienteDesglose?.Trim(),
+                // Mantener en Euros Reales (el redondeo a k€ ocurre en el Frontend)
+                Importe = Math.Round(fila.ImporteContratadoAcumulado ?? 0, 0),
+                Anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0, 0)
+            }).ToList();
+
+            await conn.ExecuteAsync(sqlInsert, datosParaInsertar, transaction: transaction);
+
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Obtiene los 30 primeros clientes del ranking filtrando por mercado, año e importe mínimo.
+    /// </summary>
+    public async Task<List<RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(string mercado, int anio, int mes, decimal importe)
     {
         const string sqlSelect = @"SELECT TOP 30
                                         rpt.[Año],
@@ -947,7 +1003,9 @@ public class InformeRepository
                                     LEFT JOIN [dbo].[ClientesSQL_MostrarContratacion_AñoAnterior] ant WITH (NOLOCK)
                                         ON rpt.[Cliente] = ant.[NomAgrupado]
                                         AND rpt.[Año] = ant.[Año]
-                                    WHERE csql.[Visible] = 1
+                                    WHERE rpt.[Mercado] = @Mercado
+                                      AND rpt.[Año] = @Anio
+                                      AND csql.[Visible] = 1
                                       AND rpt.[Cliente] <> ''
                                       AND rpt.[ImporteContratadoAcumulado] > @Importe
                                     GROUP BY
@@ -958,9 +1016,53 @@ public class InformeRepository
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
-        return (await conn.QueryAsync<Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes.RankingContratacionClientesPoco>(
+        return (await conn.QueryAsync<RankingContratacionClientesPoco>(
             sqlSelect,
-            new { Anio = anio, Mes = mes, Importe = importe },
+            new { Mercado = mercado, Anio = anio, Mes = mes, Importe = importe },
+            commandTimeout: 60
+        )).ToList();
+    }
+    
+    /// <summary>
+    /// Obtiene el detalle de desglose de clientes desde la tabla de trabajo filtrando por mercado y año.
+    /// </summary>
+    public async Task<List<RankingContratacionClientesDesglosePoco>> ObtenerRankingContratacionClientesDesgloseAsync(string mercado, int anio, int mes)
+    {
+        const string sql = @"WITH HistoricoAcumulado AS (
+                                SELECT
+                                    Mercado,
+                                    ClientePadre,
+                                    SUM(Contratacion) AS ContratacionAnterior
+                                FROM HistoricoClientesSQL
+                                WHERE Año = @Año - 1
+                                  AND Mes <= @Mes
+                                GROUP BY Mercado, ClientePadre
+                            )
+                            SELECT
+                                D.Pais,
+                                D.AI,
+                                D.Cliente,
+                                D.ClienteDesglose,
+                                D.ImporteContratadoAcumulado,
+                                ISNULL(H.ContratacionAnterior, 0) AS ImporteContratadoAcumuladoAñoAnterior
+                            FROM
+                                [dbo].[rptContratacion_Clientes_Desglose] D
+                            LEFT JOIN 
+                                HistoricoAcumulado H 
+                            ON
+                                    D.ClienteDesglose = H.ClientePadre
+                                AND D.Mercado = H.Mercado
+                            WHERE
+                                NULLIF(D.ClienteDesglose, '') IS NOT NULL
+                            ORDER BY
+                                D.ImporteContratadoAcumulado";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<RankingContratacionClientesDesglosePoco>(
+            sql, 
+            new { Mercado = mercado, Año = anio, Mes = mes }, 
             commandTimeout: 60
         )).ToList();
     }
@@ -968,14 +1070,15 @@ public class InformeRepository
     /// <summary>
     /// Obtiene la suma total de todo el mercado para el informe de Ranking de Clientes.
     /// </summary>
-    public async Task<decimal> ObtenerSumaTotalMercadoClientesAsync()
+    public async Task<decimal> ObtenerSumaTotalMercadoClientesAsync(string mercado, int anio)
     {
-        const string sqlSum = "SELECT ISNULL(Sum(ImporteContratadoAcumulado), 0) FROM rptContratacion_Clientes";
-        
+        const string sqlSum = "SELECT ISNULL(Sum(ImporteContratadoAcumulado), 0) FROM rptContratacion_Clientes WHERE Mercado = @Mercado AND Año = @Anio";
+
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
-        
-        return await conn.ExecuteScalarAsync<decimal>(sqlSum, commandTimeout: 30);
+
+        return await conn.ExecuteScalarAsync<decimal>(sqlSum, new { Mercado = mercado, Anio = anio }, commandTimeout: 30);
     }
+
 }
 

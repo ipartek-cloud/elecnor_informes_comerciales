@@ -68,17 +68,24 @@ public static class InformeCalculosUtils
     /// Formatea la variación entre dos periodos SIN aplicar ningún límite de cap.
     /// Usar cuando variaciones extremas son valores reales y válidos (ej: subinforme AI).
     /// </summary>
-    /// <param name="anterior">Valor del periodo anterior</param>
-    /// <param name="actual">Valor del periodo actual</param>
+    /// <param name="anterior">Valor del periodo anterior. Si es 0, retorna "-" (sin variación calculable).</param>
+    /// <param name="actual">Valor del periodo actual. Si es 0 y anterior&gt;0, retorna "-100%" (caída total).</param>
     /// <returns>
-    /// String formateado: "-" (si anterior=0), o el porcentaje con formato "N0" (ej: "7569%", "-63%")
+    /// String formateado:
+    /// - "-" si anterior = 0 (no hay base de comparación)
+    /// - "+XX%" si hay crecimiento (ej: "+15%", "+7569%")
+    /// - "-XX%" si hay decrecimiento (ej: "-8%", "-100%")
     /// </returns>
     public static string CalcularVariacionLibre(decimal anterior, decimal actual)
     {
+        // Caso 1: Sin base de comparación (anterior = 0)
         if (anterior == 0) return "-";
 
+        // Caso 2: Calcular variación porcentual estándar
+        // Fórmula: ((actual - anterior) / anterior) × 100
         decimal v = (actual - anterior) / anterior;
 
+        // Retornar formateado con N0 (sin decimales, con separador de miles)
         return $"{(v * 100):N0}%";
     }
 
