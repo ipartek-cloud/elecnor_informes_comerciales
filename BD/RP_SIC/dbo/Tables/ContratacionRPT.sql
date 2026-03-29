@@ -1,0 +1,27 @@
+﻿CREATE TABLE [dbo].[ContratacionRPT] (
+    [idContratacionRPT] INT             IDENTITY (1, 1) NOT NULL,
+    [Mercado]           VARCHAR (50)    NOT NULL,
+    [2005]              DECIMAL (18, 2) NULL,
+    [2006]              DECIMAL (18, 2) NULL,
+    [2007]              DECIMAL (18, 2) NULL,
+    [2008]              DECIMAL (18, 2) NULL,
+    [2009]              DECIMAL (18, 2) NULL,
+    [2010]              DECIMAL (18, 2) NULL,
+    [2011]              DECIMAL (18, 2) NULL,
+    [2012]              DECIMAL (18, 2) NULL,
+    [2013]              DECIMAL (18, 2) NULL,
+    [2014]              DECIMAL (18, 2) NULL,
+    [2015]              DECIMAL (18, 2) NULL,
+    [2016]              DECIMAL (18, 2) NULL,
+    [2017]              DECIMAL (18, 2) NULL,
+    [2018]              DECIMAL (18, 2) NULL,
+    [2019]              DECIMAL (18, 2) NULL,
+    [2020]              DECIMAL (18, 2) NULL,
+    [2021]              DECIMAL (18, 2) NULL,
+    [2022]              DECIMAL (18, 2) NULL,
+    [2023]              DECIMAL (18, 2) NULL,
+    [2024]              DECIMAL (18, 2) NULL,
+    [2025]              DECIMAL (18, 2) NULL,
+    CONSTRAINT [PK_Contratacion] PRIMARY KEY CLUSTERED ([idContratacionRPT] ASC)
+);
+

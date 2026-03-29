@@ -1,0 +1,28 @@
+﻿CREATE TABLE [dbo].[CO005BP] (
+    [id]            INT          IDENTITY (1, 1) NOT NULL,
+    [Usuario]       VARCHAR (50) NOT NULL,
+    [CTRO]          CHAR (3)     NOT NULL,
+    [OBRA]          CHAR (3)     NOT NULL,
+    [OBRAL]         CHAR (2)     NOT NULL,
+    [CDOFT]         CHAR (20)    NOT NULL,
+    [FechaApertura] NUMERIC (4)  NULL,
+    [FechaCierre]   NUMERIC (4)  NULL,
+    CONSTRAINT [PK_CO005BP_ID] PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_CO005BP_CTRO_OBRA_OBRAL]
+    ON [dbo].[CO005BP]([CTRO] ASC, [OBRA] ASC, [OBRAL] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_CO005BP_CDOFT]
+    ON [dbo].[CO005BP]([CDOFT] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_CO005BP_Usuario]
+    ON [dbo].[CO005BP]([Usuario] ASC)
+    INCLUDE([CTRO], [OBRA], [OBRAL], [CDOFT]);
+

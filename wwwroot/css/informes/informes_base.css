@@ -174,9 +174,22 @@
     color: #000 !important;
 }
 
-/* Alineación vertical para encabezados de tabla */
-.rpt-th-middle {
+/* Alineación vertical para encabezados y celdas de tabla */
+.rpt-th-middle, .rpt-va-middle {
     vertical-align: middle !important;
+}
+
+.rpt-va-bottom {
+    vertical-align: bottom !important;
+}
+
+.rpt-va-top {
+    vertical-align: top !important;
+}
+
+/* Utilidades de espaciado */
+.rpt-pt-0 {
+    padding-top: 0 !important;
 }
 
 /* --- Tablas Responsivas Stackables (Skill: responsive-design) ---

@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[WEB_ContratacionActividadUsuario] (
+    [id]                                              INT           IDENTITY (1, 1) NOT NULL,
+    [Usuario]                                         VARCHAR (50)  NOT NULL,
+    [Año]                                             INT           NOT NULL,
+    [Mes]                                             INT           NOT NULL,
+    [CDAC1]                                           VARCHAR (2)   NOT NULL,
+    [CDAC2]                                           VARCHAR (2)   NOT NULL,
+    [DSACT]                                           VARCHAR (100) NULL,
+    [Agrupacion]                                      VARCHAR (100) NULL,
+    [Objetivos]                                       FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_Objetivos] DEFAULT ((0)) NULL,
+    [ObjetivosMensual]                                FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ObjetivosMensual] DEFAULT ((0)) NULL,
+    [ImporteContratadoMesAnteriorAgrupacion]          FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAgrupacion1] DEFAULT ((0)) NULL,
+    [ImporteContratadoAgrupacion]                     FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAcumuladoMesAnteriorAgrupacion1] DEFAULT ((0)) NULL,
+    [ImporteContratadoAcumuladoMesAnteriorAgrupacion] FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAcumuladoAgrupacion1] DEFAULT ((0)) NULL,
+    [IP_MesAnterior]                                  AS            ([dbo].[fnIP]([ImporteContratadoAcumuladoMesAnteriorAgrupacion],[ObjetivosMensual],[Mes])),
+    [ImporteContratadoAcumuladoAgrupacion]            FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAcumulado1] DEFAULT ((0)) NULL,
+    [IP]                                              AS            ([dbo].[fnIP]([ImporteContratadoAcumuladoAgrupacion],[ObjetivosMensual],[Mes])),
+    [ImporteContratadoMesAnterior]                    FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoMesAnterior] DEFAULT ((0)) NULL,
+    [ImporteContratado]                               FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratado] DEFAULT ((0)) NULL,
+    [ImporteContratadoAcumuladoMesAnterior]           FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAcumuladoMesAnterior] DEFAULT ((0)) NULL,
+    [ImporteContratadoAcumulado]                      FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAcumulado] DEFAULT ((0)) NULL,
+    [ImporteContratadoAcumuladoAñoAnterior]           FLOAT (53)    CONSTRAINT [DF_WEB_ContratacionActividadUsuario_ImporteContratadoAcumuladoAñoAnterior] DEFAULT ((0)) NULL,
+    CONSTRAINT [PK_WEB_ContratacionActividadUsuario_1] PRIMARY KEY CLUSTERED ([id] ASC)
+);
+

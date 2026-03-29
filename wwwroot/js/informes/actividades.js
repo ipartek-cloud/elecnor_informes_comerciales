@@ -126,7 +126,7 @@ function _renderBloquePais(pais) {
         <tr class="rpt-total-row">
             <td class="rpt-col-act-porc-ant text-center rpt-act-line-segment-top">100%</td>
             <td class="rpt-col-act-imp-ant text-end pe-3 rpt-act-line-segment-top">${formatCurrency(pais.totales.importeAnterior / 1000, 0)}</td>
-            <td class="rpt-col-act-nombre p-0 border-0" style="padding-top: 0 !important; vertical-align: top;">
+            <td class="rpt-col-act-nombre p-0 border-0 rpt-pt-0 rpt-va-top">
                 <div class="rpt-act-line-segment-top mx-3" style="margin-top: -1px;"></div>
             </td>
             <td class="rpt-col-act-imp-act text-end pe-3 rpt-act-line-segment-top">${formatCurrency(pais.totales.importeActual / 1000, 0)}</td>

@@ -1,0 +1,2 @@
+﻿CREATE USER [ELNR\sig] FOR LOGIN [ELNR\sig];
+

@@ -150,14 +150,14 @@ function _renderCuerpoInforme() {
                         ${!esInternacional ? '<td class="rpt-col-ant"></td>' : ''}
                     </tr>
                     <tr class="rpt-ranking-grand-total-row">
-                        <td colspan="${esInternacional ? 2 : 3}" class="pb-2 px-0" style="vertical-align: bottom;">
+                        <td colspan="${esInternacional ? 2 : 3}" class="pb-2 px-0 rpt-va-bottom">
                             <div class="d-flex ${esInternacional ? 'justify-content-end' : 'justify-content-between'} align-items-baseline w-100">
                                 ${!esInternacional ? '<span class="rpt-asterisk-legend ms-2">* Acumulado mismo mes año anterior</span>' : ''}
                                 <span class="rpt-text-corporate fw-bold pe-3">Total ${filtros.mercado || 'Nacional'}</span>
                             </div>
                         </td>
-                        <td class="text-end font-monospace rpt-text-corporate fw-bold pb-2" style="vertical-align: bottom;">${formatCurrency((data.totalMercado || 0) / 1000, 0)}</td>
-                        <td colspan="${esInternacional ? 1 : 2}" class="ps-3 rpt-text-corporate fw-bold pb-2" style="vertical-align: bottom; white-space: nowrap !important;">Miles de Euros</td>
+                        <td class="text-end font-monospace rpt-text-corporate fw-bold pb-2 rpt-va-bottom">${formatCurrency((data.totalMercado || 0) / 1000, 0)}</td>
+                        <td colspan="${esInternacional ? 1 : 2}" class="ps-3 rpt-text-corporate fw-bold pb-2 rpt-va-bottom rpt-nowrap">Miles de Euros</td>
                     </tr>
                 </tfoot>
             </table>

@@ -1,0 +1,143 @@
+﻿
+CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado] 		
+	@pAño int,
+	@pMes int
+	AS
+BEGIN
+
+/*
+---------------------------------------------------------------- desde AQUÍ
+		Paco 2021-11-15
+
+		Creo una copia temporal de los datos de la vista vwWEB_OFERTAS que es la que tarda al acceder a datos del AS400.
+		De esta forma las condiciones de filtro que luego aplicabamos en el SQL SERVER sobre las vistas definidas se realizan directamente en el AS400 
+		y así se devuelven los datos filtrados
+	*/
+	-- Copia en local y filtrada de los datos de la vista vwWEB_OFERTAS (acceso al AS400)
+	DECLARE @SQL_AS400_select as varchar(1000)
+	DECLARE @SQL_AS400_from as varchar(1000)
+	DECLARE @SQL_AS400 as varchar(max)
+
+	-- No se muy bien pero el EXEC no me funciona con SELECT INTO. POr eso lo hago con CREATE TABLE + INSERT INTO
+	CREATE TABLE #vwWEB_OFERTAS_Local  (CodCentro varchar(3),CodOferta varchar(10), 
+										DescripcionOferta varchar(100), 
+										CodCliente varchar(100), 
+										Localidad varchar (100),
+										CodProv varchar(2),
+										CodAct1 varchar(5),
+										CodAct2 varchar(5),
+										CodResponsable varchar(5), 
+										FAdjudicacion datetime,
+										ImporteContratado float,
+										Pais varchar(100),
+										Provincia varchar(100))
+
+	SET @SQL_AS400_select = 'INSERT INTO #vwWEB_OFERTAS_Local (CodCentro, CodOferta, 
+																DescripcionOferta, CodCliente, Localidad, CodProv, CodAct1, CodAct2, CodResponsable, 
+																FAdjudicacion, ImporteContratado
+																, Pais, Provincia)
+							SELECT CDCEN AS CodCentro, CDOFT AS CodOferta, DCOF AS DescripcionOferta, CDCLI AS CodCliente, LOCAL AS Localidad, PROOF AS CodProv, CDAC1 AS CodAct1, CDAC2 AS CodAct2, RPROF AS CodResponsable,  
+									CASE WHEN LEN(FECHAD) > 5 
+										THEN CONVERT(datetime, RIGHT(FECHAD, 6), 103) 
+										ELSE (CASE WHEN FECHAD = ''0'' THEN ''19990101'' ELSE NULL END) 
+									END AS FAdjudicacion, 
+									PREAD AS ImporteContratado
+							,  Provincias.Pais, NMPRO as Provincia
+							'
+	SET @SQL_AS400_from = 'SELECT * FROM OPENQUERY(SIC, ''
+										SELECT     *
+										FROM S44DD901.ICOMERF.IC09AP 
+										WHERE ADELE = ''''S''''
+											 AND (substr( digits(dec(19000000+FECHAD,8,0)), 1, 4 ) = ' + str(@pAño) + ' AND substr( digits(dec(19000000+FECHAD,8,0)), 5, 2 ) <= ' + str(@pMes) + ')
+									'')'
+	SET @SQL_AS400 = @SQL_AS400_select + ' FROM (' + @SQL_AS400_from + ') Ofertas INNER JOIN Provincias ON Ofertas.PROOF = Provincias.CDPRO'
+
+	EXEC (@SQL_AS400)	
+
+	CREATE TABLE #vwRegularizaciones_Local  (CodCentro varchar(3),CodOferta varchar(10), NumRegularizacion numeric (3,0), FAlta datetime, DescripcionOferta varchar (100), 
+											CodCliente varchar(10), Localidad varchar(100), CodProv varchar(2), ImporteAprox float, FPresentacion datetime, PresupuestoVenta float, 
+											FAdjudicacion datetime, AñoAdjudicacion numeric(4,0), MesAdjudicacion numeric(2,0), Adjudicada varchar(1), ImporteContratado float, Pais varchar(100))
+
+	SET @SQL_AS400_select = 'INSERT INTO #vwRegularizaciones_Local (CodCentro, CodOferta, NumRegularizacion, FAlta, DescripcionOferta, CodCliente, Localidad,
+																	CodProv, ImporteAprox, FPresentacion, PresupuestoVenta, 
+																	FAdjudicacion, AñoAdjudicacion, MesAdjudicacion, Adjudicada, ImporteContratado, Pais)
+							SELECT vReg.CDCEN AS CodCentro, vReg.CDOFT AS CodOferta, ISNULL(vReg.NUMRE, 0) AS NumRegularizacion, dbo.fgConvertirFechaDMY(vReg.FECHAA) AS FAlta, 
+									vReg.DCOF AS DescripcionOferta, vReg.CDCLI AS CodCliente, vReg.LOCAL AS Localidad, vReg.PROOF AS CodProv, vReg.IMAOF AS ImporteAprox, 
+									 dbo.fgConvertirFechaDMY(vReg.FECHPP) AS FPresentacion, vReg.PREVE AS PresupuestoVenta, dbo.fgConvertirFechaDMY(vReg.FECHAR) AS FAdjudicacion, 
+									 YEAR(dbo.fgConvertirFechaDMY(vReg.FECHAR)) AS AñoAdjudicacion, MONTH(dbo.fgConvertirFechaDMY(vReg.FECHAR)) AS MesAdjudicacion, 
+									 vReg.ADELE AS Adjudicada, vReg.IMPRE AS ImporteContratado, dbo.fnPais(vReg.CDAUT) AS Pais
+							'
+	SET @SQL_AS400_from = 'SELECT * FROM OPENQUERY(SIC, ''
+										SELECT REG.CDCEN, REG.CDOFT, REG.NUMRE, OFE.FECHAA, OFE.DCOF, OFE.CDCLI, OFE.LOCAL, OFE.PROOF, OFE.IMAOF,
+												OFE.FECHPP, OFE.PREVE, REG.FECHAR, 
+												substr( digits(dec(19000000+REG.FECHAR,8,0)), 1, 4 ) AA, 
+												substr( digits(dec(19000000+REG.FECHAR,8,0)), 5, 2 ) MM, 
+												substr( digits(dec(19000000+REG.FECHAR,8,0)), 7, 2 ) DD
+												,OFE.ADELE, REG.IMPRE, AUT.CDAUT 
+										FROM S44DD901.ICOMERF.IC09AP OFE INNER JOIN S44DD901.ICOMERF.IC10AP REG ON OFE.CDOFT = REG.CDOFT
+											INNER JOIN S44DD901.ICOMERF.IC05AP PRO ON PRO.CDPRO = OFE.PROOF 
+												INNER JOIN S44DD901.ICOMERF.IC11AP AUT ON PRO.CDAUT = AUT.CDAUT
+										WHERE (substr( digits(dec(19000000+REG.FECHAR,8,0)), 1, 4 ) = ' + str(@pAño) + ' AND substr( digits(dec(19000000+REG.FECHAR,8,0)), 5, 2 ) <= ' + str(@pMes) + ')
+									'')'
+
+	SET @SQL_AS400 = @SQL_AS400_select + ' FROM (' + @SQL_AS400_from + ') vReg '
+
+	--PRINT (@SQL_AS400)
+	EXEC (@SQL_AS400)
+
+---------------------------------------------------------------- hasta AQUÍ
+
+	DECLARE @vContratacion TABLE (Pais varchar(100),CodCentro varchar(3),ImporteContratado float,ImporteContratadoAcumulado float, ImporteContratadoAcumuladoAñoanterior float)
+
+	-- OFERTAS
+	INSERT INTO @vContratacion(Pais,CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
+	SELECT  Pais,vwOfertas.CodCentro,
+			sum(dbo.fnImporteContratacion_MesActual(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratado,
+			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
+			0
+	FROM dbo.Sumarigrama INNER JOIN
+		 #vwWEB_OFERTAS_Local vwOfertas ON dbo.Sumarigrama.CodCentro = vwOfertas.CodCentro
+	WHERE  (year(FAdjudicacion)=@pAño ) AND month(FAdjudicacion) <= @pMes 
+	GROUP BY Pais,vwOfertas.CodCentro
+	
+	-- REGULARIZACIONES
+	INSERT INTO @vContratacion(Pais,CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
+	SELECT  Pais,vwRegularizacionesQ.CodCentro,
+			sum(dbo.fnImporteContratacion_MesActual(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratado,
+			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
+			0
+	FROM        #vwRegularizaciones_Local AS vwRegularizacionesQ
+				INNER JOIN dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
+	GROUP BY Pais,vwRegularizacionesQ.CodCentro
+	
+	-- OFERTASsql
+	INSERT INTO @vContratacion(Pais,CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
+	SELECT  Pais,OfertasSQL.CodCentro,
+			sum(dbo.fnImporteContratacion_MesActual(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratado,
+			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
+			0
+	FROM         dbo.OfertasSQL INNER JOIN
+-- Paco 2021/11/15 Incluido el COLLATE Latin1_General_BIN porque la combinacion del INNER JOIN ewntre la vista Provincias (del AS400)
+-- y la tabla OfertasSQL no devolvía correectamente lo que tenía que devolver.
+-- el orden de la informacion es diferente en unaa caso y en otro
+				dbo.Provincias ON dbo.OfertasSQL.CodProv  COLLATE Latin1_General_BIN = dbo.Provincias.CDPRO  COLLATE Latin1_General_BIN
+					INNER JOIN dbo.Sumarigrama ON dbo.OfertasSQL.CodCentro = dbo.Sumarigrama.CodCentro
+	WHERE  (year(FAdjudicacion)=@pAño ) AND month(FAdjudicacion) <= @pMes 
+	GROUP BY Pais,OfertasSQL.CodCentro
+	
+	-- CONTRATACION AÑO ANTERIOR de HISTORICO
+	INSERT INTO @vContratacion(Pais,CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
+	SELECT Mercado,dbo.HistoricoContratacionGrupoSQL.CodCentro,0, 0,sum(Importe) 
+	FROM dbo.Sumarigrama INNER JOIN
+		 dbo.HistoricoContratacionGrupoSQL ON dbo.Sumarigrama.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
+	WHERE  HistoricoContratacionGrupoSQL.Año=@pAño-1 AND Mes <= @pMes 
+	GROUP BY Mercado,dbo.HistoricoContratacionGrupoSQL.CodCentro
+	
+	SELECT Pais,C.CodCentro,
+			--S.CodDDirNegocio,   
+			Sum(ImporteContratado) as ImporteContratado,Sum(ImporteContratadoAcumulado) as ImporteContratadoAcumulado, sum(ImporteContratadoAcumuladoAñoAnterior) as ImporteContratadoAcumuladoAñoAnterior 	
+	FROM @vContratacion	C
+		--INNER JOIN Sumarigrama S ON C.CodCentro=S.CodCentro
+	GROUP BY Pais,C.CodCentro--,S.CodDDirNegocio
+	
+END

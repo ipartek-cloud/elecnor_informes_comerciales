@@ -1,0 +1,50 @@
+﻿CREATE TABLE [dbo].[CarteraDiferida_CJO] (
+    [id]               INT            IDENTITY (1, 1) NOT NULL,
+    [Año]              INT            NOT NULL,
+    [Mes]              INT            NOT NULL,
+    [01#01#13]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#13] DEFAULT ((0)) NULL,
+    [01#01#14]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#14] DEFAULT ((0)) NULL,
+    [Nuevos]           FLOAT (53)     NULL,
+    [Total]            FLOAT (53)     NULL,
+    [01#01#15]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#15] DEFAULT ((0)) NULL,
+    [01#01#16]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#16] DEFAULT ((0)) NULL,
+    [01#01#17]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#17] DEFAULT ((0)) NULL,
+    [01#01#18]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#18] DEFAULT ((0)) NULL,
+    [01#01#19]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#19] DEFAULT ((0)) NULL,
+    [01#01#20]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#20] DEFAULT ((0)) NULL,
+    [01#01#21]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#201] DEFAULT ((0)) NULL,
+    [01#01#22]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#201_1] DEFAULT ((0)) NULL,
+    [01#01#23]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#201_2] DEFAULT ((0)) NULL,
+    [01#01#24]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#201_3] DEFAULT ((0)) NULL,
+    [01#01#25]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#201_4] DEFAULT ((0)) NULL,
+    [01#01#26]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#26] DEFAULT ((0)) NULL,
+    [01#01#27]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#261] DEFAULT ((0)) NULL,
+    [01#01#28]         FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_01#01#261_1] DEFAULT ((0)) NULL,
+    [Orden]            FLOAT (53)     NULL,
+    [Mercado]          NVARCHAR (255) NULL,
+    [Cartera Diferida] NVARCHAR (255) NULL,
+    [Contr]            FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_Contr] DEFAULT ((0)) NULL,
+    [2013]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2013] DEFAULT ((0)) NULL,
+    [2014]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2014] DEFAULT ((0)) NULL,
+    [2015]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2015] DEFAULT ((0)) NULL,
+    [2016]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2016] DEFAULT ((0)) NULL,
+    [2017]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2017] DEFAULT ((0)) NULL,
+    [2018]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2018] DEFAULT ((0)) NULL,
+    [2019]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2019] DEFAULT ((0)) NULL,
+    [2020]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_2020] DEFAULT ((0)) NULL,
+    [2021]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20201] DEFAULT ((0)) NULL,
+    [2022]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20201_1] DEFAULT ((0)) NULL,
+    [2023]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20201_2] DEFAULT ((0)) NULL,
+    [2024]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20201_3] DEFAULT ((0)) NULL,
+    [2025]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20201_4] DEFAULT ((0)) NULL,
+    [2026]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20251] DEFAULT ((0)) NULL,
+    [2027]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20251_1] DEFAULT ((0)) NULL,
+    [2028]             FLOAT (53)     CONSTRAINT [DF_CarteraDiferida_CJO_20251_2] DEFAULT ((0)) NULL,
+    CONSTRAINT [PK_CarteraDiferida_CJO] PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Año_Mes]
+    ON [dbo].[CarteraDiferida_CJO]([Año] ASC, [Mes] ASC);
+

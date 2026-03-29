@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[CarteraDiferidaSQL] (
+    [CodOferta]      VARCHAR (10)   NULL,
+    [NombreCliente]  NVARCHAR (255) NULL,
+    [Contrato]       NVARCHAR (255) NULL,
+    [Zona]           NCHAR (255)    NULL,
+    [FInicio]        DATETIME       NULL,
+    [FFinal]         DATETIME       NULL,
+    [MontoTrimestre] FLOAT (53)     CONSTRAINT [DF_CarteraDiferidaSQL_MontoAño] DEFAULT ((0)) NULL,
+    [NTrimestres]    INT            CONSTRAINT [DF_CarteraDiferidaSQL_NTrimestres] DEFAULT ((0)) NULL,
+    [DuracionAño]    INT            CONSTRAINT [DF_CarteraDiferidaSQL_DuracionAño] DEFAULT ((0)) NULL,
+    [Prorrogable]    DATETIME       NULL,
+    [Vigente]        BIT            CONSTRAINT [DF_CarteraDiferidaSQL_Vigente] DEFAULT ((0)) NULL,
+    [Gerencia]       VARCHAR (100)  NULL,
+    [Tipo]           VARCHAR (1)    NULL,
+    [FFinalEfectiva] DATETIME       NULL,
+    [TipoActividad]  VARCHAR (1)    NULL,
+    [Centro]         NUMERIC (3)    NULL,
+    [A2015]          FLOAT (53)     CONSTRAINT [DF_CarteraDiferidaSQL_A2015] DEFAULT ((0)) NULL,
+    [A2016]          FLOAT (53)     CONSTRAINT [DF_CarteraDiferidaSQL_A2016] DEFAULT ((0)) NULL,
+    [A2017]          FLOAT (53)     CONSTRAINT [DF_CarteraDiferidaSQL_A2017] DEFAULT ((0)) NULL,
+    [A2018]          FLOAT (53)     CONSTRAINT [DF_CarteraDiferidaSQL_A2018] DEFAULT ((0)) NULL,
+    [Mercado]        VARCHAR (1)    CONSTRAINT [DF_CarteraDiferidaSQL_Mercado] DEFAULT ('N') NULL,
+    [CartInicio]     FLOAT (53)     NULL
+);
+

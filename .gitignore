@@ -52,3 +52,8 @@ packages/
 .memory/
 skills-lock.json
 
+# SQL Server Data Tools (SSDT)
+*.dbmdl
+*.jfm
+[Bb]in/
+[Oo]bj/

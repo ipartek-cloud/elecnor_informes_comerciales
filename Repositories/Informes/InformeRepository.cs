@@ -900,26 +900,56 @@ public class InformeRepository
                                                                                     commandTimeout: 300
                                                                                 )).ToList();
 
-            // 3. Volcar a tabla aplicando el patrón Access: Prepara bloque para inserción masiva (Batch Insert)
-            const string sqlInsert = @"INSERT INTO [dbo].[rptContratacion_Clientes] (idContratacionActividad, Año, Row, Mercado, Pais, AI, Cliente, ImporteContratadoAcumulado, ImporteContratadoAcumulado_AñoAnterior, ImporteContratadoAcumulado_Ajuste) 
-                                       VALUES (@Id, @Anio, @Row, @Mercado, @Pais, @AI, @Cliente, @Importe, @Anterior, @Ajuste)";
+            // 3. Volcar a tabla usando SqlBulkCopy (omitimos la columna IDENTITY idContratacionActividad)
+            var table = new DataTable();
+            table.Columns.Add("Año", typeof(int));
+            table.Columns.Add("Row", typeof(int));
+            table.Columns.Add("Mercado", typeof(string));
+            table.Columns.Add("Pais", typeof(string));
+            table.Columns.Add("AI", typeof(string));
+            table.Columns.Add("Cliente", typeof(string));
+            table.Columns.Add("ImporteContratadoAcumulado", typeof(decimal));
+            table.Columns.Add("ImporteContratadoAcumulado_AñoAnterior", typeof(decimal));
+            table.Columns.Add("ImporteContratadoAcumulado_Ajuste", typeof(decimal));
 
-            var datosParaInsertar = resultadosSp.Select((fila, index) => new {
-                Id = index + 1,
-                Anio = anio,
-                Row = fila.Row,
-                Mercado = mercado,
-                Pais = fila.Pais,
-                AI = fila.AI,
-                Cliente = fila.Cliente?.Trim(),
-                // El SP devuelve el importe en Euros Reales, JS dividirá por 1000 (según GEMINI.md)
-                Importe = fila.ImporteContratadoAcumulado ?? 0,
-                // El histórico viene en Euros Reales en el SP, mantener en Reales (será el JS quien divida por 1000)
-                Anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0, 0),
-                Ajuste = Math.Round(fila.ImporteContratadoAcumulado_Ajuste ?? 0, 0)
-            }).ToList();
+            foreach (var fila in resultadosSp)
+            {
+                var importe = fila.ImporteContratadoAcumulado ?? 0m;
+                var anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0m, 0);
+                var ajuste = Math.Round(fila.ImporteContratadoAcumulado_Ajuste ?? 0m, 0);
 
-            await conn.ExecuteAsync(sqlInsert, datosParaInsertar, transaction: transaction);
+                table.Rows.Add(
+                    anio,
+                    fila.Row,
+                    mercado,
+                    fila.Pais,
+                    fila.AI,
+                    fila.Cliente?.Trim(),
+                    importe,
+                    anterior,
+                    ajuste
+                );
+            }
+
+            using var bulk = new SqlBulkCopy(conn, SqlBulkCopyOptions.TableLock, (SqlTransaction)transaction)
+            {
+                DestinationTableName = "dbo.rptContratacion_Clientes",
+                BatchSize = 1000,
+                BulkCopyTimeout = 300
+            };
+
+            // Mapeo explícito de columnas (DataTable columna -> tabla destino)
+            bulk.ColumnMappings.Add("Año", "Año");
+            bulk.ColumnMappings.Add("Row", "Row");
+            bulk.ColumnMappings.Add("Mercado", "Mercado");
+            bulk.ColumnMappings.Add("Pais", "Pais");
+            bulk.ColumnMappings.Add("AI", "AI");
+            bulk.ColumnMappings.Add("Cliente", "Cliente");
+            bulk.ColumnMappings.Add("ImporteContratadoAcumulado", "ImporteContratadoAcumulado");
+            bulk.ColumnMappings.Add("ImporteContratadoAcumulado_AñoAnterior", "ImporteContratadoAcumulado_AñoAnterior");
+            bulk.ColumnMappings.Add("ImporteContratadoAcumulado_Ajuste", "ImporteContratadoAcumulado_Ajuste");
+
+            await bulk.WriteToServerAsync(table);
 
             await transaction.CommitAsync();
         }
@@ -951,24 +981,51 @@ public class InformeRepository
                                                                                             commandTimeout: 300
                                                                                         )).ToList();
 
-            // 3. Volcar a tabla aplicando el patrón de paridad: Prepara bloque para inserción masiva (Batch Insert)
-            // Nota: idContratacionActividad es IDENTITY en esta tabla, se omite en el INSERT
-            const string sqlInsert = @"INSERT INTO [dbo].[rptContratacion_Clientes_Desglose] (Año, Mercado, Pais, AI, Cliente, ClienteDesglose, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior) 
-                                       VALUES (@Anio, @Mercado, @Pais, @AI, @Cliente, @ClienteDesglose, @Importe, @Anterior)";
+            // 3. Volcar a tabla usando SqlBulkCopy (idContratacionActividad es IDENTITY en la tabla destino)
+            var table = new DataTable();
+            table.Columns.Add("Año", typeof(int));
+            table.Columns.Add("Mercado", typeof(string));
+            table.Columns.Add("Pais", typeof(string));
+            table.Columns.Add("AI", typeof(string));
+            table.Columns.Add("Cliente", typeof(string));
+            table.Columns.Add("ClienteDesglose", typeof(string));
+            table.Columns.Add("ImporteContratadoAcumulado", typeof(decimal));
+            table.Columns.Add("ImporteContratadoAcumuladoAñoAnterior", typeof(decimal));
 
-            var datosParaInsertar = resultadosSp.Select(fila => new {
-                Anio = anio,
-                Mercado = mercado,
-                Pais = fila.Pais,
-                AI = fila.AI,
-                Cliente = fila.Cliente?.Trim(),
-                ClienteDesglose = fila.ClienteDesglose?.Trim(),
-                // Mantener en Euros Reales (el redondeo a k€ ocurre en el Frontend)
-                Importe = Math.Round(fila.ImporteContratadoAcumulado ?? 0, 0),
-                Anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0, 0)
-            }).ToList();
+            foreach (var fila in resultadosSp)
+            {
+                var importe = Math.Round(fila.ImporteContratadoAcumulado ?? 0m, 0);
+                var anterior = Math.Round(fila.ImporteContratadoAcumuladoAñoAnterior ?? 0m, 0);
 
-            await conn.ExecuteAsync(sqlInsert, datosParaInsertar, transaction: transaction);
+                table.Rows.Add(
+                    anio,
+                    mercado,
+                    fila.Pais,
+                    fila.AI,
+                    fila.Cliente?.Trim(),
+                    fila.ClienteDesglose?.Trim(),
+                    importe,
+                    anterior
+                );
+            }
+
+            using var bulk = new SqlBulkCopy(conn, SqlBulkCopyOptions.TableLock, (SqlTransaction)transaction)
+            {
+                DestinationTableName = "dbo.rptContratacion_Clientes_Desglose",
+                BatchSize = 1000,
+                BulkCopyTimeout = 300
+            };
+
+            bulk.ColumnMappings.Add("Año", "Año");
+            bulk.ColumnMappings.Add("Mercado", "Mercado");
+            bulk.ColumnMappings.Add("Pais", "Pais");
+            bulk.ColumnMappings.Add("AI", "AI");
+            bulk.ColumnMappings.Add("Cliente", "Cliente");
+            bulk.ColumnMappings.Add("ClienteDesglose", "ClienteDesglose");
+            bulk.ColumnMappings.Add("ImporteContratadoAcumulado", "ImporteContratadoAcumulado");
+            bulk.ColumnMappings.Add("ImporteContratadoAcumuladoAñoAnterior", "ImporteContratadoAcumuladoAñoAnterior");
+
+            await bulk.WriteToServerAsync(table);
 
             await transaction.CommitAsync();
         }
@@ -984,41 +1041,61 @@ public class InformeRepository
     /// </summary>
     public async Task<List<RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(string mercado, int anio, int mes, decimal importe)
     {
-        const string sqlSelect = @"SELECT TOP 30
-                                        rpt.[Año],
-                                        rpt.[Row],
-                                        rpt.[Mercado],
-                                        rpt.[Pais],
-                                        rpt.[AI],
-                                        rpt.[Cliente],
-                                        rpt.[ImporteContratadoAcumulado],
-                                        rpt.[ImporteContratadoAcumulado_AñoAnterior],
-                                        MAX(CASE 
-                                            WHEN ant.[NomAgrupado] IS NOT NULL THEN 1 
-                                            ELSE 0 
-                                        END) AS [VerAñoAnterior]
-                                    FROM [dbo].[rptContratacion_Clientes] rpt WITH (NOLOCK)
-                                    INNER JOIN [dbo].[ClientesSQL] csql WITH (NOLOCK)
-                                        ON rpt.[Cliente] = csql.[NomAgrupado]
-                                    LEFT JOIN [dbo].[ClientesSQL_MostrarContratacion_AñoAnterior] ant WITH (NOLOCK)
-                                        ON rpt.[Cliente] = ant.[NomAgrupado]
-                                        AND rpt.[Año] = ant.[Año]
-                                    WHERE rpt.[Mercado] = @Mercado
-                                      AND rpt.[Año] = @Anio
-                                      AND csql.[Visible] = 1
-                                      AND rpt.[Cliente] <> ''
-                                      AND rpt.[ImporteContratadoAcumulado] > @Importe
-                                    GROUP BY
-                                        rpt.[Año], rpt.[Row], rpt.[Mercado], rpt.[Pais], rpt.[AI], rpt.[Cliente],
-                                        rpt.[ImporteContratadoAcumulado], rpt.[ImporteContratadoAcumulado_AñoAnterior]
-                                    ORDER BY rpt.[Row] ASC";
+        //const string sqlSelect = @"SELECT TOP 30
+        //                                rpt.[Año],
+        //                                rpt.[Row],
+        //                                rpt.[Mercado],
+        //                                rpt.[Pais],
+        //                                rpt.[AI],
+        //                                rpt.[Cliente],
+        //                                rpt.[ImporteContratadoAcumulado],
+        //                                rpt.[ImporteContratadoAcumulado_AñoAnterior],
+        //                                MAX(CASE 
+        //                                    WHEN ant.[NomAgrupado] IS NOT NULL THEN 1 
+        //                                    ELSE 0 
+        //                                END) AS [VerAñoAnterior]
+        //                            FROM 
+        //                                [dbo].[rptContratacion_Clientes] rpt WITH (NOLOCK)
+        //                            INNER JOIN 
+        //                                [dbo].[ClientesSQL] csql WITH (NOLOCK)
+        //                            ON 
+        //                                rpt.[Cliente] = csql.[NomAgrupado]
+        //                            LEFT JOIN 
+        //                                [dbo].[ClientesSQL_MostrarContratacion_AñoAnterior] ant WITH (NOLOCK)
+        //                            ON 
+        //                                    rpt.[Cliente] = ant.[NomAgrupado]
+        //                                AND rpt.[Año] = ant.[Año]
+        //                            WHERE                                           
+        //                                    csql.[Visible] = 1
+        //                                AND rpt.[Cliente] <> ''
+        //                                AND rpt.[ImporteContratadoAcumulado] > @Importe
+        //                            GROUP BY
+        //                                rpt.[Año], rpt.[Row], rpt.[Mercado], rpt.[Pais], rpt.[AI], rpt.[Cliente],
+        //                                rpt.[ImporteContratadoAcumulado], rpt.[ImporteContratadoAcumulado_AñoAnterior]
+        //                            ORDER BY rpt.[Row] ASC";
+
+        const string sqlSelect = @"SELECT TOP(30)
+                                        Año,
+                                        Row,
+                                        Mercado,
+                                        Pais,
+                                        AI,
+                                        Cliente,
+                                        ImporteContratadoAcumulado,
+                                        ImporteContratadoAcumulado_AñoAnterior,
+                                        VerAñoAnterior
+                                    FROM 
+                                        vwRankingContratacionClientes
+                                    WHERE 
+                                        ImporteContratadoAcumulado > @Importe
+                                    ORDER BY Row ASC";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
         return (await conn.QueryAsync<RankingContratacionClientesPoco>(
             sqlSelect,
-            new { Mercado = mercado, Anio = anio, Mes = mes, Importe = importe },
+            new {Importe = importe },
             commandTimeout: 60
         )).ToList();
     }

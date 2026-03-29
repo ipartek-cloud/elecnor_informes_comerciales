@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[Pais] (
+    [Pais] NVARCHAR (255) NOT NULL,
+    CONSTRAINT [PK_Pais] PRIMARY KEY CLUSTERED ([Pais] ASC)
+);
+

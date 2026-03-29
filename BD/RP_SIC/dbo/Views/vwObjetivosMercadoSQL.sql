@@ -1,0 +1,1 @@
+﻿CREATE VIEW [dbo].[vwObjetivosMercadoSQL] AS SELECT [Año], [Mercado], SUM([Importe]) AS [Importe] FROM [dbo].[ObjetivosSQL] GROUP BY [Año], [Mercado]

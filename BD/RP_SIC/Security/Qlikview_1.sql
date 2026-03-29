@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [Qlikview]
+    WITH PASSWORD = N'wogl{exc{uv0VD6iuoz2yorsmsFT7_&#$!~<y{hrlkx&m{li', SID = 0xBC46DC4F12045B419661C31910078B0C, DEFAULT_DATABASE = [RP_SIC], DEFAULT_LANGUAGE = [Español];
+

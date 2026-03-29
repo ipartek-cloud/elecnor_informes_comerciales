@@ -1,0 +1,24 @@
+﻿CREATE VIEW [dbo].[Ofertas_Provincias]
+AS
+--		YEAR(dbo.fgConvertirFechaDMY(O.FECHAA)) AS AñoGra, MONTH(dbo.fgConvertirFechaDMY(O.FECHAA)) AS MesGra, 
+--		YEAR(dbo.fgConvertirFechaDMY(O.FECHPP)) AS AñoPres, MONTH(dbo.fgConvertirFechaDMY(O.FECHPP)) AS MesPres, 
+--		YEAR(dbo.fgConvertirFechaDMY(O.FECHAD)) AS AñoAd, MONTH(dbo.fgConvertirFechaDMY(O.FECHAD)) AS MesAd, 
+
+SELECT     *
+FROM         OPENQUERY(SIC, '
+SELECT 	O.CDCEN , O.CDOFT , O.DCOF , CA.cdaut , 
+		O.LOCAL , O.PROOF , Pr.NMPRO , O.CDCLI , 
+		O.CDAC1 , O.CDAC2 , 
+		O.RPROF ,
+		O.FECHAA, 
+		O.DECOF , O.IMAOF , 
+		O.FECHPP,
+		O.PREVE , O.ADELE ,
+		O.FECHAD,
+		O.WS10 , O.PREAD, O.TVEN , O.DESPRO , O.BAJA
+FROM S44DD901.ICOMERF.IC09AP As O INNER JOIN S44DD901.ICOMERF.IC05AP as Pr ON O.PROOF = Pr.CDPRO 
+		INNER JOIN S44DD901.ICOMERF.IC11AP as CA ON Pr.CDAUT = CA.CDAUT
+ORDER BY O.CDCLI ASC
+') 
+
+

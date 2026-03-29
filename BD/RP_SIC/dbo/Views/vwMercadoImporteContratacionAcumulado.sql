@@ -1,0 +1,1 @@
+﻿CREATE VIEW [dbo].[vwMercadoImporteContratacionAcumulado] AS SELECT [Año], [Pais] AS [Mercado], CAST(SUM([ImporteContratadoAcumulado]) AS DECIMAL(19, 4)) AS [ImporteContratadoAcumuladoSUMA] FROM [dbo].[rptContratacion_DG_SDG_DN_SDNA] GROUP BY [Año], [Pais];

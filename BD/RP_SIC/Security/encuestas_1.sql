@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [encuestas]
+    WITH PASSWORD = N'woXgdfl{>elxPc{uviuozor#msFT7_&#$!~<s}y6m4{%hrll', SID = 0xD8C5A5B2A3AB044D8A238208AF73F1EF, DEFAULT_LANGUAGE = [Español], CHECK_POLICY = OFF;
+
