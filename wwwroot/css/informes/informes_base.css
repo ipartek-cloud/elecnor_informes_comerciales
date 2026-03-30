@@ -104,11 +104,11 @@
     font-weight: bold;
 }
 
-/* Totales y Subtotales */
+/* Totales y Subtotales (Estándar: Negrita + Azul Corporativo) */
 .rpt-td-total {
     border-top: 2px solid #00468B !important;
     color: #00468B !important;
-    font-weight: bold;
+    font-weight: bold !important;
     text-align: right;
 }
 
@@ -433,12 +433,12 @@
 
 
 /* =============================================================================
-   TOTALES AZULES - P1
+   TOTALES AZULES - P1 (Obligatorio: Negrita + Azul Corporativo)
    ============================================================================= */
 .rpt-total-row-blue td {
     border-top: 2px solid #00468B !important;
     color: #00468B !important;
-    font-weight: bold;
+    font-weight: bold !important;
     padding-top: 2px;
 }
 

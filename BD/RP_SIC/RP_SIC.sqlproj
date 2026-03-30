@@ -25,6 +25,7 @@
     <DefaultCollation>Modern_Spanish_CI_AS</DefaultCollation>
     <DefaultFilegroup>PRIMARY</DefaultFilegroup>
     <CompatibilityMode>130</CompatibilityMode>
+    <SuppressTSqlWarnings>71501</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -36,6 +37,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SuppressTSqlWarnings>71501</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug_DB\</OutputPath>
@@ -48,6 +50,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SuppressTSqlWarnings>71501</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -218,7 +221,6 @@
     <Build Include="dbo\Views\vwCarteraDiferidaTrimestral_2018_Mayo.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_DEL_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwActividadesCDAC.sql" />
-    <Build Include="dbo\Views\vwContratacionOfertas_AS400_2020.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_AREA_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_Contratacion_DN.sql" />
     <Build Include="dbo\Views\vwCarteraDiferidaAnual_2018_Mayo.sql" />
@@ -228,36 +230,26 @@
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DEL_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_DEL_GERENCIA_TipoContrato_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadesAGRUPInternacional.sql" />
-    <Build Include="dbo\Views\vwContratacion_AS400_2020.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CT_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_Contratacion_AREA.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_DEL_GERENCIA_TipoContrato_Cliente_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwContratacion_SQL_AS400_2020.sql" />
     <Build Include="dbo\Views\vwWEB_Contratacion_DEL.sql" />
     <Build Include="dbo\Views\AR%40Contrataciones_13_old.sql" />
-    <Build Include="dbo\Views\ObrasActuales-Ofertas.sql" />
     <Build Include="dbo\Views\vwObrasActualesSQL.sql" />
     <Build Include="dbo\Views\Actividades.sql" />
-    <Build Include="dbo\Views\vwWeb_Enlaces.sql" />
     <Build Include="dbo\Views\OfertasDB2%40.sql" />
-    <Build Include="dbo\Views\Ofertas.sql" />
     <Build Include="dbo\Views\vwWEB_OfertasObras.sql" />
     <Build Include="dbo\Views\RegularizacionesDB2%40.sql" />
-    <Build Include="dbo\Views\Enlaces.sql" />
-    <Build Include="dbo\Views\Contratacion.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertas_Obras.sql" />
     <Build Include="dbo\Views\OfertasGrupoDB2+SQL%40.sql" />
-    <Build Include="dbo\Views\vwContratacion_2016.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadSQL_Nacional_Internacional.sql" />
-    <Build Include="dbo\Views\vwContratacion.sql" />
     <Build Include="dbo\Views\vwContratacion_Referencias_CBE.sql" />
-    <Build Include="dbo\Views\Clientes_Aux_NAux.sql" />
     <Build Include="dbo\Views\vwContratacion_Referencias.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CLIENTE_Agrup_Anual_Trimestral_OLD.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_DEL_Agrup.sql" />
     <Build Include="dbo\Views\SumarigramaActividadMercado.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_GERENCIA_DN_Agrup_Anual_Trimestral.sql" />
-    <Build Include="dbo\Views\vwEnlaces.sql" />
     <Build Include="dbo\Views\vwOfertasReparto.sql" />
     <Build Include="dbo\Views\Provincias_20160222 original.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DG_Cliente_TipoContrato_Contrato_DN_AGRUP.sql" />
@@ -286,33 +278,25 @@
     <Build Include="dbo\Views\vwWEB_Contratacion_DN_Agrup.sql" />
     <Build Include="dbo\Views\va_Jaime Salcedo.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_DN.sql" />
-    <Build Include="dbo\Views\vwRegularizaciones_2019_Sup.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_AREA.sql" />
     <Build Include="dbo\Views\vwRankingContratacionClientes.sql" />
     <Build Include="dbo\Views\vwCentrosReparto.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_DEL.sql" />
     <Build Include="dbo\Views\vwTIPOUNO_ProduccionElecnor_Detallado.sql" />
     <Build Include="dbo\Views\vwOfertasRepartoCompensacion.sql" />
-    <Build Include="dbo\Views\vwTipoUNO_Detallado.sql" />
-    <Build Include="dbo\Views\vwEnlacesALL.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_RPT.sql" />
     <Build Include="dbo\Views\vwEnlacesALL_Obras_SOP_SOF_SOL.sql" />
     <Build Include="dbo\Views\vwObrasActualesSQL_Enlaces_CodOferta_Cliente.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_OFERTA_Agrup.sql" />
-    <Build Include="dbo\Views\vwOfertasAdjudicadas.sql" />
-    <Build Include="dbo\Views\Clientes_CodCliente_NombreCliente.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_OFERTA_Agrup_RPT.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DELEGACION_RPT.sql" />
-    <Build Include="dbo\Views\OfertaCentroObra_Producciones.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_AREA_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_DEL_Agrup.sql" />
-    <Build Include="dbo\Views\Ofertas_Clientes.sql" />
     <Build Include="dbo\Views\OfertasObservaciones.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_CT_Agrup.sql" />
     <Build Include="dbo\Views\ContratacionAsociada.sql" />
     <Build Include="dbo\Views\vwOfertas_ObrasActualesSQL.sql" />
     <Build Include="dbo\Views\vwMercadoImporteContratacionAcumulado.sql" />
-    <Build Include="dbo\Views\vwOfertas_AsociadasInversion.sql" />
     <Build Include="dbo\Views\vwWEB_Cartera_DEL.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CLIENTE_Agrup_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwExportacionObrasHistoricasSQL.sql" />
@@ -323,9 +307,7 @@
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_Cliente_TipoContrato_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones.sql" />
     <Build Include="dbo\Views\vwTIPOUNO_Produccion_Detallado_Historico.sql" />
-    <Build Include="dbo\Views\vwContratacionOfertas_AS400_2018.sql" />
     <Build Include="dbo\Views\vwOfertas_AsociadasInversion_Pais_Cliente.sql" />
-    <Build Include="dbo\Views\vwWEB_OFERTAS_CA_SinAdjudicacion_SinObras.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_Cliente_TipoContrato_DN_Anual_Trimestral_NOVALE.sql" />
     <Build Include="dbo\Views\vwEnlaces_Detallado.sql" />
     <Build Include="dbo\Views\vwContratacionOfertas_SQL_AS400_2018.sql" />
@@ -333,9 +315,7 @@
     <Build Include="dbo\Views\vwTipoUNO.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_DG_Agrup.sql" />
     <Build Include="dbo\Views\vwProduccion_Detallado_Historico.sql" />
-    <Build Include="dbo\Views\vwContratacionOfertas_AS400_2019.sql" />
     <Build Include="dbo\Views\vwTendencias_DG.sql" />
-    <Build Include="dbo\Views\Contratacion_Ofertas_Regularizaciones.sql" />
     <Build Include="dbo\Views\vwContratacion_SQL_2021.sql" />
     <Build Include="dbo\Views\vwObjetivosActivadadNacionalInternacional.sql" />
     <Build Include="dbo\Views\vwTendencias_SDG.sql" />
@@ -344,25 +324,15 @@
     <Build Include="dbo\Views\vwRPI_Asuntos_OLD.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadesNacionalInternacional_0708.sql" />
     <Build Include="dbo\Views\vwTendencias_DN.sql" />
-    <Build Include="dbo\Views\vwContratacionOfertas_AS400_2021.sql" />
-    <Build Include="dbo\Views\vwWEB_OFERTACION.sql" />
     <Build Include="dbo\Views\vwRPI_Asuntos_Singulares_OLD.sql" />
-    <Build Include="dbo\Views\Clientes.sql" />
     <Build Include="dbo\Views\vwRPI_Asuntos.sql" />
-    <Build Include="dbo\Views\vwContratacion_Ingresos300K_2019.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_GERENCIA_Agrup_Anual_Trimestral.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2019_DN.sql" />
-    <Build Include="dbo\Views\vwWEB_OFERTACION_CA.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_GERENCIA_TipoContrato_Agrup_Anual_Trimestral.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2018_DN.sql" />
-    <Build Include="dbo\Views\Provincias_20160222 DB2.sql" />
     <Build Include="dbo\Views\Referencias.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2018_0708_DN.sql" />
     <Build Include="dbo\Views\Centros.sql" />
     <Build Include="dbo\Views\vt_Principales_Contrataciones_Totales.sql" />
     <Build Include="dbo\Views\ReferenciasCertificadosClasificacionEmpresarial.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CLIENTE_TipoContrato_Agrup_Anual_Trimestral.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2019_0708_DN.sql" />
     <Build Include="dbo\Views\Delegaciones.sql" />
     <Build Include="dbo\Views\vt_Totales_Año_Contrat_Extras.sql" />
     <Build Include="dbo\Views\ReferenciasCertificadosClasificacionEmpresarial_AñoMonto.sql" />
@@ -397,12 +367,9 @@
     <Build Include="dbo\Views\vwClientes_Encuestas.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CONTRATO_RPT.sql" />
     <Build Include="dbo\Views\vwWEB_Cartera_CT_Agrup.sql" />
-    <Build Include="dbo\Views\Obras_Filtro.sql" />
     <Build Include="dbo\Views\vwRPI_Asuntos_Singulares.sql" />
     <Build Include="dbo\Views\vwWEB_Cartera_DG.sql" />
-    <Build Include="dbo\Views\OfertasE_Filtro.sql" />
     <Build Include="dbo\Views\vwWEB_Cartera_SDG.sql" />
-    <Build Include="dbo\Views\OfertasU_Filtro.sql" />
     <Build Include="dbo\Views\vwWEB_Cartera_DN.sql" />
     <Build Include="dbo\Views\Sumarigrama_Certificaciones.sql" />
     <Build Include="dbo\Views\vwObrasHistorico.sql" />
@@ -416,11 +383,9 @@
     <Build Include="dbo\Views\vwWEB_CarteraDetalladaUsuarioCentro_NumObras.sql" />
     <Build Include="dbo\Views\vwWEB_ContratacionActividad_SDG_Agrup.sql" />
     <Build Include="dbo\Views\vwREG_Fotovoltaica.sql" />
-    <Build Include="dbo\Views\vwEnlaces_ALL.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDetalladaUsuarioCentro.sql" />
     <Build Include="dbo\Views\vwOfertasAsociadasInversion.sql" />
     <Build Include="dbo\Views\vwWEB_ContratacionActividad_DN_Agrup.sql" />
-    <Build Include="dbo\Views\vwOfertasAI.sql" />
     <Build Include="dbo\Views\vwWEB_ContratacionActividad_AREA_Agrup.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadSQL_04_42.sql" />
     <Build Include="dbo\Views\vwCart_DiferidaOfertasContratosSQL.sql" />
@@ -435,7 +400,6 @@
     <Build Include="dbo\Views\vwContratacion_Ingresos300K_2019_NumOfertas.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDetalladaUsuarioCentro_OfertasSQL.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDetalladaUsuarioCentro_ANGEL.sql" />
-    <Build Include="dbo\Views\vt_Cart_Diferida_DescripcionOfertas.sql" />
     <Build Include="dbo\Views\vwContratacion_Ingresos300K_2016_NumOfertas_CON_Referencias_CON_CBE.sql" />
     <Build Include="dbo\Views\vwClientesDB2_SQL.sql" />
     <Build Include="dbo\Views\vwWEB_OfertacionDetallada.sql" />
@@ -451,22 +415,14 @@
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_AREA_Cliente_TipoContrato_Contrato_DN_AGRUP.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_AREA.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DEL_Cliente_TipoContrato_Contrato_DN_AGRUP.sql" />
-    <Build Include="dbo\Views\Enlaces_Oferta_PrimeraObra00.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_DEL.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CT_Cliente_TipoContrato_Contrato_DN_AGRUP.sql" />
-    <Build Include="dbo\Views\Ofertas_Regularizaciones.sql" />
     <Build Include="dbo\Views\vwObjetivosActividad.sql" />
-    <Build Include="dbo\Views\vwOfertas_Clientes.sql" />
-    <Build Include="dbo\Views\Ofertas_Regularizaciones_todas.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_DG_Agrup.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2020_DN.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_DG.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2020_0708_DN.sql" />
     <Build Include="dbo\Views\vwREG.sql" />
     <Build Include="dbo\Views\va_ProducionxCodOferta.sql" />
-    <Build Include="dbo\Views\Ofertas_Regularizaciones_Provincias.sql" />
     <Build Include="dbo\Views\vwWEB_Certificaciones_SDG.sql" />
-    <Build Include="dbo\Views\vwContratacion_AS400_2018.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_Agrup_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwContratacion_SQL_2018.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_GERENCIA_Agrup_Anual_Trimestral.sql" />
@@ -475,8 +431,6 @@
     <Build Include="dbo\Views\vwOfertas_Regularizaciones.sql" />
     <Build Include="dbo\Views\vwWEB_Contratacion_DEL_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_Contratacion_CT_Agrup.sql" />
-    <Build Include="dbo\Views\vwObras_Encuestas.sql" />
-    <Build Include="dbo\Views\OfertasBaja.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CT_RPT.sql" />
     <Build Include="dbo\Views\ObrasOtrasSQL_NO_BAJA.sql" />
     <Build Include="dbo\Views\vwOfertasCliente.sql" />
@@ -484,7 +438,6 @@
     <Build Include="dbo\Views\vwWEB_CarteraDetalladaUsuarioCentro_SoloCarterasNegativas.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DEL_Agrup_RPT.sql" />
     <Build Include="dbo\Views\vwRegularizacionesCliente.sql" />
-    <Build Include="dbo\Views\vwContratacion_AS400_2019.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadesNacionalInternacional_DN.sql" />
     <Build Include="dbo\Views\vwWEB_ContratacionDetallada.sql" />
     <Build Include="dbo\Views\ReferenciasCertificadosBuenaEjecucion.sql" />
@@ -507,22 +460,15 @@
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CLIENTE_TipoContrato_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDetalladaUsuarioCentro_SoloOfertasCarterasNegativas.sql" />
     <Build Include="dbo\Views\PerfilUsuario.sql" />
-    <Build Include="dbo\Views\vwEnlaces_CDOFT_1.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CONTRATO_TipoContrato_Agrup.sql" />
     <Build Include="dbo\Views\vwActividades.sql" />
-    <Build Include="dbo\Views\Regularizaciones.sql" />
     <Build Include="dbo\Views\ContratacionTotal.sql" />
-    <Build Include="dbo\Views\vwContratacion_Ingresos300K_2016.sql" />
     <Build Include="dbo\Views\vwObjetivosActivadadesMercado.sql" />
     <Build Include="dbo\Views\Responsable.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2022_0708_DN.sql" />
-    <Build Include="dbo\Views\vwContratacion_Ingresos300K_2018.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DG_Agrup_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadesNacionalInternacional.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadAgrupacion.sql" />
-    <Build Include="dbo\Views\vwWEB_OFERTAS_CA_SinAdjudicacion_SinObras_iSeries.sql" />
     <Build Include="dbo\Views\vwWEB_OFERTAS_CA_SinAdjudicacion_SinObras_antes.sql" />
-    <Build Include="dbo\Views\vwContratacion_AS400_2021.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_DN_DEL_GERENCIA_TipoContrato_Cliente_Contrato_Anual_Trimestral.sql" />
     <Build Include="dbo\Views\AR%40Regularizaciones_13_old.sql" />
     <Build Include="dbo\Views\vwOfertasInternacional.sql" />
@@ -530,9 +476,6 @@
     <Build Include="dbo\Views\vwRegularizacionesInternacional.sql" />
     <Build Include="dbo\Views\vwContratacionOfertas_SQL_AS400_2020.sql" />
     <Build Include="dbo\Views\CentrosTodos.sql" />
-    <Build Include="dbo\Views\vwOfertas_Encuestas.sql" />
-    <Build Include="dbo\Views\vwOfertas_AS400.sql" />
-    <Build Include="dbo\Views\vwRegularizaciones_2020_Sup.sql" />
     <Build Include="dbo\Views\vwSumarigrama_Encuestas.sql" />
     <Build Include="dbo\Views\vwOfertas_SQL.sql" />
     <Build Include="dbo\Views\vwSumarigrama_DN_DEL.sql" />
@@ -543,7 +486,6 @@
     <Build Include="dbo\Views\vwContratacion_Ingresos300K_2016_CON_Referencias.sql" />
     <Build Include="dbo\Views\vwObrasActualesSQL_Clientes.sql" />
     <Build Include="dbo\Views\vt_Principales_Contrataciones_Importe_i.sql" />
-    <Build Include="dbo\Views\Ofertas_OLD.sql" />
     <Build Include="dbo\Views\vwContratacion_Ingresos300K_2018_CON_Referencias.sql" />
     <Build Include="dbo\Views\vwOfertasAICliente.sql" />
     <Build Include="dbo\Views\vt_Principales_Contrataciones_Detalle por Oferta.sql" />
@@ -552,17 +494,12 @@
     <Build Include="dbo\Views\vwObjetivosActivadadNacionalInternacional_DN.sql" />
     <Build Include="dbo\Views\vwRegularizacionesAICliente.sql" />
     <Build Include="dbo\Views\Objetivos.sql" />
-    <Build Include="dbo\Views\EnlacesHistorico.sql" />
     <Build Include="dbo\Views\OfertasSQL%40.sql" />
-    <Build Include="dbo\Views\Obras.sql" />
     <Build Include="dbo\Views\Facturacion.sql" />
     <Build Include="dbo\Views\Clientes_antes.sql" />
-    <Build Include="dbo\Views\vwEnlaces_ALL_1.sql" />
     <Build Include="dbo\Views\vwWEB_OFERTAS_OF.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2022_DN.sql" />
     <Build Include="dbo\Views\vwWEB_OFERTAS.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_OBRA_Agrup_RPT.sql" />
-    <Build Include="dbo\Views\OfertaAsociadaInversion.sql" />
     <Build Include="dbo\Views\Obras_antes.sql" />
     <Build Include="dbo\Views\vwWEB_REG.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_GERENCIA_TipoContrato_Agrup.sql" />
@@ -580,7 +517,6 @@
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_Cliente_TipoContrato_Contrato_DN_AGRUP.sql" />
     <Build Include="dbo\Views\OfertasAdjGrupoDB2+SQL%40.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_SDG_Agrup.sql" />
-    <Build Include="dbo\Views\ICOMERF.ICPREC.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_Cliente_TipoContrato_Contrato_DN_DEL_AGRUP.sql" />
     <Build Include="dbo\Views\S_tiempo_espera_caducado.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_DN_Agrup.sql" />
@@ -590,17 +526,12 @@
     </Build>
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_Cliente_TipoContrato_Contrato_DN_DEL_CT_AGRUP.sql" />
     <Build Include="dbo\Views\vwWEB_Ofertacion_AREA_Agrup.sql" />
-    <Build Include="dbo\Views\Enlaces_ALL.sql" />
     <Build Include="dbo\Views\vwWEB_OFERTAS_CA_Tipo_Elecnor.sql" />
     <Build Include="dbo\Views\vwWEB_OF_Denegadas_Adjudicadas.sql" />
     <Build Include="dbo\Views\vwOFER.sql" />
-    <Build Include="dbo\Views\vwOferRegu_Encuestas.sql" />
     <Build Include="dbo\Views\SumarigramaDB2.sql" />
-    <Build Include="dbo\Views\vt_Cart_Diferida_DescripcionOfertas_20160318_original.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2021_0708_DN.sql" />
     <Build Include="dbo\Views\vwOferRegu_Actividades_Encuestas.sql" />
     <Build Include="dbo\Views\vwCart_DiferidaOfertasContratosSQL_20160318_original.sql" />
-    <Build Include="dbo\Views\vwSDG_Contratacion Actividades_2021_DN.sql" />
     <Build Include="dbo\Views\vwWEB_CarteraDiferida_CONTRATO_Agrup.sql" />
     <Build Include="dbo\Views\vwWEB_Contratacion_SDG_Agrup.sql" />
     <Build Include="dbo\Views\vwCarteraDiferidaSQLContratado.sql" />
@@ -611,7 +542,6 @@
     <Build Include="dbo\Views\vwWEB_Contratacion_DG.sql" />
     <Build Include="dbo\Views\vwObjetivosActividadesAGRUPNacionalInternacional.sql" />
     <Build Include="dbo\Views\vwTendencias_AREA.sql" />
-    <Build Include="dbo\Views\vwContratacion_CodOferta_CodCliente.sql" />
     <Build Include="dbo\Views\vwContratacionOfertas_SQL_2021.sql" />
     <Build Include="dbo\Views\vwWEB_OF_Abiertas.sql" />
     <Build Include="dbo\Views\vwContratacionHistorico2019_Excel.sql" />
@@ -622,10 +552,7 @@
     <Build Include="dbo\Views\vwWEB_OF_PdtesPresentar_PdtesDecidir.sql" />
     <Build Include="dbo\Views\vwProvinciasZonasPresencia.sql" />
     <Build Include="dbo\Views\vwTendencias_CT.sql" />
-    <Build Include="dbo\Views\vwContratacion_AS400.sql" />
     <Build Include="dbo\Views\WEB_FiltroAños.sql" />
-    <Build Include="dbo\Views\Ofertas_Provincias.sql" />
-    <Build Include="dbo\Views\vwRegularizaciones_2021_Sup.sql" />
     <Build Include="Security\Qlikview.sql" />
     <Build Include="Security\Qlikview_1.sql" />
     <Build Include="Security\LUIS OJEDA.sql" />
@@ -798,51 +725,51 @@
     <Build Include="dbo\Functions\fn_veCarteraPdteProducirSQL_AnioActual.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Comprobaciones.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Actividades.sql" />
-    <Build Include="dbo\Stored Procedures\sp_SDG_Contratacion_Actividades_DN_20240904.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraPdteEjecutar.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacion_DG_SDG_DN_SDNA_Ajuste.sql" />
+    
+    
+    
     <Build Include="dbo\Stored Procedures\spContratacion_Actividades_Ajuste.sql" />
     <Build Include="dbo\Stored Procedures\spSincronizar_ProdFactu_Analitca_SAGE.sql" />
-    <Build Include="dbo\Stored Procedures\sp_SDG_Contratacion_Actividades_DN.sql" />
+    
     <Build Include="dbo\Stored Procedures\spContratacion_Obras.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_ContratacionDetalladaUsuario.sql" />
     <Build Include="dbo\Stored Procedures\spObrasParaClasificacion.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerOfertasInternacionales.sql" />
     <Build Include="dbo\Stored Procedures\sp_SDG_por_Actividades.sql" />
     <Build Include="dbo\Stored Procedures\sp_SDG_Contratacion_por_Actividades.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDiferidaPdteEjecutar_AGRUP.sql" />
+    
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS_NOVALE.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDetalladaUsuario_AS400_SQL_20230314_ObrasFilialesSQL.sql" />
+    
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerOfertasInternacionalesPaisesEstables.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_OfertacionDetalladaUsuario.sql" />
     <Build Include="dbo\Stored Procedures\spCartera_Contratacion_Resumen_SDG.sql" />
     <Build Include="dbo\Stored Procedures\spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Obras_Asociadas_Inversion.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacion_PorOferta.sql" />
+    
     <Build Include="dbo\Stored Procedures\spCarteraContratacionDetalle_DGDesarrolloInternacional.sql" />
-    <Build Include="dbo\Stored Procedures\sp_Exportacion_Contratacion_Analitica.sql" />
-    <Build Include="dbo\Stored Procedures\sp_Exportacion_Ofertas_Analitica.sql" />
+    
+    
     <Build Include="dbo\Stored Procedures\spFActividadUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_AS400_TO_SQL.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDiferidaPdteEjecutar_AGRUP_AS400_SQL.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraUsuario_AS400_SQL.sql" />
-    <Build Include="dbo\Stored Procedures\sp_ObrasPorContratoMarco_Y_Resto.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDetalladaUsuario_AS400_SQL.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacion_Actividades_SubActividades.sql" />
+    
+    
+    
+    
+    
+    
     <Build Include="dbo\Stored Procedures\spWEB_ContratacionAsociadoInversion.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Clientes_Desglose.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_Asuntos_FichasEvaluacion.sql" />
     <Build Include="dbo\Stored Procedures\spImportacionObrasHistoricasSQL.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_ContratacionUsuario.sql" />
+    
     <Build Include="dbo\Stored Procedures\spWEB_CertificacionesUsuario.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Clientes.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Actividades_SubActividades_20240312 antes de leer las ofertas como passthrough.sql" />
-    <Build Include="dbo\Stored Procedures\spOfertasAsociadasAInversion.sql" />
+    
     <Build Include="dbo\Stored Procedures\spWEB_CarteraUsuario_TEMP.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_NacIntTODO.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Internacional_NEW.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_TendenciasUsuario.sql" />
+    
     <Build Include="dbo\Stored Procedures\spSincronizar_OfertasSQL.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_Asuntos_Producto.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS.sql" />
@@ -862,7 +789,7 @@
     <Build Include="dbo\Stored Procedures\spContratacion_Clientes_Desglose_OLD.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_Acumulada_AñoAnterior_ZONA.sql" />
     <Build Include="dbo\Stored Procedures\spContratacionMensualAcumulada.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacion_DG_SDG_DN_SDNA_Deleg_Ajuste.sql" />
+    
     <Build Include="dbo\Stored Procedures\spSincronizar_ObrasOtrasSQL.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_Acumulada_AñoAnterior_ZONA_CLIENTE.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerOfertasInternacionalPorCodOferta.sql" />
@@ -871,40 +798,43 @@
     <Build Include="dbo\Stored Procedures\spWEB_Copy_Tendencia_CT.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Acumulada_ZONA_CLIENTE.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_Copy_Tendencias_CT.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDetalladaUsuario.sql" />
+    
     <Build Include="dbo\Stored Procedures\spWEB_OfertaDetalles.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacionMensualAsociadaInversion.sql" />
+    
     <Build Include="dbo\Stored Procedures\spWEB_ContratacionActividadDetalladaUsuario.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_ZONA_CLIENTE_221.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_ZONA_CLIENTE_800.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacionMensualAsociadaInversionAcumulada.sql" />
+    
     <Build Include="dbo\Stored Procedures\spSincronizar_ObrasActualesSQL.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_CGI_ObtenerPaises.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_ZONA_CLIENTE_90.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_ZONA_CLIENTE_780.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraPdteEjecutar_DetalleObra.sql" />
+    
     <Build Include="dbo\Stored Procedures\sp_Prueba_AS400.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDiferidaPdteEjecutar.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraUsuario.sql" />
+    
+    
     <Build Include="dbo\Stored Procedures\spSincronizar_Sumarigrama.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Adhorna.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_OfertacionUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\sp_CarteraPdteEjecutar.sql" />
+    
     <Build Include="dbo\Stored Procedures\spContratacion_ObrasRPT.sql" />
     <Build Include="dbo\Stored Procedures\spBorrarAnexoAsunto.sql" />
     <Build Include="dbo\Stored Procedures\spAñadirAnexoAsunto.sql" />
-    <Build Include="dbo\Stored Procedures\sp_CarteraPdteEjecutar_DetalleObra.sql" />
+    
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerResponsablesComerciales.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerSumatoriosOfertasInternacionales.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_CENTROS.sql" />
-    <Build Include="dbo\Stored Procedures\spContratacion_DG_SDG_DN_SDNA.sql" />
+    
     <Build Include="dbo\Stored Procedures\spSincronizar_ClientesSQL.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_CarteraDiferidaPdteEjecutar_OfertaObras.sql" />
+    
     <Build Include="dbo\Stored Procedures\spContratacion_Internacional.sql" />
-    <Build Include="dbo\Stored Procedures\spWEB_ContratacionActividadUsuario.sql" />
+    
+    
     <Build Include="Security\qlikview_2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_RPSIC.scmp" />
   </ItemGroup>
 </Project>
+
+

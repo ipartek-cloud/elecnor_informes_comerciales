@@ -389,9 +389,10 @@ public class InformeRepository
 
         // ─── PASO 2: Poblado automático vía SP (el SP original de Access) ───
         // Sincronizado con las 5 columnas que devuelve el SP (según inspección)
-        const string sqlInsertExec = @" 
-            INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
-            EXEC spContratacion_Internacional @Anio, @Mes";
+        // WEB: Usa spContratacion_InternacionalWEB (versión optimizada con pushdown a AS/400).
+        //      El SP original spContratacion_Internacional se mantiene intacto para otras apps.
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
+                                       EXEC spContratacion_InternacionalWEB @Anio, @Mes";
 
         // Asignamos el Año (campo extra) para que el SELECT lo encuentre
         const string sqlUpdateAnio = "UPDATE rptContratacion_Internacional SET Año = @Anio WHERE Año IS NULL";
@@ -413,7 +414,8 @@ public class InformeRepository
                                                 0 AS ImpAnterior,
                                                 Ajuste,
                                                 0 AS Orden
-                                            FROM rptContratacion_Internacional WITH (NOLOCK)
+                                            FROM
+                                                rptContratacion_Internacional WITH (NOLOCK)
                                             WHERE Año = @Anio
 
                                         UNION ALL
@@ -424,8 +426,10 @@ public class InformeRepository
                                                 ISNULL(h.Importe, 0) AS ImpAnterior,
                                                 0 AS Ajuste,
                                                 ISNULL(h.Orden, 0) AS Orden
-                                            FROM HistoricoContratacionSQL h WITH (NOLOCK)
-                                            LEFT JOIN ProvinciasInternacional p WITH (NOLOCK) ON h.CodProv = p.CDPRO
+                                            FROM 
+                                                HistoricoContratacionSQL h WITH (NOLOCK)
+                                            LEFT JOIN 
+                                                ProvinciasInternacional p WITH (NOLOCK) ON h.CodProv = p.CDPRO
                                             WHERE h.Año = @Anio - 1
                                     ) AS t
                                     GROUP BY t.Pais

@@ -60,16 +60,47 @@ tbody .rpt-paises-pais-cell {
     color: #00468B;
     font-weight: bold;
     text-align: center;
-    border-bottom: none !important;
+}
+
+.rpt-th-blue-segmented {
+    color: #00468B !important;
+    font-weight: bold;
+}
+
+.rpt-paises-th-border {
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 3px !important;
+}
+
+.rpt-paises-th-border-pais {
+    border-bottom: 2px solid #00468B !important;
+    padding: 2px 0 2px 0 !important;
 }
 
 /* Líneas de totales segmentadas */
 .rpt-paises-total-row {
-    font-weight: bold;
+    font-weight: bold !important;
+    color: #00468B !important;
 }
 
+/* Fila 1 de totales: línea separadora azul en la parte superior */
+/* Solo se aplica a las celdas deseadas mediante la clase .rpt-paises-total-line */
 .rpt-paises-total-line {
     border-top: 2px solid #00468B !important;
+}
+
+/* Fila 2 de totales: Total Internacional global — sin línea, con espacio superior */
+.rpt-paises-total-global td {
+    border-top: none !important;
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.2rem !important;
+}
+
+/* Nota de pie de página: gris y fuente ligeramente más pequeña */
+.rpt-paises-footer-nota {
+    color: #888;
+    font-size: 0.82em;
+    margin-bottom: 0.25rem;
 }
 
 .rpt-paises-footer-block {

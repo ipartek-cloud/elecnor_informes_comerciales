@@ -32,15 +32,22 @@ public class PaisDetalleDto
 }
 
 /// <summary>
-/// Totales del informe.
+/// Totales del informe de Países.
+/// Fila 1 (SubTotal*): suma de importes y porcentajes de los países filtrados y mostrados en pantalla.
+/// Fila 2 (TotalInternacional*): total global real del mercado internacional (ya viene /1000 desde BD).
 /// </summary>
 public class TotalesPaisesDto
 {
+    // --- FILA 1: Subtotal de países visibles (suma de lo mostrado en el detalle) ---
+    public decimal SubtotalImporteAnterior { get; set; }
+    public decimal SubtotalImporteActual { get; set; }
+    public decimal SubtotalPorcentajeAnterior { get; set; }
+    public decimal SubtotalPorcentajeActual { get; set; }
+
+    // --- FILA 2: Total Internacional Global (ya dividido entre 1000 en BD) ---
     public decimal TotalInternacionalAnterior { get; set; }
     public decimal TotalInternacionalActual { get; set; }
-    public decimal PorcentajeTotalAnterior { get; set; } // Normalmente 100% o subtotal
-    public decimal PorcentajeTotalActual { get; set; }
     
-    // Campo extra para el pie del informe
+    // Campo extra para el pie del informe (DG Infraestructuras)
     public decimal TotalInternacionalDGInfrActual { get; set; }
 }

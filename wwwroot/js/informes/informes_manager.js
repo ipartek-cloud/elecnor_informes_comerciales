@@ -31,6 +31,9 @@ window.cargarInforme = async function (btn, nombreInforme) {
     // Capturar mercado si existe (para informes duales como Ranking Clientes)
     const mercado = btn?.dataset?.mercado;
 
+    // Capturar umbral si existe (para informes como Paises/Paises Relevantes)
+    const umbral = btn?.dataset?.umbral;
+
     try {
         GlobalUI.showLoading();
 
@@ -55,7 +58,9 @@ window.cargarInforme = async function (btn, nombreInforme) {
         const modulo = _registroModulos[nombreInforme];
 
         if (modulo && modulo.ejecutar) {
-            await modulo.ejecutar(anio, mes, nroPagina, mercado);
+            // Pasar ambos parámetros: mercado (para Ranking) y umbral (para Paises)
+            // Cada informe usa lo que necesita, los demás parámetros son undefined o null
+            await modulo.ejecutar(anio, mes, nroPagina, mercado, umbral);
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');

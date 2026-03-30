@@ -213,7 +213,7 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
 
     const wrapTotal = (val, align = 'text-end') => {
         if (!esTotal) return val;
-        return `<div class="${align} fw-bold text-dark rpt-mercado-total-cell">${val}</div>`;
+        return `<div class="${align} fw-bold rpt-text-corporate rpt-mercado-total-cell">${val}</div>`;
     };
 
     let midCellContent = tituloFila;

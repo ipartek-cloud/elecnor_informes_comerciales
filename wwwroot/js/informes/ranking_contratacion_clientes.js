@@ -10,8 +10,13 @@ const estado = crearEstadoInforme();
 
 /**
  * Función principal de ejecución del informe.
+ * @param {number} anio - Año del informe
+ * @param {number} mes - Mes del informe
+ * @param {number|null} nroPagina - Número de página opcional
+ * @param {string} mercado - Mercado ('Nacional' o 'Internacional')
+ * @param {number|null} umbral - Umbral de filtrado (no usado en este informe, por compatibilidad)
  */
-export async function ejecutar(anio, mes, nroPagina, mercado) {
+export async function ejecutar(anio, mes, nroPagina, mercado, umbral = null) {
     try {
         const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;

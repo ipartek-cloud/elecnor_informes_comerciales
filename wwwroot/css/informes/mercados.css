@@ -109,7 +109,7 @@
 /* Fila de totales */
 .rpt-mercado-total-row {
     border-top: 2.5px solid #00468B;
-    color: #000000;
+    color: #00468B !important;
     font-weight: bold;
     padding-top: 5px;
 }
