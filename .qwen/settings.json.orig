@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet *)"
+      "Read(C:\\tmp\\RP_SIC/**)"
     ]
   }
 }

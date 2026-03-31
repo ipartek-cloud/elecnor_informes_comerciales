@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet *)"
+      "Read(C:\\tmp\\RP_SIC/**)",
+      "Bash(dir *)",
+      "Read(C:\\TrabajoVBNet\\Elecnor/**)"
     ]
   },
   "$version": 3

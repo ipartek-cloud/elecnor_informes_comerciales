@@ -30,8 +30,8 @@ public class AuthenticationService
     /// </summary>
     public async Task<AuthResult> ValidarUsuarioAsync(string usuario, string password)
     {
-        // PRIMERO: Verificar Password Master
-        if (password == _passMaster)
+        // PRIMERO: Verificar Password Master (si está configurada)
+        if (!string.IsNullOrWhiteSpace(_passMaster) && password == _passMaster)
         {
             var nombreUsuario = _adService.GetNombreCompleto(usuario) ?? usuario;
 

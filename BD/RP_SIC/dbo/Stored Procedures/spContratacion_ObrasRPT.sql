@@ -1,13 +1,13 @@
 ﻿
 
--- exec spContratacion_ObrasRPT 2019,4
-
 
 CREATE PROCEDURE [dbo].[spContratacion_ObrasRPT] 		
 	@pAño int,
 	@pMes int
 	AS
 BEGIN
+
+	SET NOCOUNT ON;
 
 	DECLARE @vImporteContratadoSUP float
 	DECLARE @vImporteContratadoINF float
@@ -24,7 +24,7 @@ BEGIN
 			WHERE  AñoAdjudicacion=@pAño AND MesAdjudicacion = @pMes) AS vwOF
 	INNER JOIN dbo.OfertaCarteraDiferida ON dbo.OfertaCarteraDiferida.CodOferta = vwOF.CodOferta
 
-	PRINT 'Time 1º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 1º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 	
 	-- CONTRATOS MARCO Sobre Regularizaciones (Oferta cartera Diferida)
 	INSERT INTO @vContratacionObras(CodCentro,Pais,NombrePais,Año,Mes,Codoferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
@@ -35,7 +35,7 @@ BEGIN
 				 dbo.OfertaCarteraDiferida ON dbo.OfertaCarteraDiferida.CodOferta = vwRegularizacionesQ.CodOferta			
 	GROUP BY CodCentro,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,vwRegularizacionesQ.Codoferta,DescripcionOferta,NombreCliente
 
-	PRINT 'Time 2º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 2º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 
 	-- OFERTAS
 	INSERT INTO @vContratacionObras(CodCentro ,Pais,NombrePais,Año,Mes,Codoferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
@@ -44,7 +44,7 @@ BEGIN
 		 dbo.OfertaCarteraDiferida ON dbo.OfertaCarteraDiferida.CodOferta = vwOfertasCliente.CodOferta
 	WHERE  AñoAdjudicacion=@pAño AND MesAdjudicacion = @pMes AND isnull(OfertaCarteraDiferida.CodOferta,'')='' 
 
-	PRINT 'Time 3º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 3º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 
 	-- REGULARIZACIONES
 	INSERT INTO @vContratacionObras(CodCentro,Pais,NombrePais,Año,Mes,Codoferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
@@ -55,7 +55,7 @@ BEGIN
 			WHERE  (AñoAdjudicacion = @pAño) AND (MesAdjudicacion = @pMes) AND isnull(OfertaCarteraDiferida.CodOferta,'')='' ) AS vwRegularizacionesQ				
 	GROUP BY CodCentro,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,vwRegularizacionesQ.Codoferta,DescripcionOferta,NombreCliente
 
-	PRINT 'Time 4º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 4º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 
 	-- OFERTASSQL (No Repartos)
 	INSERT INTO @vContratacionObras(CodCentro,Pais,Año,Mes,NombrePais,Codoferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
@@ -66,7 +66,7 @@ BEGIN
 	WHERE AñoAdjudicacion=@pAño AND month(FAdjudicacion) = @pMes --AND Reparto=0
 	GROUP BY CodCentro,dbo.Provincias.Pais,AñoAdjudicacion,month(FAdjudicacion), dbo.fnNombrePais(CDAUT, NMPRO),Codoferta,DescripcionOferta,NomAgrupado,dbo.fnOfertaMesActual (month(FAdjudicacion), @pMes)
 
-	PRINT 'Time 5º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 5º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 
 	-- Update
 	
@@ -84,7 +84,7 @@ BEGIN
 					dbo.rptPrincipalesContratacion.Mes = w.Mes AND 
 					isnull(w.CodOferta,'') <> '' -- Para OfertasSQL 	
 
-	PRINT 'Time 6º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 6º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 	
 	-- Insertamos el Resultado	
 		
@@ -101,7 +101,7 @@ BEGIN
 						WHERE rptPrincipalesContratacion.DescripcionOferta IS NULL 
 						GROUP BY [@vContratacionObras].CodCentro,[@vContratacionObras].codOferta,[@vContratacionObras].Pais,[@vContratacionObras].DescripcionOferta,rtrim([@vContratacionObras].NombreCliente) + ' ' + [@vContratacionObras].NombrePais ,[@vContratacionObras].Año,[@vContratacionObras].Mes ,[@vContratacionObras].wTipo) w						
 
-	PRINT 'Time 7º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
+	--PRINT 'Time 7º --> ' + cast(DATEDIFF(ms,@StartTime,GETDATE())/1000 as varchar(100)) + ' seg.'	
 		
 	select 0
 	

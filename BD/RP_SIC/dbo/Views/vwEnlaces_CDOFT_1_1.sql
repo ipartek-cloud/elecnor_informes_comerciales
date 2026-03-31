@@ -1,0 +1,15 @@
+﻿
+CREATE VIEW [dbo].[vwEnlaces_CDOFT_1]
+AS
+
+	SELECT        CTRO, CDOFT, OBRA, OBRAL
+	FROM            OPENQUERY(SIC, 
+							 '
+	SELECT        CTRO, CDOFT, LEFT(OBRA, 3) AS OBRA, RIGHT(OBRA, 2) AS OBRAL
+	FROM            S44DD901.FICOSCO.CO005BP AS Enlaces
+	WHERE        (CDOFT = 1)
+	UNION
+	SELECT        CTRO, CDOFT, LEFT(OBRA, 3) AS OBRA, RIGHT(OBRA, 2) AS OBRAL
+	FROM            S44DD901.FICOSCO.CO005BPH AS EnlacesHistorico
+	WHERE        (CDOFT = 1 and left(AAMMC,2)=18) 
+	 ')
