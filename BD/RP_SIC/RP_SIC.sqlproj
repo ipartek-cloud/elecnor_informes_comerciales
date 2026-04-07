@@ -907,6 +907,7 @@
     <Build Include="dbo\Stored Procedures\sp_Exportacion_Contratacion_Analitica_1.sql" />
     <Build Include="dbo\Stored Procedures\sp_CarteraPdteEjecutar_DetalleObra_1.sql" />
     <Build Include="dbo\Stored Procedures\sp_CarteraPdteEjecutar_1.sql" />
+    <Build Include="dbo\Tables\DirGeneral_Orden.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_RPSIC.scmp" />

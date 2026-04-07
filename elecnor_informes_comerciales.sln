@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.3.11222.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "elecnor_informes_comerciales", "elecnor_informes_comerciales.csproj", "{5E5286C7-43F9-E2E8-8A5C-55C864D386B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "informes_comerciales", "informes_comerciales\informes_comerciales.csproj", "{5E5286C7-43F9-E2E8-8A5C-55C864D386B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BD", "BD", "{59F83129-CC72-4251-A47B-74311DCEDE81}"
 EndProject

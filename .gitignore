@@ -52,6 +52,9 @@ packages/
 .memory/
 skills-lock.json
 
+# Credenciales (fichero informativo personal)
+Elecnor_Conexiones_Credenciales.txt
+
 # SQL Server Data Tools (SSDT)
 *.dbmdl
 *.jfm

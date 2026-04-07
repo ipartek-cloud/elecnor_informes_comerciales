@@ -1,0 +1,371 @@
+@{
+    ViewData["Title"] = "Informes Consejo";
+}
+
+<div class="container-fluid">
+    <!-- El contenido principal se mostrará aquí tras el login -->
+    <div id="mainContent" class="d-none">
+        <!-- Sección de Filtros -->
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-filter"></i> Filtros de Informe</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="txtAnno" class="col-form-label fw-bold">Año</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" class="form-control" id="txtAnno" name="txtAnno" min="2000" max="2100"
+                            value="@DateTime.Now.Year" aria-label="Seleccionar año de consulta">
+                    </div>
+                    <div class="col-auto">
+                        <label for="txtMes" class="col-form-label fw-bold">Mes</label>
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-control" id="txtMes" name="txtMes" aria-label="Seleccionar mes de consulta">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> Consejo Administración</h5>
+            </div>
+            <div class="card-body">
+                <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start">
+
+                    <!-- Grupo Unificado: Botón + Página (CARTERA) + Checkbox -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contratacion_mercados_ai')"
+                                    data-input-pag="inputPaginaCartera"
+                                    aria-label="Ver informe Cartera Diferida">
+                                Cartera Diferida
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCartera"
+                                   name="inputPaginaCartera" value="1" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <div class="d-flex align-items-center gap-2 ms-auto">
+                            <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
+                                Generar Contratación
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox" 
+                                   id="chkGenerarRPTPrincipalesObras" 
+                                   name="chkGenerarRPTPrincipalesObras">
+                        </div>
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (MERCADOS) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'mercados')"
+                                    data-input-pag="inputPaginaMercados"
+                                    aria-label="Ver informe Mercados">
+                                Mercados
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaMercados"
+                                   name="inputPaginaMercados" value="2" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <div class="d-flex align-items-center gap-2 ms-auto">
+                            <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObrasAI">
+                                Generar Contratación(AI)
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox"
+                                   id="chkGenerarRPTPrincipalesObrasAI"
+                                   name="chkGenerarRPTPrincipalesObrasAI">
+                        </div>
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (PAISES RELEVANTES + PAISES) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Paises Relevantes -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'paises')"
+                                    data-umbral="100000"
+                                    data-input-pag="inputPaginaPaisesRelevantes"
+                                    aria-label="Ver informe Paises Relevantes">
+                                Paises Relevantes
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaPaisesRelevantes"
+                                   name="inputPaginaPaisesRelevantes" value="3" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Columna Derecha: Paises (debajo del checkbox) -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'paises')"
+                                    data-umbral="0"
+                                    data-input-pag="inputPaginaPaises"
+                                    aria-label="Ver informe Paises">
+                                Paises
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaPaises"
+                                   name="inputPaginaPaises" value="3" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (ACTIVIDADES) -->
+                    <div class="input-group rpt-input-group-index">
+                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                onclick="cargarInforme(this, 'actividades')"
+                                data-input-pag="inputPaginaActividades"
+                                aria-label="Ver informe Actividades">
+                            Actividades
+                        </button>
+                        <input type="number" class="form-control rpt-input-page" 
+                               id="inputPaginaActividades" 
+                               name="inputPaginaActividades" value="4" min="1" 
+                               aria-label="Página" title="Página inicial">
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (CONTRATACIONES + CONTRATACIONES AI) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Contrataciones -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones')"
+                                    data-input-pag="inputPaginaContrataciones"
+                                    aria-label="Ver informe Contrataciones">
+                                Contrataciones
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContrataciones"
+                                   name="inputPaginaContrataciones" value="5" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Columna Derecha: Contrataciones AI -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_ai')"
+                                    data-input-pag="inputPaginaContratacionesAI"
+                                    aria-label="Ver informe Contrataciones AI">
+                                Contrataciones AI
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContratacionesAI"
+                                   name="inputPaginaContratacionesAI" value="6" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (RANKING NACIONAL + RANKING INTERNACIONAL) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Ranking Nacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                    data-input-pag="inputPaginaRankingClientesNacionales"
+                                    data-mercado="Nacional"
+                                    aria-label="Ver informe Ranking Contratación Clientes Nacionales">
+                                Ranking Contratación Nacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaRankingClientesNacionales"
+                                   name="inputPaginaRankingClientesNacionales" value="7" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Columna Derecha: Ranking Internacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                    data-input-pag="inputPaginaRankingClientesInternacionales"
+                                    data-mercado="Internacional"
+                                    aria-label="Ver informe Ranking Contratación Clientes Internacionales">
+                                Ranking Contratación Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaRankingClientesInternacionales"
+                                   name="inputPaginaRankingClientesInternacionales" value="8" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                    </div>
+
+                    <!-- Grupo Unificado: Botón + Página (CONTRATACIONES SIGNIFICATIVAS NAC. + INT. + COMBO SUBDIRECCIÓN) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Contrataciones Significativas Nacionales -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas')"
+                                    data-input-pag="inputPaginaContratacionesSignificativasNacionales"
+                                    data-mercado="Nacional"
+                                    aria-label="Ver informe Contrataciones Significativas Nacionales">
+                                Contrataciones Significativas Nacionales
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContratacionesSignificativasNacionales"
+                                   name="inputPaginaContratacionesSignificativasNacionales" value="9" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Columna Central: Contrataciones Significativas Internacionales -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas')"
+                                    data-input-pag="inputPaginaContratacionesSignificativasInternacionales"
+                                    data-mercado="Internacional"
+                                    aria-label="Ver informe Contrataciones Significativas Internacionales">
+                                Contrataciones Significativas Internacionales
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContratacionesSignificativasInternacionales"
+                                   name="inputPaginaContratacionesSignificativasInternacionales" value="10" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Columna Derecha: Combo SubDirección General (alineado a la derecha) -->
+                        <div class="input-group rpt-input-group-index ms-auto" style="max-width: 240px;">
+                            <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral"
+                                    aria-label="Filtrar por SubDirección General">
+                                <!-- Las opciones se cargan dinámicamente desde la API -->
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Informes: Elecnor SyP SR. CRUCES -->
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> Elecnor SyP - SR. CRUCES</h5>
+            </div>
+            <div class="card-body">
+                <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">
+                    <button class="btn rpt-btn-light" 
+                            onclick="Swal.fire({ title: 'Próximamente', text: 'El informe de Gerencias Totales Cruces está actualmente en desarrollo.', icon: 'info', confirmButtonColor: '#00468B' })"
+                            aria-label="Ver informe de Gerencias Totales Cruces">
+                        Gerencias Totales Cruces
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aquí irán los componentes de informes que me indiques -->
+    </div>
+</div>
+
+<!-- Modal Login Rediseñado -->
+<div class="modal" id="formLogin" tabindex="-1" role="dialog" aria-labelledby="formLoginLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content login-custom-container p-3">
+            <form id="loginForm">
+                <div class="modal-body">
+                    <div id="loginErrorMsg" class="alert alert-danger d-none" role="alert">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="txtUser" class="login-label">Usuario:</label>
+                        <input type="text" class="form-control login-input" id="txtUser" name="Username" required
+                               value="anruiz"
+                               aria-label="Nombre de usuario" aria-required="true">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="txtPassword" class="login-label">Contraseña:</label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control login-input pe-5" id="txtPassword" name="Password" 
+                                   required
+                                   value="Eagle999"
+                                   placeholder="Contraseña"
+                                   aria-label="Contraseña" aria-required="true">
+                            <i class="fas fa-eye password-toggle-icon" id="togglePassword" title="Mostrar/Ocultar contraseña"></i>
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-login-custom" aria-label="Entrar al sistema">
+                            Entrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Único para Visualización de Informes -->
+<div class="modal fade" id="modalInforme" tabindex="-1" aria-labelledby="modalInformeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-primary text-white shadow-sm py-2 px-4 modal-header-report">
+                <!-- Columna IZQUIERDA: Título + Botón PDF -->
+                <div class="d-flex align-items-center gap-2 modal-header-left">
+                    <h5 class="modal-title mb-0" id="modalInformeTitulo">Cargando Informe...</h5>
+                    <button type="button" class="btn btn-sm btn-outline-light" id="btnExportarPdf"
+                            aria-label="Imprimir informe en PDF">
+                        <i class="fas fa-file-pdf me-1" aria-hidden="true"></i> Imprimir PDF
+                    </button>
+                </div>
+
+                <!-- Columna CENTRAL: Controles de paginación (centrados absolutamente) -->
+                <div class="d-flex align-items-center justify-content-center modal-header-center">
+                    <div class="d-flex align-items-center d-none" id="ctrlPaginacion">
+                        <button type="button" class="btn btn-sm btn-outline-light"
+                                id="btnPagAnterior" disabled
+                                aria-label="Ir a gerencia anterior" aria-disabled="true">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <span id="lblEstadoPaginacion" class="modal-pag-label mx-2"></span>
+                        <button type="button" class="btn btn-sm btn-outline-light"
+                                id="btnPagSiguiente" disabled
+                                aria-label="Ir a siguiente gerencia" aria-disabled="true">
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Columna DERECHA: Botón cerrar -->
+                <div class="d-flex align-items-center justify-content-end modal-header-right">
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal" aria-label="Cerrar modal de informe"></button>
+                </div>
+            </div>
+            <div class="modal-body modal-body-reports" id="modalInformeContenido">
+                <!-- El contenido dinámico del informe se inyectará aquí -->
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/informes/informes_base.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/mercados.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/contrataciones.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/contrataciones_ai.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/ranking_contratacion_clientes.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script type="module" src="~/js/index.js" asp-append-version="true"></script>
+    <script src="~/js/informes/informes_manager.js" type="module" asp-append-version="true"></script>
+}

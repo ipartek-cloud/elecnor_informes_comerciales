@@ -1,0 +1,711 @@
+/* Estilos base para el sistema de informes Elecnor */
+
+/* Colores Corporativos Reutilizados */
+.text-primary, .rpt-text-corporate { color: #00468B !important; }
+.bg-primary, .rpt-bg-corporate { background-color: #00468B !important; }
+.border-primary { border-color: #00468B !important; }
+
+/* 1. Contenedor "Papel" del Informe */
+.rpt-paper {
+    background-color: white;
+    min-height: 100vh;
+    font-family: Arial, sans-serif !important;
+    color: #000000 !important; /* Forzar negro puro para máxima legibilidad */
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    border: 1px solid #ccc;
+    margin: 20px auto !important;
+    padding: 2rem !important; /* Reducido de 3rem para mejor aprovechamiento */
+    max-width: 1050px;
+    position: relative;
+    z-index: 10;
+}
+
+/* 2. Cabeceras y Banners */
+.rpt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+}
+
+.rpt-header-corporate-text {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.rpt-header-logo {
+    height: 50px;
+    width: auto;
+}
+
+.rpt-page-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #00468B;
+    margin-bottom: -2px;
+    line-height: 1;
+}
+
+.rpt-banner-top {
+    background-color: #00468B !important;
+    color: white !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 38px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 0;
+}
+
+.rpt-subtitle {
+    color: #00468B !important;
+    font-size: 0.85rem;
+    text-align: right;
+    margin-top: 2px;
+    margin-bottom: 3rem;
+}
+
+/* 3. Títulos de Secciones */
+.rpt-gerente-name {
+    color: #E38631;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* 4. Estructura de Tablas */
+.rpt-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-family: Arial, sans-serif;
+    margin-bottom: 0;
+}
+
+.rpt-table th, .rpt-table td {
+    border: none;
+    padding: 0; /* Por defecto sin padding vertical */
+}
+
+/* Encabezados Azules */
+.rpt-th-blue {
+    color: #00468B !important;
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 3px !important;
+    font-weight: bold;
+}
+
+.rpt-label-blue {
+    color: #00468B !important;
+    font-weight: bold;
+}
+
+/* Totales y Subtotales (Estándar: Negrita + Azul Corporativo) */
+.rpt-td-total {
+    border-top: 2px solid #00468B !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+    text-align: right;
+}
+
+/* Distintivo de Dirección de Negocio (Recuadro Azul) */
+.rpt-group-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-weight: bold;
+    margin: 0 5px;
+    padding: 2px 0;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* =============================================================================
+   ANCHOS DE COLUMNA (Genéricos)
+   Para anchos específicos de un informe, usar su propio fichero .css
+   ============================================================================= */
+.rpt-col-width-auto { width: auto; }
+
+/* Alerta Informativa Sin Datos */
+.rpt-info-alert {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.rpt-info-alert-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #17a2b8;
+}
+
+.rpt-info-alert-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.rpt-info-alert-text {
+    margin-bottom: 0;
+    color: #0c5460;
+}
+
+/* Bloque de contenido genérico (margen superior estandarizado) */
+.rpt-content-block {
+    margin-top: 1rem;
+}
+
+/* Detalle compacto estandarizado (Elecnor 2026) */
+.rpt-detail-row td, .rpt-number-cell {
+    padding-top: 0.5px !important;
+    padding-bottom: 0.5px !important;
+    line-height: 1.4;
+    font-size: 0.85rem !important; /* 13.6px */
+    color: #000 !important;
+}
+
+/* Alineación vertical para encabezados y celdas de tabla */
+.rpt-th-middle, .rpt-va-middle {
+    vertical-align: middle !important;
+}
+
+.rpt-va-bottom {
+    vertical-align: bottom !important;
+}
+
+.rpt-va-top {
+    vertical-align: top !important;
+}
+
+/* Utilidades de espaciado */
+.rpt-pt-0 {
+    padding-top: 0 !important;
+}
+
+/* --- Tablas Responsivas Stackables (Skill: responsive-design) ---
+   Se activan mediante Container Queries cuando el ancho del contenedor es insuficiente.
+   Requiere que los <td> tengan el atributo data-label="..."
+------------------------------------------------------------------- */
+@container rpt-paper (max-width: 600px) {
+    .rpt-table-stackable {
+        border: none !important;
+        background: transparent !important;
+    }
+
+    .rpt-table-stackable thead {
+        display: none !important; /* Ocultar cabeceras reales */
+    }
+
+    .rpt-table-stackable tr {
+        display: block !important;
+        background: white !important;
+        margin-bottom: 1rem !important;
+        border-radius: 8px !important;
+        border: 1px solid var(--elecnor-border) !important;
+        padding: 0.5rem !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    }
+
+    .rpt-table-stackable td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border: none !important;
+        padding: 0.4rem 0.5rem !important;
+        text-align: right !important;
+        font-size: 0.95rem !important;
+        min-height: 2.2rem;
+    }
+
+    .rpt-table-stackable td:not(:last-child) {
+        border-bottom: 1px dashed #f0f0f0 !important;
+    }
+
+    /* Inyectar Label desde data-label */
+    .rpt-table-stackable td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--elecnor-blue);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        text-align: left;
+        margin-right: 1rem;
+    }
+
+    /* Casos especiales para celdas de total o títulos */
+    .rpt-table-stackable .rpt-td-total {
+        background: #f8faff !important;
+    }
+
+    /* --- Mejora del Triple Container en móviles --- */
+    .rpt-triple-container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+        border: 1px solid #eee;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .rpt-triple-container > div {
+        width: 100% !important;
+        margin: 0 !important;
+        border: none !important;
+    }
+
+    .rpt-block-labels {
+        order: -1; /* Poner el nombre (ej: Nacional/Internacional) arriba */
+        background: var(--elecnor-blue);
+        color: white;
+        padding: 0.5rem !important;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .rpt-block-mensual, .rpt-block-acumulado {
+        background: #fcfcfc;
+        padding: 0.5rem !important;
+        border: 1px solid #f0f0f0;
+        border-radius: 4px;
+    }
+
+    /* Etiquetas de cabecera en modo apilado */
+    .rpt-triple-container .fw-bold.rpt-font-small {
+        display: block;
+        margin-top: 0.5rem;
+        border-bottom: 2px solid var(--elecnor-blue);
+        padding-bottom: 2px;
+    }
+}
+
+/* Utilidades de Alineación y Color */
+.rpt-text-corporate { color: #00468B !important; }
+.rpt-text-dark { color: #000000 !important; }
+
+.rpt-detail-row {
+    color: #000000 !important;
+}
+
+/* Alineación financiera para celdas numéricas */
+.rpt-number-cell {
+    text-align: right !important;
+    padding-right: 5px !important; /* Compacto como en Access */
+}
+
+/* Modal Background */
+.modal-body-reports {
+    background-color: #666e76 !important;
+    padding: 0 !important;
+}
+
+/* =============================================================================
+   CAPA TEMPORAL DE IMPRESIÓN (usada por JS antes de window.print())
+   Oculta en pantalla, visible solo durante la impresión.
+   ============================================================================= */
+.rpt-print-layer {
+    display: none;
+}
+
+/* =============================================================================
+   UTILIDADES PARA CONVERTIR ESTILOS INLINE (CMAI → Clases) - P0
+   Estas clases reemplazan los ~36 estilos inline detectados en contratacion_mercados_ai.js
+   ============================================================================= */
+.rpt-pad-right-15 { padding-right: 15px !important; }
+.rpt-font-small { font-size: 0.8rem !important; }
+.rpt-text-muted-gray { color: #666 !important; }
+.rpt-margin-top-15 { margin-top: 15px !important; }
+.rpt-width-100 { width: 100px !important; }
+.rpt-width-320 { width: 320px !important; }
+.rpt-width-flex { flex-grow: 1; max-width: 350px !important; }
+.rpt-justify-start { justify-content: flex-start !important; }
+.rpt-gap-40 { gap: 40px !important; }
+.rpt-text-orange-council { color: #E38631 !important; }
+
+/* =============================================================================
+   ANCHOS DE COLUMNA COMPARTIDOS - P1
+   Para informes que necesiten anchos específicos de columna
+   ============================================================================= */
+.rpt-col-60  { width: 50px; }
+.rpt-col-70  { width: 60px; }
+.rpt-col-80  { width: 70px; }
+.rpt-col-90  { width: 75px; }
+.rpt-col-100 { width: 90px; }
+.rpt-col-120 { width: 110px; }
+.rpt-col-180 { width: 160px; }
+.rpt-col-250 { width: 220px; }
+.rpt-col-320 { width: 300px; }
+.rpt-col-500 { width: 480px; }
+
+/* =============================================================================
+   UTILIDADES DE IMPRESIÓN - P1
+   Para usar en estructuras de tabla con thead/tbody/tfoot
+   ============================================================================= */
+.rpt-print-td-flat {
+    padding: 0 !important;
+    border: none !important;
+}
+
+.rpt-print-td-main {
+    padding-left: 10mm !important;
+    padding-right: 10mm !important;
+    border: none !important;
+    vertical-align: top !important;
+}
+
+/* =============================================================================
+   LAYOUT TRIPLE BLOQUE (reutilizable para informes tipo CMAI) - P1
+   ============================================================================= */
+.rpt-triple-container {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.rpt-block-mensual { width: 180px; }
+.rpt-block-acumulado { width: 500px; }
+
+.rpt-block-labels {
+    flex: 1;
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.rpt-block-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* =============================================================================
+   LABELS DE ENCABEZADO - P1
+   ============================================================================= */
+.rpt-label-blue-header {
+    background-color: #00468B !important;
+    color: white !important;
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 2px 0;
+    margin-bottom: 1px;
+}
+
+.rpt-label-row-data {
+    font-size: 0.85rem;
+    color: #000;
+    padding: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =============================================================================
+   SUBINFORMES / SUBREPORTES - P1
+   ============================================================================= */
+.rpt-sub-report-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.rpt-sub-report-container {
+    width: 600px;
+}
+
+/* Permitir override a ancho completo */
+.rpt-sub-report-container.w-100 {
+    width: 100% !important;
+}
+
+
+/* =============================================================================
+   TOTALES AZULES - P1 (Obligatorio: Negrita + Azul Corporativo)
+   ============================================================================= */
+.rpt-total-row-blue td {
+    border-top: 2px solid #00468B !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+    padding-top: 2px;
+}
+
+.rpt-total-row-blue td.text-danger {
+    color: #dc3545 !important;
+}
+
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF
+   Técnica: Estructura de tabla (thead/tfoot) para repetir cabeceras.
+   ============================================================================= */
+@media print {
+    /* 1. Reset de página (sin textitos automáticos del navegador) */
+    @page {
+        size: A4 portrait !important;
+        margin: 0 !important;
+    }
+
+    /* 2. Ocultar ABSOLUTAMENTE TODO excepto la capa de impresión */
+    body > *:not(.rpt-print-layer) {
+        display: none !important;
+    }
+
+    /* 3. Mostrar la capa de impresión como bloque y resetear body */
+    .rpt-print-layer {
+        display: block !important;
+    }
+
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* 4. Simulador de Márgenes Físicos del PDF (Access Parity 0.64cm) */
+    .rpt-paper, .rpt-paper--print {
+        width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 6.4mm !important; /* Margen exacto de Access */
+        box-shadow: none !important;
+        border: none !important;
+        background: white !important;
+    }
+
+    .rpt-print-table {
+        width: 100% !important;
+        table-layout: fixed;
+        border-collapse: collapse;
+        margin: 0 !important;
+    }
+
+    .rpt-page-break {
+        page-break-after: always;
+    }
+
+    /* 7. Permitir cortes dentro de un bloque de Dirección de Negocio para evitar hojas vacías */
+    .dn-block {
+        page-break-inside: auto !important;
+    }
+
+    /* 8. Evitar cortes dentro de filas de detalle (centros individuales) */
+    .rpt-detail-row {
+        page-break-inside: avoid;
+    }
+
+    /* 9. No cortar justo después del header corporativo o banner */
+    .rpt-header,
+    .rpt-banner-top,
+    .rpt-subtitle {
+        page-break-after: avoid;
+    }
+
+    /* 10. Forzar renderizado de fondos y colores corporativos en impresión
+           (por defecto los navegadores eliminan background-color en @media print) */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* ==========================================================================
+       CORRECCIONES CRÍTICAS - PARIDAD VISUAL CON ACCESS (2026-03-12)
+       Estas reglas transforman el diseño "moderno" de pantalla en el diseño
+       "industrial compacto" requerido para el PDF impreso.
+       ========================================================================== */
+
+    /* 10.1 REDUCCIÓN DE FUENTE (Crítico #2): De 0.85rem (~13px) a 8pt */
+    .rpt-table {
+        font-size: 8pt !important;
+    }
+
+    /* 10.2 COMPACTACIÓN DE INTERLINEADO (Crítico #3): De 1.4 a 1.05 */
+    .rpt-detail-row td {
+        line-height: 1.05 !important;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+    }
+
+    /* 10.3 BORDES FINOS ESTILO ACCESS (Alto #5): De 2px a 0.5pt */
+    .rpt-th-blue, .rpt-td-total {
+        border-bottom-width: 0.5pt !important;  /* CORREGIDO: border-width → border-bottom-width */
+    }
+
+    /* 10.4 BANNER COMPACTO (Alto #6): De 38px a 25px */
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* 10.5 LOGOTIPO REDUCIDO (Alto #7): De 50px a 35px */
+    .rpt-header-logo {
+        height: 35px !important;
+    }
+
+    /* 10.6 COLUMNA CENTRO COMO CELDA SÓLIDA (Alto #8): Eliminar márgenes y border-radius */
+    .rpt-group-badge {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        display: block;
+        padding: 3px 0 !important;
+    }
+
+    /* 10.7 PADDING NUMÉRICO REDUCIDO (Alto #9): De 1.2rem (~19px) a 5px */
+    .rpt-number-cell {
+        padding-right: 5px !important;
+        text-align: right !important; /* Asegurar alineación a la derecha en impresión */
+    }
+
+    /* 10.8 COMPACTACIÓN DE HEADERS (Medio #11): De 3px a 2px */
+    .rpt-th-blue {
+        padding-bottom: 2px !important;
+    }
+
+    /* 10.9 HEADER COMPACTO: Reducir margen inferior y alinear arriba */
+    .rpt-header {
+        margin-bottom: 0.5rem !important;
+        align-items: flex-start !important;
+    }
+
+    /* 10.10 TEXTO CORPORATIVO COMPACTO: Reducir fuente */
+    .rpt-header-corporate-text {
+        font-size: 0.95rem !important;
+    }
+
+    /* 10.11 SUBTÍTULO COMPACTO: Reducir fuente y margen */
+    .rpt-subtitle {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* 10.12 CUERPO DE INFORME: Eliminar margen superior residual */
+    .report-body {
+        margin-top: 0 !important;
+    }
+
+    /* ==========================================================================
+       FASE 2 (2026-03-20): RESETS DE LAYOUT TRIPLE BLOQUE PARA IMPRESIÓN A4
+       Los anchos fijos en px (180px, 500px, 770px) desbordan el área útil del A4.
+       Se resetean a porcentajes proporcionales para mantener la proporción visual.
+       ========================================================================== */
+
+    /* Triple container: mantener flex pero eliminar align-items hardcoded */
+    .rpt-triple-container {
+        width: 100% !important;
+        margin-bottom: 1px !important;
+    }
+
+    /* Bloque Mensual: de 180px fijo a ~20% del ancho */
+    .rpt-block-mensual {
+        width: 20% !important;
+        min-width: 0 !important;
+    }
+
+    /* Bloque Acumulado: de 500px fijo a ~55% del ancho */
+    .rpt-block-acumulado {
+        width: 55% !important;
+        min-width: 0 !important;
+    }
+
+    /* Bloque Labels (central): ocupa el espacio restante (flex:1 ya lo hace, reforzar) */
+    .rpt-block-labels {
+        flex: 1 !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Subinforme wrapper y container: sin reset genérico.
+       Cada informe gestiona sus subinformes con proporciones calibradas
+       en su propio @media print (principio: Fluid Over Fixed). */
+}
+
+/* ==========================================================================
+   ESTILOS COMPARTIDOS PARA SELECTORES DE INFORMES (Home/Index)
+   Aseguran que botones e inputs tengan el mismo alto al píxel.
+   ========================================================================== */
+
+/* Altura fija estándar para que coincida con botones Bootstrap (aprox 38px) */
+.rpt-control-height {
+    height: 38px !important;
+}
+
+/* Ajuste específico para el input de número de página */
+.rpt-input-page {
+    width: 65px !important;
+    max-width: 65px;
+    height: 38px !important; /* Fuerza altura exacta del botón */
+    border: 1px solid #ced4da !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+    text-align: center;
+    border-left: none !important; /* Elimina la doble línea entre botón e input */
+    padding: 0 !important;
+    font-size: 1rem !important;
+    border-radius: 0 6px 6px 0 !important; /* Solo redondea esquinas derechas */
+}
+
+/* Ajuste para el botón si va dentro de un grupo */
+.rpt-btn-index {
+    border-radius: 6px 0 0 6px !important; /* Solo redondea esquinas izquierdas */
+    height: 38px !important;
+    white-space: nowrap !important; /* Evita que el texto salte a la siguiente línea */
+}
+
+/* Clase para el contenedor input-group del index con ancho uniforme */
+.rpt-input-group-index {
+    width: 485px !important; /* Ancho suficiente para el literal más largo + input página */
+}
+
+/* Estilo para el combo de SubDirección General */
+.rpt-combo-subdireccion {
+    height: 38px !important;
+    border: 1px solid #ced4da !important;
+    color: #00468B !important;
+    font-weight: 400 !important; /* Sin negrita */
+    padding: 0 10px !important;
+    font-size: 1rem !important;
+    border-radius: 6px !important;
+    background-color: white !important;
+    cursor: pointer !important;
+}
+
+.rpt-combo-subdireccion:focus {
+    border-color: #00468B !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 70, 139, 0.25) !important;
+    outline: none !important;
+}
+
+/* Opciones del combo */
+.rpt-combo-subdireccion option {
+    padding: 8px 5px !important;
+    color: #00468B !important;
+}
+
+.rpt-btn-light {
+    background: #e9ecef !important; /* Gris suave de Bootstrap */
+    color: #495057 !important;     /* Gris oscuro para el texto */
+    border: 1px solid #ced4da !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.rpt-btn-light:hover {
+    background: #ced4da !important; /* Gris un poco más intenso */
+    color: #00468B !important;     /* Resalta el azul corporativo al posar el ratón */
+    border-color: #adb5bd !important;
+    box-shadow: 0 4px 8px rgba(47, 79, 136, 0.15) !important; /* Sombra sutil de profundidad */
+    transform: translateY(-1px);    /* Micro-animación de elevación */
+}

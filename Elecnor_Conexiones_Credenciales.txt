@@ -3,7 +3,7 @@
 	+ VPN		
 		- Servidor: gwgp.elecnor.es
 		- Usuario: jlgarcia@ipartek.com
-		- Contraseña: mismo pasword de Ipartek (Marzo@gp@2026)
+		- Contraseña: mismo pasword de Ipartek (Abril@gp@2026)
 		
 	+ WEB_1 (Informes)
 		- Servidor: 172.24.16.171
