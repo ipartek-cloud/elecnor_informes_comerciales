@@ -46,7 +46,7 @@
 
         <div class="card mb-4 rpt-index-card">
             <div class="card-header rpt-index-header">
-                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> Consejo Administración</h5>
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> CONSEJO de ADMINISTRACIÓN</h5>
             </div>
             <div class="card-body">
                 <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start">
@@ -80,37 +80,6 @@
                                    id="inputPaginaMercados"
                                    name="inputPaginaMercados" value="2" min="1"
                                    aria-label="Página" title="Página inicial">
-                        </div>
-                        <div class="d-flex flex-column align-items-end gap-2 ms-auto">
-                            <!-- Generar Base -->
-                            <div class="d-flex align-items-center gap-2">
-                                <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
-                                    Generar Contratación
-                                </label>
-                                <input class="form-check-input mt-0" type="checkbox"
-                                       id="chkGenerarRPTPrincipalesObras"
-                                       name="chkGenerarRPTPrincipalesObras">
-                            </div>
-
-                            <!-- Generar AI -->
-                            <div class="d-flex align-items-center gap-2">
-                                <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObrasAI">
-                                    Generar Contratación(AI)
-                                </label>
-                                <input class="form-check-input mt-0" type="checkbox"
-                                       id="chkGenerarRPTPrincipalesObrasAI"
-                                       name="chkGenerarRPTPrincipalesObrasAI">
-                            </div>
-
-                            <!-- Generar Significativas -->
-                            <div class="d-flex align-items-center gap-2">
-                                <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesContrataciones">
-                                    Generar Contrataciones Significativas
-                                </label>
-                                <input class="form-check-input mt-0" type="checkbox"
-                                       id="chkGenerarRPTPrincipalesContrataciones"
-                                       name="chkGenerarRPTPrincipalesContrataciones">
-                            </div>
                         </div>
                     </div>
 
@@ -224,13 +193,13 @@
 
                     <!-- Grupo Unificado: Botón + Página (CONTRATACIONES SIGNIFICATIVAS NAC. + INT. + COMBO SUBDIRECCIÓN) -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Contrataciones Significativas Nacionales -->
+                        <!-- Columna Izquierda: Contrataciones Significativas Nacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
                                     data-input-pag="inputPaginaContratacionesSignificativasNacionales"
                                     data-mercado="Nacional"
-                                    aria-label="Ver informe Contrataciones Significativas Nacionales">
+                                    aria-label="Ver informe Contrataciones Significativas Nacional">
                                 Contrataciones Significativas Nacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
@@ -244,7 +213,7 @@
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
                                     data-input-pag="inputPaginaContratacionesSignificativasInternacionales"
                                     data-mercado="Internacional"
-                                    aria-label="Ver informe Contrataciones Significativas Internacionales">
+                                    aria-label="Ver informe Contrataciones Significativas Internacional">
                                 Contrataciones Significativas Internacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
@@ -252,12 +221,45 @@
                                    name="inputPaginaContratacionesSignificativasInternacionales" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Derecha: Combo SubDirección General (alineado a la derecha) -->
+                        <!-- Columna Derecha: Combo SubDirección General -->
                         <div class="input-group rpt-input-group-index ms-auto" style="max-width: 240px;">
                             <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral"
                                     aria-label="Filtrar por SubDirección General">
-                                <!-- Las opciones se cargan dinámicamente desde la API -->
+                                <!-- Las opciones se cargan dinámicamente -->
                             </select>
+                        </div>
+                    </div>
+
+                    <!-- Fila de Generación de Datos (Horizontal en la base) -->
+                    <div class="d-flex align-items-center justify-content-center gap-4 w-100 mt-4 border-top pt-3">
+                        <!-- Generar Base -->
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
+                                Generar Contratación
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox"
+                                   id="chkGenerarRPTPrincipalesObras"
+                                   name="chkGenerarRPTPrincipalesObras">
+                        </div>
+
+                        <!-- Generar AI -->
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
+                                Generar Contratación(AI)
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox"
+                                   id="chkGenerarRPTPrincipalesObrasAI"
+                                   name="chkGenerarRPTPrincipalesObrasAI">
+                        </div>
+
+                        <!-- Generar Significativas -->
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
+                                Generar Contrataciones Significativas
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox"
+                                   id="chkGenerarRPTPrincipalesContrataciones"
+                                   name="chkGenerarRPTPrincipalesContrataciones">
                         </div>
                     </div>
 
@@ -265,10 +267,10 @@
             </div>
         </div>
 
-        <!-- Sección de Informes: Elecnor SyP SR. CRUCES -->
+        <!-- Sección de Informes: RESTO de INFORMES -->
         <div class="card mb-4 rpt-index-card">
             <div class="card-header rpt-index-header">
-                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> Elecnor SyP - SR. CRUCES</h5>
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> RESTO de INFORMES</h5>
             </div>
             <div class="card-body">
                 <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">

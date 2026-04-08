@@ -18,6 +18,35 @@ const estado = crearEstadoInforme();
 // --- Ejecución ---
 export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSubDirGeneral = null) {
     try {
+        // 1. Verificar si el checkbox de generación está activado
+        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
+        const debeGenerar = chkGenerar?.checked ?? false;
+
+        // 2. Si checkbox activado, llamar al endpoint de generación
+        if (debeGenerar) {
+            GlobalUI.showLoading('Generando contrataciones significativas...');
+
+            try {
+                const genResp = await ApiClient.post('/api/ContratacionesSignificativas/generar', {
+                    anio: anio,
+                    mes: mes
+                }, true);
+
+                if (!genResp.ok) {
+                    const errorText = await genResp.text();
+                    GlobalUI.showAlert('Error al generar significativos: ' + errorText, 'danger');
+                    GlobalUI.hideLoading();
+                    return;
+                }
+            } catch (error) {
+                GlobalUI.showAlert('Error al conectar con el servidor', 'danger');
+                GlobalUI.hideLoading();
+                return;
+            }
+
+            GlobalUI.hideLoading();
+        }
+
         const subDir = codSubDirGeneral || '221';
 
         const url = `/api/ContratacionesSignificativas`

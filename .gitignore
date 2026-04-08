@@ -52,6 +52,9 @@ packages/
 .memory/
 skills-lock.json
 
+# Windows reserved names (accidentally created)
+nul
+
 # Credenciales (fichero informativo personal)
 Elecnor_Conexiones_Credenciales.txt
 

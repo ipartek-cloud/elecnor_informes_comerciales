@@ -569,12 +569,25 @@ public class InformeRepository
         }, commandTimeout: 60)).ToList();
     }
 
-    /// <summary>
-    /// Ejecuta el procedimiento almacenado spContratacion_Obras para actualizar rptPrincipalesObras.
-    /// </summary>
     public async Task EjecutarSPObrasAsync(int anio, int mes)
     {
         const string sqlExec = @"EXEC spContratacion_Obras @Anio, @Mes";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, new {
+            Anio = anio,
+            Mes = mes
+        }, commandTimeout: 120);
+    }
+
+    /// <summary>
+    /// Ejecuta el procedimiento almacenado spContratacion_ObrasRPT para actualizar las tablas de contrataciones significativas.
+    /// </summary>
+    public async Task EjecutarSPObrasRPTAsync(int anio, int mes)
+    {
+        const string sqlExec = @"EXEC spContratacion_ObrasRPT @Anio, @Mes";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();

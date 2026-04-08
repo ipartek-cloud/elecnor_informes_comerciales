@@ -15,6 +15,11 @@ public class InformeContratacionesSignificativasService
     public InformeContratacionesSignificativasService(InformeRepository repository)
         => _repository = repository;
 
+    public async Task GenerarDatosSignificativosAsync(int anio, int mes)
+    {
+        await _repository.EjecutarSPObrasRPTAsync(anio, mes);
+    }
+
     public async Task<ContratacionesSignificativasResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral)
     {
         // ═══════════════════════════════════════════════════════

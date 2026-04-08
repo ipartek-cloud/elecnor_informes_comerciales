@@ -13,9 +13,7 @@ public class ContratacionesSignificativasController : ControllerBase
     private readonly InformeContratacionesSignificativasService _service;
     private readonly ILogger<ContratacionesSignificativasController> _logger;
 
-    public ContratacionesSignificativasController(
-        InformeContratacionesSignificativasService service,
-        ILogger<ContratacionesSignificativasController> logger)
+    public ContratacionesSignificativasController( InformeContratacionesSignificativasService service, ILogger<ContratacionesSignificativasController> logger)
     {
         _service = service;
         _logger  = logger;
@@ -34,5 +32,19 @@ public class ContratacionesSignificativasController : ControllerBase
         var resultado = await _service.ObtenerInformeAsync(anio, mes, mercado, codSubDirGeneral);
         return Ok(resultado);
 
+    }
+
+    [HttpPost("generar")]
+    public async Task<IActionResult> Generar([FromBody] GenerarContratacionesRequest request)
+    {
+        try
+        {
+            await _service.GenerarDatosSignificativosAsync(request.anio, request.mes);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error al generar los datos significativos: {ex.Message}");
+        }
     }
 }
