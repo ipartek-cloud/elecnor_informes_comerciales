@@ -3,10 +3,12 @@ import { GlobalUI, ApiClient, decodeJwt } from './site.js';
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Establecer mes actual por defecto
+    // Establecer mes por defecto (mes anterior, excepto en enero que se mantiene enero)
     const txtMes = document.getElementById('txtMes');
     if (txtMes) {
-        txtMes.value = new Date().getMonth() + 1;
+        const now = new Date();
+        const currentMonth = now.getMonth() + 1; // 1-12
+        txtMes.value = currentMonth === 1 ? 1 : currentMonth - 1;
     }
 
     // Verificar si ya hay credenciales

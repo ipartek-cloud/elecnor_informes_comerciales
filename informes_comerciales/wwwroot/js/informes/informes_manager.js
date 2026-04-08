@@ -58,9 +58,11 @@ window.cargarInforme = async function (btn, nombreInforme) {
         const modulo = _registroModulos[nombreInforme];
 
         if (modulo && modulo.ejecutar) {
-            // Pasar ambos parámetros: mercado (para Ranking) y umbral (para Paises)
-            // Cada informe usa lo que necesita, los demás parámetros son undefined o null
-            await modulo.ejecutar(anio, mes, nroPagina, mercado, umbral);
+            // Obtenemos los parámetros adicionales según el reporte demandado
+            const _codSubDir = document.getElementById('cmbSubDireccionGeneral')?.value || null;
+            const parametroUmbral = (nombreInforme === 'contrataciones_significativas') ? _codSubDir : umbral;
+
+            await modulo.ejecutar(anio, mes, nroPagina, mercado, parametroUmbral);
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');

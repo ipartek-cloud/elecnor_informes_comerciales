@@ -51,6 +51,7 @@ builder.Services.AddScoped<InformeActividadesService>();
 builder.Services.AddScoped<InformeContratacionesService>();
 builder.Services.AddScoped<InformeContratacionesAIService>();
 builder.Services.AddScoped<InformeRankingContratacionClientesService>();
+builder.Services.AddScoped<InformeContratacionesSignificativasService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // Catálogos

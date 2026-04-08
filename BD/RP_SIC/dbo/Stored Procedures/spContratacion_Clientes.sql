@@ -118,7 +118,7 @@ BEGIN
     INSERT INTO @vContratacionClientes
         (Mercado, Pais, AsociadaInversion, Cliente,
          ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoanterior, ImporteContratadoAcumulado_Ajuste)
-    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado,
+    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado,
             sum(ImporteContratado), 0, 0
     FROM    dbo.OfertasSQL
             INNER JOIN dbo.Provincias              ON dbo.OfertasSQL.CodProv    = dbo.Provincias.CDPRO
@@ -127,13 +127,13 @@ BEGIN
             LEFT  JOIN dbo.OfertaAsociadaInversion ON dbo.OfertasSQL.CodOferta  = dbo.OfertaAsociadaInversion.JVAYNB
     WHERE   AñoAdjudicacion      = @pAño
       AND   month(FAdjudicacion) <= @pMes
-    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado
+    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado
 
     -- Año anterior
     INSERT INTO @vContratacionClientes
         (Mercado, Pais, AsociadaInversion, Cliente,
          ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoanterior, ImporteContratadoAcumulado_Ajuste)
-    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado,
+    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado,
             0, sum(ImporteContratado), 0
     FROM    dbo.OfertasSQL
             INNER JOIN dbo.Provincias              ON dbo.OfertasSQL.CodProv    = dbo.Provincias.CDPRO
@@ -142,7 +142,7 @@ BEGIN
     WHERE   AñoAdjudicacion      = @pAño - 1
       AND   month(FAdjudicacion) <= @pMes
       AND   reparto               = 0
-    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado
+    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado
 
     -- =====================================================
     --  OFERTAS SQL AJUSTES - año actual y anterior
@@ -152,7 +152,7 @@ BEGIN
     INSERT INTO @vContratacionClientes
         (Mercado, Pais, AsociadaInversion, Cliente,
          ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoanterior, ImporteContratadoAcumulado_Ajuste)
-    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado,
+    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado,
             sum(Importe), 0, sum(Importe)
     FROM    dbo.OfertasSQL_Ajustes
             INNER JOIN dbo.Provincias              ON dbo.OfertasSQL_Ajustes.CodProv    = dbo.Provincias.CDPRO
@@ -160,13 +160,13 @@ BEGIN
             LEFT  JOIN dbo.OfertaAsociadaInversion ON dbo.OfertasSQL_Ajustes.CodOferta  = dbo.OfertaAsociadaInversion.JVAYNB
     WHERE   AñoAdjudicacion      = @pAño
       AND   month(FAdjudicacion) <= @pMes
-    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado
+    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado
 
     -- Año anterior
     INSERT INTO @vContratacionClientes
         (Mercado, Pais, AsociadaInversion, Cliente,
          ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoanterior, ImporteContratadoAcumulado_Ajuste)
-    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado,
+    SELECT  dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado,
             0, sum(Importe), sum(Importe)
     FROM    dbo.OfertasSQL_Ajustes
             INNER JOIN dbo.Provincias              ON dbo.OfertasSQL_Ajustes.CodProv    = dbo.Provincias.CDPRO
@@ -174,7 +174,7 @@ BEGIN
             LEFT  JOIN dbo.OfertaAsociadaInversion ON dbo.OfertasSQL_Ajustes.CodOferta  = dbo.OfertaAsociadaInversion.JVAYNB
     WHERE   AñoAdjudicacion      = @pAño - 1
       AND   month(FAdjudicacion) <= @pMes
-    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, JVAYNB, NomAgrupado
+    GROUP BY dbo.Provincias.Pais, dbo.ClientesSQL.Pais, dbo.OfertaAsociadaInversion.JVAYNB, dbo.ClientesSQL.NomAgrupado
 
     -- =====================================================
     --  Agrupación final por mercado, país y cliente

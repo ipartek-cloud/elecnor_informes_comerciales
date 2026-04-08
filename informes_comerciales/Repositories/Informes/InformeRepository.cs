@@ -9,6 +9,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
 using Elecnor_Informes_Comerciales.Models.Informes.Contrataciones;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesAI;
 using Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes;
+using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesSignificativas;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1191,5 +1192,153 @@ public class InformeRepository
         return (await _connection.QueryAsync<SubDireccionGeneralDto>(sql)).ToList();
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Contrataciones Significativas
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<ContratacionesSignificativasPoco>> ObtenerContratacionesSignificativasAsync(
+        int anio, int mes, string mercado, string codSubDirGeneral)
+    {
+        int mesMenos1 = mes - 1;
+
+        const string sqlSelect = @" SELECT
+                                        ocdn.Orden_CodDDirNegocio AS Orden,
+                                        s.NombreDirNegocio,
+                                        ISNULL(SUM(rpc.ImporteContratado_OK), 0) AS ImporteContratado
+                                    FROM
+                                        rptPrincipalesContratacion   rpc
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
+                                    WHERE
+                                            rpc.Año            = @Anio
+                                        AND rpc.Mes            IN (@Mes, @MesMenos1)
+                                        AND rpc.Ocultar        = 0
+                                        AND rpc.Pais           = @Mercado
+                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
+                                    GROUP BY
+                                        ocdn.Orden_CodDDirNegocio,
+                                        s.NombreDirNegocio";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesSignificativasPoco>(    sqlSelect,
+                                                                            new {
+                                                                                Anio             = anio,
+                                                                                Mes              = mes,
+                                                                                MesMenos1        = mesMenos1,
+                                                                                Mercado          = mercado,
+                                                                                CodSubDirGeneral = codSubDirGeneral
+                                                                            },
+                                                                            commandTimeout: 60
+                                                                        )).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Contrataciones Significativas — Detalle Mes
+    // └─ Metodo: ObtenerContratacionesSignificativasMesAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene el detalle mensual de contrataciones individuales (>= @Importe k€).
+    /// </summary>
+    public async Task<List<ContratacionesSignificativasMesPoco>> ObtenerContratacionesSignificativasMesAsync(
+        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe)
+    {
+        const string sqlSelect = @"SELECT
+                                        ocdn.Orden_CodDDirNegocio                   AS Orden,
+                                        s.NombreDirNegocio,
+                                        REPLACE(rpc.NombreCliente_OK,  '''', '')     AS NombreCliente_OK,
+                                        REPLACE(rpc.DescripcionOferta_OK, '''', '')  AS DescripcionOferta_OK,
+                                        ISNULL(SUM(rpc.ImporteContratado_OK), 0)    AS ImporteContratado
+                                    FROM
+                                        rptPrincipalesContratacion   rpc
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
+                                    WHERE
+                                            rpc.Año            = @Anio
+                                        AND rpc.Mes            = @Mes
+                                        AND rpc.Ocultar        = 0
+                                        AND rpc.Pais           = @Mercado
+                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
+                                        AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
+                                    GROUP BY
+                                        ocdn.Orden_CodDDirNegocio,
+                                        s.NombreDirNegocio,
+                                        REPLACE(rpc.NombreCliente_OK,  '''', ''),
+                                        REPLACE(rpc.DescripcionOferta_OK, '''', '')
+                                    HAVING
+                                           SUM(rpc.ImporteContratado_OK) >=  @Importe
+                                        OR SUM(rpc.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesSignificativasMesPoco>(
+            sqlSelect,
+            new {
+                Anio             = anio,
+                Mes              = mes,
+                Mercado          = mercado,
+                CodSubDirGeneral = codSubDirGeneral,
+                Importe          = importe
+            },
+            commandTimeout: 60
+        )).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Contrataciones Significativas — Histórico Meses Anteriores
+    // └─ Metodo: ObtenerContratacionesSignificativasMesesAnterioresAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene el detalle mensual histórico de contrataciones (>= @Importe k€)
+    /// de los meses anteriores al consultado dentro del mismo año.
+    /// </summary>
+    public async Task<List<ContratacionesSignificativasMesPoco>> ObtenerContratacionesSignificativasMesesAnterioresAsync(
+        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe)
+    {
+        const string sqlSelect = @"SELECT
+                                        ocdn.Orden_CodDDirNegocio                   AS Orden,
+                                        s.NombreDirNegocio,
+                                        REPLACE(rpc.NombreCliente_OK,  '''', '')     AS NombreCliente_OK,
+                                        REPLACE(rpc.DescripcionOferta_OK, '''', '')  AS DescripcionOferta_OK,
+                                        ISNULL(SUM(rpc.ImporteContratado_OK), 0)    AS ImporteContratado
+                                    FROM
+                                        rptPrincipalesContratacion   rpc
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
+                                    WHERE
+                                            rpc.Año            = @Anio
+                                        AND rpc.Mes            < @Mes
+                                        AND rpc.Ocultar        = 0
+                                        AND rpc.Pais           = @Mercado
+                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
+                                        AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
+                                    GROUP BY
+                                        ocdn.Orden_CodDDirNegocio,
+                                        s.NombreDirNegocio,
+                                        REPLACE(rpc.NombreCliente_OK,  '''', ''),
+                                        REPLACE(rpc.DescripcionOferta_OK, '''', '')
+                                    HAVING
+                                           SUM(rpc.ImporteContratado_OK) >=  @Importe
+                                        OR SUM(rpc.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesSignificativasMesPoco>(
+            sqlSelect,
+            new {
+                Anio             = anio,
+                Mes              = mes,
+                Mercado          = mercado,
+                CodSubDirGeneral = codSubDirGeneral,
+                Importe          = importe
+            },
+            commandTimeout: 60
+        )).ToList();
+    }
 }
 

@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Informes Consejo";
+    // Lógica de mes por defecto: mes anterior, excepto en enero que es enero
+    int defaultMonth = DateTime.Now.Month == 1 ? 1 : DateTime.Now.Month - 1;
 }
 
 <div class="container-fluid">
@@ -24,18 +26,18 @@
                     </div>
                     <div class="col-auto">
                         <select class="form-control" id="txtMes" name="txtMes" aria-label="Seleccionar mes de consulta">
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
+                            <option value="1" selected="@(defaultMonth == 1 ? "selected" : null)">Enero</option>
+                            <option value="2" selected="@(defaultMonth == 2 ? "selected" : null)">Febrero</option>
+                            <option value="3" selected="@(defaultMonth == 3 ? "selected" : null)">Marzo</option>
+                            <option value="4" selected="@(defaultMonth == 4 ? "selected" : null)">Abril</option>
+                            <option value="5" selected="@(defaultMonth == 5 ? "selected" : null)">Mayo</option>
+                            <option value="6" selected="@(defaultMonth == 6 ? "selected" : null)">Junio</option>
+                            <option value="7" selected="@(defaultMonth == 7 ? "selected" : null)">Julio</option>
+                            <option value="8" selected="@(defaultMonth == 8 ? "selected" : null)">Agosto</option>
+                            <option value="9" selected="@(defaultMonth == 9 ? "selected" : null)">Septiembre</option>
+                            <option value="10" selected="@(defaultMonth == 10 ? "selected" : null)">Octubre</option>
+                            <option value="11" selected="@(defaultMonth == 11 ? "selected" : null)">Noviembre</option>
+                            <option value="12" selected="@(defaultMonth == 12 ? "selected" : null)">Diciembre</option>
                         </select>
                     </div>
                 </div>
@@ -49,7 +51,7 @@
             <div class="card-body">
                 <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start">
 
-                    <!-- Grupo Unificado: Botón + Página (CARTERA) + Checkbox -->
+                    <!-- Grupo Unificado: Botón + Página (CARTERA) -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
@@ -62,14 +64,6 @@
                                    id="inputPaginaCartera"
                                    name="inputPaginaCartera" value="1" min="1"
                                    aria-label="Página" title="Página inicial">
-                        </div>
-                        <div class="d-flex align-items-center gap-2 ms-auto">
-                            <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
-                                Generar Contratación
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox" 
-                                   id="chkGenerarRPTPrincipalesObras" 
-                                   name="chkGenerarRPTPrincipalesObras">
                         </div>
                     </div>
 
@@ -87,13 +81,36 @@
                                    name="inputPaginaMercados" value="2" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="d-flex align-items-center gap-2 ms-auto">
-                            <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObrasAI">
-                                Generar Contratación(AI)
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox"
-                                   id="chkGenerarRPTPrincipalesObrasAI"
-                                   name="chkGenerarRPTPrincipalesObrasAI">
+                        <div class="d-flex flex-column align-items-end gap-2 ms-auto">
+                            <!-- Generar Base -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObras">
+                                    Generar Contratación
+                                </label>
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       id="chkGenerarRPTPrincipalesObras"
+                                       name="chkGenerarRPTPrincipalesObras">
+                            </div>
+
+                            <!-- Generar AI -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesObrasAI">
+                                    Generar Contratación(AI)
+                                </label>
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       id="chkGenerarRPTPrincipalesObrasAI"
+                                       name="chkGenerarRPTPrincipalesObrasAI">
+                            </div>
+
+                            <!-- Generar Significativas -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="form-check-label mb-0 rpt-checkbox-label" for="chkGenerarRPTPrincipalesContrataciones">
+                                    Generar Contrataciones Significativas
+                                </label>
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       id="chkGenerarRPTPrincipalesContrataciones"
+                                       name="chkGenerarRPTPrincipalesContrataciones">
+                            </div>
                         </div>
                     </div>
 
@@ -214,21 +231,21 @@
                                     data-input-pag="inputPaginaContratacionesSignificativasNacionales"
                                     data-mercado="Nacional"
                                     aria-label="Ver informe Contrataciones Significativas Nacionales">
-                                Contrataciones Significativas Nacionales
+                                Contrataciones Significativas Nacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContratacionesSignificativasNacionales"
                                    name="inputPaginaContratacionesSignificativasNacionales" value="9" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Central: Contrataciones Significativas Internacionales -->
+                        <!-- Columna Central: Contrataciones Significativas Internacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
                                     data-input-pag="inputPaginaContratacionesSignificativasInternacionales"
                                     data-mercado="Internacional"
                                     aria-label="Ver informe Contrataciones Significativas Internacionales">
-                                Contrataciones Significativas Internacionales
+                                Contrataciones Significativas Internacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContratacionesSignificativasInternacionales"

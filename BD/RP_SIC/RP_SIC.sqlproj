@@ -179,7 +179,6 @@
     <Build Include="dbo\Tables\WEB_UsuariosGerencias.sql" />
     <Build Include="dbo\Tables\CO005BP.sql" />
     <Build Include="dbo\Tables\NomOfertasAdjudicadasSQL.sql" />
-    <Build Include="dbo\Tables\CO005BPH .sql" />
     <Build Include="dbo\Tables\GCIPaises.sql" />
     <Build Include="dbo\Tables\GCIZonasComerciales.sql" />
     <Build Include="dbo\Tables\ContratacionAdhorna.sql" />
@@ -862,7 +861,6 @@
     <Build Include="dbo\Views\Ofertas_Clientes_1.sql" />
     <Build Include="dbo\Views\Ofertas_1.sql" />
     <Build Include="dbo\Views\OfertaCentroObra_Producciones_1.sql" />
-    <Build Include="dbo\Views\OfertaAsociadaInversion_1.sql" />
     <Build Include="dbo\Views\ObrasActuales-Ofertas_1.sql" />
     <Build Include="dbo\Views\Obras_Filtro_1.sql" />
     <Build Include="dbo\Views\Obras_1.sql" />
