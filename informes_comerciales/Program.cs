@@ -22,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Configuración de Serilog
 builder.Host.UseSerilog((context, configuration) => configuration
     .WriteTo.Console()
-    .WriteTo.File("Logs/log_.txt", rollingInterval: RollingInterval.Day));
+    .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "Logs", "log_.txt"), rollingInterval: RollingInterval.Day));
 
 // 2. Agregar soporte para Controladores con Vistas (MVC) e Inyectar Caching
 builder.Services.AddControllersWithViews();
