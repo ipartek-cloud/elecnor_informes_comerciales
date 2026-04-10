@@ -92,7 +92,7 @@
 }
 
 /* Encabezados Azules */
-.rpt-th-blue {
+.rpt-th-blue, .rpt-th-blue th {
     color: #00468B !important;
     border-bottom: 2px solid #00468B !important;
     padding-bottom: 3px !important;
@@ -321,17 +321,18 @@
 /* =============================================================================
    UTILIDADES PARA CONVERTIR ESTILOS INLINE (CMAI → Clases) - P0
    Estas clases reemplazan los ~36 estilos inline detectados en contratacion_mercados_ai.js
+   Soporte dual: .clase y [atributo] para compatibilidad con código JS antiguo
    ============================================================================= */
-.rpt-pad-right-15 { padding-right: 15px !important; }
-.rpt-font-small { font-size: 0.8rem !important; }
-.rpt-text-muted-gray { color: #666 !important; }
-.rpt-margin-top-15 { margin-top: 15px !important; }
-.rpt-width-100 { width: 100px !important; }
-.rpt-width-320 { width: 320px !important; }
-.rpt-width-flex { flex-grow: 1; max-width: 350px !important; }
-.rpt-justify-start { justify-content: flex-start !important; }
-.rpt-gap-40 { gap: 40px !important; }
-.rpt-text-orange-council { color: #E38631 !important; }
+.rpt-pad-right-15, [rpt-pad-right-15] { padding-right: 15px !important; }
+.rpt-font-small, [rpt-font-small] { font-size: 0.8rem !important; }
+.rpt-text-muted-gray, [rpt-text-muted-gray] { color: #666 !important; }
+.rpt-margin-top-15, [rpt-margin-top-15] { margin-top: 15px !important; }
+.rpt-width-100, [rpt-width-100] { width: 100px !important; }
+.rpt-width-320, [rpt-width-320] { width: 320px !important; }
+.rpt-width-flex, [rpt-width-flex] { flex-grow: 1; max-width: 350px !important; }
+.rpt-justify-start, [rpt-justify-start] { justify-content: flex-start !important; }
+.rpt-gap-40, [rpt-gap-40] { gap: 40px !important; }
+.rpt-text-orange-council, [rpt-text-orange-council] { color: #E38631 !important; }
 
 /* =============================================================================
    ANCHOS DE COLUMNA COMPARTIDOS - P1

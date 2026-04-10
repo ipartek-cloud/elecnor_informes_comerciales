@@ -2,7 +2,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using Dapper;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias_Totales_Cruces;
-using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo;
 using Elecnor_Informes_Comerciales.Models.Informes.Mercados;
 using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
@@ -10,6 +10,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.Contrataciones;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesAI;
 using Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesSignificativas;
+using Elecnor_Informes_Comerciales.Models.Informes.MercadosDG;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -117,32 +118,22 @@ public class InformeRepository
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // INFORME: Contratación Mercados AI (Cartera Diferida)
-    // └─ Método: ObtenerContratacionMercadosAIAsync()
-    // └─ Subinformes: SubMercadoAI, CarteraProduccion
+    // INFORME: Cartera Diferida Consejo
+    // └─ Método: ObtenerCarteraDiferidaConsejoAsync()
+    // └─ Incluye: Mercados por País, Asociado Inversión, Cartera Producción/Diferida y Ventas.
     // ═══════════════════════════════════════════════════════════════════════════
 
     /// <summary>
-    /// Obtiene los datos para el informe Contratación Mercados (Consejo Administración), 
-    /// su subinforme de inversión y el de cartera.
+    /// Obtiene los datos consolidados para el informe de Cartera Diferida (Consejo de Administración).
     /// </summary>
-    public async Task<(List<ContratacionMercadosAIPoco> Principal, List<MercadoAIPoco> mercadoAI, List<CarteraProducirPoco> Cartera, List<CarteraDiferidaPoco> CarteraDiferida, List<VentasPoco> Ventas)> ObtenerContratacionMercadosAIAsync(int anio, int mes)
+    public async Task<(List<CarteraDiferidaConsejoPoco> Principal, List<MercadoAIPoco> mercadoAI, List<CarteraProducirPoco> Cartera, List<CarteraDiferidaPoco> CarteraDiferida, List<VentasPoco> Ventas)> ObtenerCarteraDiferidaConsejoAsync(int anio, int mes)
     {
-        // ─────────────────────────────────────────────────────────────────────
         // SECCIÓN A: INFORME PRINCIPAL (Mercados por País)
-        // ─────────────────────────────────────────────────────────────────────
-
-        // ─── A.1: Vaciar tabla de trabajo ───
         const string sqlDeletePrincipal = "DELETE FROM rptContratacion_DG_SDG_DN_SDNA";
-
-        // ─── A.2: Ejecutar SP y obtener resultados en memoria ───
         const string sqlExecPrincipal = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
-
-        // ─── A.3: Insertar manualmente en tabla de trabajo ───
         const string sqlInsertManualPrincipal = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo)
                                                 VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo)";
 
-        // ─── A.4: SELECT enriquecido ───
         const string sqlSelectPrincipal = @"SELECT
                                                 c.Año,
                                                 c.Pais,
@@ -160,20 +151,11 @@ public class InformeRepository
                                                 AND o.Año = c.Año
                                             GROUP BY c.Año, c.Pais, o.Importe;";
 
-        // ─────────────────────────────────────────────────────────────────────
-        // SECCIÓN B: SUBINFORME MercadoAI (Asociado Inversión)
-        // ─────────────────────────────────────────────────────────────────────
-
-        // ─── B.1: Vaciar tabla de trabajo ───
+        // SECCIÓN B: ASOCIADO INVERSIÓN (MercadoAI)
         const string sqlDeleteSub = "DELETE FROM rptContratacionAsociadoInversion";
-
-        // ─── B.2: Poblar desde SP ───
         const string sqlInsertExecSub = "EXEC spWEB_ContratacionAsociadoInversion @Anio, @Mes";
-
-        // ─── B.3: Asignar año ───
         const string sqlUpdateAnioSub = "UPDATE rptContratacionAsociadoInversion SET Año = @Anio";
 
-        // ─── B.4: SELECT enriquecido ───
         const string sqlSelectMercadoAI = @" SELECT
                                                 r.Año,
                                                 r.Mensual_Contratacion,
@@ -191,29 +173,17 @@ public class InformeRepository
                                             ON 
                                                 r.Mercado = v.Mercado";
 
-        // ─────────────────────────────────────────────────────────────────────
-        // SECCIÓN C: SUBINFORME CarteraProduccion (Cartera Pendiente Producir)
-        // ─────────────────────────────────────────────────────────────────────
-
-        // ─── C.1: SELECT directo (sin tabla de trabajo) ───
+        // SECCIÓN C: CARTERA PRODUCCIÓN (Pendiente Producir)
         const string sqlSelectCartera = @"  SELECT Año, Mes, Concepto, ImporteInicial, ImporteActual, PorcentajeIncrementoAñoAnterior, SumarCartera, CarteraAñoAnterior
                                             FROM CarteraActual_CJO
                                             WHERE Año = @Anio AND Mes = @Mes";
 
-        // ─────────────────────────────────────────────────────────────────────
-        // SECCIÓN D: SUBINFORME CarteraDiferida (Cartera Diferida - Consejo)
-        // ─────────────────────────────────────────────────────────────────────
-
-        // El usuario requiere años FIJOS en el layout (1.1.25, 2025, 2026, 2027) independientemente del año de reporte
+        // SECCIÓN D: CARTERA DIFERIDA (Años fijos por requerimiento de layout)
         const string sqlSelectDiferida = @"SELECT Año, Mes, Mercado, [Cartera Diferida] AS CarteraDiferida, [01#01#25] AS Cart1_1, Nuevos, Total, Contr, [2025] AS Anio1, [2026] AS Anio2, [2027] AS Anio3, Orden
                                            FROM CarteraDiferida_CJO
                                            WHERE Mercado = 'Mercado' AND Año = @Anio AND Mes = @Mes";
 
-        // ─────────────────────────────────────────────────────────────────────────────────
-        // SECCIÓN E: SUBINFORME Ventas (lectura directa de VentasRPT, sin tabla de trabajo)
-        // ─────────────────────────────────────────────────────────────────────────────────
-
-        // Los alias mapean las columnas numéricas [XXXX] a las propiedades del POCO (sin caracteres reservados)
+        // SECCIÓN E: VENTAS HISTÓRICAS
         const string sqlSelectVentas = @"SELECT
                                             Mercado,
                                             [2017] AS Anio2017,
@@ -259,7 +229,7 @@ public class InformeRepository
                 }, transaction: transaction);
             }
 
-            var principal = (await _connection.QueryAsync<ContratacionMercadosAIPoco>(sqlSelectPrincipal, parametros, transaction)).ToList();
+            var principal = (await _connection.QueryAsync<CarteraDiferidaConsejoPoco>(sqlSelectPrincipal, parametros, transaction)).ToList();
 
             // ── Ejecución Sección B: MercadoAI ──
             await _connection.ExecuteAsync(sqlDeleteSub, transaction: transaction);
@@ -288,23 +258,21 @@ public class InformeRepository
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // INFORME: Mercados
-    // └─ Método: ObtenerMercadosAsync()
+    // INFORME: Mercados / MercadosDG
     // ═══════════════════════════════════════════════════════════════════════════
 
+    /**
+     * Obtiene los datos de mercados mediante la población de una tabla de trabajo temporal.
+     * Utiliza spContratacion_DG_SDG_DN_SDNA para el cálculo de importes.
+     */
     public async Task<List<MercadosPoco>> ObtenerMercadosAsync(int anio, int mes)
     {
-        // ─── PASO 1: Vaciar la tabla de trabajo ───
         const string sqlDelete = "DELETE FROM rptContratacion_DG_SDG_DN_SDNA";
-
-        // ─── PASO 2: Ejecutar Procedimiento Almacenado en Memoria ───
         const string sqlExec = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
 
-        // ─── PASO 3: Insertar manualmente en tabla de trabajo ───
         const string sqlInsertManual = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo)
                                          VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo)";
 
-        // ─── PASO 4: SELECT final con JOIN a objetivos
         const string sqlSelect = @" SELECT
                                         rpt.Año,
                                         MAX(sg.Orden) AS Orden,
@@ -328,10 +296,7 @@ public class InformeRepository
                                     LEFT JOIN SubDirGeneral sg WITH (NOLOCK)
                                         ON rpt.CodSubDirGeneral = sg.CodSubDirGeneral
                                     GROUP BY
-                                        rpt.Año,
-                                        rpt.Pais,
-                                        rpt.NombreSubDirGeneral,
-                                        rpt.NombreDirNegocio";
+                                        rpt.Año, rpt.Pais, rpt.NombreSubDirGeneral, rpt.NombreDirNegocio";
 
         var parametros = new { Anio = anio, Mes = mes };
 
@@ -341,13 +306,13 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            // Ejecutar SP para conseguir los datos
+            // 1. Obtener datos desde el procedimiento almacenado
             var datosSp = (await _connection.QueryAsync<dynamic>(sqlExec, parametros, transaction: transaction)).ToList();
             
-            // Vaciar la tabla para la sesión principal
+            // 2. Limpiar tabla de trabajo para la sesión
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
             
-            // Insertar fila a fila inyectando el periodo actual
+            // 3. Poblar tabla de trabajo con el periodo solicitado
             foreach (var fila in datosSp)
             {
                 await _connection.ExecuteAsync(sqlInsertManual, new {
@@ -364,7 +329,7 @@ public class InformeRepository
                 }, transaction: transaction);
             }
 
-            // Consultar datos agrupados de la tabla temporal
+            // 4. Consulta final con agregación y JOINs de objetivos
             var resultado = (await _connection.QueryAsync<MercadosPoco>(sqlSelect, parametros, transaction)).ToList();
 
             transaction.Commit();
@@ -376,6 +341,44 @@ public class InformeRepository
             throw;
         }
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SUBINFORME: Cartera Diferida (para MercadosDG)
+    // └─ Método: ObtenerMercadosDGCarteraDiferidaAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos de Cartera Diferida para el subinforme de MercadosDG.
+    /// Lectura directa desde CarteraDiferida_CJO. Ejecuta en paralelo con ObtenerMercadosAsync().
+    /// Las columnas se calculan dinámicamente según @Anio.
+    /// </summary>
+    public async Task<List<MercadosDGCarteraDiferidaPoco>> ObtenerMercadosDGCarteraDiferidaAsync(int anio, int mes)
+    {
+        using var connection = new SqlConnection(_connectionString);
+
+        string colCartPrev = $"[01#01#{(anio - 2).ToString().Substring(2)}]";
+        string colCartAct  = $"[01#01#{(anio - 1).ToString().Substring(2)}]";
+        string colFuturo1  = $"[{anio}]";
+        string colFuturo2  = $"[{anio + 1}]";
+
+        string sql = $@"
+            SELECT
+                [Cartera Diferida] AS CarteraDiferida,
+                {colCartPrev} AS ValorCartPrev,
+                {colCartAct}  AS ValorCartAct,
+                {colFuturo1}  AS ValorFuturo1,
+                {colFuturo2}  AS ValorFuturo2,
+                Orden
+            FROM CarteraDiferida_CJO WITH (NOLOCK)
+            WHERE Mercado = 'Mercado'
+              AND Año = @Anio
+              AND Mes = @Mes";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
+        return (await connection.QueryAsync<MercadosDGCarteraDiferidaPoco>(sql, parametros)).ToList();
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
     // INFORME: Países (Mercado Internacional)
     // └─ Método: ObtenerPaisesAsync()

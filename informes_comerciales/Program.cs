@@ -19,10 +19,14 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configuración de Serilog
+// 1. Configuración de Serilog (Ruta dinámica: Raíz en Desarrollo, Binarios en Producción)
+string logPath = builder.Environment.IsDevelopment()
+    ? Path.Combine(builder.Environment.ContentRootPath, "Logs", "log_.txt")
+    : Path.Combine(AppContext.BaseDirectory, "Logs", "log_.txt");
+
 builder.Host.UseSerilog((context, configuration) => configuration
     .WriteTo.Console()
-    .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "Logs", "log_.txt"), rollingInterval: RollingInterval.Day));
+    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day));
 
 // 2. Agregar soporte para Controladores con Vistas (MVC) e Inyectar Caching
 builder.Services.AddControllersWithViews();
@@ -44,8 +48,9 @@ Console.WriteLine("[AUTH] Servicios de autenticación registrados.");
 // Informes
 builder.Services.AddScoped<InformeRepository>();
 builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
-builder.Services.AddScoped<InformeContratacionMercadosAIService>();
+builder.Services.AddScoped<InformeCarteraDiferidaConsejoService>();
 builder.Services.AddScoped<InformeMercadosService>();
+builder.Services.AddScoped<InformeMercadosDGService>();
 builder.Services.AddScoped<InformePaisesService>();
 builder.Services.AddScoped<InformeActividadesService>();
 builder.Services.AddScoped<InformeContratacionesService>();

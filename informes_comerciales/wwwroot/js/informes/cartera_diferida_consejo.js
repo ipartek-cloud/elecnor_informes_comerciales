@@ -1,5 +1,5 @@
 /**
- * Módulo para el informe Contratación Mercados AI (Cartera Diferida).
+ * Módulo para el informe Cartera Diferida Consejo.
  * Implementa paginación por años con subinforme de mercados AI.
  * 
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
@@ -23,7 +23,7 @@ const estado = crearEstadoInforme();
  */
 export async function ejecutar(anio, mes, nroPagina) {
     try {
-        let url = `/api/ContratacionMercadosAI?anio=${anio}&mes=${mes}`;
+        let url = `/api/CarteraDiferidaConsejo?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`; 
 
@@ -466,7 +466,7 @@ function _renderCarteraDiferida(agrup) {
     const sumaTotalCartera = (t.v25 + t.v26 + t.v27);
 
     return `
-        <table class="rpt-table-triple rpt-table-stackable">
+        <table class="rpt-table-triple rpt-table-stackable rpt-table-cd">
 
             <colgroup>
                 <col class="rpt-col-80px">

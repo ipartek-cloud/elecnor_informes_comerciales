@@ -49,6 +49,7 @@ packages/
 # IA
 .agent/
 .gemini/
+.qwen/
 .memory/
 skills-lock.json
 

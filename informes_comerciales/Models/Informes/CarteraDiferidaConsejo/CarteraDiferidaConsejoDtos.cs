@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Elecnor_Informes_Comerciales.DTOs.Informes.Response;
 
-namespace Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI
+namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
 {
     /// <summary>
-    /// DTO raíz para el informe Contratación Mercados AI.
+    /// DTO raíz para el informe Cartera Diferida Consejo.
     /// Usa TotalesEstandarDto para homogeneizar el payload JSON (unificación frontend).
     /// </summary>
-    public class ContratacionMercadosAIDto
+    public class CarteraDiferidaConsejoDto
     {
         public MetaInformeDto Meta { get; set; } = new();
         public List<AgrupacionAñoDto> Agrupaciones { get; set; } = new();

@@ -193,30 +193,29 @@ export function actualizarEstadoPaginacion(paginaActual, paginasTotales, prefijo
 
 /**
  * Inicializa los event listeners de paginación y PDF.
- * Se registra una sola vez gracias al flag eventosIniciados.
- * @param {object} estado - Estado del informe (paginaActual, paginasTotales, eventosIniciados)
+ * Todos los handlers se reasignan en cada apertura de informe
+ * para garantizar que referencien el estado actual.
+ * @param {object} estado - Estado del informe (paginaActual, paginasTotales)
  * @param {Function} renderFn - Función para renderizar página actual
  * @param {Function} imprimirFn - Función para imprimir informe
  */
 export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
     // NOTA CRÍTICA: Se usa `onclick` en lugar de `addEventListener` deliberadamente.
-    // Los tres botones son elementos DOM únicos compartidos por TODOS los informes.
-    // Con addEventListener, cada vez que se abre un informe diferente se añade un handler
-    // adicional al mismo botón, acumulándolos. onclick reemplaza el handler previo.
+    // Los botones son elementos DOM únicos compartidos por TODOS los informes.
+    // onclick reemplaza el handler previo; addEventListener los acumularía.
 
-    // El botón PDF se reasigna SIEMPRE, sin importar eventosIniciados.
-    // Garantiza que el último informe abierto es siempre el dueño del botón de impresión.
+    // Todos los handlers se reasignan SIEMPRE (onclick reemplaza, no acumula).
+    // Esto garantiza que cada informe abierto es dueño de los botones y
+    // que las closures capturan el estado correcto de cada invocación.
+
+    // Botón PDF
     const btnPdf = document.getElementById(RPT_CLASSES.BTN_EXPORTAR_PDF);
     if (btnPdf) {
         btnPdf.onclick = imprimirFn;
     }
 
-    // Los botones de paginación solo se configuran una vez por estado de informe.
-    if (estado.eventosIniciados) return;
-
+    // Botón Anterior
     const btnAnterior = document.getElementById(RPT_CLASSES.BTN_PAG_ANTERIOR);
-    const btnSiguiente = document.getElementById(RPT_CLASSES.BTN_PAG_SIGUIENTE);
-
     if (btnAnterior) {
         btnAnterior.onclick = () => {
             if (estado.paginaActual > 0) {
@@ -226,6 +225,8 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
         };
     }
 
+    // Botón Siguiente
+    const btnSiguiente = document.getElementById(RPT_CLASSES.BTN_PAG_SIGUIENTE);
     if (btnSiguiente) {
         btnSiguiente.onclick = () => {
             if (estado.paginaActual < estado.paginasTotales - 1) {
@@ -234,8 +235,6 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
             }
         };
     }
-
-    estado.eventosIniciados = true;
 }
 
 // =============================================================================

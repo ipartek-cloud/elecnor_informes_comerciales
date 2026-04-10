@@ -55,7 +55,7 @@
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'contratacion_mercados_ai')"
+                                    onclick="cargarInforme(this, 'cartera_diferida_consejo')"
                                     data-input-pag="inputPaginaCartera"
                                     aria-label="Ver informe Cartera Diferida">
                                 Cartera Diferida
@@ -273,12 +273,27 @@
                 <h5 class="mb-0"><i class="fas fa-file-invoice"></i> RESTO de INFORMES</h5>
             </div>
             <div class="card-body">
-                <div id="reportButtonsContainer" class="d-flex flex-wrap gap-2">
-                    <button class="btn rpt-btn-light" 
-                            onclick="Swal.fire({ title: 'Próximamente', text: 'El informe de Gerencias Totales Cruces está actualmente en desarrollo.', icon: 'info', confirmButtonColor: '#00468B' })"
-                            aria-label="Ver informe de Gerencias Totales Cruces">
-                        Gerencias Totales Cruces
-                    </button>
+                <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start">
+                    <!-- D.G. Infraestructuras x Mercado -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'mercados_dg')"
+                                    aria-label="Ver informe D.G. Infraestructuras x Mercado">
+                                D.G. Infraestructuras x Mercado
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Gerencias Totales Cruces -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="Swal.fire({ title: 'Próximamente', text: 'El informe de Gerencias Totales Cruces está actualmente en desarrollo.', icon: 'info', confirmButtonColor: '#00468B' })"
+                                    aria-label="Ver informe de Gerencias Totales Cruces">
+                                Gerencias Totales Cruces
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -382,6 +397,7 @@
     <link rel="stylesheet" href="~/css/informes/contrataciones.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/contrataciones_ai.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/ranking_contratacion_clientes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/mercados_dg.css" asp-append-version="true" />
 }
 
 @section Scripts {

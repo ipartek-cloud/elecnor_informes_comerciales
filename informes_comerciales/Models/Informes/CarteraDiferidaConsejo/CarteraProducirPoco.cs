@@ -1,4 +1,4 @@
-namespace Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI
+namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
 {
     public class CarteraProducirPoco
     {

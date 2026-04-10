@@ -1,4 +1,4 @@
-/* Estilos específicos para Contratación Mercados AI */
+/* Estilos específicos para Cartera Diferida Consejo */
 /* Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_base.css */
 
 /* =============================================================================
@@ -29,18 +29,18 @@
    ============================================================================= */
 
 /* Borde ninguno */
-.rpt-border-none {
+.rpt-border-none, [rpt-border-none] {
     border: none !important;
 }
 
 /* Borde superior none */
-.rpt-border-top-none {
+.rpt-border-top-none, [rpt-border-top-none] {
     border-top: none !important;
 }
 
 /* Alturas de filas */
-.rpt-row-height-20 { height: 20px; }
-.rpt-row-height-18 { height: 18px; }
+.rpt-row-height-20, [rpt-row-height-20] { height: 20px; }
+.rpt-row-height-18, [rpt-row-height-18] { height: 18px; }
 
 /* Anchos de columna (para colgroup) */
 .rpt-col-width-20 { width: 20%; }
@@ -56,7 +56,7 @@
 .rpt-col-width-150 { width: 150px; }
 
 /* Texto gris muted para variaciones */
-.rpt-text-muted-value {
+.rpt-text-muted-value, [rpt-text-muted-value] {
     color: #999 !important;
 }
 
@@ -131,6 +131,11 @@
     table-layout: fixed;
 }
 
+/* Variante para Cartera Diferida (más ancha: 980px) */
+.rpt-table-triple.rpt-table-cd {
+    width: 980px !important;
+}
+
 .rpt-table-triple th, .rpt-table-triple td {
     padding: 0px 4px;
     font-size: 0.85rem;
@@ -139,12 +144,17 @@
     line-height: normal;
 }
 
-.rpt-table-triple thead tr:first-child th {
+.rpt-table-triple thead th {
     color: #00468B;
     font-weight: bold;
     text-align: center;
     border: none;
     padding-bottom: 2px;
+}
+
+.rpt-table-triple thead tr:first-child th {
+    /* Mantenemos el padding específico para la primera fila si fuera necesario, 
+       pero el color ya es azul para todos los th */
 }
 
 .rpt-table-triple thead tr.rpt-border-header th {

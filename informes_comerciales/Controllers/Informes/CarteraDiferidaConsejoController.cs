@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo;
 using Elecnor_Informes_Comerciales.Services.Informes;
 using System;
 using System.Threading.Tasks;
@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace Elecnor_Informes_Comerciales.Controllers.Informes
 {
     /// <summary>
-    /// Endpoint para el informe de Contratación Mercados AI (Cartera Diferida).
+    /// Endpoint para el informe de Cartera Diferida (Consejo de Administración).
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
     [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
-    public class ContratacionMercadosAIController : ControllerBase
+    public class CarteraDiferidaConsejoController : ControllerBase
     {
-        private readonly InformeContratacionMercadosAIService _service;
+        private readonly InformeCarteraDiferidaConsejoService _service;
 
-        public ContratacionMercadosAIController(InformeContratacionMercadosAIService service)
+        public CarteraDiferidaConsejoController(InformeCarteraDiferidaConsejoService service)
         {
             _service = service;
         }

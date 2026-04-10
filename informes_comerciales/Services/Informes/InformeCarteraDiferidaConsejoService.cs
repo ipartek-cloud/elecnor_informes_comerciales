@@ -1,4 +1,4 @@
-using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo;
 using Elecnor_Informes_Comerciales.Repositories.Informes;
 using Elecnor_Informes_Comerciales.DTOs.Informes.Response;
 using Elecnor_Informes_Comerciales.Services.Informes.Utils;
@@ -9,29 +9,29 @@ using System;
 namespace Elecnor_Informes_Comerciales.Services.Informes
 {
     /// <summary>
-    /// Servicio para el informe Contratación Mercados AI (Cartera Diferida).
+    /// Servicio para el informe Cartera Diferida Consejo.
     /// </summary>
-    public class InformeContratacionMercadosAIService
+    public class InformeCarteraDiferidaConsejoService
     {
         private readonly InformeRepository _repository;
 
-        public InformeContratacionMercadosAIService(InformeRepository repository)
+        public InformeCarteraDiferidaConsejoService(InformeRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<ContratacionMercadosAIDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina)
+        public async Task<CarteraDiferidaConsejoDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina)
         {
-            var (principal, subreporte, cartera, carteraDiferida, ventas) = await _repository.ObtenerContratacionMercadosAIAsync(anio, mes);
+            var (principal, subreporte, cartera, carteraDiferida, ventas) = await _repository.ObtenerCarteraDiferidaConsejoAsync(anio, mes);
 
             // Validación de datos nulos o vacíos
             if (principal == null || !principal.Any())
             {
-                return new ContratacionMercadosAIDto
+                return new CarteraDiferidaConsejoDto
                 {
                     Meta = new MetaInformeDto
                     {
-                        Titulo = "Contratación Mercados AI",
+                        Titulo = "Cartera Diferida Consejo",
                         Descripcion = "Informe de Contratación por Mercados (Consejo Administración)",
                         Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                         FechaGeneracion = DateTime.Now,
@@ -42,11 +42,11 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 };
             }
 
-            var response = new ContratacionMercadosAIDto
+            var response = new CarteraDiferidaConsejoDto
             {
                 Meta = new MetaInformeDto
                 {
-                    Titulo = "Contratación Mercados AI",
+                    Titulo = "Cartera Diferida Consejo",
                     Descripcion = "Informe de Contratación por Mercados (Consejo Administración)",
                     Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                     FechaGeneracion = DateTime.Now,
@@ -217,7 +217,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
         /// Calcula totales para una sección del informe principal.
         /// Retorna TotalesEstandarDto para homogeneizar el payload JSON.
         /// </summary>
-        private TotalesEstandarDto CalcularTotalesSeccion(IEnumerable<ContratacionMercadosAIPoco> datos, int mes)
+        private TotalesEstandarDto CalcularTotalesSeccion(IEnumerable<CarteraDiferidaConsejoPoco> datos, int mes)
         {
             var lista = datos.ToList();
             var totalObjAnual = lista.Sum(x => x.Objetivos);
@@ -239,7 +239,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
         /// Calcula totales globales del informe.
         /// Retorna TotalesEstandarDto para homogeneizar el payload JSON.
         /// </summary>
-        private TotalesEstandarDto CalcularTotalesGlobales(IEnumerable<ContratacionMercadosAIPoco> datos, int mes)
+        private TotalesEstandarDto CalcularTotalesGlobales(IEnumerable<CarteraDiferidaConsejoPoco> datos, int mes)
         {
             var lista = datos.ToList();
             var totalObjAnual = lista.Sum(x => x.Objetivos);

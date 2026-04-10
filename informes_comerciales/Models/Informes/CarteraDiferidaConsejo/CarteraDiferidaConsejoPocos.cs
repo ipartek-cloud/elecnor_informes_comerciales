@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosAI
+namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
 {
-    public class ContratacionMercadosAIPoco
+    public class CarteraDiferidaConsejoPoco
     {
         public int Año { get; set; }
         public string Pais { get; set; } = string.Empty;

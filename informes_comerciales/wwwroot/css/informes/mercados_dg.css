@@ -1,0 +1,264 @@
+/* 
+ * ESTILOS ESPECÍFICOS: Informe D.G. Infraestructuras x Mercado (MercadosDG)
+ */
+
+/* Contenedor principal con Container Queries */
+.rpt-paper[data-informe="mercados_dg"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+    max-width: 1200px;
+    padding: clamp(0.5rem, 2vw, 1.5rem);
+    margin: 0 auto;
+    box-shadow: none;
+    border: none;
+}
+
+/* Tabla principal */
+.rpt-table {
+    width: 100%;
+}
+
+/* Número de página sobre logo */
+.rpt-page-number {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #00468B;
+    margin-right: 8px;
+    margin-bottom: -5px;
+}
+
+/* Celdas numéricas */
+.rpt-number-cell {
+    padding: 0 4px;
+    white-space: nowrap;
+}
+
+/* Cuerpo del reporte */
+.report-body {
+    margin-top: 1rem;
+}
+
+/* LAYOUT DE COLUMNAS (Sistema de proporciones) */
+.rpt-mercado-layout {
+    table-layout: fixed;
+}
+
+/* Proporciones de columnas (suman 100%) */
+.rpt-mercado-col-obj-m   { width: 13.5%; }
+.rpt-mercado-col-contr-m { width: 13.5%; }
+.rpt-mercado-col-desc    { width: 21.0%; }
+.rpt-mercado-col-obj-a   { width: 15.0%; }
+.rpt-mercado-col-contr-a { width: 15.0%; }
+.rpt-mercado-col-ip      { width: 10.0%; }
+.rpt-mercado-col-var     { width: 12.0%; }
+
+/* =============================================================================
+   ENCABEZADOS DE TABLA
+   ============================================================================= */
+
+.rpt-mercado-th-border {
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 5px !important;
+}
+
+.rpt-mercado-row-spacer {
+    height: 5px;
+}
+
+.rpt-mercado-header-align {
+    vertical-align: bottom;
+    padding: 0;
+}
+
+.rpt-mercado-header-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-size: clamp(0.75rem, 1cqi + 0.5rem, 0.9rem);
+    padding: 2px 0;
+    margin: 0;
+    border-radius: 0;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+@container rpt-paper (max-width: 700px) {
+    .rpt-number-cell {
+        padding: 0 2px !important;
+        font-size: 0.82rem;
+    }
+    .rpt-mercado-header-badge {
+        font-size: 0.75rem;
+    }
+}
+
+/* Fila de totales */
+.rpt-mercado-total-row {
+    border-top: 2.5px solid #00468B;
+    color: #00468B !important;
+    font-weight: bold;
+    padding-top: 5px;
+}
+
+.rpt-mercado-total-cell {
+    border-top: 2.5px solid #00468B;
+    margin: 0 5px;
+    padding-top: 5px;
+}
+
+.rpt-mercado-total-line {
+    border-top: 2.5px solid #00468B;
+    margin: 0 10px;
+}
+
+.rpt-mercado-detail-row {
+    height: 24px;
+}
+
+.rpt-mercado-cell-total {
+    vertical-align: top;
+    padding-top: 0 !important;
+}
+
+/* =============================================================================
+   CARTERA DIFERIDA — Subinforme al final del informe MercadosDG
+   ============================================================================= */
+
+/* Separador visual entre DirNegocios y Cartera Diferida */
+.rpt-cd-separator {
+    margin-top: 2rem;
+    padding-top: 1rem;
+}
+
+/* Layout de columnas — Reutiliza rpt-mercado-layout para alineación perfecta */
+
+/* Fila espaciadora entre secciones de cabecera */
+.rpt-cd-row-spacer {
+    height: 5px;
+}
+
+/* Bordes de cabecera */
+.rpt-cd-th-border {
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 5px !important;
+}
+
+/* Bordes de cabecera fragmentados */
+.rpt-cd-th-border-inner {
+    border-bottom: 2px solid #00468B !important;
+    padding-bottom: 5px !important;
+    margin: 0 10px;
+}
+
+/* Badge de cabecera (fondo azul corporativo) */
+.rpt-cd-header-align {
+    vertical-align: bottom;
+    padding: 0;
+}
+
+.rpt-cd-header-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-size: clamp(0.75rem, 1cqi + 0.5rem, 0.9rem);
+    padding: 2px 0;
+    margin: 0;
+    border-radius: 0;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+/* Filas de detalle */
+.rpt-cd-detail-row {
+    height: 24px;
+}
+
+/* Fila de totales — Negrita + Azul Corporativo */
+.rpt-cd-total-row {
+    color: #00468B !important;
+    font-weight: bold;
+}
+
+.rpt-cd-total-border {
+    border-top: 2.5px solid #00468B !important;
+    padding-top: 5px !important;
+}
+
+.rpt-cd-total-cell-inner {
+    border-top: 2.5px solid #00468B !important;
+    margin: 0 10px;
+    padding-top: 5px !important;
+}
+
+/* Responsive - Las columnas heredan rpt-mercado-layout */
+
+/* =============================================================================
+   IMPRESIÓN
+   ============================================================================= */
+@media print {
+    .rpt-paper[data-informe="mercados_dg"],
+    .rpt-paper--print {
+        max-width: 100% !important;
+        padding: 6.4mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .rpt-mercado-col-obj-m   { width: 14% !important; }
+    .rpt-mercado-col-contr-m { width: 14% !important; }
+    .rpt-mercado-col-desc    { width: 20% !important; }
+    .rpt-mercado-col-obj-a   { width: 16% !important; }
+    .rpt-mercado-col-contr-a { width: 16% !important; }
+    .rpt-mercado-col-ip      { width: 10% !important; }
+    .rpt-mercado-col-var     { width: 10% !important; }
+
+    .rpt-mercado-layout {
+        margin-bottom: 1px !important;
+    }
+
+    .rpt-banner-top {
+        margin-top: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .rpt-detail-row {
+        page-break-inside: avoid;
+    }
+
+    .rpt-banner-top {
+        page-break-after: avoid;
+    }
+
+    .dn-block {
+        page-break-inside: auto !important;
+    }
+
+    .rpt-table {
+        font-size: 8pt !important;
+    }
+
+    .rpt-th-blue, .rpt-td-total {
+        border-bottom-width: 0.5pt !important;
+    }
+
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* Cartera Diferida — ajustes de impresión */
+    .rpt-cd-separator {
+        margin-top: 1.5rem !important;
+    }
+
+    .rpt-cd-col-c1   { width: 17% !important; }
+    .rpt-cd-col-c2   { width: 17% !important; }
+    .rpt-cd-col-desc { width: 28% !important; }
+    .rpt-cd-col-a1   { width: 19% !important; }
+    .rpt-cd-col-a2   { width: 19% !important; }
+
+    .rpt-cd-detail-row {
+        page-break-inside: avoid;
+    }
+}
