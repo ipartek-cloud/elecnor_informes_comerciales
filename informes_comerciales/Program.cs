@@ -64,6 +64,7 @@ builder.Services.AddScoped<InformeMercadosService>();
 builder.Services.AddScoped<InformeMercadosDGService>();
 builder.Services.AddScoped<InformePaisesService>();
 builder.Services.AddScoped<InformeActividadesService>();
+builder.Services.AddScoped<InformeActividadesObjetivosService>();
 builder.Services.AddScoped<InformeContratacionesService>();
 builder.Services.AddScoped<InformeContratacionesAIService>();
 builder.Services.AddScoped<InformeRankingContratacionClientesService>();
@@ -174,7 +175,45 @@ using (var scope = app.Services.CreateScope())
 // 8. Registro del Middleware de Excepciones Global
 app.UseMiddleware<ExceptionMiddleware>();
 
-// 9. Configuración del Entorno (Desarrollo vs Producción)
+// 8.1 Log de peticiones HTTP (API/controladores con método, ruta, query y body - excluye estáticos)
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath}{RequestQuery} responded {StatusCode} in {Elapsed:0.0000} ms";
+    options.GetLevel = (httpContext, elapsed, ex) =>
+    {
+        if (ex != null || httpContext.Response.StatusCode > 499)
+            return Serilog.Events.LogEventLevel.Error;
+        var path = httpContext.Request.Path.Value ?? "";
+        if (path.StartsWith("/css", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("/js", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("/images", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("/favicon", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("/lib", StringComparison.OrdinalIgnoreCase))
+            return Serilog.Events.LogEventLevel.Verbose;
+        return Serilog.Events.LogEventLevel.Information;
+    };
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        var qs = httpContext.Request.QueryString.Value;
+        diagnosticContext.Set("RequestQuery", string.IsNullOrEmpty(qs) ? "" : $" {qs}");
+        if (httpContext.Request.Method == "POST" || httpContext.Request.Method == "PUT" || httpContext.Request.Method == "PATCH")
+        {
+            if (httpContext.Request.ContentLength > 0 && httpContext.Request.ContentLength <= 4096)
+            {
+                try
+                {
+                    httpContext.Request.EnableBuffering();
+                    httpContext.Request.Body.Position = 0;
+                    using var reader = new StreamReader(httpContext.Request.Body, leaveOpen: true);
+                    var body = reader.ReadToEndAsync().GetAwaiter().GetResult();
+                    diagnosticContext.Set("RequestBody", body.Length > 2000 ? body[..2000] + "...(truncated)" : body);
+                    httpContext.Request.Body.Position = 0;
+                }
+                catch { }
+            }
+        }
+    };
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

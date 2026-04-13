@@ -6,6 +6,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo;
 using Elecnor_Informes_Comerciales.Models.Informes.Mercados;
 using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
+using Elecnor_Informes_Comerciales.Models.Informes.ActividadesObjetivos;
 using Elecnor_Informes_Comerciales.Models.Informes.Contrataciones;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesAI;
 using Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes;
@@ -521,9 +522,8 @@ public class InformeRepository
                                         a.Orden
                                     FROM
                                         vwActividades a
-                                        LEFT JOIN rptContratacion_Actividad c WITH (NOLOCK)
-                                            ON  a.Pais      = c.Pais
-                                            AND a.Agrupacion = c.Actividad
+                                    LEFT JOIN rptContratacion_Actividad c WITH (NOLOCK)
+                                    ON  a.Pais = c.Pais AND a.Agrupacion = c.Actividad
                                     GROUP BY
                                         a.Pais,
                                         a.Agrupacion,
@@ -544,6 +544,92 @@ public class InformeRepository
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<ActividadPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Actividades_Objetivos
+    // └─ Método: ObtenerActividadesObjetivosAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos para el informe de Actividades_Objetivos.
+    /// Incluye contratación acumulada + objetivos + cálculos de IP.
+    /// </summary>
+    public async Task<List<ActividadObjetivoPoco>> ObtenerActividadesObjetivosAsync(int anio, int mes)
+    {
+        const string sqlDelete = "DELETE FROM rptContratacion_Actividad";
+
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
+                                       EXEC spContratacion_Actividades_Ajuste @Anio, @Mes";
+
+        const string sqlUpdateAnio = "UPDATE rptContratacion_Actividad SET Año = @Anio WHERE Año IS NULL";
+
+        const string sqlSelect = @"WITH CTE_BaseActividades AS (
+                                        SELECT DISTINCT
+                                            p.Pais,
+                                            a.Agrupacion AS Actividad
+                                        FROM ActividadesSQL a WITH (NOLOCK)
+                                        CROSS JOIN Pais p WITH (NOLOCK)
+                                    ),
+                                    CTE_Objetivos AS (
+                                        SELECT
+                                            Agrupacion,
+                                            Año,
+                                            CASE WHEN Mercado = 'N' THEN 'Nacional' ELSE 'Internacional' END AS Mercados,
+                                            SUM(Importe) AS ImporteObjetivos
+                                        FROM vwObjetivosActividadesAGRUPNacionalInternacional WITH (NOLOCK)
+                                        WHERE Año = @Anio
+                                        GROUP BY
+                                            Agrupacion,
+                                            Año,
+                                            CASE WHEN Mercado = 'N' THEN 'Nacional' ELSE 'Internacional' END
+                                    )
+                                    SELECT
+                                        base.Pais,
+                                        base.Actividad,
+                                        ISNULL(SUM(rpt.ImporteContratadoAcumulado), 0)            AS ImporteContratadoAcumulado,
+                                        ISNULL(SUM(rpt.ImporteContratadoAcumuladoAñoAnterior), 0) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        ISNULL(SUM(rpt.ImporteContratadoAcumuladoLastYear), 0)    AS ImporteContratadoAcumuladoLastYear,
+                                        ISNULL(MAX(obj.ImporteObjetivos), 0)                      AS ImporteObjetivos
+                                    FROM
+                                        CTE_BaseActividades base
+                                    LEFT JOIN rptContratacion_Actividad rpt WITH (NOLOCK)
+                                        ON  base.Pais      = rpt.Pais
+                                        AND base.Actividad = rpt.Actividad
+                                        AND rpt.Año        = @Anio
+                                    LEFT JOIN CTE_Objetivos obj
+                                        ON  rpt.Actividad  = obj.Agrupacion
+                                        AND rpt.Pais       = obj.Mercados
+                                    GROUP BY
+                                        base.Pais,
+                                        base.Actividad
+                                    HAVING
+                                        SUM(rpt.ImporteContratadoAcumulado) <> 0
+                                        OR SUM(rpt.ImporteContratadoAcumuladoAñoAnterior) <> 0
+                                        OR MAX(obj.ImporteObjetivos) <> 0";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
+
+            var resultado = (await _connection.QueryAsync<ActividadObjetivoPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
 
             transaction.Commit();
             return resultado;
