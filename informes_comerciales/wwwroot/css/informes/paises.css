@@ -126,7 +126,7 @@ tbody .rpt-paises-pais-cell {
     .rpt-paper[data-informe="paises"],
     .rpt-paper--print {
         max-width: 100% !important;
-        padding: 6.4mm !important;
+        /* padding gestionado vía variable CSS inline (--rpt-padding-pdf) */
         margin: 0 !important;
         box-shadow: none !important;
         border: none !important;

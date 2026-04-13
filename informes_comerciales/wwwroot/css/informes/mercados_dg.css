@@ -7,7 +7,7 @@
     container-type: inline-size;
     container-name: rpt-paper;
     max-width: 1200px;
-    padding: clamp(0.5rem, 2vw, 1.5rem);
+    padding: 1.5rem !important; /* Paridad visual con clamp() original */
     margin: 0 auto;
     box-shadow: none;
     border: none;
@@ -124,15 +124,15 @@
    CARTERA DIFERIDA — Subinforme al final del informe MercadosDG
    ============================================================================= */
 
-/* Separador visual entre DirNegocios y Cartera Diferida */
+/* Separador visual */
 .rpt-cd-separator {
     margin-top: 2rem;
     padding-top: 1rem;
 }
 
-/* Layout de columnas — Reutiliza rpt-mercado-layout para alineación perfecta */
+/* Usa rpt-mercado-layout para alineación con el informe base */
 
-/* Fila espaciadora entre secciones de cabecera */
+/* Espaciador de cabecera */
 .rpt-cd-row-spacer {
     height: 5px;
 }
@@ -143,14 +143,7 @@
     padding-bottom: 5px !important;
 }
 
-/* Bordes de cabecera fragmentados */
-.rpt-cd-th-border-inner {
-    border-bottom: 2px solid #00468B !important;
-    padding-bottom: 5px !important;
-    margin: 0 10px;
-}
-
-/* Badge de cabecera (fondo azul corporativo) */
+/* Badge de cabecera */
 .rpt-cd-header-align {
     vertical-align: bottom;
     padding: 0;
@@ -173,92 +166,42 @@
     height: 24px;
 }
 
-/* Fila de totales — Negrita + Azul Corporativo */
+/* Fila de totales con líneas entrecortadas */
 .rpt-cd-total-row {
     color: #00468B !important;
     font-weight: bold;
 }
 
-.rpt-cd-total-border {
+.rpt-cd-total-cell {
+    border-top: none !important;
+}
+
+.rpt-cd-total-inner {
     border-top: 2.5px solid #00468B !important;
+    margin: 0 5px;
     padding-top: 5px !important;
 }
 
-.rpt-cd-total-cell-inner {
-    border-top: 2.5px solid #00468B !important;
-    margin: 0 10px;
-    padding-top: 5px !important;
+/* Responsive */
+@container rpt-paper (max-width: 700px) {
+    .rpt-cd-header-badge {
+        font-size: 0.75rem;
+    }
 }
-
-/* Responsive - Las columnas heredan rpt-mercado-layout */
 
 /* =============================================================================
    IMPRESIÓN
    ============================================================================= */
 @media print {
-    .rpt-paper[data-informe="mercados_dg"],
-    .rpt-paper--print {
-        max-width: 100% !important;
-        padding: 6.4mm !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
-
-    .rpt-mercado-col-obj-m   { width: 14% !important; }
-    .rpt-mercado-col-contr-m { width: 14% !important; }
-    .rpt-mercado-col-desc    { width: 20% !important; }
-    .rpt-mercado-col-obj-a   { width: 16% !important; }
-    .rpt-mercado-col-contr-a { width: 16% !important; }
-    .rpt-mercado-col-ip      { width: 10% !important; }
-    .rpt-mercado-col-var     { width: 10% !important; }
-
-    .rpt-mercado-layout {
-        margin-bottom: 1px !important;
-    }
-
-    .rpt-banner-top {
-        margin-top: 1rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    .rpt-detail-row {
-        page-break-inside: avoid;
-    }
-
-    .rpt-banner-top {
-        page-break-after: avoid;
-    }
-
-    .dn-block {
-        page-break-inside: auto !important;
-    }
-
-    .rpt-table {
-        font-size: 8pt !important;
-    }
-
-    .rpt-th-blue, .rpt-td-total {
-        border-bottom-width: 0.5pt !important;
-    }
-
-    .rpt-banner-top {
-        height: 25px !important;
-        font-size: 1.1rem !important;
-    }
-
-    /* Cartera Diferida — ajustes de impresión */
     .rpt-cd-separator {
         margin-top: 1.5rem !important;
     }
 
-    .rpt-cd-col-c1   { width: 17% !important; }
-    .rpt-cd-col-c2   { width: 17% !important; }
-    .rpt-cd-col-desc { width: 28% !important; }
-    .rpt-cd-col-a1   { width: 19% !important; }
-    .rpt-cd-col-a2   { width: 19% !important; }
-
     .rpt-cd-detail-row {
         page-break-inside: avoid;
+    }
+
+    .rpt-table {
+        font-size: 8pt !important;
     }
 }

@@ -20,7 +20,8 @@ export async function ejecutar(anio, mes) {
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
-            claveAgrupacion: 'NONE' // Visualización unificada
+            claveAgrupacion: 'NONE', // Visualización unificada
+            margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
         });
     } catch (error) {
         throw error;
@@ -72,7 +73,8 @@ async function _imprimirInforme() {
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContructorCompleto(true),
-        modoAgrupacion: 'NONE'
+        modoAgrupacion: 'NONE',
+        margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
     });
 }
 
@@ -284,6 +286,7 @@ function _renderCarteraDiferida() {
     const totales = cd.totales;
     const anioBase = data.meta?.filtros?.anio || new Date().getFullYear();
 
+    // Headers dinámicos visuales
     const labelCartPrev = `1.1.${(anioBase - 2).toString().slice(-2)}`;
     const labelCartAct  = `1.1.${(anioBase - 1).toString().slice(-2)}`;
     const labelFuturo1  = `${anioBase}`;
@@ -329,11 +332,11 @@ function _renderCarteraDiferida() {
                     ${cd.lineas.map(l => `
                         <tr class="rpt-detail-row rpt-cd-detail-row">
                             <td></td>
-                            <td class="rpt-number-cell pe-2" data-label="${labelCartPrev}">${val(l.valorCartPrev || l.ValorCartPrev || 0)}</td>
-                            <td class="rpt-number-cell pe-2" data-label="${labelCartAct}">${val(l.valorCartAct || l.ValorCartAct || 0)}</td>
+                            <td class="rpt-number-cell pe-2" data-label="Cartera Inicio 1">${val(l.valorCartPrev || l.ValorCartPrev || 0)}</td>
+                            <td class="rpt-number-cell pe-2" data-label="Cartera Inicio 2">${val(l.valorCartAct || l.ValorCartAct || 0)}</td>
                             <td class="ps-3" data-label="Cartera Diferida">${(l.concepto || l.Concepto || '').trim()}</td>
-                            <td class="rpt-number-cell pe-2" data-label="${labelFuturo1}">${val(l.valorFuturo1 || l.ValorFuturo1 || 0)}</td>
-                            <td class="rpt-number-cell pe-2" data-label="${labelFuturo2}">${val(l.valorFuturo2 || l.ValorFuturo2 || 0)}</td>
+                            <td class="rpt-number-cell pe-2" data-label="Proyección 1">${val(l.valorFuturo1 || l.ValorFuturo1 || 0)}</td>
+                            <td class="rpt-number-cell pe-2" data-label="Proyección 2">${val(l.valorFuturo2 || l.ValorFuturo2 || 0)}</td>
                             <td></td>
                         </tr>
                     `).join('')}
@@ -341,11 +344,11 @@ function _renderCarteraDiferida() {
                 <tfoot class="fw-bold">
                     <tr class="rpt-cd-total-row">
                         <td></td>
-                        <td class="text-end rpt-cd-total-cell" data-label="Total ${labelCartPrev}"><div class="rpt-cd-total-cell-inner text-end pe-2">${val(totales.valorCartPrev || totales.ValorCartPrev || 0)}</div></td>
-                        <td class="text-end rpt-cd-total-cell" data-label="Total ${labelCartAct}"><div class="rpt-cd-total-cell-inner text-end pe-2">${val(totales.valorCartAct || totales.ValorCartAct || 0)}</div></td>
+                        <td class="text-end pe-2 rpt-cd-total-cell" data-label="Total Cartera Inicio 1"><div class="rpt-cd-total-inner">${val(totales.valorCartPrev || totales.ValorCartPrev || 0)}</div></td>
+                        <td class="text-end pe-2 rpt-cd-total-cell" data-label="Total Cartera Inicio 2"><div class="rpt-cd-total-inner">${val(totales.valorCartAct || totales.ValorCartAct || 0)}</div></td>
                         <td></td>
-                        <td class="text-end pe-2 rpt-cd-total-border rpt-text-corporate" data-label="Total ${labelFuturo1}">${val(totales.valorFuturo1 || totales.ValorFuturo1 || 0)}</td>
-                        <td class="text-end pe-2 rpt-cd-total-border rpt-text-corporate" data-label="Total ${labelFuturo2}">${val(totales.valorFuturo2 || totales.ValorFuturo2 || 0)}</td>
+                        <td class="text-end pe-2 rpt-cd-total-cell" data-label="Total Proyección 1"><div class="rpt-cd-total-inner">${val(totales.valorFuturo1 || totales.ValorFuturo1 || 0)}</div></td>
+                        <td class="text-end pe-2 rpt-cd-total-cell" data-label="Total Proyección 2"><div class="rpt-cd-total-inner">${val(totales.valorFuturo2 || totales.ValorFuturo2 || 0)}</div></td>
                         <td></td>
                     </tr>
                 </tfoot>

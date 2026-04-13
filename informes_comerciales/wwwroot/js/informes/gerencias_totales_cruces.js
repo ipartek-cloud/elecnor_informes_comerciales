@@ -58,7 +58,7 @@ function _renderizarPagina(index) {
     const mesCorto = getMesCorto(estado.informeGlobalData.meta.filtros.mes - 1);
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-gerente-index="${index}" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="gerencias_totales_cruces" data-gerente-index="${index}" role="main">
             ${_getHtmlEncabezado(gerente.nombreGerente)}
             <div class="report-body">
                 ${renderSeccionGerente(gerente, mesCorto)}

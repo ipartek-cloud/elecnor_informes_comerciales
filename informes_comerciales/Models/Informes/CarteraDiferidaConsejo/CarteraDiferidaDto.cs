@@ -16,25 +16,25 @@ namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
     public class CarteraDiferidaLineaDto
     {
         public string Concepto { get; set; } = string.Empty;
-        public decimal Cart1_1 { get; set; }
+        public decimal ValorCart1_1 { get; set; }
         public decimal Nuevos { get; set; }
         public decimal Total { get; set; }
         public decimal Contr { get; set; }
         public decimal Ip { get; set; }
-        public decimal Anio1 { get; set; }
-        public decimal Anio2 { get; set; }
-        public decimal Anio3 { get; set; }
+        public decimal ValorAnio1 { get; set; }
+        public decimal ValorAnio2 { get; set; }
+        public decimal ValorAnio3 { get; set; }
     }
 
     public class CarteraDiferidaTotalesDto
     {
-        public decimal Cart1_1 { get; set; }
+        public decimal ValorCart1_1 { get; set; }
         public decimal Nuevos { get; set; }
         public decimal Total { get; set; }
         public decimal Contr { get; set; }
         public decimal Ip { get; set; }
-        public decimal Anio1 { get; set; }
-        public decimal Anio2 { get; set; }
-        public decimal Anio3 { get; set; }
+        public decimal ValorAnio1 { get; set; }
+        public decimal ValorAnio2 { get; set; }
+        public decimal ValorAnio3 { get; set; }
     }
 }

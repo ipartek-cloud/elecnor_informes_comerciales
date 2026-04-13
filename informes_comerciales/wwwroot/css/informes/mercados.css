@@ -9,7 +9,7 @@
     container-type: inline-size;
     container-name: rpt-paper;
     max-width: 1200px;
-    padding: clamp(0.5rem, 2vw, 1.5rem); /* Padding fluido */
+    padding: 1.5rem !important; /* Paridad visual con clamp() original */
     margin: 0 auto;
     box-shadow: none;
     border: none;
@@ -147,7 +147,7 @@
     .rpt-paper[data-informe="mercados"],
     .rpt-paper--print {
         max-width: 100% !important;
-        padding: 6.4mm !important;
+        /* padding gestionado vía variable CSS inline (--rpt-padding-pdf) */
         margin: 0 !important;
         box-shadow: none !important;
         border: none !important;

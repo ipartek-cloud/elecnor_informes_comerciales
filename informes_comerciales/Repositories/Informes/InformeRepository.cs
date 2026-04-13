@@ -178,10 +178,31 @@ public class InformeRepository
                                             FROM CarteraActual_CJO
                                             WHERE Año = @Anio AND Mes = @Mes";
 
-        // SECCIÓN D: CARTERA DIFERIDA (Años fijos por requerimiento de layout)
-        const string sqlSelectDiferida = @"SELECT Año, Mes, Mercado, [Cartera Diferida] AS CarteraDiferida, [01#01#25] AS Cart1_1, Nuevos, Total, Contr, [2025] AS Anio1, [2026] AS Anio2, [2027] AS Anio3, Orden
-                                           FROM CarteraDiferida_CJO
-                                           WHERE Mercado = 'Mercado' AND Año = @Anio AND Mes = @Mes";
+        // SECCIÓN D: CARTERA DIFERIDA (columnas calculadas dinámicamente según @Anio - 1)
+        // Para anio=N: ValorCart1_1=[01#01#(N-1)], ValorAnio1=[N-1], ValorAnio2=[N], ValorAnio3=[N+1]
+        string colCart1_1 = $"[01#01#{(anio - 1).ToString().Substring(2, 2)}]";
+        string colAnio1   = $"[{anio - 1}]";
+        string colAnio2   = $"[{anio}]";
+        string colAnio3   = $"[{anio + 1}]";
+
+        string sqlSelectDiferida = $@"
+            SELECT
+                Año,
+                Mes,
+                Mercado,
+                [Cartera Diferida] AS CarteraDiferida,
+                {colCart1_1} AS ValorCart1_1,
+                Nuevos,
+                Total,
+                Contr,
+                {colAnio1} AS ValorAnio1,
+                {colAnio2} AS ValorAnio2,
+                {colAnio3} AS ValorAnio3,
+                Orden
+            FROM CarteraDiferida_CJO WITH (NOLOCK)
+            WHERE Mercado = 'Mercado'
+              AND Año = @Anio
+              AND Mes = @Mes";
 
         // SECCIÓN E: VENTAS HISTÓRICAS
         const string sqlSelectVentas = @"SELECT

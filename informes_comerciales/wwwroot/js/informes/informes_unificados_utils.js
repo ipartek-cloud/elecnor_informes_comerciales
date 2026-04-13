@@ -160,17 +160,43 @@ export function getHtmlEncabezadoBase(opciones) {
 }
 
 // =============================================================================
+// HELPER: Genera string de variables CSS inline para márgenes custom
+// =============================================================================
+
+/**
+ * Construye un string de atributos style con variables CSS para márgenes.
+ * Si margenes es null/undefined, retorna string vacío (se aplican los defaults del CSS).
+ *
+ * @param {object|null} margenes - Configuración de márgenes custom
+ * @param {string} [margenes.web] - Padding en pantalla (ej: "1.5rem")
+ * @param {string} [margenes.pdf] - Padding en impresión (ej: "6.4mm")
+ * @param {string} [margenes.maxWidth] - Ancho máximo del papel (ej: "1200px")
+ * @returns {string} String HTML para inyectar como atributo style, o string vacío.
+ */
+function _buildStyleVars(margenes) {
+    if (!margenes || typeof margenes !== 'object') return '';
+
+    const vars = [];
+    if (margenes.web) vars.push(`--rpt-padding-web: ${margenes.web};`);
+    if (margenes.pdf) vars.push(`--rpt-padding-pdf: ${margenes.pdf};`);
+    if (margenes.maxWidth) vars.push(`--rpt-max-width: ${margenes.maxWidth};`);
+
+    return vars.length > 0 ? ` style="${vars.join(' ')}"` : '';
+}
+
+// =============================================================================
 // IMPRESIÓN PDF BASE
 // =============================================================================
 
 /**
  * Genera la capa de impresión para un informe.
- * 
+ *
  * @param {object} opciones - Opciones de impresión
  * @param {object} opciones.informeGlobalData - Datos del informe
  * @param {Function} opciones.getHtmlEncabezado - Función para generar encabezado (específica del informe, sin parámetros)
  * @param {Function} opciones.renderContenido - Función para renderizar contenido (específica del informe, recibe el item)
- * @param {string} [opciones.claveAgrupacion=null] - Clave manual de agrupación (igual que en inicializarInforme)
+ * @param {string} [opciones.modoAgrupacion=null] - Clave manual de agrupación (igual que en inicializarInforme)
+ * @param {object} [opciones.margenes=null] - Configuración de márgenes custom { web, pdf, maxWidth }
  * @returns {Promise<void>}
  */
 export async function imprimirInformeUnificado(opciones) {
@@ -178,10 +204,14 @@ export async function imprimirInformeUnificado(opciones) {
         informeGlobalData,
         getHtmlEncabezado,
         renderContenido,
-        modoAgrupacion = null
+        modoAgrupacion = null,
+        margenes = null
     } = opciones;
 
     if (!informeGlobalData) return;
+
+    // Construir string de variables CSS inline si se proporcionan márgenes custom
+    const styleVars = _buildStyleVars(margenes);
 
     const capaPrint = document.createElement('div');
     capaPrint.className = 'rpt-print-layer';
@@ -193,7 +223,7 @@ export async function imprimirInformeUnificado(opciones) {
     // Caso especial: informe de página única (modoAgrupacion = 'NONE')
     if (esPaginaUnica) {
         const html = `
-            <div class="rpt-paper rpt-paper--print" data-informe="una-pagina">
+            <div class="rpt-paper rpt-paper--print" data-informe="una-pagina"${styleVars}>
                 ${getHtmlEncabezado()}
                 <div class="report-body">
                     ${renderContenido()}
@@ -218,16 +248,16 @@ export async function imprimirInformeUnificado(opciones) {
     }
 
     // Informes con paginación basada en array de agrupación
-    const key = (modoAgrupacion && !esPaginaUnica) 
-        ? modoAgrupacion 
+    const key = (modoAgrupacion && !esPaginaUnica)
+        ? modoAgrupacion
         : Object.keys(informeGlobalData).find(k => Array.isArray(informeGlobalData[k]));
-    
+
     const items = key ? (informeGlobalData[key] || []) : [];
 
     if (!Array.isArray(items) || items.length === 0) return;
 
     const html = items.map((item, idx) => `
-        <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''}">
+        <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''}"${styleVars}>
             ${getHtmlEncabezado(item)}
             <div class="report-body">
                 ${renderContenido(item)}

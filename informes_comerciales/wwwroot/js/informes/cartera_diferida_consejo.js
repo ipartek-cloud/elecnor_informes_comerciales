@@ -56,7 +56,7 @@ function _renderizarPagina(index) {
     const agrupacion = estado.informeGlobalData.agrupaciones[index];
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-anio-index="${index}" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_diferida_consejo" data-anio-index="${index}" role="main">
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${_renderTripleBlock(agrupacion)}
@@ -326,7 +326,7 @@ function _renderSubsetTripleBlock(agrup) {
                     <th rpt-border-none></th>
                     <th class="text-end">Contr</th>
                     <th class="text-end">% s/Merc</th>
-                    <th class="text-end">Var/2025</th>
+                    <th class="text-end">Var/${agrup.año - 1}</th>
                 </tr>
             </thead>
             <tbody>
@@ -338,7 +338,7 @@ function _renderSubsetTripleBlock(agrup) {
                         <td rpt-border-none></td>
                         <td class="text-end" data-label="Acum. Contr.">${val(s.importeContratadoAcumulado)}</td>
                         <td class="text-end" data-label="% s/Merc">${formatPercentage(s.porcentajeSobreMercado)}</td>
-                        <td class="text-end" data-label="Var/2025">${s.variacion}</td>
+                        <td class="text-end" data-label="Var/${agrup.año - 1}">${s.variacion}</td>
                     </tr>
                 `).join('')}
             </tbody>
@@ -452,18 +452,20 @@ function _renderCarteraDiferida(agrup) {
     const totales = data.totales;
     const anioSel = agrup.año;
 
-    // Mapeo directo a slots fijos (1.1.25, 2025, 2026, 2027) según requerimiento de layout estático
-    const getVals = (l) => {
-        return { 
-            v1_1: l.cart1_1 || l.Cart1_1 || 0,
-            v25: l.anio1 || l.Anio1 || 0,
-            v26: l.anio2 || l.Anio2 || 0,
-            v27: l.anio3 || l.Anio3 || 0
-        };
-    };
+    // Acceso a propiedades semánticas del DTO con fallback triple (nuevo → DTO → legacy)
+    const getVals = (l) => ({
+        v1_1: l.valorCart1_1 ?? l.ValorCart1_1 ?? l.cart1_1 ?? l.Cart1_1 ?? 0,
+        nuevos: l.nuevos ?? l.Nuevos ?? 0,
+        total: l.total ?? l.Total ?? 0,
+        contr: l.contr ?? l.Contr ?? 0,
+        ip: l.ip ?? l.Ip ?? 0,
+        v1: l.valorAnio1 ?? l.ValorAnio1 ?? l.anio1 ?? l.Anio1 ?? 0,
+        v2: l.valorAnio2 ?? l.ValorAnio2 ?? l.anio2 ?? l.Anio2 ?? 0,
+        v3: l.valorAnio3 ?? l.ValorAnio3 ?? l.anio3 ?? l.Anio3 ?? 0
+    });
 
     const t = getVals(totales);
-    const sumaTotalCartera = (t.v25 + t.v26 + t.v27);
+    const sumaTotalCartera = (t.v1 + t.v2 + t.v3);
 
     return `
         <table class="rpt-table-triple rpt-table-stackable rpt-table-cd">
@@ -493,7 +495,7 @@ function _renderCarteraDiferida(agrup) {
                             <th colspan="3" class="text-center" rpt-border-none>Cartera Pendiente</th>
                         </tr>
                         <tr class="rpt-border-header" rpt-row-height-18>
-                            <th class="text-end">1.1.25</th>
+                            <th class="text-end">${data.tituloColInicial}</th>
                             <th class="text-end">Nuevos *</th>
                             <th class="text-end">Total</th>
                             <th rpt-border-none></th>
@@ -501,9 +503,9 @@ function _renderCarteraDiferida(agrup) {
                             <th rpt-border-none></th>
                             <th class="text-end">Contr.</th>
                             <th class="text-end">Ip</th>
-                            <th class="text-end">2025</th>
-                            <th class="text-end">2026</th>
-                            <th class="text-end">2027</th>
+                            <th class="text-end">${data.tituloColAnio1}</th>
+                            <th class="text-end">${data.tituloColAnio2}</th>
+                            <th class="text-end">${data.tituloColAnio3}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -511,34 +513,34 @@ function _renderCarteraDiferida(agrup) {
                             const v = getVals(l);
                             return `
                                 <tr rpt-row-height-18>
-                                    <td class="text-end" data-label="1.1.25">${val(v.v1_1)}</td>
-                                    <td class="text-end" data-label="Nuevos *">${val(l.nuevos)}</td>
-                                    <td class="text-end" data-label="Total">${val(l.total)}</td>
+                                    <td class="text-end" data-label="${data.tituloColInicial}">${val(v.v1_1)}</td>
+                                    <td class="text-end" data-label="Nuevos *">${val(v.nuevos)}</td>
+                                    <td class="text-end" data-label="Total">${val(v.total)}</td>
                                     <td rpt-border-none></td>
                                     <td class="ps-2" data-label="Cartera Diferida">${l.concepto.trim()}</td>
                                     <td rpt-border-none></td>
-                                    <td class="text-end" data-label="Contr.">${val(l.contr)}</td>
-                                    <td class="text-end" data-label="Ip">${l.total === 0 ? '####' : formatCurrency(l.ip, 2)}</td>
-                                    <td class="text-end" data-label="2025">${val(v.v25)}</td>
-                                    <td class="text-end" data-label="2026">${val(v.v26)}</td>
-                                    <td class="text-end" data-label="2027">${val(v.v27)}</td>
+                                    <td class="text-end" data-label="Contr.">${val(v.contr)}</td>
+                                    <td class="text-end" data-label="Ip">${l.total === 0 ? '####' : formatCurrency(v.ip, 2)}</td>
+                                    <td class="text-end" data-label="${data.tituloColAnio1}">${val(v.v1)}</td>
+                                    <td class="text-end" data-label="${data.tituloColAnio2}">${val(v.v2)}</td>
+                                    <td class="text-end" data-label="${data.tituloColAnio3}">${val(v.v3)}</td>
                                 </tr>
                             `;
                         }).join('')}
                     </tbody>
                     <tfoot>
                         <tr class="fw-bold fs-7 rpt-text-corporate" rpt-row-height-18>
-                            <td class="text-end rpt-td-total" data-label="Total 1.1.25">${val(t.v1_1)}</td>
-                            <td class="text-end rpt-td-total" data-label="Total Nuevos">${val(totales.nuevos)}</td>
-                            <td class="text-end rpt-td-total" data-label="Total Total">${val(totales.total)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(t.v1_1)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total Nuevos">${val(t.nuevos)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total Total">${val(t.total)}</td>
                             <td rpt-border-none></td>
                             <td class="rpt-td-total"></td>
                             <td rpt-border-none></td>
-                            <td class="text-end rpt-td-total" data-label="Total Contr.">${val(totales.contr)}</td>
-                            <td class="text-end rpt-td-total" data-label="Total Ip">${totales.total === 0 ? '####' : formatCurrency(totales.ip, 2)}</td>
-                            <td class="text-end rpt-td-total" data-label="Total 2025">${val(t.v25)}</td>
-                            <td class="text-end rpt-td-total" data-label="Total 2026">${val(t.v26)}</td>
-                            <td class="text-end rpt-td-total" data-label="Total 2027">${val(t.v27)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total Contr.">${val(t.contr)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total Ip">${t.total === 0 ? '####' : formatCurrency(t.ip, 2)}</td>
+                                <td class="text-end rpt-td-total" data-label="Total ${data.tituloColAnio1}">${val(t.v1)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total ${data.tituloColAnio2}">${val(t.v2)}</td>
+                            <td class="text-end rpt-td-total" data-label="Total ${data.tituloColAnio3}">${val(t.v3)}</td>
                         </tr>
                     </tfoot>
                 </table>

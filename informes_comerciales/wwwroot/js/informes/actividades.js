@@ -99,14 +99,24 @@ function _renderBloquePais(pais) {
                 <th colspan="6"></th>
             </tr>
             <tr class="rpt-th-blue">
-                <th class="rpt-col-act-porc-ant text-center rpt-act-line-segment">% s/Merc</th>
-                <th class="rpt-col-act-imp-ant text-end pe-3 rpt-act-line-segment">Contr.</th>
-                <th class="rpt-col-act-nombre text-start rpt-header-align-middle border-0 px-4">
+                <th class="rpt-col-act-porc-ant text-center">
+                    <div class="rpt-act-header-line">% s/Merc</div>
+                </th>
+                <th class="rpt-col-act-imp-ant text-end pe-3">
+                    <div class="rpt-act-header-line">Contr.</div>
+                </th>
+                <th class="rpt-col-act-nombre text-start rpt-header-align-middle px-4">
                     <div class="rpt-act-badge text-uppercase">${pais.nombrePais}</div>
                 </th>
-                <th class="rpt-col-act-imp-act text-end pe-3 rpt-act-line-segment">Contr.</th>
-                <th class="rpt-col-act-var text-center rpt-act-line-segment">% ${anioAnterior}</th>
-                <th class="rpt-col-act-porc-act text-center rpt-act-line-segment">% s/Merc</th>
+                <th class="rpt-col-act-imp-act text-end pe-3">
+                    <div class="rpt-act-header-line">Contr.</div>
+                </th>
+                <th class="rpt-col-act-var text-center">
+                    <div class="rpt-act-header-line">% ${anioAnterior}</div>
+                </th>
+                <th class="rpt-col-act-porc-act text-center">
+                    <div class="rpt-act-header-line">% s/Merc</div>
+                </th>
             </tr>
         </thead>
     `;
@@ -124,14 +134,24 @@ function _renderBloquePais(pais) {
 
     const totalesHtml = `
         <tr class="rpt-total-row">
-            <td class="rpt-col-act-porc-ant text-center rpt-act-line-segment-top">100%</td>
-            <td class="rpt-col-act-imp-ant text-end pe-3 rpt-act-line-segment-top">${formatCurrency(pais.totales.importeAnterior / 1000, 0)}</td>
-            <td class="rpt-col-act-nombre p-0 border-0 rpt-pt-0 rpt-va-top">
-                <div class="rpt-act-line-segment-top mx-3" style="margin-top: -1px;"></div>
+            <td class="rpt-col-act-porc-ant text-center">
+                <div class="rpt-act-total-line">100%</div>
             </td>
-            <td class="rpt-col-act-imp-act text-end pe-3 rpt-act-line-segment-top">${formatCurrency(pais.totales.importeActual / 1000, 0)}</td>
-            <td class="rpt-col-act-var text-center rpt-act-line-segment-top"></td>
-            <td class="rpt-col-act-porc-act text-center rpt-act-line-segment-top">100%</td>
+            <td class="rpt-col-act-imp-ant text-end pe-3">
+                <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeAnterior / 1000, 0)}</div>
+            </td>
+            <td class="rpt-col-act-nombre">
+                <div class="rpt-act-total-line rpt-act-total-line-text">&nbsp;</div>
+            </td>
+            <td class="rpt-col-act-imp-act text-end pe-3">
+                <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeActual / 1000, 0)}</div>
+            </td>
+            <td class="rpt-col-act-var text-center">
+                <div class="rpt-act-total-line"></div>
+            </td>
+            <td class="rpt-col-act-porc-act text-center">
+                <div class="rpt-act-total-line">100%</div>
+            </td>
         </tr>
     `;
 

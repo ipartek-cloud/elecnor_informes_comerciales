@@ -68,28 +68,51 @@
     padding-bottom: 5px !important;
 }
 
-/* Clases unificadas para las líneas segmentadas (pueden usarse en th, td o div) */
-.rpt-act-line-segment {
+/* --- PATRÓN UNIFICADO DE TOTALES (Estilo Mercados/Cartera) --- */
+
+/* --- PATRÓN UNIFICADO DE CABECERAS (Igual que Totales) --- */
+
+/* Celda de cabecera: Contenedor sin padding inferior para alinear líneas internas */
+.rpt-th-blue th {
+    padding-bottom: 0 !important;
+    vertical-align: bottom !important;
+    border-bottom: none !important;
+}
+
+/* Div de línea de cabecera: aplicado dentro de cada th */
+.rpt-act-header-line {
     border-bottom: 2px solid #00468B !important;
+    margin: 0 4px;
+    padding-bottom: 4px; /* Espacio entre el texto y la línea */
 }
 
-.rpt-act-line-segment-top {
-    border-top: 2px solid #00468B !important;
-}
-
-/* Fila de resumen de totales del bloque (unificado) */
-.rpt-total-row td, .rpt-row-total-actividad td {
-    color: #00468B !important;
-    font-weight: bold !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-}
-
-/* Forzar el borde superior en las clases de total */
-.rpt-total-row td.rpt-act-line-segment-top, 
-.rpt-row-total-actividad td.rpt-act-line-segment-top,
 div.rpt-act-line-segment-top {
     border-top: 2px solid #00468B !important;
+}
+
+/* --- PATRÓN UNIFICADO DE TOTALES (Estilo Mercados/Cartera) --- */
+
+/* Celda de total: Contenedor sin padding para alinear líneas internas */
+.rpt-total-row td, 
+.rpt-row-total-actividad td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    padding-top: 0 !important; /* Vital para que el div interno suba al tope */
+    padding-bottom: 4px !important;
+    vertical-align: top !important;
+    border-top: none !important; /* Eliminamos el borde de la celda para usar el de los divs */
+}
+
+/* Div de línea de total: aplicado dentro de cada td de la fila de total */
+.rpt-act-total-line {
+    border-top: 2px solid #00468B !important;
+    margin: 0 4px; /* Crea el efecto de segmentación/gaps entre columnas */
+    padding-top: 4px; /* Espacio entre la línea y el texto del número */
+}
+
+/* Variante para la columna de nombre (que suele estar vacía en el total) */
+.rpt-act-total-line-text {
+    margin: 0 1rem;
 }
 
 /* Anchos de columna optimizados para el informe de Actividades */

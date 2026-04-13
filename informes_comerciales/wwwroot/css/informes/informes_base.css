@@ -14,8 +14,21 @@
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
     border: 1px solid #ccc;
     margin: 20px auto !important;
-    padding: 2rem !important; /* Reducido de 3rem para mejor aprovechamiento */
-    max-width: 1050px;
+
+    /* ==========================================================================
+       VARIABLES CSS DE MÁRGENES (Parametrización Elecnor 2026)
+       - Valores por defecto para TODOS los informes (fallback)
+       - Se pueden sobrescribir inline desde JS vía objeto `margenes`
+       - --rpt-padding-web: padding en pantalla (modal)
+       - --rpt-padding-pdf:   padding en impresión (@media print)
+       - --rpt-max-width:     ancho máximo del papel en pantalla
+       ========================================================================== */
+    --rpt-padding-web: 2rem;
+    --rpt-padding-pdf: 6.4mm;
+    --rpt-max-width: 1050px;
+
+    padding: var(--rpt-padding-web) !important;
+    max-width: var(--rpt-max-width);
     position: relative;
     z-index: 10;
 }
@@ -475,13 +488,16 @@
         overflow: visible !important;
     }
 
-    /* 4. Simulador de Márgenes Físicos del PDF (Access Parity 0.64cm) */
+    /* 4. Simulador de Márgenes Físicos del PDF (Access Parity 0.64cm)
+       NOTA: Usa la variable CSS --rpt-padding-pdf con fallback a 6.4mm.
+       Cada informe puede sobrescribir esta variable inline si necesita márgenes custom. */
     .rpt-paper, .rpt-paper--print {
         width: 100% !important;
         min-height: auto !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 6.4mm !important; /* Margen exacto de Access */
+        padding: var(--rpt-padding-pdf) !important;
+        max-width: 100% !important; /* En impresión, el papel ocupa el 100% del A4 */
         box-shadow: none !important;
         border: none !important;
         background: white !important;

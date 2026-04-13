@@ -173,7 +173,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
         }
 
         /// <summary>
-        /// Obtiene y transforma el subinforme de Cartera Diferida (Consejo)
+        /// Obtiene y transforma el subinforme de Cartera Diferida (Consejo).
+        /// Los títulos de columna se calculan dinámicamente según el año de consulta - 1.
+        /// Para anio=N: TituloColInicial="1.1.(N-1)", TituloColAnio1="N-1", TituloColAnio2="N", TituloColAnio3="N+1".
         /// </summary>
         private CarteraDiferidaDto CalcularSubinformeCarteraDiferida(List<CarteraDiferidaPoco> datos, int anio, int mes)
         {
@@ -181,35 +183,36 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
 
             var dto = new CarteraDiferidaDto
             {
-                TituloColInicial = $"1.1.{anio.ToString().Substring(2, 2)}",
-                TituloColAnio1 = anio.ToString(),
-                TituloColAnio2 = (anio + 1).ToString(),
-                TituloColAnio3 = (anio + 2).ToString(),
+                // Títulos dinámicos calculados desde el año de consulta - 1
+                TituloColInicial = $"1.1.{(anio - 1).ToString().Substring(2, 2)}",  // ej: "1.1.25" para 2026
+                TituloColAnio1 = (anio - 1).ToString(),                             // ej: "2025" para 2026
+                TituloColAnio2 = anio.ToString(),                                   // ej: "2026" para 2026
+                TituloColAnio3 = (anio + 1).ToString(),                             // ej: "2027" para 2026
                 Lineas = datos.OrderBy(d => d.Orden).Select(d => new CarteraDiferidaLineaDto
                 {
                     Concepto = d.CarteraDiferida,
-                    Cart1_1 = d.Cart1_1,
-                    Nuevos = d.Nuevos,
-                    Total = d.Total,
-                    Contr = d.Contr,
-                    Ip = InformeCalculosUtils.CalcularIp(d.Contr, d.Total / 12, mes),
-                    Anio1 = d.Anio1,
-                    Anio2 = d.Anio2,
-                    Anio3 = d.Anio3
+                    ValorCart1_1 = d.ValorCart1_1,    // Antes: d.Cart1_1
+                    Nuevos = d.Nuevos,                // PRESERVAR
+                    Total = d.Total,                  // PRESERVAR
+                    Contr = d.Contr,                  // PRESERVAR
+                    Ip = InformeCalculosUtils.CalcularIp(d.Contr, d.Total / 12, mes),  // PRESERVAR
+                    ValorAnio1 = d.ValorAnio1,        // Antes: d.Anio1
+                    ValorAnio2 = d.ValorAnio2,        // Antes: d.Anio2
+                    ValorAnio3 = d.ValorAnio3         // Antes: d.Anio3
                 }).ToList(),
                 Totales = new CarteraDiferidaTotalesDto
                 {
-                    Cart1_1 = datos.Sum(d => d.Cart1_1),
+                    ValorCart1_1 = datos.Sum(d => d.ValorCart1_1),
                     Nuevos = datos.Sum(d => d.Nuevos),
                     Total = datos.Sum(d => d.Total),
                     Contr = datos.Sum(d => d.Contr),
                     Ip = InformeCalculosUtils.CalcularIp(datos.Sum(d => d.Contr), datos.Sum(d => d.Total / 12), mes),
-                    Anio1 = datos.Sum(d => d.Anio1),
-                    Anio2 = datos.Sum(d => d.Anio2),
-                    Anio3 = datos.Sum(d => d.Anio3)
+                    ValorAnio1 = datos.Sum(d => d.ValorAnio1),
+                    ValorAnio2 = datos.Sum(d => d.ValorAnio2),
+                    ValorAnio3 = datos.Sum(d => d.ValorAnio3)
                 }
             };
-            
+
             return dto;
         }
 

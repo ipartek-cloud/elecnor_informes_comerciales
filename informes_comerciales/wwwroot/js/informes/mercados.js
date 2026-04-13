@@ -19,7 +19,8 @@ export async function ejecutar(anio, mes, nroPagina) {
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
-            claveAgrupacion: 'NONE'
+            claveAgrupacion: 'NONE',
+            margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
         });
     } catch (error) {
         throw error;
@@ -64,7 +65,8 @@ async function _imprimirInforme() {
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContructorCompleto(true),
-        modoAgrupacion: 'NONE' 
+        modoAgrupacion: 'NONE',
+        margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
     });
 }
 

@@ -240,8 +240,9 @@
         margin-bottom: 0 !important;
     }
 
+    /* Contenedor subinformes: 100% del ancho imprimible para paridad visual */
     .rpt-sub-report-container {
-        width: 78%; /* Sin !important para permitir override con w-100 */
+        width: 100% !important;
     }
 
 
@@ -253,6 +254,12 @@
         table-layout: auto !important;
         margin-right: 0 !important;
         margin-left: 0 !important;
+    }
+
+    /* Variante Cartera Diferida: también 100% en impresión */
+    .rpt-table-triple.rpt-table-cd {
+        width: 100% !important;
+        table-layout: auto !important;
     }
 
     /* -------------------------------------------------------------------------
