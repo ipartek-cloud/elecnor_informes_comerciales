@@ -1,0 +1,106 @@
+/* 
+ * ESTILOS ESPECÍFICOS: Informe de Gerencias
+ * Layout Central: [Mensual 2col] | [Gerencia] | [Acumulado 3col] | [Var 2col]
+ */
+
+.rpt-paper[data-informe="gerencias"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+    padding: 1.5rem !important;
+    max-width: 1200px !important;
+    margin: 20px auto !important;
+}
+
+/* ELIMINACIÓN DE LÍNEAS CONTINUAS (Sobrescribe informes_base.css) */
+.rpt-gerencias-layout thead tr,
+.rpt-gerencias-layout thead th,
+.rpt-gerencias-layout .rpt-th-blue,
+.rpt-gerencias-layout .rpt-th-blue th {
+    border: none !important;
+}
+
+@media print {
+    .rpt-paper[data-informe="gerencias"] {
+        padding: 6.4mm !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
+
+/* Base de tabla */
+.rpt-gerencias-layout {
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+/* PROPORCIONES DE COLUMNAS (Total 100%)
+   Mensual: 11% + 11% = 22%
+   Gerencia: 23%
+   Acumulado: 12% + 12% + 8% = 32%
+   Variación: 11% + 12% = 23%
+*/
+.rpt-ger-col-m       { width: 11%; }
+.rpt-ger-col-desc    { width: 23%; }
+.rpt-ger-col-a       { width: 12%; }
+.rpt-ger-col-ip      { width: 8%; }
+.rpt-ger-col-v-contr { width: 11%; }
+.rpt-ger-col-v-cart  { width: 13%; }
+
+/* ENCABEZADOS */
+.rpt-gerencias-group-header {
+    border-bottom: none !important; /* Eliminado por petición del usuario */
+    padding-bottom: 3px !important;
+}
+
+.rpt-ger-header-line {
+    border-bottom: 2px solid #00468B !important;
+    margin: 0 5px;
+    padding-bottom: 3px;
+}
+
+/* Espacio entre grupos de cabeceras */
+.rpt-gerencias-th-spacer {
+    width: 10px;
+}
+
+.rpt-gerencias-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 4px 0;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.rpt-gerencias-title-center {
+    color: #00468B;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+/* LÍNEAS DE TOTALES (Broken Lines Pattern) */
+.rpt-ger-total-cell {
+    border-top: 2.5px solid #00468B;
+    margin: 0 5px;
+    padding-top: 5px;
+    color: #00468B !important; /* Aseguramos que el importe sea azul */
+}
+
+/* Reposicionamiento del Total */
+.rpt-total-row-gerencia {
+    color: #00468B !important;
+    font-weight: bold;
+}
+
+.rpt-gerencias-detail-row:hover {
+    background-color: #f8faff !important;
+}
+
+/* Ajustes de celdas */
+.rpt-number-cell {
+    padding-right: 8px !important;
+}

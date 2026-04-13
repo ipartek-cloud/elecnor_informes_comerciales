@@ -33,8 +33,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado, umbral = 0) {
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
-            claveAgrupacion: 'NONE', // Informe de página única
-            margenes: { web: '2rem', pdf: '6.4mm', maxWidth: '1100px' }
+            claveAgrupacion: 'NONE' // Informe de página única
         });
     } catch (error) {
         console.error("Error al ejecutar informe Paises:", error);
@@ -82,8 +81,7 @@ async function _imprimirInforme() {
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderTablaPaises() + _renderFooterInfo(),
-        modoAgrupacion: 'NONE',
-        margenes: { web: '2rem', pdf: '6.4mm', maxWidth: '1100px' }
+        modoAgrupacion: 'NONE'
     });
 }
 

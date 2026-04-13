@@ -1,5 +1,25 @@
 /* Estilos específicos para el informe Gerencias Totales Cruces */
 
+/* Contenedor principal con márgenes estandarizados (1.5rem Web / 6.4mm PDF / 1100px Max) */
+.rpt-paper[data-informe="gerencias_totales_cruces"] {
+    padding: 1.5rem !important; /* Estándar Web Elecnor 2026 */
+    max-width: 1100px !important; /* Ancho extendido para informes de gerencia */
+    margin: 20px auto !important;
+}
+
+/* Impresión - Paridad con Access (The 6.4mm Rule) */
+@media print {
+    .rpt-paper[data-informe="gerencias_totales_cruces"],
+    .rpt-paper--print {
+        padding: 6.4mm !important; /* Paridad total con Access */
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
+
 /* Columna Central de Tabla (Centro/Dirección) */
 .rpt-col-centro {
     width: 220px; /* Corregido: min-width es ignorado con table-layout:fixed */

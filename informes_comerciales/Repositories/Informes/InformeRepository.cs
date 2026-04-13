@@ -11,6 +11,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesAI;
 using Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesSignificativas;
 using Elecnor_Informes_Comerciales.Models.Informes.MercadosDG;
+using Elecnor_Informes_Comerciales.Models.Informes.Gerencias;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1376,6 +1377,84 @@ public class InformeRepository
             },
             commandTimeout: 60
         )).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Gerencias
+    // └─ Método: ObtenerGerenciasAsync(int anio, int mes)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos planos para el informe de Gerencias.
+    /// </summary>
+    public async Task<List<GerenciasPoco>> ObtenerGerenciasAsync(int anio, int mes)
+    {
+        // PASO 1: Vaciar tabla de trabajo
+        const string sqlDelete = "DELETE FROM rptContratacion_GerenciaCentro";
+
+        // PASO 2: Poblar desde el SP (columnas exactas que devuelve el SP)
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
+                                       EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes";
+
+        // PASO 3: Asignar el año a todas las filas
+        const string sqlUpdateAnio = "UPDATE rptContratacion_GerenciaCentro SET Año = @Anio";
+
+        // PASO 4: SELECT enriquecido con JOINs
+        const string sqlSelect = @"SELECT
+                                        rpt.Año,
+                                        cg.SumarizaGerentes,
+                                        rpt.NombreGerente AS Actividad,
+                                        cg.Orden,
+                                        SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
+                                        SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
+                                        SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        SUM(ISNULL(vw.Importe, 0))                                AS Objetivos,
+                                        SUM(ISNULL(act.CarteraPdteAñoActual, 0))                  AS CarteraPdteAñoActual,
+                                        SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                AS CarteraPdteAñoAnterior
+                                    FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
+                                    INNER JOIN Sumarigrama s WITH (NOLOCK)
+                                        ON rpt.CodCentro = s.CodCentro
+                                    INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
+                                        ON rpt.Año = cg.Año
+                                        AND rpt.CodCentro = cg.CodCentro
+                                        AND rpt.NombreGerente = cg.NombreGerente
+                                    LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
+                                        ON rpt.CodCentro = act.CodCentro
+                                    LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
+                                        ON rpt.CodCentro = ant.CodCentro
+                                    LEFT JOIN vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
+                                        ON rpt.CodCentro = vw.CodCentro
+                                        AND rpt.Año = vw.Año
+                                    GROUP BY
+                                        rpt.Año,
+                                        cg.SumarizaGerentes,
+                                        rpt.NombreGerente,
+                                        cg.Orden";
+
+        var parametros = new { 
+            Anio = anio, 
+            Mes = mes
+        };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction);
+            var resultado = (await _connection.QueryAsync<GerenciasPoco>(sqlSelect, parametros, transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 }
 

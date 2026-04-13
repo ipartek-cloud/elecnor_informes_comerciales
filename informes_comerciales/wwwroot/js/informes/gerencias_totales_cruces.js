@@ -15,6 +15,13 @@ import { ApiClient } from '../site.js';
 // ===============================================================================
 const estado = crearEstadoInforme();
 
+// Estándar de márgenes para informes de gerencia
+const MARGENES_GERENCIA = {
+    web: '1.5rem',
+    pdf: '6.4mm',
+    maxWidth: '1100px'
+};
+
 // ===============================================================================
 // PUNTO DE ENTRADA (llamado por informes_manager.js)
 // ===============================================================================
@@ -34,7 +41,8 @@ export async function ejecutar(anio, mes, nroPagina) {
             estado,
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
-            prefijoPaginacion: 'Gerencia'
+            prefijoPaginacion: 'Gerencia',
+            margenes: MARGENES_GERENCIA
         });
     } catch (error) {
         throw error; // El manager lo capturará
@@ -57,8 +65,19 @@ function _renderizarPagina(index) {
     const gerente = estado.informeGlobalData.gerentes[index];
     const mesCorto = getMesCorto(estado.informeGlobalData.meta.filtros.mes - 1);
 
+    // Inyectamos variables CSS para que el contenedor respete los márgenes del JS
+    const styleInline = `
+        --rpt-padding-web: ${MARGENES_GERENCIA.web};
+        --rpt-padding-pdf: ${MARGENES_GERENCIA.pdf};
+        --rpt-max-width: ${MARGENES_GERENCIA.maxWidth};
+    `;
+
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="gerencias_totales_cruces" data-gerente-index="${index}" role="main">
+        <div class="${RPT_CLASSES.PAPER}" 
+             data-informe="gerencias_totales_cruces" 
+             data-gerente-index="${index}" 
+             role="main"
+             style="${styleInline}">
             ${_getHtmlEncabezado(gerente.nombreGerente)}
             <div class="report-body">
                 ${renderSeccionGerente(gerente, mesCorto)}
@@ -123,7 +142,8 @@ async function _imprimirInforme() {
         renderContenido: (gerente) => {
             const mesCorto = getMesCorto(estado.informeGlobalData.meta.filtros.mes - 1);
             return renderSeccionGerente(gerente, mesCorto, true);
-        }
+        },
+        margenes: MARGENES_GERENCIA
     });
 }
 

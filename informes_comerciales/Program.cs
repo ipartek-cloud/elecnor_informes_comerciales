@@ -25,6 +25,17 @@ string logPath = builder.Environment.IsDevelopment()
     : Path.Combine(AppContext.BaseDirectory, "Logs", "log_.txt");
 
 builder.Host.UseSerilog((context, configuration) => configuration
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Routing", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.StaticFiles", Serilog.Events.LogEventLevel.Error)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Authorization", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.DataProtection", Serilog.Events.LogEventLevel.Error)
+    .MinimumLevel.Override("Microsoft.AspNetCore.ResponseCaching", Serilog.Events.LogEventLevel.Error)
+    .MinimumLevel.Override("System.Net.Http", Serilog.Events.LogEventLevel.Warning)
     .WriteTo.Console()
     .WriteTo.File(logPath, rollingInterval: RollingInterval.Day));
 
@@ -57,6 +68,7 @@ builder.Services.AddScoped<InformeContratacionesService>();
 builder.Services.AddScoped<InformeContratacionesAIService>();
 builder.Services.AddScoped<InformeRankingContratacionClientesService>();
 builder.Services.AddScoped<InformeContratacionesSignificativasService>();
+builder.Services.AddScoped<InformeGerenciasService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // Catálogos
