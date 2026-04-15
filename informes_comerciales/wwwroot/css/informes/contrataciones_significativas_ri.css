@@ -12,6 +12,11 @@
     vertical-align: bottom;
 }
 
+/* Primera direccion pegada al encabezado del mes */
+.rpt-cont-sig-month-row + tr .rpt-cont-sig-group-header {
+    padding-top: 0 !important;
+}
+
 .rpt-cont-sig-group-title {
     background-color: #00468B;
     color: #ffffff;

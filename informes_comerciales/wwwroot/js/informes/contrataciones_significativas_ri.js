@@ -21,7 +21,7 @@ const estado = crearEstadoInforme();
 export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSubDirGeneral = '221', mostrarTitulo = true) {
     try {
         // 1. Verificar si el checkbox de generación está activado
-        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones_ri');
+        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
         const debeGenerar = chkGenerar?.checked ?? false;
 
         // 2. Si checkbox activado, llamar al endpoint de generación
@@ -142,6 +142,15 @@ function _renderCuerpoInforme() {
         return `<div class="text-center p-5 text-muted">No se han encontrado registros para el periodo seleccionado.</div>`;
     }
 
+    // Fila del Mes (Única al principio)
+    const filaMesHtml = `
+        <tr class="rpt-detail-row rpt-cont-sig-month-row">
+            <td colspan="3" class="rpt-cont-sig-mes-label fw-bold">
+                ${_escapeHtml(nombreMes)}
+            </td>
+        </tr>
+    `;
+
     // Generar el contenido de cada dirección
     const bloquesHtml = direccionesConDatos.map(direccion => {
         const contratosDelGrupo = dataMes.filter(item => 
@@ -150,16 +159,11 @@ function _renderCuerpoInforme() {
 
         if (contratosDelGrupo.length === 0) return '';
 
-        // Cabecera de Dirección de Negocio y fila del Mes
+        // Cabecera de Dirección de Negocio (El mes ya no se repite aquí)
         let bloque = `
         <tr>
             <td colspan="3" class="rpt-cont-sig-group-header" style="border-top: none;">
                 <span class="rpt-cont-sig-group-title">${_escapeHtml(direccion.nombreDirNegocio)}</span>
-            </td>
-        </tr>
-        <tr class="rpt-detail-row rpt-cont-sig-month-row">
-            <td colspan="3" class="rpt-cont-sig-mes-label fw-bold">
-                ${_escapeHtml(nombreMes)}
             </td>
         </tr>
         `;
@@ -192,6 +196,7 @@ function _renderCuerpoInforme() {
                 </tr>
             </thead>
             <tbody>
+                ${filaMesHtml}
                 ${bloquesHtml}
             </tbody>
         </table>

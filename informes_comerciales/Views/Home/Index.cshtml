@@ -40,6 +40,15 @@
                             <option value="12" selected="@(defaultMonth == 12 ? "selected" : null)">Diciembre</option>
                         </select>
                     </div>
+                    <div class="col-auto ms-auto">
+                        <label for="cmbSubDireccionGeneral" class="col-form-label fw-bold">SubDirección</label>
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral" name="cmbSubDireccionGeneral" 
+                                style="min-width: 250px;" aria-label="Seleccionar SubDirección General">
+                            <!-- Las opciones se cargan dinámicamente -->
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,8 +57,8 @@
             <div class="card-header rpt-index-header">
                 <h5 class="mb-0"><i class="fas fa-file-invoice"></i> CONSEJO de ADMINISTRACIÓN</h5>
             </div>
-            <div class="card-body">
-                <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start">
+            <div class="card-body p-0">
+                <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start p-3">
 
                     <!-- Grupo Unificado: Botón + Página (CARTERA) -->
                     <div class="d-flex align-items-center gap-2 w-100">
@@ -221,17 +230,124 @@
                                    name="inputPaginaContratacionesSignificativasInternacionales" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Derecha: Combo SubDirección General -->
-                        <div class="input-group rpt-input-group-index ms-auto" style="max-width: 240px;">
-                            <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral"
-                                    aria-label="Filtrar por SubDirección General">
-                                <!-- Las opciones se cargan dinámicamente -->
-                            </select>
+
+                    </div>
+
+
+                    </div>
+
+                    <!-- SEPARADOR SECCIÓN: RESTO DE INFORMES -->
+                    <div class="rpt-index-header py-2 px-3 border-top border-bottom mt-2">
+                        <h5 class="mb-0"><i class="fas fa-file-invoice"></i> RESTO de INFORMES</h5>
+                    </div>
+
+                    <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">
+                        <!-- D.G. Infraestructuras x Mercado -->
+                        <div class="d-flex align-items-center gap-2 w-100">
+                            <div class="input-group rpt-input-group-index">
+                                <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                        onclick="cargarInforme(this, 'mercados_dg')"
+                                        aria-label="Ver informe D.G. Infraestructuras x Mercados">
+                                    D.G. Infraestructuras x Mercados
+                                </button>
+                            </div>
+                        </div>
+                    <!-- Gerencias -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'gerencias')"
+                                    aria-label="Ver informe Gerencias">
+                                Gerencias
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Actividades Objetivos -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'actividades_objetivos')"
+                                    aria-label="Ver informe Actividades Objetivos">
+                                Actividades Objetivos
+                            </button>
+                        </div>
+                    </div>
+                    <!-- SG Delegaciones Mercados -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'mercados_sg_delegaciones')"
+                                    aria-label="Ver informe S.G. Delegaciones x Mercados">
+                                S.G. Delegaciones x Mercados
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Ranking Contratación Nacional e Internacional (Sin Página) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Ranking Nacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                    data-mercado="Nacional"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Ranking Contratación Nacional">
+                                Ranking Contratación Nacional
+                            </button>
+                        </div>
+                        <!-- Columna Derecha: Ranking Internacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                    data-mercado="Internacional"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Ranking Contratación Internacional">
+                                Ranking Contratación Internacional
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Contrataciones Significativas Nacional e Internacional (Sin Página) - RESTO INFORMES -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Contrataciones Significativas Nacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
+                                    data-mercado="Nacional"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Contrataciones Significativas Nacional">
+                                Contrataciones Significativas Nacional
+                            </button>
+                        </div>
+                        <!-- Columna Central: Contrataciones Significativas Internacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
+                                    data-mercado="Internacional"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Contrataciones Significativas Internacional">
+                                Contrataciones Significativas Internacional
+                            </button>
+                        </div>
+
+                    </div>
+                    <!-- Gerencias Totales Cruces -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="Swal.fire({ title: 'Próximamente', text: 'El informe de Gerencias Totales Cruces está actualmente en desarrollo.', icon: 'info', confirmButtonColor: '#00468B' })"
+                                    aria-label="Ver informe de Gerencias Totales Cruces">
+                                Gerencias Totales Cruces
+                            </button>
+                        </div>
+                    </div>
                         </div>
                     </div>
 
-                    <!-- Fila de Generación de Datos (Horizontal en la base) -->
-                    <div class="d-flex align-items-center justify-content-center gap-4 w-100 mt-4 border-top pt-3">
+                    <!-- PIE DE FORMUARIO: GENERACIÓN DE DATOS -->
+                    <div class="rpt-index-header py-2 px-3 border-top border-bottom mt-2">
+                        <h5 class="mb-0 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;"><i class="fas fa-cogs"></i> Opciones de Generación</h5>
+                    </div>
+                    
+                    <div class="d-flex align-items-center justify-content-center gap-4 w-100 p-3 bg-light bg-opacity-50">
                         <!-- Generar Base -->
                         <div class="d-flex align-items-center gap-2">
                             <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
@@ -260,132 +376,6 @@
                             <input class="form-check-input mt-0" type="checkbox"
                                    id="chkGenerarRPTPrincipalesContrataciones"
                                    name="chkGenerarRPTPrincipalesContrataciones">
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Sección de Informes: RESTO de INFORMES -->
-        <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header">
-                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> RESTO de INFORMES</h5>
-            </div>
-            <div class="card-body">
-                <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start">
-                    <!-- D.G. Infraestructuras x Mercado -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'mercados_dg')"
-                                    aria-label="Ver informe D.G. Infraestructuras x Mercados">
-                                D.G. Infraestructuras x Mercados
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Gerencias -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'gerencias')"
-                                    aria-label="Ver informe Gerencias">
-                                Gerencias
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Actividades Objetivos -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'actividades_objetivos')"
-                                    aria-label="Ver informe Actividades Objetivos">
-                                Actividades Objetivos
-                            </button>
-                        </div>
-                    </div>
-                    <!-- SG Delegaciones Mercados -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'mercados_sg_delegaciones')"
-                                    aria-label="Ver informe S.G. Delegaciones x Mercados">
-                                S.G. Delegaciones x Mercados
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Ranking Contratación Nacional e Internacional (Sin Página) -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Ranking Nacional -->
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
-                                    data-mercado="Nacional"
-                                    data-mostrar-titulo="false"
-                                    aria-label="Ver informe Ranking Contratación Nacional">
-                                Ranking Contratación Nacional
-                            </button>
-                        </div>
-                        <!-- Columna Derecha: Ranking Internacional -->
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
-                                    data-mercado="Internacional"
-                                    data-mostrar-titulo="false"
-                                    aria-label="Ver informe Ranking Contratación Internacional">
-                                Ranking Contratación Internacional
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Contrataciones Significativas Nacional e Internacional (Sin Página) - RESTO INFORMES -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Contrataciones Significativas Nacional -->
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
-                                    data-mercado="Nacional"
-                                    data-mostrar-titulo="false"
-                                    aria-label="Ver informe Contrataciones Significativas Nacional">
-                                Contrataciones Significativas Nacional
-                            </button>
-                        </div>
-                        <!-- Columna Central: Contrataciones Significativas Internacional -->
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
-                                    data-mercado="Internacional"
-                                    data-mostrar-titulo="false"
-                                    aria-label="Ver informe Contrataciones Significativas Internacional">
-                                Contrataciones Significativas Internacional
-                            </button>
-                        </div>
-                        <!-- Columna Derecha: Combo SubDirección General -->
-                        <div class="input-group rpt-input-group-index ms-auto" style="max-width: 240px;">
-                            <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral_ri"
-                                    aria-label="Filtrar por SubDirección General">
-                                <!-- Las opciones se cargan dinámicamente -->
-                            </select>
-                        </div>
-                    </div>
-                    <!-- Gerencias Totales Cruces -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="Swal.fire({ title: 'Próximamente', text: 'El informe de Gerencias Totales Cruces está actualmente en desarrollo.', icon: 'info', confirmButtonColor: '#00468B' })"
-                                    aria-label="Ver informe de Gerencias Totales Cruces">
-                                Gerencias Totales Cruces
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Fila de Generación de Datos para RESTO DE INFORMES -->
-                    <div class="d-flex align-items-center justify-content-center gap-4 w-100 mt-4 border-top pt-3">
-                        <div class="d-flex align-items-center gap-2">
-                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones_ri">
-                                Generar Contrataciones Significativas
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox"
-                                   id="chkGenerarRPTPrincipalesContrataciones_ri"
-                                   name="chkGenerarRPTPrincipalesContrataciones_ri">
                         </div>
                     </div>
                 </div>

@@ -682,6 +682,13 @@
     white-space: nowrap !important; /* Evita que el texto salte a la siguiente línea */
 }
 
+/* Botón solo (sin input-group) - esquinas redondeadas a ambos lados */
+.rpt-btn-index-alone {
+    border-radius: 6px !important;
+    height: 38px !important;
+    white-space: nowrap !important;
+}
+
 /* Clase para el contenedor input-group del index con ancho uniforme */
 .rpt-input-group-index {
     width: 485px !important; /* Ancho suficiente para el literal más largo + input página */
