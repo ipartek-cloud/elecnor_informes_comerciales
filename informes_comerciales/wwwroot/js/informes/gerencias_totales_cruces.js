@@ -30,11 +30,13 @@ const MARGENES_GERENCIA = {
  * Inicializa o actualiza el informe para el año/mes indicados.
  * Usa inicializarInforme() de informes_utils.js para máxima reutilización.
  */
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
     try {
         let url = `/api/GerenciasTotalesCruces?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`; // Cache buster (Regla de Oro #9)
+
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -112,7 +114,8 @@ function _getHtmlEncabezado(itemONombre = '') {
         textoBanner2: 'Gerencias',
         mes,
         anio,
-        nroPagina
+        nroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 
     return nombreGerencia ? `

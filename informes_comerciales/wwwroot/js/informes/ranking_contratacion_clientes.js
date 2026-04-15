@@ -15,12 +15,14 @@ const estado = crearEstadoInforme();
  * @param {number|null} nroPagina - Número de página opcional
  * @param {string} mercado - Mercado ('Nacional' o 'Internacional')
  * @param {number|null} umbral - Umbral de filtrado (no usado en este informe, por compatibilidad)
+ * @param {boolean} mostrarTitulo - Flag de visibilidad del título
  */
-export async function ejecutar(anio, mes, nroPagina, mercado, umbral = null) {
+export async function ejecutar(anio, mes, nroPagina, mercado, umbral = null, mostrarTitulo) {
     try {
         const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -71,7 +73,8 @@ function _getHtmlEncabezado() {
         mes: filtros.mes,
         anio: filtros.anio,
         nroPagina: estado.nroPagina || 7,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 

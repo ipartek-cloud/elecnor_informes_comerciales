@@ -31,12 +31,13 @@ const MARGENES_GERENCIA = {
 /**
  * Punto de entrada principal.
  */
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
     try {
         const url = `/api/Gerencias?anio=${anio}&mes=${mes}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -95,7 +96,8 @@ function _getHtmlEncabezado() {
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 

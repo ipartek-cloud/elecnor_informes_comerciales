@@ -7,7 +7,7 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimir
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
     try {
         let url = `/api/Mercados?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
@@ -15,6 +15,7 @@ export async function ejecutar(anio, mes, nroPagina) {
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -56,7 +57,8 @@ function _getHtmlEncabezado() {
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina || 2,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 

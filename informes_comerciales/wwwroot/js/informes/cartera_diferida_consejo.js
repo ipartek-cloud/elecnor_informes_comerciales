@@ -21,7 +21,7 @@ const estado = crearEstadoInforme();
  * Inicializa o actualiza el informe para el año/mes indicados.
  * Usa inicializarInforme() de informes_utils.js para máxima reutilización.
  */
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
     try {
         let url = `/api/CarteraDiferidaConsejo?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
@@ -29,6 +29,7 @@ export async function ejecutar(anio, mes, nroPagina) {
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -109,7 +110,8 @@ function _getHtmlEncabezado() {
             mes,
             anio,
             nroPagina: estado.nroPagina || 1,
-            mostrarNumeroPagina: estado.mostrarNumeroPagina
+            mostrarNumeroPagina: estado.mostrarNumeroPagina,
+            mostrarTitulo: estado.mostrarTitulo
         })}
     `;
 }

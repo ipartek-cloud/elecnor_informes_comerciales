@@ -31,7 +31,8 @@ export function crearEstadoInforme() {
         paginaActual: 0,
         paginasTotales: 0,
         eventosIniciados: false,
-        mostrarNumeroPagina: true // Flag de visibilidad
+        mostrarNumeroPagina: true, // Flag de visibilidad
+        mostrarTitulo: true        // Nuevo flag de visibilidad
     };
 }
 
@@ -93,8 +94,16 @@ export async function inicializarInforme(opciones) {
         estado.informeGlobalData = data;
         estado.paginaActual = 0;
         estado.paginasTotales = paginas;
-        // Capturamos la visibilidad desde la metadata (o true si no viene)
-        estado.mostrarNumeroPagina = data.meta?.mostrarNumeroPagina ?? true;
+        
+        // Prioridad: Si el frontend ya ha decidido ocultarlo (mostrarNumeroPagina === false), se mantiene.
+        // Si no, se intenta leer del servidor.
+        if (estado.mostrarNumeroPagina !== false) {
+            estado.mostrarNumeroPagina = data.meta?.mostrarNumeroPagina ?? true;
+        }
+
+        if (estado.mostrarTitulo !== false) {
+            estado.mostrarTitulo = data.meta?.mostrarTitulo ?? true;
+        }
 
         renderizarPagina(0);
 
@@ -131,6 +140,7 @@ export async function inicializarInforme(opciones) {
  * @param {number} opciones.anio - Año del informe
  * @param {number} [opciones.nroPagina] - Número de página opcional
  * @param {boolean} [opciones.mostrarNumeroPagina=true] - Si debe mostrarse el número de página
+ * @param {boolean} [opciones.mostrarTitulo=true] - Si debe mostrarse el título corporativo
  * @returns {string} HTML del encabezado
  */
 export function getHtmlEncabezadoBase(opciones) {
@@ -141,7 +151,8 @@ export function getHtmlEncabezadoBase(opciones) {
         mes,
         anio,
         nroPagina,
-        mostrarNumeroPagina = true
+        mostrarNumeroPagina = true,
+        mostrarTitulo = true
     } = opciones;
 
     const nombreMes = getNombreMes(mes);
@@ -151,9 +162,16 @@ export function getHtmlEncabezadoBase(opciones) {
         ? `<span class="rpt-page-number">${nroPagina}</span>` 
         : '';
 
+    // El título corporativo solo se muestra si está habilitado.
+    // Si no se muestra, inyectamos un div vacío para que Flexbox (justify-content: space-between)
+    // mantenga el logotipo a la derecha.
+    const htmlTitulo = (mostrarTitulo !== false)
+        ? `<div class="rpt-text-corporate rpt-header-corporate-text">${tituloCorporativo}</div>`
+        : '<div></div>';
+
     return `
         <div class="${RPT_CLASSES.HEADER}">
-            <div class="rpt-text-corporate rpt-header-corporate-text">${tituloCorporativo}</div>
+            ${htmlTitulo}
             <div class="d-flex flex-column align-items-end">
                 ${htmlPagina}
                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">

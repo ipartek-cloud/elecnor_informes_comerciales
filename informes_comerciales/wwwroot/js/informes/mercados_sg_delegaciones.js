@@ -3,12 +3,13 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase } from '.
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mercado, umbral, mostrarTitulo) {
     try {
         const url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url, estado,
@@ -46,7 +47,8 @@ function _getHtmlEncabezado(sdg) {
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 
     if (!sdg) return encabezadoBase;

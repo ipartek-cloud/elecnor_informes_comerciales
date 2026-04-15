@@ -10,12 +10,13 @@ const estado = crearEstadoInforme();
 /**
  * Punto de entrada principal para la ejecución del informe.
  */
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
     try {
         const url = `/api/MercadosDG?anio=${anio}&mes=${mes}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -62,7 +63,8 @@ function _getHtmlEncabezado() {
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 

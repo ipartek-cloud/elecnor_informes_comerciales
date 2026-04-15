@@ -18,7 +18,7 @@ const estado = crearEstadoInforme();
  * @param {string|null} mercado - Mercado (no usado en este informe, por compatibilidad con otros informes)
  * @param {string|number} umbral - Umbral de filtrado (0 = todos, 100000 = relevantes)
  */
-export async function ejecutar(anio, mes, nroPagina, mercado, umbral = 0) {
+export async function ejecutar(anio, mes, nroPagina, mercado, umbral = 0, mostrarTitulo) {
     try {
         // Convertir umbral a número (viene como string desde data-umbral en HTML)
         const umbralNum = umbral !== undefined && umbral !== null ? Number(umbral) : 0;
@@ -29,6 +29,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado, umbral = 0) {
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -72,7 +73,8 @@ function _getHtmlEncabezado() {
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina || 3,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 

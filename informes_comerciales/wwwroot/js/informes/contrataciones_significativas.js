@@ -16,7 +16,7 @@ import { ApiClient, GlobalUI } from '../site.js';
 const estado = crearEstadoInforme();
 
 // --- Ejecución ---
-export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSubDirGeneral = null) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo, mercado = 'Nacional', codSubDirGeneral = null) {
     try {
         // 1. Verificar si el checkbox de generación está activado
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
@@ -57,6 +57,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -120,7 +121,8 @@ function _getHtmlEncabezado() {
         mes: filtros.mes,
         anio: filtros.anio,
         nroPagina: estado.nroPagina || (mercado === 'Nacional' ? 9 : 10),
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 

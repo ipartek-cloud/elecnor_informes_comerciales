@@ -12,6 +12,7 @@ public class MetaInformeDto
     public DateTime FechaGeneracion { get; set; }
     public string Usuario { get; set; } = string.Empty;
     public bool MostrarNumeroPagina { get; set; } = true;
+    public bool MostrarTitulo { get; set; } = true;
 }
 
 /// <summary>

@@ -34,6 +34,9 @@ window.cargarInforme = async function (btn, nombreInforme) {
     // Capturar umbral si existe (para informes como Paises/Paises Relevantes)
     const umbral = btn?.dataset?.umbral;
 
+    // Capturar si se debe mostrar el título
+    const mostrarTitulo = btn?.dataset?.mostrarTitulo !== 'false';
+
     try {
         GlobalUI.showLoading();
 
@@ -62,7 +65,7 @@ window.cargarInforme = async function (btn, nombreInforme) {
             const _codSubDir = document.getElementById('cmbSubDireccionGeneral')?.value || null;
             const parametroUmbral = (nombreInforme === 'contrataciones_significativas') ? _codSubDir : umbral;
 
-            await modulo.ejecutar(anio, mes, nroPagina, mercado, parametroUmbral);
+            await modulo.ejecutar(anio, mes, nroPagina, mercado, parametroUmbral, mostrarTitulo);
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');

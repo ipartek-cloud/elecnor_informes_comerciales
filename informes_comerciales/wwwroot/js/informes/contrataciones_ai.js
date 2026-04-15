@@ -12,7 +12,7 @@ const estado = crearEstadoInforme();
 /**
  * Función principal de ejecución del informe.
  */
-export async function ejecutar(anio, mes, nroPagina) {
+export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
     try {
         // 1. Verificar si el checkbox de generación está activado
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesObrasAI');
@@ -45,6 +45,7 @@ export async function ejecutar(anio, mes, nroPagina) {
         const url = `/api/ContratacionesAI?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
@@ -93,7 +94,8 @@ function _getHtmlEncabezado() {
         mes: data?.meta?.filtros?.mes,
         anio: data?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina || 6,
-        mostrarNumeroPagina: estado.mostrarNumeroPagina
+        mostrarNumeroPagina: estado.mostrarNumeroPagina,
+        mostrarTitulo: estado.mostrarTitulo
     });
 }
 
