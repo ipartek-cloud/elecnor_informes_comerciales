@@ -337,6 +337,36 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Contrataciones Significativas Nacional e Internacional (Sin Página) - RESTO INFORMES -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Columna Izquierda: Contrataciones Significativas Nacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
+                                    data-mercado="Nacional"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Contrataciones Significativas Nacional">
+                                Contrataciones Significativas Nacional
+                            </button>
+                        </div>
+                        <!-- Columna Central: Contrataciones Significativas Internacional -->
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
+                                    data-mercado="Internacional"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Contrataciones Significativas Internacional">
+                                Contrataciones Significativas Internacional
+                            </button>
+                        </div>
+                        <!-- Columna Derecha: Combo SubDirección General -->
+                        <div class="input-group rpt-input-group-index ms-auto" style="max-width: 240px;">
+                            <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral_ri"
+                                    aria-label="Filtrar por SubDirección General">
+                                <!-- Las opciones se cargan dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
                     <!-- Gerencias Totales Cruces -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
@@ -345,6 +375,17 @@
                                     aria-label="Ver informe de Gerencias Totales Cruces">
                                 Gerencias Totales Cruces
                             </button>
+                        </div>
+                    </div>
+                    <!-- Fila de Generación de Datos para RESTO DE INFORMES -->
+                    <div class="d-flex align-items-center justify-content-center gap-4 w-100 mt-4 border-top pt-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones_ri">
+                                Generar Contrataciones Significativas
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox"
+                                   id="chkGenerarRPTPrincipalesContrataciones_ri"
+                                   name="chkGenerarRPTPrincipalesContrataciones_ri">
                         </div>
                     </div>
                 </div>

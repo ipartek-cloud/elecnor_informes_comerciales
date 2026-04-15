@@ -1,10 +1,12 @@
 /**
- * Informe Contrataciones Significativas
+ * Informe Contrataciones Significativas (Resto Informes)
  * Filtros: Mercado y SubDirección General
+ * Variante sin histórico de meses anteriores.
  */
 import {
     RPT_CLASSES, formatCurrency, getNombreMes,
-    actualizarEstadoPaginacion, inicializarEventListenersBase
+    actualizarEstadoPaginacion, inicializarEventListenersBase,
+    ocultarControlesPaginacion
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme,
@@ -19,7 +21,7 @@ const estado = crearEstadoInforme();
 export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSubDirGeneral = '221', mostrarTitulo = true) {
     try {
         // 1. Verificar si el checkbox de generación está activado
-        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
+        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones_ri');
         const debeGenerar = chkGenerar?.checked ?? false;
 
         // 2. Si checkbox activado, llamar al endpoint de generación
@@ -27,7 +29,8 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
             GlobalUI.showLoading('Generando contrataciones significativas...');
 
             try {
-                const genResp = await ApiClient.post('/api/ContratacionesSignificativas/generar', {
+                // LLamada al controlador que se implementará posteriormente en otra fase
+                const genResp = await ApiClient.post('/api/ContratacionesSignificativasRi/generar', {
                     anio: anio,
                     mes: mes
                 }, true);
@@ -49,7 +52,8 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
 
         const subDir = codSubDirGeneral || '221';
 
-        const url = `/api/ContratacionesSignificativas`
+        // LLamada al controlador que se implementará posteriormente en otra fase
+        const url = `/api/ContratacionesSignificativasRi`
             + `?anio=${anio}&mes=${mes}`
             + `&mercado=${encodeURIComponent(mercado)}`
             + `&codSubDirGeneral=${encodeURIComponent(subDir)}`
@@ -69,7 +73,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
         });
 
     } catch (error) {
-        console.error('[ContratacionesSignificativas] Error:', error);
+        console.error('[ContratacionesSignificativas RI] Error:', error);
         GlobalUI.showAlert?.('Error al cargar los datos del informe', 'danger');
     }
 }
@@ -80,12 +84,36 @@ async function _renderizarPagina(index = 0) {
     if (!container) return;
 
     const dataArr = estado.informeGlobalData?.datos || [];
-    const direccion = dataArr[index];
+    const dataMes = estado.informeGlobalData?.datosMes || [];
+    
+    // Filtrar solo las direcciones que tienen al menos un contrato significativo
+    const direccionesConDatos = dataArr.filter(direccion => 
+        dataMes.some(item => item.nombreDirNegocio === direccion.nombreDirNegocio)
+    );
+
+    // Si no hay ninguna dirección con datos, mostrar mensaje
+    if (direccionesConDatos.length === 0) {
+        container.innerHTML = `
+            <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" role="main">
+                ${_getHtmlEncabezado()}
+                <div class="report-body">
+                    <div class="text-center p-5 text-muted">No se han encontrado registros para el periodo seleccionado.</div>
+                </div>
+            </div>
+        `;
+        container.scrollTop = 0;
+        ocultarControlesPaginacion();
+        return;
+    }
+
+    // Usar el índice limitado al tamaño del array filtrado
+    const safeIndex = Math.min(index, direccionesConDatos.length - 1);
+    const direccion = direccionesConDatos[safeIndex];
 
     const cuerpoInformeHtml = await _renderCuerpoInforme(direccion);
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas" role="main" data-pagina-index="${index}">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" role="main" data-pagina-index="${safeIndex}">
             ${_getHtmlEncabezado(direccion)}
             <div class="report-body">
                 ${cuerpoInformeHtml}
@@ -94,11 +122,11 @@ async function _renderizarPagina(index = 0) {
     `;
 
     container.scrollTop = 0;
-    actualizarEstadoPaginacion(estado.paginaActual, estado.paginasTotales, 'Página');
+    actualizarEstadoPaginacion(estado.paginaActual, direccionesConDatos.length, 'Página');
 }
 
 /**
- * Renderiza el cuerpo: tabla principal con detalle mensual intercalado asilada a la direccion actual.
+ * Renderiza el cuerpo: tabla principal con detalle mensual aislado a la direccion actual.
  */
 async function _renderCuerpoInforme(direccion) {
     let html = _renderTablaDireccion(direccion);
@@ -115,12 +143,12 @@ function _getHtmlEncabezado() {
     const mercado = filtros.mercado || 'Nacional';
     
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council fs-4">Consejo de Administración</span> <span class="rpt-info-complementary ms-2">Información complementaria</span>',
+        tituloCorporativo: '<span class="rpt-info-complementary ms-2">Información complementaria</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: `Contrat. significativas Mercado ${mercado}`,
         mes: filtros.mes,
         anio: filtros.anio,
-        nroPagina: estado.nroPagina || (mercado === 'Nacional' ? 9 : 10),
+        nroPagina: estado.nroPagina || null,
         mostrarNumeroPagina: estado.mostrarNumeroPagina,
         mostrarTitulo: estado.mostrarTitulo
     });
@@ -132,6 +160,16 @@ function _renderTablaDireccion(direccion) {
     const dataMes = estado.informeGlobalData?.datosMes || [];
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     const nombreMes = getNombreMes(filtros.mes);
+
+    // Filtrar los contratos correspondientes a esta Dirección de Negocio
+    const contratosDelGrupo = dataMes.filter(item => 
+        item.nombreDirNegocio === direccion.nombreDirNegocio
+    );
+    
+    // Si no hay contratos significativos para esta dirección, no mostrar nada
+    if (contratosDelGrupo.length === 0) {
+        return '';
+    }
 
     // Cabecera de Dirección de Negocio y fila del Mes
     let bloqueHtml = `
@@ -147,42 +185,16 @@ function _renderTablaDireccion(direccion) {
     </tr>
     `;
 
-    // Filtrar e inyectar los contratos correspondientes a esta Dirección de Negocio
-    const contratosDelGrupo = dataMes.filter(item => 
-        item.nombreDirNegocio === direccion.nombreDirNegocio
-    );
-    
-    if (contratosDelGrupo.length > 0) {
-        bloqueHtml += contratosDelGrupo.map(item => `
+    // Añadir los contratos (ya sabemos que hay al menos uno)
+    bloqueHtml += contratosDelGrupo.map(item => `
     <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-cont-sig-mes-item">
         <td class="rpt-col-mes-cliente">${_escapeHtml(_limpiarCliente(item.nombreCliente_OK))}</td>
         <td class="rpt-col-mes-oferta">${_escapeHtml(item.descripcionOferta_OK)}</td>
         <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
     </tr>
-        `).join('');
-    }
+    `).join('');
 
-    // Filtrar e inyectar los contratos de Meses Anteriores
-    const dataMesesAnteriores = estado.informeGlobalData?.datosMesesAnteriores || [];
-    const contratosAnterioresDelGrupo = dataMesesAnteriores.filter(item => 
-        item.nombreDirNegocio === direccion.nombreDirNegocio
-    );
-
-    if (contratosAnterioresDelGrupo.length > 0) {
-        bloqueHtml += `
-    <tr class="rpt-cont-sig-anterior-label">
-        <td colspan="3" class="rpt-text-muted-gray">Anterior</td>
-    </tr>
-        `;
-
-        bloqueHtml += contratosAnterioresDelGrupo.map(item => `
-    <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-cont-sig-mes-item rpt-cont-sig-hist-row">
-        <td class="rpt-col-mes-cliente">${_escapeHtml(_limpiarCliente(item.nombreCliente_OK))}</td>
-        <td class="rpt-col-mes-oferta">${_escapeHtml(item.descripcionOferta_OK)}</td>
-        <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
-    </tr>
-        `).join('');
-    }
+    const umbralTexto = estado.informeGlobalData?.meta?.umbralTexto || 'Contratación > 2M';
 
     return `
         <table class="rpt-table rpt-table-cont-sig mb-4">
@@ -193,7 +205,7 @@ function _renderTablaDireccion(direccion) {
             </colgroup>
             <thead class="border-0">
                 <tr class="fw-bold border-0">
-                    <th class="rpt-text-corporate text-start ps-3 border-0 fs-6">Contratación &gt;1M</th>
+                    <th class="rpt-text-corporate text-start ps-3 border-0 fs-6">${_escapeHtml(umbralTexto)}</th>
                     <th class="border-0"></th>
                     <th class="rpt-text-corporate text-end pe-3 border-0 fs-6">Mensual</th>
                 </tr>

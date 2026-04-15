@@ -1,0 +1,105 @@
+/* Estilos: Contrataciones Significativas (Resto Informes) */
+
+.rpt-info-complementary {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* Agrupador: Nombre de Direccion */
+.rpt-cont-sig-group-header {
+    border-bottom: 2px solid #00468B !important;
+    padding: 25px 0 0 0 !important;
+    vertical-align: bottom;
+}
+
+.rpt-cont-sig-group-title {
+    background-color: #00468B;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 2px 10px;
+    display: inline-block;
+    font-size: 0.95rem;
+    width: 40%;
+}
+
+/* Fila de fondo para detalles (Mes) */
+.rpt-cont-sig-month-row,
+.rpt-cont-sig-month-row td {
+    background-color: #E2EBF4 !important;
+}
+
+/* Celda del nombre del mes (Informe Base) - Forzado P0 */
+tr.rpt-cont-sig-month-row td.rpt-cont-sig-mes-label {
+    color: #00468B !important;
+    padding-left: 12px !important;
+    font-weight: bold !important;
+}
+
+/* Quitar la linea debajo de los encabezados de la tabla nativa */
+.rpt-table-cont-sig thead,
+.rpt-table-cont-sig thead th,
+.rpt-table-cont-sig thead tr {
+    border-bottom: none !important;
+}
+
+.rpt-table-cont-sig {
+    margin-top: 15px !important;
+}
+
+/* Detalle de contratos individuales */
+.rpt-col-mes-cliente { width: 32%; text-align: left; padding-left: 8px !important; }
+.rpt-col-mes-oferta { 
+    width: 48%; 
+    text-align: left; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    max-width: 0; 
+}
+.rpt-col-mes-importe { 
+    width: 20%; 
+    text-align: right; 
+    padding-right: 10px !important; 
+    min-width: 90px; 
+    font-variant-numeric: tabular-nums; 
+    white-space: nowrap; 
+}
+
+/* Filas de detalle (estilo Access) */
+.rpt-cont-sig-mes-item td {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    padding: 1px 6px;
+    vertical-align: middle;
+    border-bottom: none !important;
+    background-color: #ffffff !important;
+}
+
+/* Media Print */
+@media print {
+    .rpt-cont-sig-group-header {
+        page-break-after: avoid;
+    }
+
+    .rpt-cont-sig-col-concepto,
+    .rpt-cont-sig-col-importe {
+        font-size: 8pt !important;
+    }
+
+    .rpt-table-cont-sig {
+        page-break-inside: avoid;
+    }
+
+    .rpt-col-mes-cliente,
+    .rpt-col-mes-oferta,
+    .rpt-col-mes-importe {
+        font-size: 8pt !important;
+    }
+
+    /* En impresion permitir wrapping en descripciones */
+    .rpt-col-mes-oferta {
+        white-space: normal;
+        max-width: none;
+        text-overflow: clip;
+    }
+}

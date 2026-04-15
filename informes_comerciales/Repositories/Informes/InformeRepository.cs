@@ -1171,40 +1171,7 @@ public class InformeRepository
     /// Obtiene los 30 primeros clientes del ranking filtrando por mercado, año e importe mínimo.
     /// </summary>
     public async Task<List<RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(string mercado, int anio, int mes, decimal importe)
-    {
-        //const string sqlSelect = @"SELECT TOP 30
-        //                                rpt.[Año],
-        //                                rpt.[Row],
-        //                                rpt.[Mercado],
-        //                                rpt.[Pais],
-        //                                rpt.[AI],
-        //                                rpt.[Cliente],
-        //                                rpt.[ImporteContratadoAcumulado],
-        //                                rpt.[ImporteContratadoAcumulado_AñoAnterior],
-        //                                MAX(CASE 
-        //                                    WHEN ant.[NomAgrupado] IS NOT NULL THEN 1 
-        //                                    ELSE 0 
-        //                                END) AS [VerAñoAnterior]
-        //                            FROM 
-        //                                [dbo].[rptContratacion_Clientes] rpt WITH (NOLOCK)
-        //                            INNER JOIN 
-        //                                [dbo].[ClientesSQL] csql WITH (NOLOCK)
-        //                            ON 
-        //                                rpt.[Cliente] = csql.[NomAgrupado]
-        //                            LEFT JOIN 
-        //                                [dbo].[ClientesSQL_MostrarContratacion_AñoAnterior] ant WITH (NOLOCK)
-        //                            ON 
-        //                                    rpt.[Cliente] = ant.[NomAgrupado]
-        //                                AND rpt.[Año] = ant.[Año]
-        //                            WHERE                                           
-        //                                    csql.[Visible] = 1
-        //                                AND rpt.[Cliente] <> ''
-        //                                AND rpt.[ImporteContratadoAcumulado] > @Importe
-        //                            GROUP BY
-        //                                rpt.[Año], rpt.[Row], rpt.[Mercado], rpt.[Pais], rpt.[AI], rpt.[Cliente],
-        //                                rpt.[ImporteContratadoAcumulado], rpt.[ImporteContratadoAcumulado_AñoAnterior]
-        //                            ORDER BY rpt.[Row] ASC";
-
+    {        
         const string sqlSelect = @"SELECT TOP(30)
                                         Año,
                                         Row,
@@ -1467,13 +1434,94 @@ public class InformeRepository
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Contrataciones Significativas (RESTO DE INFORMES)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<ContratacionesSignificativasPoco>> ObtenerContratacionesSignificativasRiAsync(
+        int anio, int mes, string mercado, string codSubDirGeneral)
+    {
+        const string sqlSelect = @" SELECT
+                                        ocdn.Orden_CodDDirNegocio AS Orden,
+                                        s.NombreDirNegocio,
+                                        ISNULL(SUM(rpc.ImporteContratado_OK), 0) AS ImporteContratado
+                                    FROM
+                                        rptPrincipalesContratacion   rpc
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
+                                    WHERE
+                                            rpc.Año            = @Anio
+                                        AND rpc.Mes            = @Mes
+                                        AND rpc.Ocultar        = 0
+                                        AND rpc.Pais           = @Mercado
+                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
+                                    GROUP BY
+                                        ocdn.Orden_CodDDirNegocio,
+                                        s.NombreDirNegocio";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesSignificativasPoco>(    sqlSelect,
+                                                                            new {
+                                                                                Anio             = anio,
+                                                                                Mes              = mes,
+                                                                                Mercado          = mercado,
+                                                                                CodSubDirGeneral = codSubDirGeneral
+                                                                            },
+                                                                            commandTimeout: 60
+                                                                        )).ToList();
+    }
+
+    public async Task<List<ContratacionesSignificativasMesPoco>> ObtenerContratacionesSignificativasMesRiAsync(
+        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe)
+    {
+        const string sqlSelect = @"SELECT
+                                        ocdn.Orden_CodDDirNegocio                   AS Orden,
+                                        s.NombreDirNegocio,
+                                        REPLACE(rpc.NombreCliente_OK,  '''', '')     AS NombreCliente_OK,
+                                        REPLACE(rpc.DescripcionOferta_OK, '''', '')  AS DescripcionOferta_OK,
+                                        ISNULL(SUM(rpc.ImporteContratado_OK), 0)    AS ImporteContratado
+                                    FROM
+                                        rptPrincipalesContratacion   rpc
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
+                                    WHERE
+                                            rpc.Año            = @Anio
+                                        AND rpc.Mes            = @Mes
+                                        AND rpc.Ocultar        = 0
+                                        AND rpc.Pais           = @Mercado
+                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
+                                        AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
+                                    GROUP BY
+                                        ocdn.Orden_CodDDirNegocio,
+                                        s.NombreDirNegocio,
+                                        REPLACE(rpc.NombreCliente_OK,  '''', ''),
+                                        REPLACE(rpc.DescripcionOferta_OK, '''', '')
+                                    HAVING
+                                           SUM(rpc.ImporteContratado_OK) >=  @Importe
+                                        OR SUM(rpc.ImporteContratado_OK) <= -@Importe";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        return (await conn.QueryAsync<ContratacionesSignificativasMesPoco>(
+            sqlSelect,
+            new {
+                Anio             = anio,
+                Mes              = mes,
+                Mercado          = mercado,
+                CodSubDirGeneral = codSubDirGeneral,
+                Importe          = importe
+            },
+            commandTimeout: 60
+        )).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // INFORME: Gerencias
     // └─ Método: ObtenerGerenciasAsync(int anio, int mes)
     // ═══════════════════════════════════════════════════════════════════════════
 
-    /// <summary>
-    /// Obtiene los datos planos para el informe de Gerencias.
-    /// </summary>
     public async Task<List<GerenciasPoco>> ObtenerGerenciasAsync(int anio, int mes)
     {
         // PASO 1: Vaciar tabla de trabajo

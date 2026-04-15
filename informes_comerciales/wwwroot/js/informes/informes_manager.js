@@ -63,7 +63,14 @@ window.cargarInforme = async function (btn, nombreInforme) {
         if (modulo && modulo.ejecutar) {
             // Obtenemos los parámetros adicionales según el reporte demandado
             const _codSubDir = document.getElementById('cmbSubDireccionGeneral')?.value || null;
-            const parametroUmbral = (nombreInforme === 'contrataciones_significativas') ? _codSubDir : umbral;
+            const _codSubDirRi = document.getElementById('cmbSubDireccionGeneral_ri')?.value || null;
+            
+            let parametroUmbral = umbral;
+            if (nombreInforme === 'contrataciones_significativas') {
+                parametroUmbral = _codSubDir;
+            } else if (nombreInforme === 'contrataciones_significativas_ri') {
+                parametroUmbral = _codSubDirRi;
+            }
 
             await modulo.ejecutar(anio, mes, nroPagina, mercado, parametroUmbral, mostrarTitulo);
         } else {

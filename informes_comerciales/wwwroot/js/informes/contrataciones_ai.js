@@ -12,7 +12,7 @@ const estado = crearEstadoInforme();
 /**
  * Función principal de ejecución del informe.
  */
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+export async function ejecutar(anio, mes, nroPagina, mercado, umbral, mostrarTitulo) {
     try {
         // 1. Verificar si el checkbox de generación está activado
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesObrasAI');

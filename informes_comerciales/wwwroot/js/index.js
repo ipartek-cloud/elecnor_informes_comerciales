@@ -161,21 +161,33 @@ async function cargarSubDirecciones() {
 
         const data = await resp.json();
         const combo = document.getElementById('cmbSubDireccionGeneral');
-        if (!combo) return;
+        const comboRi = document.getElementById('cmbSubDireccionGeneral_ri');
 
         // Limpiar opciones
-        combo.innerHTML = '';
+        if (combo) combo.innerHTML = '';
+        if (comboRi) comboRi.innerHTML = '';
 
         // Poblar combo
         data.forEach((sd, index) => {
-            const option = document.createElement('option');
-            option.value = sd.codSubDirGeneral;
-            option.textContent = sd.nombreSubDirGeneral;
-            // Seleccionar el primer elemento por defecto
-            if (index === 0) {
-                option.selected = true;
+            if (combo) {
+                const option = document.createElement('option');
+                option.value = sd.codSubDirGeneral;
+                option.textContent = sd.nombreSubDirGeneral;
+                // Seleccionar el primer elemento por defecto
+                if (index === 0) {
+                    option.selected = true;
+                }
+                combo.appendChild(option);
             }
-            combo.appendChild(option);
+            if (comboRi) {
+                const optionRi = document.createElement('option');
+                optionRi.value = sd.codSubDirGeneral;
+                optionRi.textContent = sd.nombreSubDirGeneral;
+                if (index === 0) {
+                    optionRi.selected = true;
+                }
+                comboRi.appendChild(optionRi);
+            }
         });
     } catch (error) {
         console.error('Error cargando SubDirecciones:', error);

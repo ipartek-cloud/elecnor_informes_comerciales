@@ -72,6 +72,7 @@ builder.Services.AddScoped<InformeContratacionesService>();
 builder.Services.AddScoped<InformeContratacionesAIService>();
 builder.Services.AddScoped<InformeRankingContratacionClientesService>();
 builder.Services.AddScoped<InformeContratacionesSignificativasService>();
+builder.Services.AddScoped<InformeContratacionesSignificativasRiService>();
 builder.Services.AddScoped<InformeGerenciasService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
