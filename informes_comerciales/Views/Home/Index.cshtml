@@ -1,13 +1,12 @@
 @{
     ViewData["Title"] = "Informes Consejo";
-    // Lógica de mes por defecto: mes anterior, excepto en enero que es enero
     int defaultMonth = DateTime.Now.Month == 1 ? 1 : DateTime.Now.Month - 1;
 }
 
 <div class="container-fluid">
-    <!-- El contenido principal se mostrará aquí tras el login -->
     <div id="mainContent" class="d-none">
-        <!-- Sección de Filtros -->
+        
+        <!-- ==================== CARD 1: FILTROS DE INFORME ==================== -->
         <div class="card mb-4 rpt-index-card">
             <div class="card-header rpt-index-header">
                 <h5 class="mb-0"><i class="fas fa-filter"></i> Filtros de Informe</h5>
@@ -46,21 +45,21 @@
                     <div class="col-auto">
                         <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral" name="cmbSubDireccionGeneral" 
                                 style="min-width: 250px;" aria-label="Seleccionar SubDirección General">
-                            <!-- Las opciones se cargan dinámicamente -->
                         </select>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ==================== CARD 2: CONSEJO DE ADMINISTRACIÓN ==================== -->
         <div class="card mb-4 rpt-index-card">
             <div class="card-header rpt-index-header">
                 <h5 class="mb-0"><i class="fas fa-file-invoice"></i> CONSEJO de ADMINISTRACIÓN</h5>
             </div>
             <div class="card-body p-0">
                 <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start p-3">
-
-                    <!-- Grupo Unificado: Botón + Página (CARTERA) -->
+                    
+                    <!-- CARTERA -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
@@ -76,7 +75,7 @@
                         </div>
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (MERCADOS) -->
+                    <!-- MERCADOS -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
@@ -92,9 +91,8 @@
                         </div>
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (PAISES RELEVANTES + PAISES) -->
+                    <!-- PAISES RELEVANTES + PAISES -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Paises Relevantes -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises')"
@@ -108,7 +106,6 @@
                                    name="inputPaginaPaisesRelevantes" value="3" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Derecha: Paises (debajo del checkbox) -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises')"
@@ -124,7 +121,7 @@
                         </div>
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (ACTIVIDADES) -->
+                    <!-- ACTIVIDADES -->
                     <div class="input-group rpt-input-group-index">
                         <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                 onclick="cargarInforme(this, 'actividades')"
@@ -138,9 +135,8 @@
                                aria-label="Página" title="Página inicial">
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (CONTRATACIONES + CONTRATACIONES AI) -->
+                    <!-- CONTRATACIONES + CONTRATACIONES AI -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Contrataciones -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones')"
@@ -153,7 +149,6 @@
                                    name="inputPaginaContrataciones" value="5" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Derecha: Contrataciones AI -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_ai')"
@@ -168,9 +163,8 @@
                         </div>
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (RANKING NACIONAL + RANKING INTERNACIONAL) -->
+                    <!-- RANKING NACIONAL + INTERNACIONAL -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Ranking Nacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
@@ -184,7 +178,6 @@
                                    name="inputPaginaRankingClientesNacionales" value="7" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Derecha: Ranking Internacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
@@ -200,9 +193,8 @@
                         </div>
                     </div>
 
-                    <!-- Grupo Unificado: Botón + Página (CONTRATACIONES SIGNIFICATIVAS NAC. + INT. + COMBO SUBDIRECCIÓN) -->
+                    <!-- CONTRATACIONES SIGNIFICATIVAS NAC. + INT. -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Contrataciones Significativas Nacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
@@ -216,7 +208,6 @@
                                    name="inputPaginaContratacionesSignificativasNacionales" value="9" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Columna Central: Contrataciones Significativas Internacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
@@ -230,29 +221,32 @@
                                    name="inputPaginaContratacionesSignificativasInternacionales" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-
                     </div>
 
+                </div>
+            </div>
+        </div>
 
-                    </div>
-
-                    <!-- SEPARADOR SECCIÓN: RESTO DE INFORMES -->
-                    <div class="rpt-index-header py-2 px-3 border-top border-bottom mt-2">
-                        <h5 class="mb-0"><i class="fas fa-file-invoice"></i> RESTO de INFORMES</h5>
-                    </div>
-
-                    <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">
-                        <!-- D.G. Infraestructuras x Mercado -->
-                        <div class="d-flex align-items-center gap-2 w-100">
-                            <div class="input-group rpt-input-group-index">
-                                <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
-                                        onclick="cargarInforme(this, 'mercados_dg')"
-                                        aria-label="Ver informe D.G. Infraestructuras x Mercados">
-                                    D.G. Infraestructuras x Mercados
-                                </button>
-                            </div>
+        <!-- ==================== CARD 3: RESTO DE INFORMES ==================== -->
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> RESTO de INFORMES</h5>
+            </div>
+            <div class="card-body p-0">
+                <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">
+                    
+                    <!-- D.G. INFRAESTRUCTURAS X MERCADO -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'mercados_dg')"
+                                    aria-label="Ver informe D.G. Infraestructuras x Mercados">
+                                D.G. Infraestructuras x Mercados
+                            </button>
                         </div>
-                    <!-- Gerencias -->
+                    </div>
+
+                    <!-- GERENCIAS -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
@@ -262,7 +256,8 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Actividades Objetivos -->
+
+                    <!-- ACTIVIDADES OBJETIVOS -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
@@ -272,7 +267,8 @@
                             </button>
                         </div>
                     </div>
-                    <!-- SG Delegaciones Mercados -->
+
+                    <!-- S.G. DELEGACIONES MERCADOS -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
@@ -282,9 +278,9 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Ranking Contratación Nacional e Internacional (Sin Página) -->
+
+                    <!-- RANKING CONTRATACIÓN NACIONAL + INTERNACIONAL -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Ranking Nacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
@@ -294,7 +290,6 @@
                                 Ranking Contratación Nacional
                             </button>
                         </div>
-                        <!-- Columna Derecha: Ranking Internacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
@@ -305,9 +300,9 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Contrataciones Significativas Nacional e Internacional (Sin Página) - RESTO INFORMES -->
+
+                    <!-- CONTRATACIONES SIGNIFICATIVAS NACIONAL + INTERNACIONAL -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Columna Izquierda: Contrataciones Significativas Nacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
@@ -317,7 +312,6 @@
                                 Contrataciones Significativas Nacional
                             </button>
                         </div>
-                        <!-- Columna Central: Contrataciones Significativas Internacional -->
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
@@ -327,9 +321,9 @@
                                 Contrataciones Significativas Internacional
                             </button>
                         </div>
-
                     </div>
-                    <!-- Gerencias Totales Cruces -->
+
+                    <!-- GERENCIAS TOTALES CRUCES -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <div class="input-group rpt-input-group-index">
                             <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
@@ -339,54 +333,54 @@
                             </button>
                         </div>
                     </div>
-                        </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CARD 4: OPCIONES DE GENERACIÓN ==================== -->
+        <div class="card mb-4 rpt-index-card">
+            <div class="card-header rpt-index-header">
+                <h5 class="mb-0 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <i class="fas fa-cogs"></i> Opciones de Generación
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-center gap-4 w-100 p-3 bg-light bg-opacity-50">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
+                            Generar Contratación
+                        </label>
+                        <input class="form-check-input mt-0" type="checkbox"
+                               id="chkGenerarRPTPrincipalesObras"
+                               name="chkGenerarRPTPrincipalesObras">
                     </div>
 
-                    <!-- PIE DE FORMUARIO: GENERACIÓN DE DATOS -->
-                    <div class="rpt-index-header py-2 px-3 border-top border-bottom mt-2">
-                        <h5 class="mb-0 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;"><i class="fas fa-cogs"></i> Opciones de Generación</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
+                            Generar Contratación(AI)
+                        </label>
+                        <input class="form-check-input mt-0" type="checkbox"
+                               id="chkGenerarRPTPrincipalesObrasAI"
+                               name="chkGenerarRPTPrincipalesObrasAI">
                     </div>
-                    
-                    <div class="d-flex align-items-center justify-content-center gap-4 w-100 p-3 bg-light bg-opacity-50">
-                        <!-- Generar Base -->
-                        <div class="d-flex align-items-center gap-2">
-                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
-                                Generar Contratación
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox"
-                                   id="chkGenerarRPTPrincipalesObras"
-                                   name="chkGenerarRPTPrincipalesObras">
-                        </div>
 
-                        <!-- Generar AI -->
-                        <div class="d-flex align-items-center gap-2">
-                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
-                                Generar Contratación(AI)
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox"
-                                   id="chkGenerarRPTPrincipalesObrasAI"
-                                   name="chkGenerarRPTPrincipalesObrasAI">
-                        </div>
-
-                        <!-- Generar Significativas -->
-                        <div class="d-flex align-items-center gap-2">
-                            <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
-                                Generar Contrataciones Significativas
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox"
-                                   id="chkGenerarRPTPrincipalesContrataciones"
-                                   name="chkGenerarRPTPrincipalesContrataciones">
-                        </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
+                            Generar Contrataciones Significativas
+                        </label>
+                        <input class="form-check-input mt-0" type="checkbox"
+                               id="chkGenerarRPTPrincipalesContrataciones"
+                               name="chkGenerarRPTPrincipalesContrataciones">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Aquí irán los componentes de informes que me indiques -->
     </div>
 </div>
 
-<!-- Modal Login Rediseñado -->
+<!-- MODAL LOGIN -->
 <div class="modal" id="formLogin" tabindex="-1" role="dialog" aria-labelledby="formLoginLabel" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -426,12 +420,11 @@
     </div>
 </div>
 
-<!-- Modal Único para Visualización de Informes -->
+<!-- MODAL INFORME -->
 <div class="modal fade" id="modalInforme" tabindex="-1" aria-labelledby="modalInformeLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content border-0">
             <div class="modal-header bg-primary text-white shadow-sm py-2 px-4 modal-header-report">
-                <!-- Columna IZQUIERDA: Título + Botón PDF -->
                 <div class="d-flex align-items-center gap-2 modal-header-left">
                     <h5 class="modal-title mb-0" id="modalInformeTitulo">Cargando Informe...</h5>
                     <button type="button" class="btn btn-sm btn-outline-light" id="btnExportarPdf"
@@ -440,7 +433,6 @@
                     </button>
                 </div>
 
-                <!-- Columna CENTRAL: Controles de paginación (centrados absolutamente) -->
                 <div class="d-flex align-items-center justify-content-center modal-header-center">
                     <div class="d-flex align-items-center d-none" id="ctrlPaginacion">
                         <button type="button" class="btn btn-sm btn-outline-light"
@@ -457,14 +449,12 @@
                     </div>
                 </div>
 
-                <!-- Columna DERECHA: Botón cerrar -->
                 <div class="d-flex align-items-center justify-content-end modal-header-right">
                     <button type="button" class="btn-close btn-close-white"
                             data-bs-dismiss="modal" aria-label="Cerrar modal de informe"></button>
                 </div>
             </div>
             <div class="modal-body modal-body-reports" id="modalInformeContenido">
-                <!-- El contenido dinámico del informe se inyectará aquí -->
                 <div class="d-flex justify-content-center align-items-center h-100">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Cargando...</span>
