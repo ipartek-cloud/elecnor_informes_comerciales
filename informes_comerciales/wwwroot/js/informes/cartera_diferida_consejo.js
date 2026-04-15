@@ -27,6 +27,9 @@ export async function ejecutar(anio, mes, nroPagina) {
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`; 
 
+        estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+
         await inicializarInforme({
             url,
             estado,
@@ -97,7 +100,6 @@ function _renderizarPagina(index) {
 function _getHtmlEncabezado() {
     const mes = estado.informeGlobalData.meta.filtros.mes;
     const anio = estado.informeGlobalData.meta.filtros.anio;
-    const nroPagina = estado.informeGlobalData.meta.filtros.nroPagina;
 
     return `
         ${getHtmlEncabezadoBase({
@@ -106,7 +108,8 @@ function _getHtmlEncabezado() {
             textoBanner2: 'Mercados',
             mes,
             anio,
-            nroPagina
+            nroPagina: estado.nroPagina || 1,
+            mostrarNumeroPagina: estado.mostrarNumeroPagina
         })}
     `;
 }

@@ -13,6 +13,9 @@ export async function ejecutar(anio, mes, nroPagina) {
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`;
 
+        estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+
         await inicializarInforme({
             url,
             estado,
@@ -52,7 +55,8 @@ function _getHtmlEncabezado() {
         textoBanner2: 'Mercados',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
-        nroPagina: estado.informeGlobalData?.meta?.filtros?.nroPagina
+        nroPagina: estado.nroPagina || 2,
+        mostrarNumeroPagina: estado.mostrarNumeroPagina
     });
 }
 

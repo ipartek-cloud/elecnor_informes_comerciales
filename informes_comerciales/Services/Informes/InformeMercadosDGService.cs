@@ -36,7 +36,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             {
                 Meta = new MetaInformeDto
                 {
-                    Titulo = "D.G. Infraestructuras x Mercado",
+                    Titulo = "D.G. Infraestructuras x Mercados",
                     Descripcion = "Informe de Contratación — D.G. Infraestructuras",
                     Filtros = new { anio = anio, mes = mes },
                     FechaGeneracion = DateTime.Now

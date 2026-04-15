@@ -20,6 +20,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado, umbral = null) {
     try {
         const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
 
         await inicializarInforme({
             url,
@@ -69,7 +70,8 @@ function _getHtmlEncabezado() {
         textoBanner2: 'Clientes',
         mes: filtros.mes,
         anio: filtros.anio,
-        nroPagina: estado.nroPagina || 7
+        nroPagina: estado.nroPagina || 7,
+        mostrarNumeroPagina: estado.mostrarNumeroPagina
     });
 }
 
@@ -162,7 +164,7 @@ function _renderCuerpoInforme() {
                             </div>
                         </td>
                         <td class="text-end font-monospace rpt-text-corporate fw-bold pb-2 rpt-va-bottom">${formatCurrency((data.totalMercado || 0) / 1000, 0)}</td>
-                        <td colspan="${esInternacional ? 1 : 2}" class="ps-3 rpt-text-corporate fw-bold pb-2 rpt-va-bottom rpt-nowrap">Miles de Euros</td>
+                        <td colspan="${esInternacional ? 1 : 2}" class="ps-3 rpt-text-corporate fw-bold pb-2 rpt-va-bottom rpt-nowrap text-nowrap">Miles de Euros</td>
                     </tr>
                 </tfoot>
             </table>

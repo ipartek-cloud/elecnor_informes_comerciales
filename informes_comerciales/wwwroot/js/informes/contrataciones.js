@@ -42,6 +42,7 @@ export async function ejecutar(anio, mes, nroPagina) {
         // 3. Cargar el informe (con o sin generación previa)
         const url = `/api/Contrataciones?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
 
         await inicializarInforme({
             url,
@@ -83,7 +84,8 @@ function _getHtmlEncabezado() {
         textoBanner2: 'Contratos',
         mes: data?.meta?.filtros?.mes,
         anio: data?.meta?.filtros?.anio,
-        nroPagina: estado.nroPagina || 5
+        nroPagina: estado.nroPagina || 5,
+        mostrarNumeroPagina: estado.mostrarNumeroPagina
     });
 }
 

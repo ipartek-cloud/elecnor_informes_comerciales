@@ -44,6 +44,7 @@ export async function ejecutar(anio, mes, nroPagina) {
         // 3. Cargar el informe
         const url = `/api/ContratacionesAI?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
 
         await inicializarInforme({
             url,
@@ -91,7 +92,8 @@ function _getHtmlEncabezado() {
         textoBanner2: data?.meta?.subTitulo || 'Contratos',
         mes: data?.meta?.filtros?.mes,
         anio: data?.meta?.filtros?.anio,
-        nroPagina: estado.nroPagina || 6
+        nroPagina: estado.nroPagina || 6,
+        mostrarNumeroPagina: estado.mostrarNumeroPagina
     });
 }
 

@@ -1,0 +1,106 @@
+.rpt-paper[data-informe="mercados_sg_delegaciones"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+    max-width: 1200px;
+    padding: 1.5rem !important;
+    margin: 0 auto;
+    box-shadow: none;
+    border: none;
+}
+
+.rpt-dn-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+.rpt-dn-title-first { color: #E38631; }
+.rpt-dn-title:not(.rpt-dn-title-first) { color: #00468B; }
+
+.rpt-dg-subheaders-row th { text-align: center; padding-bottom: 2px; }
+.rpt-dg-subheaders-row th span { color: #00468B; font-weight: bold; font-size: 0.75rem; }
+
+.rpt-table-delegaciones {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-family: Arial, sans-serif;
+}
+
+.rpt-dg-col-obj-m { width: 9%; }
+.rpt-dg-col-contr-m { width: 9.5%; }
+.rpt-dg-col-centro { width: 28%; }
+.rpt-dg-col-obj-a { width: 9.5%; }
+.rpt-dg-col-contr-a { width: 9.5%; }
+.rpt-dg-col-ip { width: 7%; }
+.rpt-dg-col-spacer { width: 4%; }
+.rpt-dg-col-var-contr { width: 8%; }
+.rpt-dg-col-var-cart { width: 8.5%; }
+
+.rpt-dg-th-columns th {
+    color: #00468B; font-weight: bold; font-size: 0.85rem;
+    padding: 4px 2px; vertical-align: bottom;
+}
+.rpt-dg-header-center-name {
+    text-align: left; padding-left: 8px; vertical-align: bottom;
+}
+.rpt-dg-header-line-row th { padding: 0; }
+.rpt-dg-header-line { border-bottom: 2px solid #00468B; margin: 0; }
+
+.rpt-dg-detail-row td {
+    padding: 2px 4px; line-height: 1.4; font-size: 0.85rem; color: #000;
+}
+.rpt-dg-col-centro { text-align: left; padding-left: 8px !important; font-weight: 500; }
+
+.rpt-dg-total-row td { color: #00468B; font-weight: bold; vertical-align: top; padding-top: 4px; padding-bottom: 6px; }
+.rpt-dg-total-row td.has-line { border-top: 2px solid #00468B; }
+
+.rpt-dg-resumen-row td { padding: 2px 4px; font-size: 0.85rem; color: #00468B; font-weight: bold; }
+.rpt-dg-resumen-nacional td { padding-top: 10px; }
+
+.rpt-bloque-dn { margin-bottom: 1.5rem; page-break-inside: avoid; }
+
+@media print {
+    /* Neutralizar padding: gestionado por la estructura de tablas y thead */
+    .rpt-paper[data-informe="mercados_sg_delegaciones"],
+    .rpt-paper--print {
+        max-width: 100% !important;
+        padding: var(--rpt-padding-pdf) !important;
+        margin: 0 !important;
+    }
+    .rpt-table-delegaciones { font-size: 8pt !important; }
+
+    /* Repetición nativa de thead */
+    .rpt-table-delegaciones thead {
+        display: table-header-group !important;
+    }
+
+    /* Visibilidad DN en PDF: Blanco sobre Azul Corporativo */
+    .rpt-dg-header-center-name {
+        color: white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Permitir que los bloques DN se corten entre páginas para que las tablas internas puedan repetir su thead */
+    .rpt-bloque-dn {
+        page-break-inside: auto !important;
+    }
+
+    .rpt-dg-col-obj-m { width: 10% !important; }
+    .rpt-dg-col-contr-m { width: 10% !important; }
+    .rpt-dg-col-centro { width: 33% !important; }
+    .rpt-dg-col-obj-a { width: 10% !important; }
+    .rpt-dg-col-contr-a { width: 10% !important; }
+    .rpt-dg-col-ip { width: 7% !important; }
+    .rpt-dg-col-spacer { width: 3% !important; }
+    .rpt-dg-col-var-contr { width: 8% !important; }
+    .rpt-dg-col-var-cart { width: 9% !important; }
+    .rpt-dg-header-line { border-bottom: 0.5pt solid #00468B !important; margin: 0 !important; }
+    .rpt-dg-total-row td.has-line { border-top: 0.5pt solid #00468B !important; }
+    .rpt-dg-detail-row { page-break-inside: avoid; }
+    .rpt-sub-headers-row { display: none; } /* Obsolote legacy */
+    .rpt-dg-subheaders-row { margin-bottom: 1px; }
+}

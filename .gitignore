@@ -51,6 +51,7 @@ packages/
 .gemini/
 .qwen/
 .memory/
+artifacts/
 skills-lock.json
 
 # Windows reserved names (accidentally created)

@@ -108,7 +108,7 @@
 
 /* Fila de totales */
 .rpt-mercado-total-row {
-    border-top: 2.5px solid #00468B;
+    border-top: 2px solid #00468B;
     color: #00468B !important;
     font-weight: bold;
     padding-top: 5px;
@@ -116,14 +116,14 @@
 
 /* Celda total con margen */
 .rpt-mercado-total-cell {
-    border-top: 2.5px solid #00468B;
+    border-top: 2px solid #00468B;
     margin: 0 5px;
     padding-top: 5px;
 }
 
 /* Celda total con margen mayor (línea segmentada) */
 .rpt-mercado-total-line {
-    border-top: 2.5px solid #00468B;
+    border-top: 2px solid #00468B;
     margin: 0 10px;
 }
 
@@ -194,8 +194,11 @@
     }
 
     /* Bordes más finos estilo Access */
-    .rpt-th-blue, .rpt-td-total {
+    .rpt-th-blue, .rpt-td-total, .rpt-mercado-th-border {
         border-bottom-width: 0.5pt !important;
+    }
+    .rpt-mercado-total-row, .rpt-mercado-total-cell, .rpt-mercado-total-line {
+        border-top-width: 0.5pt !important;
     }
 
     /* Banner compacto */

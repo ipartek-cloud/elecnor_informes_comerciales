@@ -13,6 +13,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.RankingContratacionClientes;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesSignificativas;
 using Elecnor_Informes_Comerciales.Models.Informes.MercadosDG;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias;
+using Elecnor_Informes_Comerciales.Models.Informes.MercadosSGDelegaciones;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1542,5 +1543,131 @@ public class InformeRepository
             throw;
         }
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Mercados SG Delegaciones
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<MercadoSGDelegacionPoco>> ObtenerMercadosSGDelegacionesAsync(
+        int anio, int mes,
+        string codSdgSinArea = "221",
+        string codSdgOrdenDel = "090")
+    {
+        const string sqlDelete = "DELETE FROM rptContratacion_SG_Mercado WHERE Año = @Anio OR Año IS NULL";
+
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_SG_Mercado
+                                            (Pais, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
+                                        EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes";
+
+        const string sqlUpdateAnio = "UPDATE rptContratacion_SG_Mercado SET Año = @Anio WHERE Año IS NULL";
+
+        const string sqlSelect = @"WITH CTE_Estructura_Delegacion AS (
+                                        SELECT DISTINCT
+                                            S.OrdenSubDirGeneral,
+                                            S.CodSubDirGeneral,
+                                            S.NombreSubDirGeneral,
+                                            ONeg.Orden_CodDDirNegocio,
+                                            S.CodDDirNegocio,
+                                            S.NombreDirNegocio,
+                                            S.CodDelegacion,
+                                            S.NombreDelegacion,
+                                            CASE WHEN S.CodSubDirGeneral = @CodSdgSinArea THEN '' ELSE S.NombreSubDirNegocioArea END AS Area
+                                        FROM dbo.Sumarigrama S WITH (NOLOCK)
+                                        INNER JOIN dbo.Orden_CodDDirNegocio ONeg WITH (NOLOCK) ON S.CodDDirNegocio = ONeg.CodDDirNegocio
+                                        WHERE S.Año = @Anio
+                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                    ),
+                                    CTE_Contratacion_Del AS (
+                                        SELECT S.CodDelegacion,
+                                            SUM(C.ImporteContratado) AS ImporteContratado,
+                                            SUM(CASE WHEN ISNULL(CG.Mercado, 'N') = 'N' THEN C.ImporteContratado ELSE 0 END) AS ImporteContratadoNacional,
+                                            SUM(CASE WHEN CG.Mercado = 'I' THEN C.ImporteContratado ELSE 0 END) AS ImporteContratadoInternacional,
+                                            SUM(C.ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
+                                            SUM(CASE WHEN ISNULL(CG.Mercado, 'N') = 'N' THEN C.ImporteContratadoAcumulado ELSE 0 END) AS ImporteContratadoAcumuladoNacional,
+                                            SUM(CASE WHEN CG.Mercado = 'I' THEN C.ImporteContratadoAcumulado ELSE 0 END) AS ImporteContratadoAcumuladoInternacional,
+                                            SUM(C.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior
+                                        FROM dbo.rptContratacion_SG_Mercado C WITH (NOLOCK)
+                                        INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON C.CodCentro = S.CodCentro AND C.Año = S.Año
+                                        LEFT JOIN dbo.CentrosGerentesSQL CG WITH (NOLOCK) ON C.CodCentro = CG.CodCentro AND C.Año = CG.Año
+                                        WHERE C.Año = @Anio
+                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                        GROUP BY S.CodDelegacion
+                                    ),
+                                    CTE_Objetivos_Del AS (
+                                        SELECT S.CodDelegacion,
+                                            SUM(O.Importe) AS ImporteObjetivos,
+                                            SUM(CASE WHEN ISNULL(O.Mercado, 'N') = 'N' THEN O.Importe ELSE 0 END) AS ObjetivosNacional,
+                                            SUM(CASE WHEN O.Mercado = 'I' THEN O.Importe ELSE 0 END) AS ObjetivosInternacional
+                                        FROM dbo.ObjetivosActividadSQL O WITH (NOLOCK)
+                                        INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON O.CodCentro = S.CodCentro AND O.Año = S.Año
+                                        WHERE O.Año = @Anio
+                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                        GROUP BY S.CodDelegacion
+                                    ),
+                                    CTE_Cartera_Del AS (
+                                        SELECT S.CodDelegacion,
+                                            SUM(CASE WHEN Cart.Año = @Anio THEN Importe ELSE 0 END) AS CarteraPdteAñoActual,
+                                            SUM(CASE WHEN Cart.Año = @Anio - 1 THEN Importe ELSE 0 END) AS CarteraPdteAñoAnterior
+                                        FROM dbo.CarteraPdteProducirSQL Cart WITH (NOLOCK)
+                                        INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON Cart.CodCentro = S.CodCentro
+                                        WHERE Cart.Mes = (@Mes - 1) AND Cart.Año IN (@Anio, @Anio - 1)
+                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                        GROUP BY S.CodDelegacion
+                                    )
+                                    SELECT
+                                        E.OrdenSubDirGeneral, E.CodSubDirGeneral, E.NombreSubDirGeneral,
+                                        E.Orden_CodDDirNegocio, E.CodDDirNegocio,
+                                        E.NombreDirNegocio AS NomDirNegocio, E.Area, E.CodDelegacion,
+                                        CASE WHEN E.CodSubDirGeneral = @CodSdgOrdenDel THEN E.NombreDelegacion ELSE '' END AS OrdenNombreDelegacion,
+                                        E.NombreDelegacion,
+                                        ISNULL(C.ImporteContratado, 0) AS ImporteContratado,
+                                        ISNULL(C.ImporteContratadoNacional, 0) AS ImporteContratadoNacional,
+                                        ISNULL(C.ImporteContratadoInternacional, 0) AS ImporteContratadoInternacional,
+                                        ISNULL(C.ImporteContratadoAcumulado, 0) AS ImporteContratadoAcumulado,
+                                        ISNULL(C.ImporteContratadoAcumuladoNacional, 0) AS ImporteContratadoAcumuladoNacional,
+                                        ISNULL(C.ImporteContratadoAcumuladoInternacional, 0) AS ImporteContratadoAcumuladoInternacional,
+                                        ISNULL(C.ImporteContratadoAcumuladoAñoAnterior, 0) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        ISNULL(OBJ.ImporteObjetivos, 0) AS Objetivos,
+                                        ISNULL(OBJ.ObjetivosNacional, 0) AS ObjetivosNacional,
+                                        ISNULL(OBJ.ObjetivosInternacional, 0) AS ObjetivosInternacional,
+                                        ISNULL(CART.CarteraPdteAñoActual, 0) AS CarteraPdteAñoActual,
+                                        ISNULL(CART.CarteraPdteAñoAnterior, 0) AS CarteraPdteAñoAnterior
+                                    FROM CTE_Estructura_Delegacion E
+                                    LEFT JOIN CTE_Contratacion_Del C ON E.CodDelegacion = C.CodDelegacion
+                                    LEFT JOIN CTE_Objetivos_Del OBJ ON E.CodDelegacion = OBJ.CodDelegacion
+                                    LEFT JOIN CTE_Cartera_Del CART ON E.CodDelegacion = CART.CodDelegacion
+                                    ORDER BY E.OrdenSubDirGeneral, E.Orden_CodDDirNegocio, E.CodDelegacion";
+
+        var parametros = new
+        {
+            Anio = anio,
+            Mes = mes,
+            CodSdgSinArea = codSdgSinArea,
+            CodSdgOrdenDel = codSdgOrdenDel
+        };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, parametros, transaction: transaction);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
+
+            var resultado = (await _connection.QueryAsync<MercadoSGDelegacionPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+
+
 }
 

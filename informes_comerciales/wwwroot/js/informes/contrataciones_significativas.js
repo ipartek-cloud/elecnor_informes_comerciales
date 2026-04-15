@@ -56,6 +56,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
             + `&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
 
         await inicializarInforme({
             url,
@@ -111,28 +112,16 @@ async function _renderCuerpoInforme(direccion) {
 function _getHtmlEncabezado() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     const mercado = filtros.mercado || 'Nacional';
-    const mesNombre = getNombreMes(filtros.mes);
-    const nroPagina = estado.nroPagina;
-
-    return `
-        <div class="${RPT_CLASSES.HEADER}">
-            <div>
-                <span class="rpt-text-orange-council fs-4">Consejo de Administración</span>
-                <span class="rpt-info-complementary ms-2">Información complementaria</span>
-            </div>
-            <div class="d-flex flex-column align-items-end">
-                ${nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
-                <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo" loading="lazy">
-            </div>
-        </div>
-        <div class="${RPT_CLASSES.BANNER}">
-            <span>Elecnor</span>
-            <span>Contrat. significativas Mercado ${mercado}</span>
-        </div>
-        <div class="${RPT_CLASSES.SUBTITLE}">
-            Cierre de ${mesNombre} ${filtros.anio} | Miles de euros
-        </div>
-    `;
+    
+    return getHtmlEncabezadoBase({
+        tituloCorporativo: '<span class="rpt-text-orange-council fs-4">Consejo de Administración</span> <span class="rpt-info-complementary ms-2">Información complementaria</span>',
+        textoBanner1: 'Elecnor',
+        textoBanner2: `Contrat. significativas Mercado ${mercado}`,
+        mes: filtros.mes,
+        anio: filtros.anio,
+        nroPagina: estado.nroPagina || (mercado === 'Nacional' ? 9 : 10),
+        mostrarNumeroPagina: estado.mostrarNumeroPagina
+    });
 }
 
 function _renderTablaDireccion(direccion) {

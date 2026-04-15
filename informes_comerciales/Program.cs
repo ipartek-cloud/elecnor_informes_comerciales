@@ -36,8 +36,10 @@ builder.Host.UseSerilog((context, configuration) => configuration
     .MinimumLevel.Override("Microsoft.AspNetCore.DataProtection", Serilog.Events.LogEventLevel.Error)
     .MinimumLevel.Override("Microsoft.AspNetCore.ResponseCaching", Serilog.Events.LogEventLevel.Error)
     .MinimumLevel.Override("System.Net.Http", Serilog.Events.LogEventLevel.Warning)
-    .WriteTo.Console()
-    .WriteTo.File(logPath, rollingInterval: RollingInterval.Day));
+    .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(logPath, 
+        rollingInterval: RollingInterval.Day, 
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"));
 
 // 2. Agregar soporte para Controladores con Vistas (MVC) e Inyectar Caching
 builder.Services.AddControllersWithViews();
@@ -62,6 +64,7 @@ builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
 builder.Services.AddScoped<InformeCarteraDiferidaConsejoService>();
 builder.Services.AddScoped<InformeMercadosService>();
 builder.Services.AddScoped<InformeMercadosDGService>();
+builder.Services.AddScoped<InformeMercadosSGDelegacionesService>();
 builder.Services.AddScoped<InformePaisesService>();
 builder.Services.AddScoped<InformeActividadesService>();
 builder.Services.AddScoped<InformeActividadesObjetivosService>();

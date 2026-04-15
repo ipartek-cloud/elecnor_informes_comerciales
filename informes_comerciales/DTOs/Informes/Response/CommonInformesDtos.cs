@@ -11,6 +11,7 @@ public class MetaInformeDto
     public object Filtros { get; set; } = new { };
     public DateTime FechaGeneracion { get; set; }
     public string Usuario { get; set; } = string.Empty;
+    public bool MostrarNumeroPagina { get; set; } = true;
 }
 
 /// <summary>

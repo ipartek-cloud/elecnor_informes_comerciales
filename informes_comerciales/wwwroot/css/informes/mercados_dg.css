@@ -94,20 +94,20 @@
 
 /* Fila de totales */
 .rpt-mercado-total-row {
-    border-top: 2.5px solid #00468B;
+    border-top: 2px solid #00468B;
     color: #00468B !important;
     font-weight: bold;
     padding-top: 5px;
 }
 
 .rpt-mercado-total-cell {
-    border-top: 2.5px solid #00468B;
+    border-top: 2px solid #00468B;
     margin: 0 5px;
     padding-top: 5px;
 }
 
 .rpt-mercado-total-line {
-    border-top: 2.5px solid #00468B;
+    border-top: 2px solid #00468B;
     margin: 0 10px;
 }
 
@@ -177,7 +177,7 @@
 }
 
 .rpt-cd-total-inner {
-    border-top: 2.5px solid #00468B !important;
+    border-top: 2px solid #00468B !important;
     margin: 0 5px;
     padding-top: 5px !important;
 }
@@ -203,5 +203,13 @@
 
     .rpt-table {
         font-size: 8pt !important;
+    }
+
+    /* Bordes más finos estilo Access */
+    .rpt-mercado-th-border, .rpt-cd-th-border {
+        border-bottom-width: 0.5pt !important;
+    }
+    .rpt-mercado-total-row, .rpt-mercado-total-cell, .rpt-mercado-total-line, .rpt-cd-total-inner {
+        border-top-width: 0.5pt !important;
     }
 }

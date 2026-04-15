@@ -8,9 +8,11 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimir
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes) {
+export async function ejecutar(anio, mes, nroPagina) {
     try {
         const url = `/api/ActividadesObjetivos?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+        estado.nroPagina = nroPagina;
+        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
 
         await inicializarInforme({
             url,
@@ -48,7 +50,9 @@ function _getHtmlEncabezado() {
         textoBanner1: 'Elecnor',
         textoBanner2: 'Actividades Objetivos',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
-        anio: estado.informeGlobalData?.meta?.filtros?.anio
+        anio: estado.informeGlobalData?.meta?.filtros?.anio,
+        nroPagina: estado.nroPagina,
+        mostrarNumeroPagina: estado.mostrarNumeroPagina
     });
 }
 

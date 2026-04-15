@@ -30,7 +30,8 @@ export function crearEstadoInforme() {
         informeGlobalData: null,
         paginaActual: 0,
         paginasTotales: 0,
-        eventosIniciados: false
+        eventosIniciados: false,
+        mostrarNumeroPagina: true // Flag de visibilidad
     };
 }
 
@@ -92,6 +93,8 @@ export async function inicializarInforme(opciones) {
         estado.informeGlobalData = data;
         estado.paginaActual = 0;
         estado.paginasTotales = paginas;
+        // Capturamos la visibilidad desde la metadata (o true si no viene)
+        estado.mostrarNumeroPagina = data.meta?.mostrarNumeroPagina ?? true;
 
         renderizarPagina(0);
 
@@ -127,6 +130,7 @@ export async function inicializarInforme(opciones) {
  * @param {number} opciones.mes - Mes del informe
  * @param {number} opciones.anio - Año del informe
  * @param {number} [opciones.nroPagina] - Número de página opcional
+ * @param {boolean} [opciones.mostrarNumeroPagina=true] - Si debe mostrarse el número de página
  * @returns {string} HTML del encabezado
  */
 export function getHtmlEncabezadoBase(opciones) {
@@ -136,16 +140,22 @@ export function getHtmlEncabezadoBase(opciones) {
         textoBanner2 = 'Informes',
         mes,
         anio,
-        nroPagina
+        nroPagina,
+        mostrarNumeroPagina = true
     } = opciones;
 
     const nombreMes = getNombreMes(mes);
+
+    // El número de página solo se muestra si está habilitado Y existe un valor.
+    const htmlPagina = (mostrarNumeroPagina !== false && nroPagina) 
+        ? `<span class="rpt-page-number">${nroPagina}</span>` 
+        : '';
 
     return `
         <div class="${RPT_CLASSES.HEADER}">
             <div class="rpt-text-corporate rpt-header-corporate-text">${tituloCorporativo}</div>
             <div class="d-flex flex-column align-items-end">
-                ${nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
+                ${htmlPagina}
                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
             </div>
         </div>
