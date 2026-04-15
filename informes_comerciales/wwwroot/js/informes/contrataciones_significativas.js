@@ -86,7 +86,7 @@ async function _renderizarPagina(index = 0) {
 
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas" role="main" data-pagina-index="${index}">
-            ${_getHtmlEncabezado(direccion)}
+            ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${cuerpoInformeHtml}
             </div>

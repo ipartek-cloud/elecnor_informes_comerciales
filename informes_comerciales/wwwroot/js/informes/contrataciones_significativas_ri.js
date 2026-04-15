@@ -69,7 +69,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
             renderizarPagina:         _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion:        'Página',
-            claveAgrupacion:          'datos'
+            claveAgrupacion:          'NONE'
         });
 
     } catch (error) {
@@ -106,36 +106,96 @@ async function _renderizarPagina(index = 0) {
         return;
     }
 
-    // Usar el índice limitado al tamaño del array filtrado
-    const safeIndex = Math.min(index, direccionesConDatos.length - 1);
-    const direccion = direccionesConDatos[safeIndex];
-
-    const cuerpoInformeHtml = await _renderCuerpoInforme(direccion);
+    // Renderizar TODAS las direcciones en una sabana continua
+    const cuerpoHtml = _renderCuerpoInforme();
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" role="main" data-pagina-index="${safeIndex}">
-            ${_getHtmlEncabezado(direccion)}
+        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" role="main">
+            ${_getHtmlEncabezado()}
             <div class="report-body">
-                ${cuerpoInformeHtml}
+                ${cuerpoHtml}
             </div>
         </div>
     `;
 
     container.scrollTop = 0;
-    actualizarEstadoPaginacion(estado.paginaActual, direccionesConDatos.length, 'Página');
+    ocultarControlesPaginacion();
 }
 
 /**
- * Renderiza el cuerpo: tabla principal con detalle mensual aislado a la direccion actual.
+ * Renderiza el cuerpo: tabla principal con todas las direcciones en una sabana.
+ * Modelo similar a Ranking Contratación - una sola página con thead que se repite.
  */
-async function _renderCuerpoInforme(direccion) {
-    let html = _renderTablaDireccion(direccion);
+function _renderCuerpoInforme() {
+    const dataArr = estado.informeGlobalData?.datos || [];
+    const dataMes = estado.informeGlobalData?.datosMes || [];
+    const filtros = estado.informeGlobalData?.meta?.filtros || {};
+    const nombreMes = getNombreMes(filtros.mes);
+    const umbralTexto = estado.informeGlobalData?.meta?.umbralTexto || 'Contratación > 2M';
 
-    if (!html?.trim()) {
+    // Filtrar solo las direcciones que tienen al menos un contrato significativo
+    const direccionesConDatos = dataArr.filter(direccion => 
+        dataMes.some(item => item.nombreDirNegocio === direccion.nombreDirNegocio)
+    );
+
+    if (direccionesConDatos.length === 0) {
         return `<div class="text-center p-5 text-muted">No se han encontrado registros para el periodo seleccionado.</div>`;
     }
 
-    return html;
+    // Generar el contenido de cada dirección
+    const bloquesHtml = direccionesConDatos.map(direccion => {
+        const contratosDelGrupo = dataMes.filter(item => 
+            item.nombreDirNegocio === direccion.nombreDirNegocio
+        );
+
+        if (contratosDelGrupo.length === 0) return '';
+
+        // Cabecera de Dirección de Negocio y fila del Mes
+        let bloque = `
+        <tr>
+            <td colspan="3" class="rpt-cont-sig-group-header" style="border-top: none;">
+                <span class="rpt-cont-sig-group-title">${_escapeHtml(direccion.nombreDirNegocio)}</span>
+            </td>
+        </tr>
+        <tr class="rpt-detail-row rpt-cont-sig-month-row">
+            <td colspan="3" class="rpt-cont-sig-mes-label fw-bold">
+                ${_escapeHtml(nombreMes)}
+            </td>
+        </tr>
+        `;
+
+        // Añadir los contratos
+        bloque += contratosDelGrupo.map(item => `
+        <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-cont-sig-mes-item">
+            <td class="rpt-col-mes-cliente">${_escapeHtml(_limpiarCliente(item.nombreCliente_OK))}</td>
+            <td class="rpt-col-mes-oferta">${_escapeHtml(item.descripcionOferta_OK)}</td>
+            <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+        </tr>
+        `).join('');
+
+        return bloque;
+    }).join('');
+
+    // Devolver una única tabla con thead que se repetirá en cada página del PDF
+    return `
+        <table class="rpt-table rpt-table-cont-sig mb-4">
+            <colgroup>
+                <col class="rpt-col-mes-cliente">
+                <col class="rpt-col-mes-oferta">
+                <col class="rpt-col-mes-importe">
+            </colgroup>
+            <thead class="border-0">
+                <tr class="fw-bold border-0">
+                    <th class="rpt-text-corporate text-start ps-3 border-0 fs-6">${_escapeHtml(umbralTexto)}</th>
+                    <th class="border-0"></th>
+                    <th class="rpt-text-corporate text-end pe-3 border-0 fs-6">Mensual</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${bloquesHtml}
+            </tbody>
+        </table>
+    `;
 }
 
 function _getHtmlEncabezado() {
@@ -238,10 +298,11 @@ function _registrarEventos() {
 }
 
 async function _imprimirInforme() {
+    const contenidoHtml = _renderCuerpoInforme();
     await imprimirInformeUnificado({
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
-        renderContenido:   (direccion) => _renderTablaDireccion(direccion),
-        modoAgrupacion:    'datos' 
+        renderContenido: () => contenidoHtml,
+        modoAgrupacion: 'NONE'
     });
 }
