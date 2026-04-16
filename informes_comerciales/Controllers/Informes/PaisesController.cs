@@ -27,22 +27,20 @@ public class PaisesController : ControllerBase
     public async Task<IActionResult> Get(int anio, int mes, int? nroPagina, int umbral = 0)
     {
         // Validaciones básicas
-        if (anio > DateTime.Now.Year + 1) // Permitimos un poco de margen a futuro
+        if (anio > DateTime.Now.Year + 1)
             return BadRequest("El año de consulta es excesivamente alto.");
         if (mes < 1 || mes > 12)
             return BadRequest("El mes debe estar entre 1 y 12.");
 
-        // Ejecución de servicio
-        var resultado = await _service.ObtenerInformeAsync(anio, mes, nroPagina, umbral);
+        // Ejecución de servicio (Método estandarizado)
+        var resultado = await _service.ObtenerInformePaisesAsync(anio, mes, nroPagina, umbral);
 
         return Ok(resultado);
     }
 
     /// <summary>
     /// Punto de entrada para el informe de Países (Nacional + Internacional) - Todos los países.
-    /// Usa spContratacion_NacIntTODO con parámetro '' para obtener Nacional + Internacional.
-    /// Título: "Países Relevantes" (SIN "Mercado Internacional").
-    /// Umbral fijo: 100000 (relevantes).
+    /// Título: "Países Relevantes". Umbral fijo: 100000 (relevantes).
     /// </summary>
     [HttpGet("paises_all")]
     public async Task<IActionResult> GetPaisesAll(int anio, int mes, int? nroPagina)
@@ -53,8 +51,8 @@ public class PaisesController : ControllerBase
         if (mes < 1 || mes > 12)
             return BadRequest("El mes debe estar entre 1 y 12.");
 
-        // Ejecución de servicio
-        var resultado = await _service.ObtenerInformeAllAsync(anio, mes, nroPagina);
+        // Ejecución de servicio (Método estandarizado)
+        var resultado = await _service.ObtenerInformePaisesAllAsync(anio, mes, nroPagina);
 
         return Ok(resultado);
     }

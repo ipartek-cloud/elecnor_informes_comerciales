@@ -403,7 +403,7 @@ public class InformeRepository
 
     // ═══════════════════════════════════════════════════════════════════════════
     // INFORME: Países ALL (Nacional + Internacional)
-    // └─ Método: ObtenerPaisesAllAsync()
+    // └─ Método: ObtenerPaisesAllAsync() REFACTORIZADO AL PATRÓN ESTÁNDAR
     // ═══════════════════════════════════════════════════════════════════════════
 
     /// <summary>
@@ -411,74 +411,79 @@ public class InformeRepository
     /// </summary>
     public async Task<List<PaisesPoco>> ObtenerPaisesAllAsync(int anio, int mes)
     {
+        // ─── PASO 1: Vaciar la tabla de trabajo (misma que el internacional) ───
+        const string sqlDelete = "DELETE FROM rptContratacion_Internacional";
+
+        // ─── PASO 2: Poblado vía SP (Paises ALL: Nac + Int) ───
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
+                                       EXEC spContratacion_NacIntTODO @Anio, @Mes, ''";
+
+        const string sqlUpdateAnio = "UPDATE rptContratacion_Internacional SET Año = @Anio WHERE Año IS NULL";
+
+        // ─── PASO 3: Selección y Cruce con Histórico (Cruce por PAÍS para asegurar 'España') ───
+        const string sqlSelect = @" SELECT 
+                                        @Anio AS Año,
+                                        t.Pais,
+                                        SUM(t.ImpActual) AS ImporteContratadoAcumulado,
+                                        SUM(t.ImpAnterior) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        MAX(t.Ajuste) AS Ajuste,
+                                        CASE WHEN SUM(t.ImpAnterior) = 0 THEN '*' ELSE '' END AS SinContratacionAñoAnterior,
+                                        MAX(t.Orden) AS OrdenAñoAnterior
+                                    FROM (
+                                            -- Datos Actuales (insertados en el paso 2)
+                                            SELECT 
+                                                Pais,
+                                                dbo.fgRedondear(ISNULL(ImporteContratadoAcumulado, 0), 2) AS ImpActual,
+                                                0 AS ImpAnterior,
+                                                Ajuste,
+                                                0 AS Orden
+                                            FROM 
+                                                rptContratacion_Internacional WITH (NOLOCK)
+                                            WHERE Año = @Anio
+
+                                        UNION ALL
+
+                                            -- Datos Históricos (Cruce por nombre de País para Nacional + Int)
+                                            SELECT 
+                                                CASE 
+                                                   WHEN h.CodProv = '00' OR h.CodProv = ' España' THEN 'España' 
+                                                   ELSE ISNULL(p.NMPRO, 'OTROS') 
+                                                END AS Pais,
+                                                0 AS ImpActual,
+                                                ISNULL(h.Importe, 0) AS ImpAnterior,
+                                                0 AS Ajuste,
+                                                ISNULL(h.Orden, 0) AS Orden
+                                            FROM 
+                                                HistoricoContratacionSQL h WITH (NOLOCK)
+                                            LEFT JOIN 
+                                                ProvinciasInternacional p WITH (NOLOCK) ON h.CodProv = p.CDPRO
+                                            WHERE h.Año = @Anio - 1
+                                    ) AS t
+                                    GROUP BY t.Pais
+                                    ORDER BY ImporteContratadoAcumulado DESC";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
 
-        // 1. Ejecutar SP directamente (devuelve resultset directamente)
-        var parametrosSp = new { pAño = anio, pMes = mes, pNacInt = "" };
-        var datosActuales = (await _connection.QueryAsync<PaisesPoco>(
-            "spContratacion_NacIntTODO",
-            parametrosSp,
-            commandTimeout: 60,
-            commandType: CommandType.StoredProcedure
-        )).ToList();
-
-        // 2. Cargar todos los datos históricos del año anterior en UNA query
-        var datosHistorico = (await _connection.QueryAsync<dynamic>(
-            @"SELECT ISNULL(p.NMPRO, 'OTROS') AS Pais,
-                    ISNULL(h.Importe, 0) AS ImporteAnterior,
-                    ISNULL(h.Orden, 0) AS Orden
-              FROM HistoricoContratacionSQL h WITH (NOLOCK)
-              LEFT JOIN ProvinciasInternacional p WITH (NOLOCK) ON h.CodProv = p.CDPRO
-              WHERE h.Año = @AnioAnterior",
-            new { AnioAnterior = anio - 1 }
-        )).ToList();
-
-        // Crear diccionario de histórico para búsqueda O(1)
-        var dictHistorico = datosHistorico.ToDictionary(
-            d => (string)d.Pais,
-            d => new { ImporteAnterior = (decimal)d.ImporteAnterior, Orden = (int)d.Orden }
-        );
-
-        // 3. Combinar datos actuales con histórico en memoria
-        var resultado = datosActuales.Select(d =>
+        using var transaction = _connection.BeginTransaction();
+        try
         {
-            dictHistorico.TryGetValue(d.Pais, out var historico);
-            decimal impAnterior = historico?.ImporteAnterior ?? 0;
-            int ordenAnterior = historico?.Orden ?? 0;
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
+            
+            var resultado = (await _connection.QueryAsync<PaisesPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
 
-            return new PaisesPoco
-            {
-                Año = anio,
-                Pais = d.Pais,
-                ImporteContratadoAcumulado = d.ImporteContratadoAcumulado,
-                ImporteContratadoAcumuladoAñoAnterior = impAnterior,
-                Ajuste = d.Ajuste,
-                SinContratacionAñoAnterior = impAnterior == 0 ? "*" : "",
-                OrdenAñoAnterior = ordenAnterior
-            };
-        }).ToList();
-
-        // 4. Añadir países del histórico que NO tienen datos actuales (tienen 0 en actual)
-        var paisesActuales = datosActuales.Select(d => d.Pais).ToHashSet();
-        var paisesSinActual = dictHistorico.Keys.Where(p => !paisesActuales.Contains(p));
-
-        foreach (var pais in paisesSinActual)
-        {
-            var h = dictHistorico[pais];
-            resultado.Add(new PaisesPoco
-            {
-                Año = anio,
-                Pais = pais,
-                ImporteContratadoAcumulado = 0,
-                ImporteContratadoAcumuladoAñoAnterior = h.ImporteAnterior,
-                Ajuste = 0,
-                SinContratacionAñoAnterior = "*",
-                OrdenAñoAnterior = h.Orden
-            });
+            transaction.Commit();
+            return resultado;
         }
-
-        return resultado.OrderByDescending(x => x.ImporteContratadoAcumulado).ToList();
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

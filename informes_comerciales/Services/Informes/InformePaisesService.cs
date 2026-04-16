@@ -5,7 +5,8 @@ using Elecnor_Informes_Comerciales.Repositories.Informes;
 namespace Elecnor_Informes_Comerciales.Services.Informes;
 
 /// <summary>
-/// Servicio para el informe de Países (Mercado Internacional por países).
+/// Servicio para el informe de Países (Mercado Internacional y Países ALL).
+/// Refactorizado siguiendo el patrón estándar de Servicios Elecnor.
 /// </summary>
 public class InformePaisesService
 {
@@ -16,19 +17,21 @@ public class InformePaisesService
         _repository = repository;
     }
 
-    public async Task<PaisesResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina, int umbral = 0)
+    /// <summary>
+    /// Obtiene el informe de Países (Mercado Internacional).
+    /// </summary>
+    public async Task<PaisesResponseDto> ObtenerInformePaisesAsync(int anio, int mes, int? nroPagina, int umbral = 0)
     {
-        // 1. Obtener datos del repositorio
+        // 1. Obtener datos del repositorio (Patrón Estándar)
         var datosPlanos = await _repository.ObtenerPaisesAsync(anio, mes);
 
         // 2. Preparar respuesta
+        var tituloBase = umbral > 0 ? "Países Relevantes" : "Países";
         var response = new PaisesResponseDto
         {
             Meta = new MetaInformeDto
             {
-                Titulo = umbral > 0 
-                    ? "Países Relevantes (Mercado Internacional)" 
-                    : "Países (Mercado Internacional)",
+                Titulo = $"{tituloBase} (Mercado Internacional)",
                 Descripcion = "Consejo Administración - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral },
                 FechaGeneracion = DateTime.Now,
@@ -39,89 +42,21 @@ public class InformePaisesService
         if (datosPlanos == null || !datosPlanos.Any())
             return response;
 
-        // 3. Calcular el "100% Real" (Todas las filas del repo, incluso las que se filtrarán)
-        decimal totalGlobalActual = datosPlanos.Sum(x => x.ImporteContratadoAcumulado);
-        decimal totalGlobalAnterior = datosPlanos.Sum(x => x.ImporteContratadoAcumuladoAñoAnterior);
-        decimal totalDGInfr = datosPlanos.Where(x => x.Ajuste == 0).Sum(x => x.ImporteContratadoAcumulado);
-
-        // 4. Mapear Detalle y filtrar por umbral
-        // - umbral = 0: Muestra todos los países con importe > 0 (equivale a != 0 cuando valores >= 0)
-        // - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes)
-        // Nota: Para umbral > 0, usamos >= para incluir el valor exacto del umbral
-        int posRelativa = 1;
-        foreach (var p in datosPlanos.OrderByDescending(x => x.ImporteContratadoAcumulado))
-        {
-            // El registro 'OTROS' no se muestra en el detalle, pero ya ha sido sumado al global total
-            if (p.Pais == "OTROS") continue;
-
-            // Filtrado por umbral: > 0 si umbral=0, >= umbral si umbral>0
-            bool cumpleUmbral = umbral == 0
-                ? p.ImporteContratadoAcumulado > 0        // Modo "Todos": > 0 ≡ != 0
-                : p.ImporteContratadoAcumulado >= umbral; // Modo "Relevantes": >= 100000
-
-            if (cumpleUmbral)
-            {
-                var detalle = new PaisDetalleDto
-                {
-                    Pais = p.Pais,
-                    EsNuevo = p.SinContratacionAñoAnterior == "*",
-
-                    // Mantenemos EUROS REALES según mandato GEMINI.md
-                    ImporteActual = p.ImporteContratadoAcumulado,
-                    PosicionActual = posRelativa++,
-
-                    // Porcentaje relativo al Total Global (no a la suma de lo visible)
-                    PorcentajeSobreInternacionalActual = totalGlobalActual > 0
-                        ? (decimal)Math.Round((double)((p.ImporteContratadoAcumulado / totalGlobalActual) * 100), 0, MidpointRounding.AwayFromZero)
-                        : 0,
-
-                    ImporteAnterior = p.ImporteContratadoAcumuladoAñoAnterior,
-                    PosicionAnterior = p.OrdenAñoAnterior,
-
-                    PorcentajeSobreInternacionalAnterior = totalGlobalAnterior > 0
-                        ? (decimal)Math.Round((double)((p.ImporteContratadoAcumuladoAñoAnterior / totalGlobalAnterior) * 100), 0, MidpointRounding.AwayFromZero)
-                        : 0
-                };
-                response.Paises.Add(detalle);
-            }
-        }
-
-        // 5. Calcular subtotales de la Fila 1 (solo países filtrados y mostrados en detalle)
-        decimal subtotalImporteActual   = response.Paises.Sum(x => x.ImporteActual);
-        decimal subtotalImporteAnterior = response.Paises.Sum(x => x.ImporteAnterior);
-        
-        decimal subtotalPorcentajeActual   = response.Paises.Sum(x => x.PorcentajeSobreInternacionalActual);
-        decimal subtotalPorcentajeAnterior = response.Paises.Sum(x => x.PorcentajeSobreInternacionalAnterior);
-
-        response.Totales = new TotalesPaisesDto
-        {
-            // Fila 1: suma de lo visible en pantalla (Euros Reales)
-            SubtotalImporteActual      = subtotalImporteActual,
-            SubtotalImporteAnterior    = subtotalImporteAnterior,
-            SubtotalPorcentajeActual   = subtotalPorcentajeActual,
-            SubtotalPorcentajeAnterior = subtotalPorcentajeAnterior,
-
-            // Fila 2: total global real (Euros Reales)
-            TotalInternacionalActual       = totalGlobalActual,
-            TotalInternacionalAnterior     = totalGlobalAnterior,
-            TotalInternacionalDGInfrActual = totalDGInfr,
-        };
+        // 3. Procesar y Filtrar Detalle
+        _ProcesarDetalleYTotales(response, datosPlanos, umbral);
 
         return response;
     }
 
     /// <summary>
-    /// Obtiene el informe de Países (Nacional + Internacional) - Todos los países relevantes.
-    /// Usa spContratacion_NacIntTODO con parámetro '' para obtener Nacional + Internacional.
-    /// Título: "Países Relevantes" (sin "Mercado Internacional").
-    /// Umbral fijo: 100000 (relevantes).
+    /// Obtiene el informe de Países ALL (Nacional + Internacional).
     /// </summary>
-    public async Task<PaisesResponseDto> ObtenerInformeAllAsync(int anio, int mes, int? nroPagina)
+    public async Task<PaisesResponseDto> ObtenerInformePaisesAllAsync(int anio, int mes, int? nroPagina)
     {
         // 1. Obtener datos del repositorio (Nacional + Internacional)
         var datosPlanos = await _repository.ObtenerPaisesAllAsync(anio, mes);
 
-        // 2. Preparar respuesta con título específico para paises_all
+        // 2. Preparar respuesta
         var response = new PaisesResponseDto
         {
             Meta = new MetaInformeDto
@@ -137,58 +72,81 @@ public class InformePaisesService
         if (datosPlanos == null || !datosPlanos.Any())
             return response;
 
-        // 3. Calcular el "100% Real" (Todas las filas del repo, incluso las que se filtrarán)
+        // 3. Procesar y Filtrar Detalle (Umbral fijo 100.000 para ALL)
+        _ProcesarDetalleYTotales(response, datosPlanos, 100000);
+
+        return response;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MÉTODOS PRIVADOS DE APOYO (ENCAPSULACIÓN DE LÓGICA)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Procesa la lista plana de países, aplica el umbral y calcula los subtotales/totales.
+    /// </summary>
+    private void _ProcesarDetalleYTotales(PaisesResponseDto response, List<PaisesPoco> datosPlanos, int umbral)
+    {
+        // Cálculos Globales (El 100% real del mercado)
         decimal totalGlobalActual = datosPlanos.Sum(x => x.ImporteContratadoAcumulado);
         decimal totalGlobalAnterior = datosPlanos.Sum(x => x.ImporteContratadoAcumuladoAñoAnterior);
-        decimal totalDGInfr = datosPlanos.Where(x => x.Ajuste == 0).Sum(x => x.ImporteContratadoAcumulado);
+        decimal totalDGInfrActual = datosPlanos.Where(x => x.Ajuste == 0).Sum(x => x.ImporteContratadoAcumulado);
 
-        // 4. Mapear Detalle y filtrar por umbral = 100000 (Relevantes)
-        int umbral = 100000;
         int posRelativa = 1;
-        foreach (var p in datosPlanos.OrderByDescending(x => x.ImporteContratadoAcumulado))
+        var paisesOrdenados = datosPlanos.OrderByDescending(x => x.ImporteContratadoAcumulado);
+
+        foreach (var p in paisesOrdenados)
         {
+            // El registro 'OTROS' es una fila técnica de consolidación, no se muestra en el detalle
             if (p.Pais == "OTROS") continue;
 
-            bool cumpleUmbral = p.ImporteContratadoAcumulado >= umbral;
+            // Lógica de filtrado por umbral
+            bool cumpleUmbral = umbral == 0 
+                ? p.ImporteContratadoAcumulado > 0 
+                : p.ImporteContratadoAcumulado >= umbral;
 
             if (cumpleUmbral)
             {
-                var detalle = new PaisDetalleDto
+                response.Paises.Add(new PaisDetalleDto
                 {
                     Pais = p.Pais,
                     EsNuevo = p.SinContratacionAñoAnterior == "*",
+                    
+                    // Año Actual
                     ImporteActual = p.ImporteContratadoAcumulado,
                     PosicionActual = posRelativa++,
-                    PorcentajeSobreInternacionalActual = totalGlobalActual > 0
-                        ? (decimal)Math.Round((double)((p.ImporteContratadoAcumulado / totalGlobalActual) * 100), 0, MidpointRounding.AwayFromZero)
-                        : 0,
+                    PorcentajeSobreInternacionalActual = _CalcularPorcentaje(p.ImporteContratadoAcumulado, totalGlobalActual),
+
+                    // Año Anterior
                     ImporteAnterior = p.ImporteContratadoAcumuladoAñoAnterior,
                     PosicionAnterior = p.OrdenAñoAnterior,
-                    PorcentajeSobreInternacionalAnterior = totalGlobalAnterior > 0
-                        ? (decimal)Math.Round((double)((p.ImporteContratadoAcumuladoAñoAnterior / totalGlobalAnterior) * 100), 0, MidpointRounding.AwayFromZero)
-                        : 0
-                };
-                response.Paises.Add(detalle);
+                    PorcentajeSobreInternacionalAnterior = _CalcularPorcentaje(p.ImporteContratadoAcumuladoAñoAnterior, totalGlobalAnterior)
+                });
             }
         }
 
-        // 5. Calcular subtotales de la Fila 1
-        decimal subtotalImporteActual = response.Paises.Sum(x => x.ImporteActual);
-        decimal subtotalImporteAnterior = response.Paises.Sum(x => x.ImporteAnterior);
-        decimal subtotalPorcentajeActual = response.Paises.Sum(x => x.PorcentajeSobreInternacionalActual);
-        decimal subtotalPorcentajeAnterior = response.Paises.Sum(x => x.PorcentajeSobreInternacionalAnterior);
-
+        // Asignación de Totales
         response.Totales = new TotalesPaisesDto
         {
-            SubtotalImporteActual = subtotalImporteActual,
-            SubtotalImporteAnterior = subtotalImporteAnterior,
-            SubtotalPorcentajeActual = subtotalPorcentajeActual,
-            SubtotalPorcentajeAnterior = subtotalPorcentajeAnterior,
+            // Fila 1: Subtotal de los países visibles (filtrados)
+            SubtotalImporteActual = response.Paises.Sum(x => x.ImporteActual),
+            SubtotalImporteAnterior = response.Paises.Sum(x => x.ImporteAnterior),
+            SubtotalPorcentajeActual = response.Paises.Sum(x => x.PorcentajeSobreInternacionalActual),
+            SubtotalPorcentajeAnterior = response.Paises.Sum(x => x.PorcentajeSobreInternacionalAnterior),
+
+            // Fila 2: Total Global del Mercado (Euros Reales)
             TotalInternacionalActual = totalGlobalActual,
             TotalInternacionalAnterior = totalGlobalAnterior,
-            TotalInternacionalDGInfrActual = totalDGInfr,
+            TotalInternacionalDGInfrActual = totalDGInfrActual
         };
+    }
 
-        return response;
+    /// <summary>
+    /// Calcula el porcentaje relativo redondeado a 0 decimales (estándar Consejo).
+    /// </summary>
+    private decimal _CalcularPorcentaje(decimal parcial, decimal total)
+    {
+        if (total <= 0) return 0;
+        return (decimal)Math.Round((double)((parcial / total) * 100), 0, MidpointRounding.AwayFromZero);
     }
 }
