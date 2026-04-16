@@ -8,7 +8,6 @@ namespace Elecnor_Informes_Comerciales.Services.Informes;
 public class InformeMercadosSGDelegacionesService
 {
     private readonly InformeRepository _repository;
-    private const string CodSdgSinArea = "221";
     private const string CodSdgOrdenDel = "090";
 
     public InformeMercadosSGDelegacionesService(InformeRepository repository)
@@ -16,10 +15,10 @@ public class InformeMercadosSGDelegacionesService
         _repository = repository;
     }
 
-    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes)
+    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, string codSubDirGeneral = "221")
     {
         var datosPlanos = await _repository.ObtenerMercadosSGDelegacionesAsync(
-            anio, mes, CodSdgSinArea, CodSdgOrdenDel);
+            anio, mes, codSubDirGeneral, CodSdgOrdenDel);
 
         var response = new MercadosSGDelegacionesResponseDto
         {

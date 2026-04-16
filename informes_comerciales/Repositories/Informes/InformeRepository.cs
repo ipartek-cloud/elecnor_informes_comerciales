@@ -1511,7 +1511,7 @@ public class InformeRepository
 
     public async Task<List<MercadoSGDelegacionPoco>> ObtenerMercadosSGDelegacionesAsync(
         int anio, int mes,
-        string codSdgSinArea = "221",
+        string codSubDirGeneral = "221",
         string codSdgOrdenDel = "090")
     {
         const string sqlDelete = "DELETE FROM rptContratacion_SG_Mercado WHERE Año = @Anio OR Año IS NULL";
@@ -1532,11 +1532,11 @@ public class InformeRepository
                                             S.NombreDirNegocio,
                                             S.CodDelegacion,
                                             S.NombreDelegacion,
-                                            CASE WHEN S.CodSubDirGeneral = @CodSdgSinArea THEN '' ELSE S.NombreSubDirNegocioArea END AS Area
+                                            CASE WHEN S.CodSubDirGeneral = @codSubDirGeneral THEN '' ELSE S.NombreSubDirNegocioArea END AS Area
                                         FROM dbo.Sumarigrama S WITH (NOLOCK)
                                         INNER JOIN dbo.Orden_CodDDirNegocio ONeg WITH (NOLOCK) ON S.CodDDirNegocio = ONeg.CodDDirNegocio
                                         WHERE S.Año = @Anio
-                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                          AND S.CodSubDirGeneral = @codSubDirGeneral
                                     ),
                                     CTE_Contratacion_Del AS (
                                         SELECT S.CodDelegacion,
@@ -1551,7 +1551,7 @@ public class InformeRepository
                                         INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON C.CodCentro = S.CodCentro AND C.Año = S.Año
                                         LEFT JOIN dbo.CentrosGerentesSQL CG WITH (NOLOCK) ON C.CodCentro = CG.CodCentro AND C.Año = CG.Año
                                         WHERE C.Año = @Anio
-                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                          AND S.CodSubDirGeneral = @codSubDirGeneral
                                         GROUP BY S.CodDelegacion
                                     ),
                                     CTE_Objetivos_Del AS (
@@ -1562,7 +1562,7 @@ public class InformeRepository
                                         FROM dbo.ObjetivosActividadSQL O WITH (NOLOCK)
                                         INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON O.CodCentro = S.CodCentro AND O.Año = S.Año
                                         WHERE O.Año = @Anio
-                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                          AND S.CodSubDirGeneral = @codSubDirGeneral
                                         GROUP BY S.CodDelegacion
                                     ),
                                     CTE_Cartera_Del AS (
@@ -1572,7 +1572,7 @@ public class InformeRepository
                                         FROM dbo.CarteraPdteProducirSQL Cart WITH (NOLOCK)
                                         INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON Cart.CodCentro = S.CodCentro
                                         WHERE Cart.Mes = (@Mes - 1) AND Cart.Año IN (@Anio, @Anio - 1)
-                                          AND S.CodSubDirGeneral = @CodSdgSinArea
+                                          AND S.CodSubDirGeneral = @codSubDirGeneral
                                         GROUP BY S.CodDelegacion
                                     )
                                     SELECT
@@ -1603,7 +1603,7 @@ public class InformeRepository
         {
             Anio = anio,
             Mes = mes,
-            CodSdgSinArea = codSdgSinArea,
+            CodSubDirGeneral = codSubDirGeneral,
             CodSdgOrdenDel = codSdgOrdenDel
         };
 

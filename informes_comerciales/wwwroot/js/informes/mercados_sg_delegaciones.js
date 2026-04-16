@@ -3,9 +3,10 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase } from '.
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina, mercado, umbral, mostrarTitulo) {
+export async function ejecutar(anio, mes, nroPagina, mercado, codSubDirGeneral = '221', mostrarTitulo) {
     try {
-        const url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+        const subDir = codSubDirGeneral || '221';
+        const url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&codSubDirGeneral=${encodeURIComponent(subDir)}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
