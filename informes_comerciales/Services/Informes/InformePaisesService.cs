@@ -26,7 +26,9 @@ public class InformePaisesService
         {
             Meta = new MetaInformeDto
             {
-                Titulo = "Mercado internacional por países",
+                Titulo = umbral > 0 
+                    ? "Países Relevantes (Mercado Internacional)" 
+                    : "Países (Mercado Internacional)",
                 Descripcion = "Consejo Administración - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral },
                 FechaGeneracion = DateTime.Now,
@@ -102,6 +104,88 @@ public class InformePaisesService
             // Fila 2: total global real (Euros Reales)
             TotalInternacionalActual       = totalGlobalActual,
             TotalInternacionalAnterior     = totalGlobalAnterior,
+            TotalInternacionalDGInfrActual = totalDGInfr,
+        };
+
+        return response;
+    }
+
+    /// <summary>
+    /// Obtiene el informe de Países (Nacional + Internacional) - Todos los países relevantes.
+    /// Usa spContratacion_NacIntTODO con parámetro '' para obtener Nacional + Internacional.
+    /// Título: "Países Relevantes" (sin "Mercado Internacional").
+    /// Umbral fijo: 100000 (relevantes).
+    /// </summary>
+    public async Task<PaisesResponseDto> ObtenerInformeAllAsync(int anio, int mes, int? nroPagina)
+    {
+        // 1. Obtener datos del repositorio (Nacional + Internacional)
+        var datosPlanos = await _repository.ObtenerPaisesAllAsync(anio, mes);
+
+        // 2. Preparar respuesta con título específico para paises_all
+        var response = new PaisesResponseDto
+        {
+            Meta = new MetaInformeDto
+            {
+                Titulo = "Países Relevantes",
+                Descripcion = "Consejo Administración - Informe de Contratación",
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = 100000 },
+                FechaGeneracion = DateTime.Now,
+                Usuario = "Sistema"
+            }
+        };
+
+        if (datosPlanos == null || !datosPlanos.Any())
+            return response;
+
+        // 3. Calcular el "100% Real" (Todas las filas del repo, incluso las que se filtrarán)
+        decimal totalGlobalActual = datosPlanos.Sum(x => x.ImporteContratadoAcumulado);
+        decimal totalGlobalAnterior = datosPlanos.Sum(x => x.ImporteContratadoAcumuladoAñoAnterior);
+        decimal totalDGInfr = datosPlanos.Where(x => x.Ajuste == 0).Sum(x => x.ImporteContratadoAcumulado);
+
+        // 4. Mapear Detalle y filtrar por umbral = 100000 (Relevantes)
+        int umbral = 100000;
+        int posRelativa = 1;
+        foreach (var p in datosPlanos.OrderByDescending(x => x.ImporteContratadoAcumulado))
+        {
+            if (p.Pais == "OTROS") continue;
+
+            bool cumpleUmbral = p.ImporteContratadoAcumulado >= umbral;
+
+            if (cumpleUmbral)
+            {
+                var detalle = new PaisDetalleDto
+                {
+                    Pais = p.Pais,
+                    EsNuevo = p.SinContratacionAñoAnterior == "*",
+                    ImporteActual = p.ImporteContratadoAcumulado,
+                    PosicionActual = posRelativa++,
+                    PorcentajeSobreInternacionalActual = totalGlobalActual > 0
+                        ? (decimal)Math.Round((double)((p.ImporteContratadoAcumulado / totalGlobalActual) * 100), 0, MidpointRounding.AwayFromZero)
+                        : 0,
+                    ImporteAnterior = p.ImporteContratadoAcumuladoAñoAnterior,
+                    PosicionAnterior = p.OrdenAñoAnterior,
+                    PorcentajeSobreInternacionalAnterior = totalGlobalAnterior > 0
+                        ? (decimal)Math.Round((double)((p.ImporteContratadoAcumuladoAñoAnterior / totalGlobalAnterior) * 100), 0, MidpointRounding.AwayFromZero)
+                        : 0
+                };
+                response.Paises.Add(detalle);
+            }
+        }
+
+        // 5. Calcular subtotales de la Fila 1
+        decimal subtotalImporteActual = response.Paises.Sum(x => x.ImporteActual);
+        decimal subtotalImporteAnterior = response.Paises.Sum(x => x.ImporteAnterior);
+        decimal subtotalPorcentajeActual = response.Paises.Sum(x => x.PorcentajeSobreInternacionalActual);
+        decimal subtotalPorcentajeAnterior = response.Paises.Sum(x => x.PorcentajeSobreInternacionalAnterior);
+
+        response.Totales = new TotalesPaisesDto
+        {
+            SubtotalImporteActual = subtotalImporteActual,
+            SubtotalImporteAnterior = subtotalImporteAnterior,
+            SubtotalPorcentajeActual = subtotalPorcentajeActual,
+            SubtotalPorcentajeAnterior = subtotalPorcentajeAnterior,
+            TotalInternacionalActual = totalGlobalActual,
+            TotalInternacionalAnterior = totalGlobalAnterior,
             TotalInternacionalDGInfrActual = totalDGInfr,
         };
 

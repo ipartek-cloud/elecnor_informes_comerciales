@@ -99,7 +99,7 @@
                                     data-umbral="100000"
                                     data-input-pag="inputPaginaPaisesRelevantes"
                                     aria-label="Ver informe Paises Relevantes">
-                                Paises Relevantes
+                                Paises Relevantes (Mercado Internacional)
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaisesRelevantes"
@@ -112,7 +112,7 @@
                                     data-umbral="0"
                                     data-input-pag="inputPaginaPaises"
                                     aria-label="Ver informe Paises">
-                                Paises
+                                Paises (Mercado Internacional)
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaises"
@@ -319,6 +319,18 @@
                                     data-mostrar-titulo="false"
                                     aria-label="Ver informe Contrataciones Significativas Internacional">
                                 Contrataciones Significativas Internacional
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PAÍSES RELEVANTES (NACIONAL + INTERNACIONAL) -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <div class="input-group rpt-input-group-index">
+                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'paises_all')"
+                                    data-mostrar-titulo="false"
+                                    aria-label="Ver informe Países Relevantes">
+                                Países Relevantes
                             </button>
                         </div>
                     </div>

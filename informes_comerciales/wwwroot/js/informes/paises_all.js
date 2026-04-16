@@ -1,11 +1,11 @@
 /**
- * Módulo para el informe de Países (Mercado Internacional).
+ * Módulo para el informe de Países (Nacional + Internacional) - Todos los países relevantes.
  * Basado en el diseño simétrico de dos columnas comparativas.
- * Soporta dos modos de filtrado:
- * - umbral = 0: Muestra todos los países con importe > 0
- * - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes)
+ * Usa spContratacion_NacIntTODO con parámetro '' para obtener Nacional + Internacional.
+ * Título: "Países Relevantes" (sin "Mercado Internacional").
+ * Umbral fijo: 100000 (relevantes).
  */
-import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -14,12 +14,10 @@ const estado = crearEstadoInforme();
  * Punto de entrada llamado por el gestor de informes.
  * @param {object} params - Objeto de parámetros
  */
-export async function ejecutar({ anio, mes, nroPagina, umbral = 0, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
-        // Convertir umbral a número (viene como string desde data-umbral en HTML)
-        const umbralNum = umbral !== undefined && umbral !== null ? Number(umbral) : 0;
-        
-        let url = `/api/Paises?anio=${anio}&mes=${mes}&umbral=${umbralNum}`;
+        // URL para el endpoint de países todos (Nacional + Internacional)
+        let url = `/api/Paises/paises_all?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`;
 
@@ -33,15 +31,15 @@ export async function ejecutar({ anio, mes, nroPagina, umbral = 0, mostrarTitulo
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
-            claveAgrupacion: 'NONE' // Informe de página única
+            claveAgrupacion: 'NONE'
         });
     } catch (error) {
-        console.error("Error al ejecutar informe Paises:", error);
+        console.error("Error al ejecutar informe PaisesAll:", error);
     }
 }
 
 /**
- * Renderizado de la vista de Países.
+ * Renderizado de la vista de Países All.
  */
 function _renderizarPagina() {
     const container = document.getElementById(RPT_CLASSES.MODAL_CONTENT);
@@ -65,7 +63,7 @@ function _getHtmlEncabezado() {
     return getHtmlEncabezadoBase({
         tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo de Administración</span> <span class="ms-3 fs-6">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
-        textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Mercado internacional por países',
+        textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Países Relevantes',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina || 3,
@@ -89,6 +87,7 @@ async function _imprimirInforme() {
 
 /**
  * Renderiza la tabla principal con el layout simétrico.
+ * Nota: El CSS reutiliza el de paises.js (data-informe="paises").
  */
 function _renderTablaPaises() {
     const data = estado.informeGlobalData;
@@ -115,13 +114,13 @@ function _renderTablaPaises() {
                     <th colspan="3">${anioActual}</th>
                 </tr>
                 <tr class="rpt-th-blue-segmented">
-                    <th class="text-center rpt-paises-th-border">% S/Internac</th>
+                    <th class="text-center rpt-paises-th-border">% S/Total</th>
                     <th class="text-end pe-3 rpt-paises-th-border">Contr.</th>
                     <th class="text-center rpt-paises-th-border">Pos.</th>
                     <th class="rpt-paises-pais-cell rpt-paises-th-border-pais">País</th>
                     <th class="text-center rpt-paises-th-border">Pos.</th>
                     <th class="text-end pe-3 rpt-paises-th-border">Contr.</th>
-                    <th class="text-center rpt-paises-th-border">% S/Internac</th>
+                    <th class="text-center rpt-paises-th-border">% S/Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,13 +129,13 @@ function _renderTablaPaises() {
     data.paises.forEach(p => {
         const porcAnterior = p.porcentajeSobreInternacionalAnterior != null ? p.porcentajeSobreInternacionalAnterior.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
         const porcActual = p.porcentajeSobreInternacionalActual != null ? p.porcentajeSobreInternacionalActual.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
-        
+
         html += `
             <tr class="rpt-detail-row">
                 <td class="text-center">${porcAnterior}%</td>
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
                 <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
-                
+
                 <td class="rpt-paises-pais-cell">
                     <div class="d-flex align-items-center justify-content-start ps-2">
                         <span style="width: 25px; display: inline-block; flex-shrink: 0;">
@@ -145,7 +144,7 @@ function _renderTablaPaises() {
                         <span>${p.pais}</span>
                     </div>
                 </td>
-                
+
                 <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeActual / 1000, 0)}</td>
                 <td class="text-center">${porcActual}%</td>
@@ -173,12 +172,12 @@ function _renderTablaPaises() {
                     <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
                     <td class="text-center rpt-paises-total-line">${subtotalPorcActual}%</td>
                 </tr>
-                <!-- Fila 2: Total Internacional Global -->
+                <!-- Fila 2: Total Global -->
                 <tr class="rpt-paises-total-global">
                     <td></td>
                     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
                     <td></td>
-                    <td>Total Internacional</td>
+                    <td>Total</td>
                     <td></td>
                     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
                     <td></td>
@@ -186,7 +185,6 @@ function _renderTablaPaises() {
             </tfoot>
         </table>
     `;
-
 
     return html;
 }

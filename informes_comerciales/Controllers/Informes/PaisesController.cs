@@ -20,8 +20,8 @@ public class PaisesController : ControllerBase
     /// <summary>
     /// Punto de entrada para el informe de Países (Mercado Internacional).
     /// Soporta dos modos de filtrado:
-    /// - umbral = 0 (por defecto): Muestra todos los países con importe > 0
-    /// - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes)
+    /// - umbral = 0 (por defecto): Muestra todos los países con importe > 0 -> "Países (Mercado Internacional)"
+    /// - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes) -> "Países Relevantes (Mercado Internacional)"
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Get(int anio, int mes, int? nroPagina, int umbral = 0)
@@ -34,6 +34,27 @@ public class PaisesController : ControllerBase
 
         // Ejecución de servicio
         var resultado = await _service.ObtenerInformeAsync(anio, mes, nroPagina, umbral);
+
+        return Ok(resultado);
+    }
+
+    /// <summary>
+    /// Punto de entrada para el informe de Países (Nacional + Internacional) - Todos los países.
+    /// Usa spContratacion_NacIntTODO con parámetro '' para obtener Nacional + Internacional.
+    /// Título: "Países Relevantes" (SIN "Mercado Internacional").
+    /// Umbral fijo: 100000 (relevantes).
+    /// </summary>
+    [HttpGet("paises_all")]
+    public async Task<IActionResult> GetPaisesAll(int anio, int mes, int? nroPagina)
+    {
+        // Validaciones básicas
+        if (anio > DateTime.Now.Year + 1)
+            return BadRequest("El año de consulta es excesivamente alto.");
+        if (mes < 1 || mes > 12)
+            return BadRequest("El mes debe estar entre 1 y 12.");
+
+        // Ejecución de servicio
+        var resultado = await _service.ObtenerInformeAllAsync(anio, mes, nroPagina);
 
         return Ok(resultado);
     }

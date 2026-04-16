@@ -402,6 +402,86 @@ public class InformeRepository
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Países ALL (Nacional + Internacional)
+    // └─ Método: ObtenerPaisesAllAsync()
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Obtiene los datos para el informe de Países (Nacional + Internacional).
+    /// </summary>
+    public async Task<List<PaisesPoco>> ObtenerPaisesAllAsync(int anio, int mes)
+    {
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        // 1. Ejecutar SP directamente (devuelve resultset directamente)
+        var parametrosSp = new { pAño = anio, pMes = mes, pNacInt = "" };
+        var datosActuales = (await _connection.QueryAsync<PaisesPoco>(
+            "spContratacion_NacIntTODO",
+            parametrosSp,
+            commandTimeout: 60,
+            commandType: CommandType.StoredProcedure
+        )).ToList();
+
+        // 2. Cargar todos los datos históricos del año anterior en UNA query
+        var datosHistorico = (await _connection.QueryAsync<dynamic>(
+            @"SELECT ISNULL(p.NMPRO, 'OTROS') AS Pais,
+                    ISNULL(h.Importe, 0) AS ImporteAnterior,
+                    ISNULL(h.Orden, 0) AS Orden
+              FROM HistoricoContratacionSQL h WITH (NOLOCK)
+              LEFT JOIN ProvinciasInternacional p WITH (NOLOCK) ON h.CodProv = p.CDPRO
+              WHERE h.Año = @AnioAnterior",
+            new { AnioAnterior = anio - 1 }
+        )).ToList();
+
+        // Crear diccionario de histórico para búsqueda O(1)
+        var dictHistorico = datosHistorico.ToDictionary(
+            d => (string)d.Pais,
+            d => new { ImporteAnterior = (decimal)d.ImporteAnterior, Orden = (int)d.Orden }
+        );
+
+        // 3. Combinar datos actuales con histórico en memoria
+        var resultado = datosActuales.Select(d =>
+        {
+            dictHistorico.TryGetValue(d.Pais, out var historico);
+            decimal impAnterior = historico?.ImporteAnterior ?? 0;
+            int ordenAnterior = historico?.Orden ?? 0;
+
+            return new PaisesPoco
+            {
+                Año = anio,
+                Pais = d.Pais,
+                ImporteContratadoAcumulado = d.ImporteContratadoAcumulado,
+                ImporteContratadoAcumuladoAñoAnterior = impAnterior,
+                Ajuste = d.Ajuste,
+                SinContratacionAñoAnterior = impAnterior == 0 ? "*" : "",
+                OrdenAñoAnterior = ordenAnterior
+            };
+        }).ToList();
+
+        // 4. Añadir países del histórico que NO tienen datos actuales (tienen 0 en actual)
+        var paisesActuales = datosActuales.Select(d => d.Pais).ToHashSet();
+        var paisesSinActual = dictHistorico.Keys.Where(p => !paisesActuales.Contains(p));
+
+        foreach (var pais in paisesSinActual)
+        {
+            var h = dictHistorico[pais];
+            resultado.Add(new PaisesPoco
+            {
+                Año = anio,
+                Pais = pais,
+                ImporteContratadoAcumulado = 0,
+                ImporteContratadoAcumuladoAñoAnterior = h.ImporteAnterior,
+                Ajuste = 0,
+                SinContratacionAñoAnterior = "*",
+                OrdenAñoAnterior = h.Orden
+            });
+        }
+
+        return resultado.OrderByDescending(x => x.ImporteContratadoAcumulado).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // INFORME: Actividades
     // └─ Método: ObtenerActividadesAsync()
     // ═══════════════════════════════════════════════════════════════════════════
