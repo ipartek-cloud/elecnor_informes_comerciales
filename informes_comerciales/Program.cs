@@ -60,7 +60,6 @@ Console.WriteLine("[AUTH] Servicios de autenticación registrados.");
 
 // Informes
 builder.Services.AddScoped<InformeRepository>();
-builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
 builder.Services.AddScoped<InformeCarteraDiferidaConsejoService>();
 builder.Services.AddScoped<InformeMercadosService>();
 builder.Services.AddScoped<InformeMercadosDGService>();
