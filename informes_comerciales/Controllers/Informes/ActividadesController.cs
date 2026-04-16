@@ -26,8 +26,6 @@ public class ActividadesController : ControllerBase
         {
             if (anio > DateTime.Now.Year)
                 return BadRequest("El año de consulta no puede ser superior al año actual.");
-
-            _logger.LogInformation("Solicitando informe Actividades para el periodo {Mes}/{Anio}", mes, anio);
             
             var result = await _service.ObtenerInformeAsync(anio, mes);
             

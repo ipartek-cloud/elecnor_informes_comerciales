@@ -3,9 +3,9 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase } from '.
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina, mercado, codSubDirGeneral = '221', mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostrarTitulo }) {
     try {
-        const subDir = codSubDirGeneral || '221';
+        const subDir = codSubDir || '221';
         const url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&codSubDirGeneral=${encodeURIComponent(subDir)}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
@@ -62,7 +62,6 @@ function _getHtmlEncabezado(sdg) {
         </div>
     `;
 }
-
 function _renderSDG(sdg) {
     if (!sdg || !sdg.direccionesNegocio) return '';
     return sdg.direccionesNegocio.map(dn => _renderDN(dn, sdg)).join('');

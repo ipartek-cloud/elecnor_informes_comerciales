@@ -8,7 +8,10 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimir
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+/**
+ * Punto de entrada llamado por el gestor de informes.
+ */
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         const url = `/api/ActividadesObjetivos?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;

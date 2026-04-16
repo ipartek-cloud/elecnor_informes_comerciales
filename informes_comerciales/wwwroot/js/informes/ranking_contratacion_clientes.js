@@ -17,7 +17,7 @@ const estado = crearEstadoInforme();
  * @param {number|null} umbral - Umbral de filtrado (no usado en este informe, por compatibilidad)
  * @param {boolean} mostrarTitulo - Flag de visibilidad del título
  */
-export async function ejecutar(anio, mes, nroPagina, mercado, umbral = null, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo }) {
     try {
         const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;

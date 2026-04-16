@@ -454,7 +454,7 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 120);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<ActividadPoco>(sqlSelect, parametros, transaction: transaction)).ToList();

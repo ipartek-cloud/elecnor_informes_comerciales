@@ -8,7 +8,10 @@ import { ApiClient, GlobalUI } from '../site.js';
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina, mercado, umbral, mostrarTitulo) {
+/**
+ * Punto de entrada principal para la ejecución del informe.
+ */
+export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo }) {
     try {
         // 1. Verificar si el checkbox está activado
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesObras');

@@ -18,7 +18,7 @@ import { ApiClient, GlobalUI } from '../site.js';
 const estado = crearEstadoInforme();
 
 // --- Ejecución ---
-export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSubDirGeneral = '221', mostrarTitulo = true) {
+export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true }) {
     try {
         // 1. Verificar si el checkbox de generación está activado
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
@@ -50,7 +50,7 @@ export async function ejecutar(anio, mes, nroPagina, mercado = 'Nacional', codSu
             GlobalUI.hideLoading();
         }
 
-        const subDir = codSubDirGeneral || '221';
+        const subDir = codSubDir || '221';
 
         // LLamada al controlador que se implementará posteriormente en otra fase
         const url = `/api/ContratacionesSignificativasRi`

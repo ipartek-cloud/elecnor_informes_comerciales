@@ -31,7 +31,7 @@ const MARGENES_GERENCIA = {
 /**
  * Punto de entrada principal.
  */
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         const url = `/api/Gerencias?anio=${anio}&mes=${mes}&_=${Date.now()}`;
 

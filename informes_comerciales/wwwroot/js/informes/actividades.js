@@ -14,7 +14,7 @@ const estado = crearEstadoInforme();
 /**
  * Punto de entrada llamado por el gestor de informes.
  */
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         const url = `/api/Actividades?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;

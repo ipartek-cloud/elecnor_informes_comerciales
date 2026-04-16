@@ -7,7 +7,7 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimir
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         let url = `/api/Mercados?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;

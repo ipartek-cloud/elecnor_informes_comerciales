@@ -12,13 +12,9 @@ const estado = crearEstadoInforme();
 
 /**
  * Punto de entrada llamado por el gestor de informes.
- * @param {number} anio - Año del informe
- * @param {number} mes - Mes del informe
- * @param {number|null} nroPagina - Número de página opcional
- * @param {string|null} mercado - Mercado (no usado en este informe, por compatibilidad con otros informes)
- * @param {string|number} umbral - Umbral de filtrado (0 = todos, 100000 = relevantes)
+ * @param {object} params - Objeto de parámetros
  */
-export async function ejecutar(anio, mes, nroPagina, mercado, umbral = 0, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, umbral = 0, mostrarTitulo }) {
     try {
         // Convertir umbral a número (viene como string desde data-umbral en HTML)
         const umbralNum = umbral !== undefined && umbral !== null ? Number(umbral) : 0;
@@ -157,8 +153,7 @@ function _renderTablaPaises() {
         `;
     });
 
-    // FILA 1 de totales: Subtotal de los países visibles en pantalla (con línea separadora)
-    // FILA 2 de totales: Total Internacional global — sin línea, espaciado superior, "Miles de Euros" inline
+    // FILA 1 de totales: Subtotal de los países visibles en pantalla
     const subtotalPorcAnterior = data.totales.subtotalPorcentajeAnterior != null
         ? data.totales.subtotalPorcentajeAnterior.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
         : '0';
@@ -169,24 +164,23 @@ function _renderTablaPaises() {
     html += `
             </tbody>
             <tfoot class="rpt-paises-total-row">
-                <!-- Fila 1: Subtotal de países visibles — línea en datos y país, no en posiciones -->
                 <tr>
                     <td class="text-center rpt-paises-total-line">${subtotalPorcAnterior}%</td>
                     <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
                     <td></td>
                     <td class="rpt-paises-total-line"></td>
                     <td></td>
-                    <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual, 0)}</td>
+                    <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
                     <td class="text-center rpt-paises-total-line">${subtotalPorcActual}%</td>
                 </tr>
-                <!-- Fila 2: Total Internacional Global (ya viene /1000 desde BD) -->
+                <!-- Fila 2: Total Internacional Global -->
                 <tr class="rpt-paises-total-global">
                     <td></td>
                     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
                     <td></td>
                     <td>Total Internacional</td>
                     <td></td>
-                    <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual, 0)}</td>
+                    <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
                     <td></td>
                 </tr>
             </tfoot>

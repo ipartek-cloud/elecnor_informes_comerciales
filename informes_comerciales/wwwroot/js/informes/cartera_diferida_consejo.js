@@ -21,7 +21,7 @@ const estado = crearEstadoInforme();
  * Inicializa o actualiza el informe para el año/mes indicados.
  * Usa inicializarInforme() de informes_utils.js para máxima reutilización.
  */
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         let url = `/api/CarteraDiferidaConsejo?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;

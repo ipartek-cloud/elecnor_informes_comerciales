@@ -10,7 +10,7 @@ const estado = crearEstadoInforme();
 /**
  * Punto de entrada principal para la ejecución del informe.
  */
-export async function ejecutar(anio, mes, nroPagina, mostrarTitulo) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         const url = `/api/MercadosDG?anio=${anio}&mes=${mes}&_=${Date.now()}`;
 

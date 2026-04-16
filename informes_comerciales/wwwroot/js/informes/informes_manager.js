@@ -51,21 +51,27 @@ window.cargarInforme = async function (btn, nombreInforme) {
             document.head.appendChild(link);
         }
 
-        // 2. Cargar módulo solo si no está ya en el registro
-        if (!_registroModulos[nombreInforme]) {
-            // Primera carga: incluir versión de build para cache-busting inicial
-            const path = `./${nombreInforme}.js?v=${Date.now()}`;
-            _registroModulos[nombreInforme] = await import(path);
-        }
+        // 2. Cargar módulo (Forzar siempre carga fresca para asegurar que los cambios de escala se aplican)
+        const path = `./${nombreInforme}.js?v=${Date.now()}`;
+        _registroModulos[nombreInforme] = await import(path);
 
         const modulo = _registroModulos[nombreInforme];
 
         if (modulo && modulo.ejecutar) {
             const _codSubDir = document.getElementById('cmbSubDireccionGeneral')?.value || null;
             
-            let parametroUmbral = _codSubDir;
+            // Construir objeto de parámetros (Context Object) para evitar colisiones posicionales
+            const parametros = {
+                anio: anio,
+                mes: mes,
+                nroPagina: nroPagina,
+                mercado: mercado,
+                umbral: btn?.dataset?.umbral || null,
+                codSubDir: _codSubDir,
+                mostrarTitulo: mostrarTitulo
+            };
 
-            await modulo.ejecutar(anio, mes, nroPagina, mercado, parametroUmbral, mostrarTitulo);
+            await modulo.ejecutar(parametros);
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');

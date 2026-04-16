@@ -64,7 +64,8 @@ public class InformePaisesService
                     Pais = p.Pais,
                     EsNuevo = p.SinContratacionAñoAnterior == "*",
 
-                    ImporteActual = Math.Round(p.ImporteContratadoAcumulado / 1000, 0, MidpointRounding.AwayFromZero),
+                    // Mantenemos EUROS REALES según mandato GEMINI.md
+                    ImporteActual = p.ImporteContratadoAcumulado,
                     PosicionActual = posRelativa++,
 
                     // Porcentaje relativo al Total Global (no a la suma de lo visible)
@@ -72,7 +73,7 @@ public class InformePaisesService
                         ? (decimal)Math.Round((double)((p.ImporteContratadoAcumulado / totalGlobalActual) * 100), 0, MidpointRounding.AwayFromZero)
                         : 0,
 
-                    ImporteAnterior = Math.Round(p.ImporteContratadoAcumuladoAñoAnterior, 0, MidpointRounding.AwayFromZero),
+                    ImporteAnterior = p.ImporteContratadoAcumuladoAñoAnterior,
                     PosicionAnterior = p.OrdenAñoAnterior,
 
                     PorcentajeSobreInternacionalAnterior = totalGlobalAnterior > 0
@@ -86,24 +87,22 @@ public class InformePaisesService
         // 5. Calcular subtotales de la Fila 1 (solo países filtrados y mostrados en detalle)
         decimal subtotalImporteActual   = response.Paises.Sum(x => x.ImporteActual);
         decimal subtotalImporteAnterior = response.Paises.Sum(x => x.ImporteAnterior);
-        // Los porcentajes de la Fila 1 son la suma de los porcentajes individuales de las filas visibles.
-        // Cada porcentaje individual ya está calculado respecto al total global, por lo que la suma
-        // refleja el peso real del subconjunto mostrado sobre el total del mercado internacional.
+        
         decimal subtotalPorcentajeActual   = response.Paises.Sum(x => x.PorcentajeSobreInternacionalActual);
         decimal subtotalPorcentajeAnterior = response.Paises.Sum(x => x.PorcentajeSobreInternacionalAnterior);
 
         response.Totales = new TotalesPaisesDto
         {
-            // Fila 1: suma de lo visible en pantalla
-            SubtotalImporteActual      = Math.Round(subtotalImporteActual,   0, MidpointRounding.AwayFromZero),
-            SubtotalImporteAnterior    = Math.Round(subtotalImporteAnterior, 0, MidpointRounding.AwayFromZero),
-            SubtotalPorcentajeActual   = Math.Round(subtotalPorcentajeActual,   0, MidpointRounding.AwayFromZero),
-            SubtotalPorcentajeAnterior = Math.Round(subtotalPorcentajeAnterior, 0, MidpointRounding.AwayFromZero),
+            // Fila 1: suma de lo visible en pantalla (Euros Reales)
+            SubtotalImporteActual      = subtotalImporteActual,
+            SubtotalImporteAnterior    = subtotalImporteAnterior,
+            SubtotalPorcentajeActual   = subtotalPorcentajeActual,
+            SubtotalPorcentajeAnterior = subtotalPorcentajeAnterior,
 
-            // Fila 2: total global real (escalado a miles para visualización)
-            TotalInternacionalActual       = Math.Round(totalGlobalActual / 1000,   0, MidpointRounding.AwayFromZero),
-            TotalInternacionalAnterior     = Math.Round(totalGlobalAnterior, 0, MidpointRounding.AwayFromZero),
-            TotalInternacionalDGInfrActual = Math.Round(totalDGInfr / 1000,         0, MidpointRounding.AwayFromZero),
+            // Fila 2: total global real (Euros Reales)
+            TotalInternacionalActual       = totalGlobalActual,
+            TotalInternacionalAnterior     = totalGlobalAnterior,
+            TotalInternacionalDGInfrActual = totalDGInfr,
         };
 
         return response;
