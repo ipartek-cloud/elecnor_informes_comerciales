@@ -3,7 +3,6 @@
  * Módulo compartido para funciones de formateo, clasificación y UI.
  * 
  * Este archivo contiene:
- * - Constante de versión para cache-busting (APP_VERSION)
  * - Constantes de clases CSS (RPT_CLASSES)
  * - Arrays de meses (MESES_COMPLETOS, MESES_CORTOS)
  * - Helpers de fecha (getNombreMes, getMesCorto, getMesAnterior)
@@ -11,10 +10,7 @@
  * - Funciones de formateo (formatCurrency, getIpClass, getVarClass)
  */
 
-// =============================================================================
-// CONSTANTE DE VERSIÓN COMPARTIDA (para cache-busting)
-// =============================================================================
-export const APP_VERSION = '1.0.2';
+
 
 // =============================================================================
 // CONSTANTES DE CLASES CSS COMPARTIDAS

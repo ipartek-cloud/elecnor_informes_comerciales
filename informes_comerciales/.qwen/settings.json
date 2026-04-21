@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\informes_comerciales\\../**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales/**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\Documentacion/**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\.agent\\skills\\scaffold-nuevo-informe/**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\Documentacion\\Informes/**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\BD\\RP_SIC\\dbo\\Stored Procedures/**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\BD\\RP_SIC\\dbo\\Tables/**)",
+      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\BD\\RP_SIC\\dbo\\Functions/**)",
+      "Bash(mkdir *)",
+      "Bash(dotnet *)",
+      "Bash(findstr *)",
+      "Bash(taskkill *)",
+      "Bash(timeout *)",
+      "Bash(sqlcmd *)"
+    ]
+  },
+  "$version": 3
+}

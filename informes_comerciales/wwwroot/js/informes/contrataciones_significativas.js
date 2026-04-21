@@ -8,7 +8,7 @@ import {
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme,
-    getHtmlEncabezadoBase, imprimirInformeUnificado
+    getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars
 } from './informes_unificados_utils.js';
 import { ApiClient, GlobalUI } from '../site.js';
 
@@ -65,7 +65,8 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umb
             renderizarPagina:         _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion:        'Página',
-            claveAgrupacion:          'datos'
+            claveAgrupacion:          'datos',
+            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
         });
 
     } catch (error) {
@@ -85,7 +86,7 @@ async function _renderizarPagina(index = 0) {
     const cuerpoInformeHtml = await _renderCuerpoInforme(direccion);
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas" role="main" data-pagina-index="${index}">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas" role="main" data-pagina-index="${index}" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${cuerpoInformeHtml}
@@ -230,6 +231,7 @@ async function _imprimirInforme() {
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido:   (direccion) => _renderTablaDireccion(direccion),
-        modoAgrupacion:    'datos' 
+        modoAgrupacion:    'datos',
+        margenes: estado.margenes
     });
 }

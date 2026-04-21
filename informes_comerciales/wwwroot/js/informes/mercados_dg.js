@@ -3,7 +3,7 @@
  * Estructura de página única sin paginación lógica.
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, getIpClass, getVarClass, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -25,7 +25,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE', // Visualización unificada
-            margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
+            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
         });
     } catch (error) {
         throw error;
@@ -40,7 +40,7 @@ function _renderizarPagina(index) {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_dg" data-pagina-index="0" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_dg" data-pagina-index="0" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${_renderContructorCompleto()}
@@ -81,7 +81,7 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContructorCompleto(true),
         modoAgrupacion: 'NONE',
-        margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
+        margenes: estado.margenes
     });
 }
 

@@ -6,7 +6,7 @@
 .rpt-paper[data-informe="gerencias"] {
     container-type: inline-size;
     container-name: rpt-paper;
-    padding: 1.5rem !important;
+    padding: var(--rpt-padding-web, 1.5rem) !important;
     max-width: 1200px !important;
     margin: 20px auto !important;
 }
@@ -20,12 +20,12 @@
 }
 
 @media print {
-    .rpt-paper[data-informe="gerencias"] {
-        padding: 6.4mm !important;
-        margin: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
-    }
+  .rpt-paper[data-informe="gerencias"] {
+    padding: 16mm !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
 }
 
 /* Base de tabla */

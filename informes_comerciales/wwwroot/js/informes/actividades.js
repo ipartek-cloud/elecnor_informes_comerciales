@@ -4,7 +4,7 @@
  */
 
 import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, getNombreMes, getVarClass } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
 
 // ============================================================
 // ESTADO DEL MÓDULO
@@ -27,7 +27,8 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
-            claveAgrupacion: 'NONE' // Informe de página única con múltiples bloques
+            claveAgrupacion: 'NONE', // Informe de página única con múltiples bloques
+            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
         });
     } catch (error) {
         console.error("Error al ejecutar informe Actividades:", error);
@@ -42,7 +43,7 @@ function _renderizarPagina() {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="actividades" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="actividades" role="main" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${_renderCuerpoInforme()}
@@ -187,6 +188,7 @@ async function _imprimirInforme() {
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: _renderCuerpoInforme,
-        modoAgrupacion: 'NONE'
+        modoAgrupacion: 'NONE',
+        margenes: estado.margenes
     });
 }

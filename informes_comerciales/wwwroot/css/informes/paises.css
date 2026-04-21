@@ -121,7 +121,7 @@ tbody .rpt-paises-pais-cell {
     top: 2px;
 }
 
-/* Impresión - Paridad con Access (Margen 6.4mm) */
+/* Impresión - Paridad con Access (Margen 16mm) */
 @media print {
     .rpt-paper[data-informe="paises"],
     .rpt-paper--print {

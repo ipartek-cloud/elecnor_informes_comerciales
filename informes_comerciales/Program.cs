@@ -1,5 +1,6 @@
 using System.Text;
 using System.Data;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
@@ -36,10 +37,10 @@ builder.Host.UseSerilog((context, configuration) => configuration
     .MinimumLevel.Override("Microsoft.AspNetCore.DataProtection", Serilog.Events.LogEventLevel.Error)
     .MinimumLevel.Override("Microsoft.AspNetCore.ResponseCaching", Serilog.Events.LogEventLevel.Error)
     .MinimumLevel.Override("System.Net.Http", Serilog.Events.LogEventLevel.Warning)
-    .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Usuario}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .WriteTo.File(logPath, 
         rollingInterval: RollingInterval.Day, 
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"));
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Usuario}] [{Level:u3}] {Message:lj}{NewLine}{Exception}"));
 
 // 2. Agregar soporte para Controladores con Vistas (MVC) e Inyectar Caching
 builder.Services.AddControllersWithViews();
@@ -98,7 +99,9 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!)),
+        NameClaimType = ClaimTypes.Name,
+        RoleClaimType = ClaimTypes.Role
     };
 
     // Personalizar respuesta cuando falla la autenticación (401)
@@ -199,6 +202,11 @@ app.UseSerilogRequestLogging(options =>
     {
         var qs = httpContext.Request.QueryString.Value;
         diagnosticContext.Set("RequestQuery", string.IsNullOrEmpty(qs) ? "" : $" {qs}");
+        
+        // Usuario desde token JWT
+        var usuario = httpContext.User?.Identity?.Name ?? "ANONIMO";
+        diagnosticContext.Set("Usuario", usuario);
+
         if (httpContext.Request.Method == "POST" || httpContext.Request.Method == "PUT" || httpContext.Request.Method == "PATCH")
         {
             if (httpContext.Request.ContentLength > 0 && httpContext.Request.ContentLength <= 4096)

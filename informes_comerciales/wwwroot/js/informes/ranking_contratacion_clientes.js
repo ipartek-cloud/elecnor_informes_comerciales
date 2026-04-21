@@ -3,7 +3,7 @@
  */
 
 import { RPT_CLASSES, formatCurrency, formatPercentage, escapeHtml, getNombreMes } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 const estado = crearEstadoInforme();
@@ -29,7 +29,8 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo })
             estado,
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
-            claveAgrupacion: 'NONE'
+            claveAgrupacion: 'NONE',
+            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
         });
 
     } catch (error) {
@@ -48,7 +49,7 @@ async function _renderizarPagina() {
     const cuerpoHtml = _renderCuerpoInforme();
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="ranking_clientes" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="ranking_clientes" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${cuerpoHtml}
@@ -195,7 +196,8 @@ async function _imprimirInforme() {
             informeGlobalData: estado.informeGlobalData,
             getHtmlEncabezado: _getHtmlEncabezado,
             renderContenido: () => contenidoHtml,
-            modoAgrupacion: 'NONE'
+            modoAgrupacion: 'NONE',
+            margenes: estado.margenes
         });
     } catch (error) {
         console.error("Error al intentar imprimir el informe Ranking Clientes:", error);

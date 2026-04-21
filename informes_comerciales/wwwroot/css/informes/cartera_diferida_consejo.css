@@ -15,12 +15,28 @@
     color: #00468B !important;
     font-weight: bold;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 8pt;
     margin-bottom: 5px;
 }
 
 .rpt-text-grey {
-    color: #888 !important;
+  color: #888 !important;
+}
+
+/* =============================================================================
+LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
+============================================================================= */
+
+/* "Informe de Contratación" - Tamaño 9pt */
+.rpt-cmai-subtitulo {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #00468B;
+}
+
+/* Contenedor del título corporativo - margen superior para bajar los literales */
+.rpt-cmai-titulo-container {
+  margin-top: 8px;
 }
 
 /* =============================================================================
@@ -138,7 +154,7 @@
 
 .rpt-table-triple th, .rpt-table-triple td {
     padding: 0px 4px;
-    font-size: 0.85rem;
+    font-size: 8pt;
     vertical-align: bottom;
     height: 19px;
     line-height: normal;
@@ -193,73 +209,64 @@
 
 
 /* =============================================================================
-   FOOTER ESPECÍFICO CARTERA DIFERIDA
-   ============================================================================= */
-.rpt-cma-footer-container {
-    margin-top: 2.5rem; /* Margen normal en pantalla */
+FOOTER ESPECÍFICO CARTERA DIFERIDA
+============================================================================= */
+.rpt-cma-footer-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .rpt-cma-footer-note {
-    margin-left: 110px; /* Aligned roughly under "Nuevos *" column */
-    color: #000 !important;
-    font-weight: normal;
+  font-size: 8pt;
+  color: #000;
+  padding-left: 110px;
+  white-space: nowrap;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 .rpt-cma-footer-total {
-    margin-right: 145px; /* Aligned roughly under "2025" column */
+  text-align: right;
+  padding-right: 145px;
+  white-space: nowrap;
+  font-size: 8pt;
+  color: #00468B;
+  font-weight: bold;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.rpt-cma-total-valor {
+  margin-left: 4px;
 }
 
 /* =============================================================================
    MÁRGENES ESPECÍFICOS PARA EVITAR CONFLICTOS CON BOOTSTRAP (PANTALLA)
    ============================================================================= */
 .rpt-cmai-mt-medium {
-    margin-top: 2.5rem !important; /* Recuperar el hueco asignado en origen */
+  margin-top: 2.0rem !important; /* Consistente con PDF */
 }
 .rpt-cmai-mt-huge {
-    margin-top: 2.5rem !important; /* Recuperar el hueco asignado en origen */
+  margin-top: 3.0rem !important; /* Mayor que medium, consistente web/PDF */
 }
+
 /* =============================================================================
-   IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
+IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
    Las reglas generales de impresión están en informes_base.css
    Aquí solo definimos overrides específicos para este informe
    ============================================================================= */
 @media print {
     /* -------------------------------------------------------------------------
-     * BLOQUE PRINCIPAL: proporciones fluidas para A4
-     * Overrides específicos de CMAI sobre la base de informes_base.css
-     * ------------------------------------------------------------------------- */
-    .rpt-block-mensual  { width: 18% !important; min-width: 0 !important; }
-    .rpt-block-acumulado { width: 51% !important; min-width: 0 !important; }
-
-    /* -------------------------------------------------------------------------
-     * SUBINFORMES CMAI: preservar proporción relativa (78% del ancho usable)
-     * 770px / 986px = 78% → sobre A4 usable (~745px) = ~581px
+     * SUBINFORMES CMAI: preservar espaciado
      * ------------------------------------------------------------------------- */
     .rpt-sub-report-wrapper {
         margin-top: 2.5rem !important;
         margin-bottom: 0 !important;
-    }
-
-    /* Contenedor subinformes: 100% del ancho imprimible para paridad visual */
-    .rpt-sub-report-container {
-        width: 100% !important;
-    }
-
-
-    /* -------------------------------------------------------------------------
-     * TABLA TRIPLE: eliminar overflow de anchos fijos (770px > 745px A4)
-     * ------------------------------------------------------------------------- */
-    .rpt-table-triple {
-        width: 100% !important;
-        table-layout: auto !important;
-        margin-right: 0 !important;
-        margin-left: 0 !important;
-    }
-
-    /* Variante Cartera Diferida: también 100% en impresión */
-    .rpt-table-triple.rpt-table-cd {
-        width: 100% !important;
-        table-layout: auto !important;
     }
 
     /* -------------------------------------------------------------------------
@@ -268,37 +275,33 @@
     .rpt-cmai-mt-medium { margin-top: 2.0rem !important; } /* Equivalente a 2-3 filas vacías */
     
     .rpt-cmai-mt-huge {
-        margin-top: 8.0rem !important; /* Espacio verdaderamente masivo antes de Ventas */
+      margin-top: 3.0rem !important; /* Mayor que medium, consistente web/PDF */
     }
 
     /* -------------------------------------------------------------------------
-     * FOOTER ESPECÍFICO CARTERA DIFERIDA - AJUSTES PARA A4
-     * ------------------------------------------------------------------------- */
-    .rpt-cma-footer-container {
-        margin-top: 0.15rem !important; /* El footer va muy pegado a la tabla en Access */
+    * LITERALES DE ENCABEZADO CMAI - AJUSTES PARA A4
+    * ------------------------------------------------------------------------- */
+    .rpt-cmai-subtitulo {
+      font-size: 9pt !important;
     }
-
-    .rpt-cma-footer-note {
-        margin-left: 11% !important; /* Maintain relative position on A4 */
-    }
-    .rpt-cma-footer-total {
-        margin-right: 15% !important; /* Maintain relative position on A4 */
+    .rpt-cmai-titulo-container {
+      margin-top: 8px !important;
     }
 }
 
 
 
 /* =============================================================================
-   SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
-   ============================================================================= */
+SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
+============================================================================= */
 
 .rpt-ventas-container {
     width: 100%;
 }
 
 .rpt-ventas-unit {
-    font-size: 0.75rem;
-    color: #888;
+  font-size: 8pt;
+  color: #888;
 }
 
 .rpt-ventas-table {
@@ -311,7 +314,7 @@
 .rpt-ventas-table th,
 .rpt-ventas-table td {
     padding: 2px 8px;
-    font-size: 0.82rem;
+    font-size: 8pt;
     vertical-align: middle;
     height: 18px;
     border: none; /* Eliminamos bordes por defecto */
@@ -382,16 +385,23 @@
 
 .rpt-ventas-total {
     color: #555;
-    font-size: 0.82rem;
+    font-size: 8pt;
     font-weight: bold;
 }
 
 /* Leyenda */
 .rpt-ventas-legend {
-    font-size: 0.78rem;
-    color: #444;
-    padding-left: 50px;
-    margin-top: 50px !important; /* Separación extra con los totales */
+  font-size: 8pt;
+  color: #444;
+  padding-left: 50px;
+  margin-top: 50px !important; /* Separación extra con los totales */
+}
+
+/* Ajuste para PDF */
+@media print {
+  .rpt-ventas-legend {
+    margin-top: 50px !important; /* Mantener separación en PDF */
+  }
 }
 
 .rpt-ventas-sq {
@@ -414,5 +424,4 @@
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
-
 }

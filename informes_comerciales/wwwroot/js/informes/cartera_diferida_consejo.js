@@ -4,8 +4,8 @@
  * 
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
  */
-import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase, APP_VERSION } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, APP_VERSION as UTILS_VERSION } from './informes_unificados_utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 // ===============================================================================
@@ -104,7 +104,7 @@ function _getHtmlEncabezado() {
 
     return `
         ${getHtmlEncabezadoBase({
-            tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo de Administración</span> <span class="ms-3 fs-6">Informe de Contratación</span>',
+            tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span> <span class="ms-3 rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
             textoBanner1: 'Elecnor',
             textoBanner2: 'Mercados',
             mes,
@@ -253,7 +253,7 @@ function _renderTripleBlock(agrup) {
     return `
         <div class="rpt-triple-container mt-4 mb-0 rpt-align-flex-end">
             <div class="rpt-block-mensual">
-                <div class="fw-bold rpt-font-small rpt-text-corporate text-center mb-1">Mensual</div>
+                <div class="rpt-font-bold rpt-text-small rpt-text-corporate text-center mb-1">Mensual</div>
                 <table class="rpt-block-table">
                     <thead>
                         <tr class="rpt-th-blue" rpt-border-top-none>
@@ -267,7 +267,7 @@ function _renderTripleBlock(agrup) {
                 <div class="rpt-label-blue-header">Mercado</div>
             </div>
             <div class="rpt-block-acumulado">
-                <div class="fw-bold rpt-font-small rpt-text-corporate text-center mb-1">Acumulado</div>
+                <div class="rpt-font-bold rpt-text-small rpt-text-corporate text-center mb-1">Acumulado</div>
                 <table class="rpt-block-table">
                     <colgroup>
                         <col class="rpt-col-width-20">
@@ -348,7 +348,7 @@ function _renderSubsetTripleBlock(agrup) {
                 `).join('')}
             </tbody>
             <tfoot>
-                <tr class="fw-bold rpt-text-corporate" rpt-row-height-18>
+                <tr class="rpt-font-bold rpt-text-corporate" rpt-row-height-18>
                     <td class="text-end rpt-td-total" data-label="Total Mensual">${val(totales.contratacionMensual)}</td>
                     <td rpt-border-none></td>
                     <td class="rpt-td-total"></td>
@@ -423,19 +423,19 @@ function _renderCarteraProduccion(agrup) {
                                 </tr>
                             `;
                         }).join('')}
-                    </tbody>
-                    <tfoot>
-                        <tr class="fw-bold fs-7 rpt-text-corporate" rpt-row-height-18>
-                            <td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(totales.importeInicial)}</td>
+</tbody>
+<tfoot>
+<tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
+<td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(totales.importeInicial)}</td>
                             <td rpt-border-none></td>
                             <td class="rpt-td-total"></td>
                             <td rpt-border-none></td>
                             <td class="text-end rpt-td-total" data-label="Total ${data.tituloColActual}">${val(totales.importeActual)}</td>
                             <td class="text-end rpt-td-total" data-label="Variación">${totales.variacionCartera || ''}</td>
                         </tr>
-                        <tr class="fs-8 rpt-text-corporate">
+                        <tr class="rpt-fs-8pt rpt-text-corporate">
                             <td class="text-end py-1" data-label="Variación Anual">
-                                Δ / ${agrup.año - 1} <span class="fw-bold">${totales.variacionAñoAnterior || ''}</span>
+                                Δ / ${agrup.año - 1} <span class="rpt-font-bold">${totales.variacionAñoAnterior || ''}</span>
                             </td>
                             <td colspan="5" class="d-none d-print-table-cell"></td>
                         </tr>
@@ -532,10 +532,10 @@ function _renderCarteraDiferida(agrup) {
                                 </tr>
                             `;
                         }).join('')}
-                    </tbody>
-                    <tfoot>
-                        <tr class="fw-bold fs-7 rpt-text-corporate" rpt-row-height-18>
-                            <td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(t.v1_1)}</td>
+</tbody>
+<tfoot>
+<tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
+<td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(t.v1_1)}</td>
                             <td class="text-end rpt-td-total" data-label="Total Nuevos">${val(t.nuevos)}</td>
                             <td class="text-end rpt-td-total" data-label="Total Total">${val(t.total)}</td>
                             <td rpt-border-none></td>
@@ -547,12 +547,12 @@ function _renderCarteraDiferida(agrup) {
                             <td class="text-end rpt-td-total" data-label="Total ${data.tituloColAnio2}">${val(t.v2)}</td>
                             <td class="text-end rpt-td-total" data-label="Total ${data.tituloColAnio3}">${val(t.v3)}</td>
                         </tr>
-                    </tfoot>
-                </table>
-        <div class="d-flex justify-content-between rpt-cma-footer-container rpt-font-small text-nowrap">
-            <div class="rpt-cma-footer-note">* Contratos nuevos, reapreciación de Cartera y prórrogas</div>
-            <div class="rpt-cma-footer-total rpt-text-corporate fw-bold">Total Cartera Pendiente: <span class="ms-1">${val(sumaTotalCartera)}</span></div>
-        </div>
+</tfoot>
+</table>
+<div class="rpt-cma-footer-line">
+<div class="rpt-cma-footer-note">* Contratos nuevos, reapreciación de Cartera y prórrogas</div>
+<div class="rpt-cma-footer-total">Total Cartera Pendiente: <span class="rpt-cma-total-valor">${val(sumaTotalCartera)}</span></div>
+</div>
     `;
 }
 

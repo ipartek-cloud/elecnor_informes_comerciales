@@ -1,5 +1,5 @@
 import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -18,7 +18,7 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostr
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'subDireccionesGenerales',
-            margenes: { web: '1.5rem', pdf: '6.4mm', maxWidth: '1200px' }
+            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
         });
     } catch (error) {
         console.error("Error al ejecutar informe Mercados SG Delegaciones:", error);
@@ -32,7 +32,7 @@ function _renderizarPagina() {
     if (!sdg) return;
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_sg_delegaciones" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_sg_delegaciones" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado(sdg)}
             <div class="report-body">${_renderSDG(sdg)}</div>
         </div>`;
@@ -192,7 +192,7 @@ async function _imprimirInforme() {
     if (!items.length) return;
 
     // Variables CSS inline para márgenes (paridad con el modal)
-    const styleVars = '--rpt-padding-web: 1.5rem; --rpt-padding-pdf: 6.4mm; --rpt-max-width: 1200px;';
+    const styleVars = getStyleVars(estado.margenes);
 
     const capaPrint = document.createElement('div');
     capaPrint.className = 'rpt-print-layer';
@@ -200,7 +200,7 @@ async function _imprimirInforme() {
     /* Técnica Outer-Table para repetición nativa de cabeceras corporativas */
     const html = items.map((sdg, idx) => `
         <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''}"
-             style="${styleVars}">
+             ${styleVars}>
             <table style="width:100%; border-collapse:collapse; border:none; table-layout:fixed;">
                 <thead>
                     <tr>

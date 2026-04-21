@@ -16,16 +16,17 @@ import {
     crearEstadoInforme,
     inicializarInforme,
     getHtmlEncabezadoBase,
-    imprimirInformeUnificado
+    imprimirInformeUnificado,
+    getStyleVars
 } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
 // Estándar de márgenes para informes de gerencia
 const MARGENES_GERENCIA = {
-    web: '1.5rem',
+    web: '3rem',
     pdf: '6.4mm',
-    maxWidth: '1100px'
+    maxWidth: '1050px'
 };
 
 /**
@@ -62,18 +63,11 @@ function _renderizarPagina(index) {
     if (!container) return;
 
     // Inyectamos variables CSS para que el contenedor respete los márgenes del JS
-    const styleInline = `
-        --rpt-padding-web: ${MARGENES_GERENCIA.web};
-        --rpt-padding-pdf: ${MARGENES_GERENCIA.pdf};
-        --rpt-max-width: ${MARGENES_GERENCIA.maxWidth};
-    `;
-
-    container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" 
              data-informe="gerencias" 
              data-pagina-index="0" 
              role="main"
-             style="${styleInline}">
+             ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${_renderContenido()}

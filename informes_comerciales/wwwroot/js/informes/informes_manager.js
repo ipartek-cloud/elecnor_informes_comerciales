@@ -13,6 +13,15 @@ import { GlobalUI } from '../site.js';
 // Registro interno: { [nombreInforme]: moduloImportado }
 const _registroModulos = {};
 
+/**
+ * Elimina del DOM todos los links de CSS dinámicos de informes.
+ * Evita la acumulación de etiquetas <link> y posibles colisiones de estilos.
+ */
+export function limpiarCssInformes() {
+    const links = document.querySelectorAll('link[id^="css-informe-"]');
+    links.forEach(link => link.remove());
+}
+
 window.cargarInforme = async function (btn, nombreInforme) {
 
     // Mantener compatibilidad si se llama solo con nombreInforme

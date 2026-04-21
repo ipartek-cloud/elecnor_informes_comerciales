@@ -2,7 +2,7 @@
     container-type: inline-size;
     container-name: rpt-paper;
     max-width: 1200px;
-    padding: 1.5rem !important;
+    padding: var(--rpt-padding-web, 1.5rem) !important;
     margin: 0 auto;
     box-shadow: none;
     border: none;

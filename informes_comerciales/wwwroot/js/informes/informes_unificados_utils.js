@@ -3,19 +3,21 @@
  * Proporciona funciones base que orquestan las utilidades de utils.js
  * 
  * Este archivo contiene:
- * - Constante APP_VERSION (re-exportada desde utils.js)
  * - Factory function para estado de informe (crearEstadoInforme)
  * - Inicialización de informe con patrón de opciones (inicializarInforme)
  * - Encabezado HTML base (getHtmlEncabezadoBase)
  * - Impresión PDF base (imprimirInformeBase)
  */
 
-import { RPT_CLASSES, getNombreMes, APP_VERSION } from './utils.js';
+import { 
+    RPT_CLASSES, 
+    getNombreMes, 
+    mostrarControlesPaginacion, 
+    ocultarControlesPaginacion, 
+    mostrarSinDatos, 
+    abrirModal 
+} from './utils.js';
 import { ApiClient } from '../site.js';
-import { mostrarControlesPaginacion, ocultarControlesPaginacion, mostrarSinDatos, abrirModal } from './utils.js';
-
-// Re-exportar para que los módulos de informe puedan importar desde aquí
-export { APP_VERSION };
 
 // =============================================================================
 // ESTADO BASE DE INFORME (Factory Function)
@@ -32,7 +34,8 @@ export function crearEstadoInforme() {
         paginasTotales: 0,
         eventosIniciados: false,
         mostrarNumeroPagina: true, // Flag de visibilidad
-        mostrarTitulo: true        // Nuevo flag de visibilidad
+        mostrarTitulo: true,       // Flag de visibilidad
+        margenes: null             // Configuración de márgenes custom
     };
 }
 
@@ -59,7 +62,8 @@ export async function inicializarInforme(opciones) {
         renderizarPagina,
         inicializarEventListeners,
         prefijoPaginacion = 'Página',
-        claveAgrupacion = null
+        claveAgrupacion = null,
+        margenes = null
     } = opciones;
 
     try {
@@ -94,6 +98,7 @@ export async function inicializarInforme(opciones) {
         estado.informeGlobalData = data;
         estado.paginaActual = 0;
         estado.paginasTotales = paginas;
+        estado.margenes = margenes;
         
         // Prioridad: Si el frontend ya ha decidido ocultarlo (mostrarNumeroPagina === false), se mantiene.
         // Si no, se intenta leer del servidor.
@@ -198,10 +203,10 @@ export function getHtmlEncabezadoBase(opciones) {
  * @param {object|null} margenes - Configuración de márgenes custom
  * @param {string} [margenes.web] - Padding en pantalla (ej: "1.5rem")
  * @param {string} [margenes.pdf] - Padding en impresión (ej: "6.4mm")
- * @param {string} [margenes.maxWidth] - Ancho máximo del papel (ej: "1200px")
+ * @param {string} [margenes.maxWidth] - Ancho máximo del papel (ej: "1050px")
  * @returns {string} String HTML para inyectar como atributo style, o string vacío.
  */
-function _buildStyleVars(margenes) {
+function getStyleVars(margenes) {
     if (!margenes || typeof margenes !== 'object') return '';
 
     const vars = [];
@@ -211,6 +216,9 @@ function _buildStyleVars(margenes) {
 
     return vars.length > 0 ? ` style="${vars.join(' ')}"` : '';
 }
+
+// Exportación explícita de utilidades
+export { getStyleVars };
 
 // =============================================================================
 // IMPRESIÓN PDF BASE
@@ -239,7 +247,7 @@ export async function imprimirInformeUnificado(opciones) {
     if (!informeGlobalData) return;
 
     // Construir string de variables CSS inline si se proporcionan márgenes custom
-    const styleVars = _buildStyleVars(margenes);
+    const styleVars = getStyleVars(margenes);
 
     const capaPrint = document.createElement('div');
     capaPrint.className = 'rpt-print-layer';

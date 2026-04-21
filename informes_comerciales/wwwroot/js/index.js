@@ -1,4 +1,5 @@
 import { GlobalUI, ApiClient, decodeJwt } from './site.js';
+import { limpiarCssInformes } from './informes/informes_manager.js';
 // Script principal asociado a la vista Home/Index.cshtml
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -139,6 +140,25 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             if (mainContent) mainContent.classList.add('d-none');
         }
+    }
+
+    // ---- Manejo del Modal de Informes ----
+    const modalInforme = document.getElementById('modalInforme');
+    if (modalInforme) {
+        modalInforme.addEventListener('hidden.bs.modal', function () {
+            // 1. Limpiar CSS inyectado para evitar colisiones de estilos
+            limpiarCssInformes();
+            // 2. Limpiar contenido HTML para liberar memoria y resetear estado visual
+            const contenido = document.getElementById('modalInformeContenido');
+            if (contenido) {
+                contenido.innerHTML = `
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>`;
+            }
+        });
     }
 
 });

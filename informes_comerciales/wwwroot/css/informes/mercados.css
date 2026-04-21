@@ -9,7 +9,7 @@
     container-type: inline-size;
     container-name: rpt-paper;
     max-width: 1200px;
-    padding: 1.5rem !important; /* Paridad visual con clamp() original */
+    padding: var(--rpt-padding-web, 1.5rem) !important; /* Paridad visual con clamp() original */
     margin: 0 auto;
     box-shadow: none;
     border: none;
@@ -18,15 +18,6 @@
 /* Tabla principal */
 .rpt-table {
     width: 100%;
-}
-
-/* Estilos para el número de página sobre el logo (Imagen 4) */
-.rpt-page-number {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #00468B;
-    margin-right: 8px;
-    margin-bottom: -5px;
 }
 
 /* Ajustes de celdas para evitar scroll */

@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -19,7 +19,8 @@ public class TokenService
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.NameId, user.Usuario),
+            new(ClaimTypes.Name, user.Usuario),
+            new(JwtRegisteredClaimNames.Sub, user.Usuario),
             new("NombreUsuario", user.NombreUsuario),
             new("Puesto", user.Puesto),
             new("CodEntidad", user.CodEntidad ?? string.Empty)
