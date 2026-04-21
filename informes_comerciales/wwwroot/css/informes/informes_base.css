@@ -274,6 +274,7 @@ Estándar: 10pt, sin negrita, azul corporativo
         padding: 0.75rem;
         border-radius: 8px;
         margin-bottom: 1.5rem !important;
+        border: none !important;
     }
 
     .rpt-triple-container > div {
@@ -393,7 +394,7 @@ Estándar: 10pt, sin negrita, azul corporativo
 
 /* =============================================================================
    ANCHOS DE COLUMNA COMPARTIDOS - P1
-   Para informes que necesiten anchos específicos de columna
+   Para informes que necesiten anchos específicos de un informe
    ============================================================================= */
 .rpt-col-60  { width: 50px; }
 .rpt-col-70  { width: 60px; }
@@ -489,19 +490,28 @@ Estándar: 10pt, sin negrita, azul corporativo
     width: 100% !important;
 }
 
-
 /* =============================================================================
    TOTALES AZULES - P1 (Obligatorio: Negrita + Azul Corporativo)
    ============================================================================= */
-.rpt-total-row-blue td {
+.rpt-total-row-blue td, .rpt-td-total {
     border-top: 2px solid #00468B !important;
     color: #00468B !important;
     font-weight: bold !important;
-    padding-top: 2px;
+    padding-top: 3px !important; /* Espacio interno de lectura */
 }
 
-.rpt-total-row-blue td.text-danger {
-    color: #dc3545 !important;
+/* =============================================================================
+   ESPECIALES DE SEPARACIÓN TOTALES (Sustituyen estilos en línea y ajustan Gap)
+   ============================================================================= */
+.rpt-mt-totales-main {
+    margin-top: 6px !important;
+}
+.rpt-spacer-row-totales, .rpt-spacer-cell-totales {
+    height: 6px !important;
+    border: none !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
 }
 
 /* =============================================================================
@@ -600,23 +610,30 @@ Estándar: 10pt, sin negrita, azul corporativo
         padding-bottom: 1px !important;
     }
 
-    /* 10.3 BORDES FINOS ESTILO ACCESS (Alto #5): De 2px a 0.5pt */
-    .rpt-th-blue, .rpt-td-total {
-        border-bottom-width: 0.5pt !important;  /* CORREGIDO: border-width → border-bottom-width */
+    /* 10.3 BORDES FINOS ESTILO ACCESS (Alto #5): Cabeceras y Totales Hairline (0.3pt) */
+    .rpt-th-blue, 
+    .rpt-th-blue th, 
+    .rpt-th-blue td,
+    .rpt-table-triple thead tr.rpt-border-header th {
+        border-bottom-width: 0.3pt !important;
+        border-top-width: 0px !important;
     }
 
-  /* 10.4 BANNER COMPACTO (Alto #6): De 38px a 25px */
-  .rpt-banner-top {
-    height: 25px !important;
-    font-size: 14pt !important;
-    font-weight: normal !important;
-  }
-
-    /* 10.5 LOGOTIPO REDUCIDO (Alto #7): De 50px a 35px */
-    .rpt-header-logo {
-        height: 35px !important;
+    .rpt-td-total, 
+    .rpt-total-row-blue td {
+        border-top-width: 0.3pt !important;
+        border-bottom-width: 0px !important;
     }
 
+    /* 10.4 BANNER COMPACTO (Alto #6): De 38px a 25px */
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 14pt !important;
+        font-weight: normal !important;
+    }
+
+    /* 10.5 LOGOTIPO (Mantenemos tamaño web 50px, eliminamos reducción a 35px) */
+    
     /* 10.6 COLUMNA CENTRO COMO CELDA SÓLIDA (Alto #8): Eliminar márgenes y border-radius */
     .rpt-group-badge {
         margin: 0 !important;
@@ -637,10 +654,9 @@ Estándar: 10pt, sin negrita, azul corporativo
         padding-bottom: 2px !important;
     }
 
-    /* 10.9 HEADER COMPACTO: Reducir margen inferior y alinear arriba */
+    /* 10.9 HEADER COMPACTO: Reducir margen inferior */
     .rpt-header {
         margin-bottom: 0.5rem !important;
-        align-items: flex-start !important;
     }
 
   /* 10.10 TEXTO CORPORATIVO COMPACTO: Estandarizado a 14pt */
@@ -728,7 +744,7 @@ Estándar: 10pt, sin negrita, azul corporativo
   }
 }
 
-/* ==========================================================================
+/* =============================================================================
    ESTILOS COMPARTIDOS PARA SELECTORES DE INFORMES (Home/Index)
    Aseguran que botones e inputs tengan el mismo alto al píxel.
    ========================================================================== */

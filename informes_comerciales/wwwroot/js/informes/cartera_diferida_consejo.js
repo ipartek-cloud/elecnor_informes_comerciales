@@ -213,7 +213,7 @@ function _renderTripleBlock(agrup) {
     `).join('');
 
     const totalesHtml = `
-        <div class="rpt-triple-container mt-1">
+        <div class="rpt-triple-container rpt-mt-totales-main">
             <div class="rpt-block-mensual">
                 <table class="rpt-block-table">
                     <tr class="rpt-total-row-blue">
@@ -251,7 +251,7 @@ function _renderTripleBlock(agrup) {
     `;
 
     return `
-        <div class="rpt-triple-container mt-4 mb-0 rpt-align-flex-end">
+        <div class="rpt-triple-container rpt-mt-6 mb-0 rpt-align-flex-end">
             <div class="rpt-block-mensual">
                 <div class="rpt-font-bold rpt-text-small rpt-text-corporate text-center mb-1">Mensual</div>
                 <table class="rpt-block-table">
@@ -309,12 +309,13 @@ function _renderSubsetTripleBlock(agrup) {
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
                 <col class="rpt-col-100px">
-                <col class="rpt-col-25px">
-                <col class="rpt-col-315px">
-                <col class="rpt-col-30px">
-                <col class="rpt-col-100px">
-                <col class="rpt-col-100px">
-                <col class="rpt-col-100px">
+                <col class="rpt-col-10px">
+                <col class="rpt-col-concepto-unificado">
+                <col class="rpt-col-10px">
+                <col class="rpt-col-80px">
+                <col class="rpt-col-80px">
+                <col class="rpt-col-85px">
+                <col class="rpt-col-155px">
             </colgroup>
             <thead>
                 <tr rpt-row-height-20>
@@ -346,6 +347,7 @@ function _renderSubsetTripleBlock(agrup) {
                         <td class="text-end" data-label="Var/${agrup.año - 1}">${s.variacion}</td>
                     </tr>
                 `).join('')}
+                <tr class="rpt-spacer-row-totales"><td colspan="7" class="rpt-spacer-cell-totales"></td></tr>
             </tbody>
             <tfoot>
                 <tr class="rpt-font-bold rpt-text-corporate" rpt-row-height-18>
@@ -377,11 +379,12 @@ function _renderCarteraProduccion(agrup) {
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
                 <col class="rpt-col-100px">
-                <col class="rpt-col-25px">
-                <col class="rpt-col-315px">
-                <col class="rpt-col-30px">
-                <col class="rpt-col-150px">
-                <col class="rpt-col-150px">
+                <col class="rpt-col-10px">
+                <col class="rpt-col-concepto-unificado">
+                <col class="rpt-col-10px">
+                <col class="rpt-col-120px">
+                <col class="rpt-col-125px">
+                <col class="rpt-col-155px">
             </colgroup>
 
                     <thead>
@@ -423,8 +426,9 @@ function _renderCarteraProduccion(agrup) {
                                 </tr>
                             `;
                         }).join('')}
-</tbody>
-<tfoot>
+                        <tr class="rpt-spacer-row-totales"><td colspan="6" class="rpt-spacer-cell-totales"></td></tr>
+                    </tbody>
+                <tfoot>
 <tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
 <td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(totales.importeInicial)}</td>
                             <td rpt-border-none></td>
@@ -479,14 +483,15 @@ function _renderCarteraDiferida(agrup) {
                 <col class="rpt-col-80px">
                 <col class="rpt-col-80px">
                 <col class="rpt-col-80px">
-                <col class="rpt-col-15px">
-                <col class="rpt-col-390px">
-                <col class="rpt-col-15px">
+                <col class="rpt-col-10px">
+                <col class="rpt-col-concepto-unificado">
+                <col class="rpt-col-10px">
                 <col class="rpt-col-80px">
                 <col class="rpt-col-45px">
                 <col class="rpt-col-65px">
                 <col class="rpt-col-65px">
                 <col class="rpt-col-65px">
+                <col class="rpt-col-150px">
             </colgroup>
 
                     <thead>
@@ -532,8 +537,9 @@ function _renderCarteraDiferida(agrup) {
                                 </tr>
                             `;
                         }).join('')}
-</tbody>
-<tfoot>
+                        <tr class="rpt-spacer-row-totales"><td colspan="11" class="rpt-spacer-cell-totales"></td></tr>
+                    </tbody>
+                <tfoot>
 <tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
 <td class="text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(t.v1_1)}</td>
                             <td class="text-end rpt-td-total" data-label="Total Nuevos">${val(t.nuevos)}</td>

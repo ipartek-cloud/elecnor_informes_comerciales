@@ -10,6 +10,12 @@
     align-items: flex-start; /* CMAI usa flex-start en lugar de flex-end (base) */
 }
 
+.rpt-block-labels {
+    flex: 0 0 230px !important; /* 230px + 20px margins = 250px allocated visual width */
+    width: 230px !important;
+    max-width: 230px !important;
+}
+
 /* Etiquetas específicas de este informe */
 .rpt-label-text-header {
     color: #00468B !important;
@@ -94,12 +100,35 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 .rpt-col-25px { width: 25px; }
 .rpt-col-315px { width: 315px; }
 .rpt-col-30px { width: 30px; }
+.rpt-col-35px { width: 35px; }
 .rpt-col-150px { width: 150px; }
+.rpt-col-10px { width: 10px; }
 .rpt-col-15px { width: 15px; }
 .rpt-col-390px { width: 390px; }
 .rpt-col-45px { width: 45px; }
+.rpt-col-55px { width: 55px; }
+.rpt-col-60px { width: 60px; }
 .rpt-col-65px { width: 65px; }
+.rpt-col-75px { width: 75px; }
 .rpt-col-80px { width: 80px; }
+.rpt-col-85px { width: 85px; }
+.rpt-col-95px { width: 95px; }
+.rpt-col-100px { width: 100px; }
+.rpt-col-110px { width: 110px; }
+.rpt-col-120px { width: 120px; }
+.rpt-col-125px { width: 125px; }
+.rpt-col-135px { width: 135px; }
+.rpt-col-140px { width: 140px; }
+.rpt-col-150px { width: 150px; }
+.rpt-col-155px { width: 155px; }
+
+/* Utilidades de Margen Personalizadas */
+.rpt-mt-6 { margin-top: 3.5rem !important; } /* Un paso más que mt-5 (3rem) */
+
+/* Unificación de Ancho de Conceptos (Principal y Subinformes) a 250px estricto */
+.rpt-col-concepto-unificado {
+    width: 250px !important;
+}
 
 /* Tabla con ancho completo */
 .rpt-table-full {
@@ -142,7 +171,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 .rpt-table-triple {
     width: 770px;
     margin-left: auto;
-    margin-right: auto; /* Centrado horizontal */
+    margin-right: auto;
     border-collapse: collapse;
     table-layout: fixed;
 }
@@ -190,7 +219,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
    La tabla triple mide 770px, el contenedor debe ser al menos igual
    ============================================================================= */
 .rpt-sub-report-container {
-    width: 770px; /* Ajustado para coincidir con .rpt-table-triple (770px) */
+    width: 770px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -418,8 +447,16 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
     .rpt-ventas-container {
         page-break-inside: avoid;
     }
-    .rpt-ventas-table thead th,
-    .rpt-ventas-total-row td,
+    .rpt-ventas-table thead th {
+        border-bottom-width: 0.3pt !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .rpt-ventas-total-row td {
+        border-top-width: 0.3pt !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
     .rpt-ventas-sq {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
