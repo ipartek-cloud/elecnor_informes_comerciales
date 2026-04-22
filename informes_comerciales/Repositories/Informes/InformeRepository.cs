@@ -40,7 +40,7 @@ public class InformeRepository
     // ═══════════════════════════════════════════════════════════════════════════
 
     /// <summary>
-    /// Obtiene los datos consolidados para el informe de Cartera Diferida (Consejo de Administración).
+    /// Obtiene los datos consolidados para el informe de Cartera Diferida (CONSEJO ELECNOR).
     /// </summary>
     public async Task<(List<CarteraDiferidaConsejoPoco> Principal, List<MercadoAIPoco> mercadoAI, List<CarteraProducirPoco> Cartera, List<CarteraDiferidaPoco> CarteraDiferida, List<VentasPoco> Ventas)> ObtenerCarteraDiferidaConsejoAsync(int anio, int mes)
     {

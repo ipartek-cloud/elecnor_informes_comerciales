@@ -116,7 +116,7 @@ function _getHtmlEncabezado() {
     const mercado = filtros.mercado || 'Nacional';
     
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council fs-4">Consejo de Administración</span> <span class="rpt-info-complementary ms-2">Información complementaria</span>',
+        tituloCorporativo: '<span class="rpt-text-orange-council fs-4">Consejo Elecnor</span> <span class="rpt-info-complementary ms-2">Información complementaria</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: `Contrat. significativas Mercado ${mercado}`,
         mes: filtros.mes,

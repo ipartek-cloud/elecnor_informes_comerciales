@@ -62,7 +62,7 @@ function _renderizarPagina() {
 
 function _getHtmlEncabezado() {
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo de Administración</span> <span class="ms-3 fs-6">Informe de Contratación</span>',
+        tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo Elecnor</span> <span class="ms-3 fs-6">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Países Relevantes',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,

@@ -40,7 +40,7 @@ public class InformeContratacionesAIService
             {
                 Titulo = "Principales Contrataciones del Año",
                 SubTitulo = "Contratos",
-                Descripcion = "Consejo Administración - Contrataciones Asociadas a Inversión",
+                Descripcion = "CONSEJO ELECNOR - Contrataciones Asociadas a Inversión",
                 Filtros = new { Anio = anio, Mes = mes },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema"

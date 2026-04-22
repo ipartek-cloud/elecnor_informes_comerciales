@@ -32,7 +32,7 @@ public class InformePaisesService
             Meta = new MetaInformeDto
             {
                 Titulo = $"{tituloBase} (Mercado Internacional)",
-                Descripcion = "Consejo Administración - Informe de Contratación",
+                Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema"

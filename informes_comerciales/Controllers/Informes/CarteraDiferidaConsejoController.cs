@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Elecnor_Informes_Comerciales.Controllers.Informes
 {
     /// <summary>
-    /// Endpoint para el informe de Cartera Diferida (Consejo de Administración).
+    /// Endpoint para el informe de Cartera Diferida (CONSEJO ELECNOR).
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]

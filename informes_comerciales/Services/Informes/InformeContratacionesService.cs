@@ -6,7 +6,7 @@ using Elecnor_Informes_Comerciales.Repositories.Informes;
 namespace Elecnor_Informes_Comerciales.Services.Informes;
 
 /// <summary>
-/// Servicio para el informe de Principales Contrataciones del Año (Consejo Administración).
+/// Servicio para el informe de Principales Contrataciones del Año (CONSEJO ELECNOR).
 /// </summary>
 public class InformeContratacionesService
 {
@@ -79,7 +79,7 @@ public class InformeContratacionesService
                 Meta = new MetaInformeDto
                 {
                     Titulo = "Principales Contrataciones del Año",
-                    Descripcion = "Consejo Administración - Informe de Contratación Mercado Nacional",
+                    Descripcion = "CONSEJO ELECNOR - Informe de Contratación Mercado Nacional",
                     Filtros = new { Anio = anio, Mes = mes },
                     FechaGeneracion = DateTime.Now,
                     Usuario = "Sistema"
@@ -96,7 +96,7 @@ public class InformeContratacionesService
             Meta = new MetaInformeDto
             {
                 Titulo = "Principales Contrataciones del Año",
-                Descripcion = "Consejo Administración - Informe de Contratación Mercado Nacional",
+                Descripcion = "CONSEJO ELECNOR - Informe de Contratación Mercado Nacional",
                 Filtros = new { Anio = anio, Mes = mes },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema"
@@ -136,7 +136,7 @@ public class InformeContratacionesService
                 Meta = new MetaInformeDto
                 {
                     Titulo = "Contrataciones Año Nacional Anterior",
-                    Descripcion = "Consejo Administración - Contratos acumulados meses anteriores",
+                    Descripcion = "CONSEJO ELECNOR - Contratos acumulados meses anteriores",
                     Filtros = new { Anio = anio, Mes = mes },
                     FechaGeneracion = DateTime.Now,
                     Usuario = "Sistema"
@@ -154,7 +154,7 @@ public class InformeContratacionesService
             Meta = new MetaInformeDto
             {
                 Titulo = "Contrataciones Año Nacional Anterior",
-                Descripcion = "Consejo Administración - Contratos acumulados meses anteriores",
+                Descripcion = "CONSEJO ELECNOR - Contratos acumulados meses anteriores",
                 Filtros = new { Anio = anio, Mes = mes },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema"

@@ -68,7 +68,7 @@ function _getHtmlEncabezado() {
     const filtros = data?.meta?.filtros || {};
     
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="text-orange-council fs-3">Consejo de Administración</span> <span class="ms-3 fs-6 text-primary">Informe de Contratación</span>',
+        tituloCorporativo: '<span class="text-orange-council fs-3">Consejo Elecnor</span> <span class="ms-3 fs-6 text-primary">Informe de Contratación</span>',
         textoBanner1: 'Ranking de Contratación',
         textoBanner2: 'Clientes',
         mes: filtros.mes,
