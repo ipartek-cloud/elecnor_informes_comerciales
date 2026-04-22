@@ -77,8 +77,10 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 .rpt-col-width-65 { width: 65px; }
 .rpt-col-width-150 { width: 150px; }
 
-/* Texto gris muted para variaciones */
-.rpt-text-muted-value, [rpt-text-muted-value] {
+/* Texto gris muted para variaciones (con especificidad aumentada para ganar a rpt-number-cell) */
+.rpt-text-muted-value, [rpt-text-muted-value], 
+.rpt-number-cell.rpt-text-muted-value,
+.rpt-number-cell[rpt-text-muted-value] {
     color: #999 !important;
 }
 

@@ -202,7 +202,7 @@ function _renderTripleBlock(agrup) {
                     </colgroup>
                     <tr class="rpt-detail-row">
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleObjetivo(d.objetivoAnual)}</td>
-                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15" rpt-text-muted-value>${d.pais === 'Nacional' ? '-7%' : '4%'}</td>
+                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15 rpt-text-muted-value">${d.pais === 'Nacional' ? '-7%' : '4%'}</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleContratado(d.importeContratadoAcumulado)}</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${formatCurrency(d.indiceProduccion / 1000, 2)}</td>
                         <td class="rpt-number-cell">${d.variacion}</td>
@@ -240,7 +240,7 @@ function _renderTripleBlock(agrup) {
                     </colgroup>
                     <tr class="rpt-total-row-blue">
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleObjetivo(agrup.totales.objetivoAnual)}</td>
-                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15" rpt-text-muted-value>-1%</td>
+                        <td class="rpt-number-cell rpt-font-small rpt-pad-right-15 rpt-text-muted-value">-1%</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${scaleContratado(agrup.totales.contratacionAcumulada)}</td>
                         <td class="rpt-number-cell rpt-pad-right-15">${formatCurrency(agrup.totales.indiceProduccion / 1000, 2)}</td>
                         <td class="rpt-number-cell">${agrup.totales.variacionContratacion}</td>
