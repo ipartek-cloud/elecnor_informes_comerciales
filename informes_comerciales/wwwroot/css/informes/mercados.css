@@ -1,15 +1,14 @@
 /* =============================================================================
-   ESTILOS ESPECÍFICOS PARA EL INFORME MERCADOS
-   Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_base.css
-   ============================================================================= */
+ESTILOS ESPECÍFICOS PARA EL INFORME MERCADOS
+Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_base.css
+============================================================================= */
 
 /* Contenedor principal: ajustar solo lo necesario para pantalla */
-/* Contenedor principal con soporte para Container Queries */
 .rpt-paper[data-informe="mercados"] {
     container-type: inline-size;
     container-name: rpt-paper;
-    max-width: 1200px;
-    padding: var(--rpt-padding-web, 1.5rem) !important; /* Paridad visual con clamp() original */
+    /* Los márgenes se controlan vía JS con getStyleVars() - no aplicar padding aquí */
+    /* Las variables --rpt-padding-web y --rpt-padding-pdf se inyectan desde JS */
     margin: 0 auto;
     box-shadow: none;
     border: none;
@@ -17,184 +16,280 @@
 
 /* Tabla principal */
 .rpt-table {
-    width: 100%;
+  width: 100%;
 }
 
 /* Ajustes de celdas para evitar scroll */
 .rpt-number-cell {
-    padding: 0 4px;
-    white-space: nowrap;
+  padding: 0 4px;
+  white-space: nowrap;
 }
 
 /* Márgenes de bloques */
 .report-body {
-    margin-top: 1rem;
+  margin-top: 0 !important;
 }
 
+/* Utilidades de Margen Personalizadas (Paridad con Cartera Diferida) */
+.rpt-mt-6 { margin-top: 3.5rem !important; }
+
 /* =============================================================================
-   LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
-   Define los anchos para que el informe principal y subinformes cuadren.
-   Basado en colgroup y table-layout: fixed.
-   ============================================================================= */
+LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
+Define los anchos para que el informe principal y subinformes cuadren.
+Basado en colgroup y table-layout: fixed.
+============================================================================= */
 
 /* Contenedor de tabla con el layout de Mercados */
 .rpt-mercado-layout {
-    table-layout: fixed;
+  table-layout: fixed;
 }
 
-/* Proporciones de las columnas (suman 100%) */
-.rpt-mercado-col-obj-m   { width: 13.5%; }
-.rpt-mercado-col-contr-m { width: 13.5%; }
-.rpt-mercado-col-desc    { width: 21.0%; }
-.rpt-mercado-col-obj-a   { width: 15.0%; }
-.rpt-mercado-col-contr-a { width: 15.0%; }
-.rpt-mercado-col-ip      { width: 10.0%; }
-.rpt-mercado-col-var     { width: 12.0%; }
+/* Proporciones de las columnas (suman 100% - 9 columnas con separadores) */
+.rpt-mercado-col-obj-m { width: 12.5%; }
+.rpt-mercado-col-contr-m { width: 12.5%; }
+.rpt-col-10px { width: 10px; }
+.rpt-mercado-col-desc { width: 20.0%; }
+.rpt-mercado-col-obj-a { width: 14.5%; }
+.rpt-mercado-col-contr-a { width: 14.5%; }
+.rpt-mercado-col-ip { width: 10.0%; }
+.rpt-mercado-col-var { width: 11.0%; }
+
+/* Separadores sin borde (rompen continuidad del border-top en totales) */
+[rpt-border-none] { border: none !important; }
 
 /* =============================================================================
-   ENCABEZADOS DE TABLA - MERCADOS
-   Clases para reemplazar estilos inline del JS
-   ============================================================================= */
+ENCABEZADOS DE TABLA - MERCADOS
+Clases para reemplazar estilos inline del JS
+============================================================================= */
 
 /* Borde inferior de encabezados */
 .rpt-mercado-th-border {
-    border-bottom: 2px solid #00468B !important;
-    padding-bottom: 5px !important;
+  border-bottom: 2px solid #00468B !important;
+  padding-bottom: 5px !important;
 }
 
 /* Fila separadora de 5px */
 .rpt-mercado-row-spacer {
-    height: 5px;
+  height: 5px;
 }
 
 /* Alineación vertical para celdas de encabezado con badge */
 .rpt-mercado-header-align {
-    vertical-align: bottom;
-    padding: 0;
+  vertical-align: bottom;
+  padding: 0;
 }
 
-/* Badge de título central con tipografía fluida */
+/* Badge de título central - Tamaño fijo 8pt (NO clamp) */
 .rpt-mercado-header-badge {
-    background-color: #00468B !important;
-    color: white !important;
-    font-size: clamp(0.75rem, 1cqi + 0.5rem, 0.9rem);
-    padding: 2px 0;
-    margin: 0;
-    border-radius: 0;
-    text-align: center;
-    display: block;
-    width: 100%;
+  background-color: #00468B !important;
+  color: white !important;
+  font-size: 8pt !important;
+  padding: 2px 0;
+  margin: 0;
+  border-radius: 0;
+  text-align: center;
+  display: block;
+  width: 100%;
 }
 
 /* Ajustes de compactación para contenedores estrechos (< 700px) */
 @container rpt-paper (max-width: 700px) {
-    .rpt-number-cell {
-        padding: 0 2px !important;
-        font-size: 0.82rem;
-    }
-    .rpt-mercado-header-badge {
-        font-size: 0.75rem;
-    }
+  .rpt-number-cell {
+    padding: 0 2px !important;
+    font-size: 8pt !important;
+  }
+  .rpt-mercado-header-badge {
+    font-size: 8pt !important;
+  }
 }
 
-/* Fila de totales */
-.rpt-mercado-total-row {
-    border-top: 2px solid #00468B;
-    color: #00468B !important;
-    font-weight: bold;
-    padding-top: 5px;
-}
+/* ============================================================================= TOTALES - Usa rpt-td-total de informes_base.css
+Las columnas separadoras rpt-col-10px + [rpt-border-none] segmentan
+la línea de border-top en 3 bloques (Mensual | Concepto | Acumulado)
+============================================================================= */
 
-/* Celda total con margen */
-.rpt-mercado-total-cell {
-    border-top: 2px solid #00468B;
-    margin: 0 5px;
-    padding-top: 5px;
-}
-
-/* Celda total con margen mayor (línea segmentada) */
-.rpt-mercado-total-line {
-    border-top: 2px solid #00468B;
-    margin: 0 10px;
-}
-
-/* Fila de detalle con altura fija */
+/* Fila de detalle - Altura automática con line-height compacto */
 .rpt-mercado-detail-row {
-    height: 24px;
+  height: auto;
+  line-height: 1.05;
 }
 
-/* Ajuste vertical para celdas de totales */
-.rpt-mercado-cell-total {
-    vertical-align: top;
-    padding-top: 0 !important;
+/* =============================================================================UTILIDADES CSS - Reemplazo de Bootstrap
+============================================================================= */
+
+/* Alineación de texto */
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+
+/* Padding */
+.rpt-pad-0 { padding: 0 !important; }
+.rpt-pad-right-15 { padding-right: 15px !important; }
+.rpt-ps-3 { padding-left: 1rem !important; }
+
+/* Negrita */
+.rpt-font-bold { font-weight: bold !important; }
+
+/* Tamaños de fuente estándar */
+.rpt-fs-8pt { font-size: 8pt !important; }
+.rpt-fs-9pt { font-size: 9pt !important; }
+.rpt-fs-14pt { font-size: 14pt !important; }
+
+/* Colores */
+.rpt-text-white { color: white !important; }
+
+/* Espaciados Estándar (Reemplazo de Bootstrap) */
+.rpt-mt-4 { margin-top: 1.5rem !important; }
+.rpt-mb-2 { margin-bottom: 0.5rem !important; }
+.rpt-mb-3 { margin-bottom: 1rem !important; }
+.rpt-mb-4 { margin-bottom: 1.5rem !important; }
+.rpt-mb-5 { margin-bottom: 3rem !important; }
+.rpt-px-3 { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+/* =============================================================================
+LITERALES DE ENCABEZADO ESPECÍFICOS CMAI (Patrón Cartera Diferida)
+============================================================================= */
+
+/* "Informe de Contratación" - Tamaño 9pt, color azul corporativo */
+.rpt-cmai-subtitulo {
+    font-size: 9pt;
+    font-weight: normal;
+    color: #00468B;
+}
+
+/* Contenedor del título corporativo - margen superior para bajar los literales */
+.rpt-cmai-titulo-container {
+    margin-top: 8px;
+}
+
+/* Separación específica para el subtítulo CMAI */
+.rpt-cmai-margin-left {
+    margin-left: 1rem !important;
 }
 
 /* =============================================================================
-   IMPRESIÓN — AJUSTES ESPECÍFICOS PARA MERCADOS
-   Las reglas generales de impresión están en informes_base.css
-   ============================================================================= */
+IMPRESIÓN — AJUSTES ESPECÍFICOS PARA MERCADOS
+Las reglas generales de impresión están en informes_base.css
+============================================================================= */
 @media print {
-    /* Contenedor papel para impresión */
-    .rpt-paper[data-informe="mercados"],
-    .rpt-paper--print {
-        max-width: 100% !important;
-        /* padding gestionado vía variable CSS inline (--rpt-padding-pdf) */
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
+  /* Forzar renderizado de colores de fondo */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-    /* Proporciones de columnas para A4 (745px útiles) */
-    .rpt-mercado-col-obj-m   { width: 14% !important; }
-    .rpt-mercado-col-contr-m { width: 14% !important; }
-    .rpt-mercado-col-desc    { width: 20% !important; }
-    .rpt-mercado-col-obj-a   { width: 16% !important; }
-    .rpt-mercado-col-contr-a { width: 16% !important; }
-    .rpt-mercado-col-ip      { width: 10% !important; }
-    .rpt-mercado-col-var     { width: 10% !important; }
+  /* Contenedor papel para impresión */
+  .rpt-paper[data-informe="mercados"],
+  .rpt-paper--print {
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
 
-    /* Reducir márgenes verticales entre bloques */
-    .rpt-mercado-layout {
-        margin-bottom: 1px !important;
-    }
+/* Proporciones de columnas para A4 (9 columnas con separadores) */
+.rpt-mercado-col-obj-m { width: 13% !important; }
+.rpt-mercado-col-contr-m { width: 13% !important; }
+.rpt-mercado-col-desc { width: 20% !important; }
+.rpt-mercado-col-obj-a { width: 15% !important; }
+.rpt-mercado-col-contr-a { width: 15% !important; }
+.rpt-mercado-col-ip { width: 10% !important; }
+.rpt-mercado-col-var { width: 10% !important; }
+.rpt-col-10px { width: 5px !important; }
 
-    /* Compactar banners de DG */
-    .rpt-banner-top {
-        margin-top: 1rem !important;
-        margin-bottom: 0.5rem !important;
-    }
+  /* Reducir márgenes verticales entre bloques */
+  .rpt-mercado-layout {
+    margin-bottom: 1px !important;
+  }
 
-    /* Evitar cortes dentro de filas de detalle */
-    .rpt-detail-row {
-        page-break-inside: avoid;
-    }
+  /* Compactar banners de DG - Separación aumentada entre agrupaciones */
+  .rpt-banner-top {
+    margin-top: 2.5rem !important;
+    margin-bottom: 0.8rem !important;
+  }
 
-    /* No cortar justo después de banners */
-    .rpt-banner-top {
-        page-break-after: avoid;
-    }
+  /* Evitar cortes dentro de filas de detalle */
+  .rpt-detail-row {
+    page-break-inside: avoid;
+  }
 
-    /* Permitir cortes dentro de bloques de DG para evitar hojas vacías */
-    .dn-block {
-        page-break-inside: auto !important;
-    }
+  /* No cortar justo después de banners */
+  .rpt-banner-top {
+    page-break-after: avoid;
+  }
 
-    /* Reducir fuente para impresión (paridad con Access) */
-    .rpt-table {
-        font-size: 8pt !important;
-    }
+  /* Permitir cortes dentro de bloques de DG para evitar hojas vacías */
+  .dn-block {
+    page-break-inside: auto !important;
+  }
 
-    /* Bordes más finos estilo Access */
-    .rpt-th-blue, .rpt-td-total, .rpt-mercado-th-border {
-        border-bottom-width: 0.5pt !important;
-    }
-    .rpt-mercado-total-row, .rpt-mercado-total-cell, .rpt-mercado-total-line {
-        border-top-width: 0.5pt !important;
-    }
+  /* Tipografía unificada 8pt */
+  .rpt-table {
+    font-size: 8pt !important;
+  }
 
-    /* Banner compacto */
-    .rpt-banner-top {
-        height: 25px !important;
-        font-size: 1.1rem !important;
-    }
+/* Compactación de interlineado y tipografía 8pt para filas de detalle */
+.rpt-detail-row td,
+.rpt-mercado-detail-row td {
+    line-height: 1.05 !important;
+    padding-top: 0.5px !important;
+    padding-bottom: 0.5px !important;
+    font-size: 8pt !important;
+}
+
+/* Bordes Hairline 0.3pt estilo Access */
+.rpt-th-blue,
+.rpt-th-blue th,
+.rpt-mercado-th-border {
+border-bottom: 0.3pt solid #00468B !important;
+border-top: none !important;
+}
+
+.rpt-td-total,
+.rpt-total-row-blue td {
+border-top: 0.3pt solid #00468B !important;
+border-bottom: none !important;
+}
+
+[rpt-border-none] {
+border: none !important;
+}
+
+  /* Seguridad: eliminar border-radius en print */
+  .rpt-mercado-header-badge {
+    border-radius: 0 !important;
+  }
+
+  /* Banner compacto - 14pt */
+  .rpt-banner-top {
+    height: 25px !important;
+    font-size: 14pt !important;
+    font-weight: normal !important;
+  }
+
+  /* Padding numérico reducido unificado (incluye totales para alinear Ip/Var) */
+  .rpt-number-cell,
+  .rpt-pad-right-15,
+  .rpt-td-total {
+    padding-right: 5px !important;
+    padding-left: 5px !important;
+  }
+
+  /* Header compacto */
+  .rpt-header {
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Subtítulo compacto — idéntico a Cartera Diferida */
+  .rpt-subtitle {
+    font-size: 8pt !important;
+    margin-bottom: 0.3rem !important;  /* Reducido para igualar densidad con Cartera Diferida */
+  }
+
+  /* Literales del encabezado CMAI - paridad con cartera_diferida_consejo.css */
+  .rpt-cmai-subtitulo {
+    font-size: 9pt !important;
+  }
+  .rpt-cmai-titulo-container {
+    margin-top: 8px !important;
+  }
 }

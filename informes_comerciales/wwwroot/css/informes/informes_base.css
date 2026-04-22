@@ -540,6 +540,7 @@ Estándar: 10pt, sin negrita, azul corporativo
         margin: 0 !important;
         padding: 0 !important;
         overflow: visible !important;
+        font-family: Verdana, Arial, sans-serif !important;
     }
 
 /* 4. Simulador de Márgenes Físicos del PDF (Access Parity 1.6cm / 16mm)
@@ -599,15 +600,18 @@ Estándar: 10pt, sin negrita, azul corporativo
        ========================================================================== */
 
     /* 10.1 igUal PARA WEB Y PRINT */
-    .rpt-table {
+    .rpt-table, .rpt-table th, .rpt-table td, .rpt-table div, .rpt-table span,
+    .rpt-block-table th, .rpt-block-table td,
+    .rpt-table-triple th, .rpt-table-triple td {
         font-size: 8pt !important;
+        font-family: Verdana, Arial, sans-serif !important;
     }
 
-    /* 10.2 COMPACTACIÓN DE INTERLINEADO (Crítico #3): De 1.4 a 1.05 */
+    /* 10.2 COMPACTACIÓN DE INTERLINEADO (Crítico #3): De 1.4 a 1.15 */
     .rpt-detail-row td {
-        line-height: 1.05 !important;
-        padding-top: 1px !important;
-        padding-bottom: 1px !important;
+        line-height: 1.15 !important;
+        padding-top: 1.5px !important;
+        padding-bottom: 1.5px !important;
     }
 
     /* 10.3 BORDES FINOS ESTILO ACCESS (Alto #5): Cabeceras y Totales Hairline (0.3pt) */
@@ -615,14 +619,14 @@ Estándar: 10pt, sin negrita, azul corporativo
     .rpt-th-blue th, 
     .rpt-th-blue td,
     .rpt-table-triple thead tr.rpt-border-header th {
-        border-bottom-width: 0.3pt !important;
-        border-top-width: 0px !important;
+        border-bottom: 0.3pt solid #00468B !important;
+        border-top: none !important;
     }
 
     .rpt-td-total, 
     .rpt-total-row-blue td {
-        border-top-width: 0.3pt !important;
-        border-bottom-width: 0px !important;
+        border-top: 0.3pt solid #00468B !important;
+        border-bottom: none !important;
     }
 
     /* 10.4 BANNER COMPACTO (Alto #6): De 38px a 25px */
