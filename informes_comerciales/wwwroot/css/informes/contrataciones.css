@@ -2,55 +2,52 @@
 
 /* Título de sección */
 .rpt-section-title {
-    color: #00468B;
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 1.5rem 0 0.8rem 0;
+  color: #00468B;
+  font-size: 9pt !important; /* PT obligatorio - reemplaza 1rem */
+  font-weight: bold;
+  margin: 1rem 0 0.5rem 0;
+  border-bottom: 1px solid #00468B; /* Línea horizontal azul igual que Contrataciones_AI */
+  padding-bottom: 5px;
 }
 
-/* Cabecera de mes (barra azul claro) */
+/* Cabecera de mes (barra azul claro) - Mismo ancho que la tabla */
 .rpt-month-header {
-    background-color: #D6EAF8;
-    color: #00468B;
-    font-weight: bold;
-    font-size: 0.85rem;
-    padding: 4px 10px;
-    margin-bottom: 0.5rem;
+  background-color: #D6EAF8;
+  color: #00468B;
+  font-weight: bold;
+  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.85rem */
+  padding: 4px 10px;
+  margin: 0 auto 0.5rem auto; /* Centrado, margen inferior separa de la tabla */
+  width: 98%; /* Mismo ancho que la tabla */
+  box-sizing: border-box;
 }
 
-/* Tabla del bloque principal y subinformes genéricos */
+/* Tabla del bloque principal y subinformes genéricos - Rigidez columnar (V-15) */
 .rpt-table-contrataciones {
-    width: 98% !important; /* Aumentado del 95% para mejor aprovechamiento */
-    margin: 0 auto !important; /* Centrado perfecto respecto a la cabecera */
-    border-collapse: collapse;
+  width: 98% !important;
+  margin: 0 auto !important; /* Mismo centrado que la cabecera */
+  border-collapse: collapse;
+  table-layout: fixed !important; /* Rigidez columnar */
 }
 
 /* Bloque de informe con margen inferior */
 .rpt-content-block {
-    margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 /* Anchos de columna unificados para alineación vertical */
-.rpt-col-ai        { width: 4%; }
+.rpt-col-ai { width: 3%; }
 .rpt-col-desc      { width: 42%; }
 .rpt-col-cliente   { width: 29%; }
 .rpt-col-importe   { width: 13%; }
 .rpt-col-dirnegocio { width: 12%; }
 
-/* Padding de celdas y tamaño de fuente afinado (8.4pt aprox) */
+/* Padding de celdas y tamaño de fuente afinado (8pt estándar) */
 .rpt-table-contrataciones td {
-    padding: 1px 4px !important;
-    font-size: 0.65rem; /* Reducido a petición (0.65rem ≈ 7.8pt) para máxima densidad visual */
-    line-height: 1.1;
-    vertical-align: middle;
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-    .rpt-table-contrataciones {
-        width: 100% !important;
-        font-size: 0.75rem;
-    }
+  padding: 2px 4px !important;
+  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.65rem */
+  line-height: 1.2;
+  vertical-align: middle;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
@@ -59,47 +56,148 @@
 
 /* Asegurar que los títulos de subinformes históricos sean grises */
 .rpt-contrataciones-anno-nacional-anterior-section {
-    margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .rpt-contrataciones-anno-nacional-anterior-section .rpt-section-title {
-    color: #8a8a8a !important;
+  color: #8a8a8a !important;
 }
 
-/* Línea separadora genérica: Negra y bien contrastada */
+/* Último subinforme (sin borde inferior) */
+.rpt-contrataciones-last .rpt-section-title {
+  border-bottom: none !important;
+}
+
+/* Línea separadora genérica: Negra y bien contrastada - Mismo ancho que la tabla */
 .rpt-subreport-separator {
-    border: 0;
-    border-top: 1px solid #333; 
-    margin: 0 0 0.5rem 0;
-    width: 100%;
+  border: 0;
+  border-top: 1px solid #333;
+  margin: 0.5rem auto; /* Centrado como la tabla */
+  width: 98%; /* Mismo ancho que la tabla */
 }
 
 /* Reducción de fuente para subinformes históricos (grises) */
 .rpt-contrataciones-anno-nacional-anterior-section td {
-    color: #8a8a8a !important;
+  color: #8a8a8a !important;
 }
 
-/* ==========================================================================
-   REGLAS DE IMPRESIÓN - Paridad visual PDF (modal → print)
-   ========================================================================== */
+/* =============================================================================
+   UTILIDADES CSS (Reemplazo de Bootstrap)
+   ============================================================================= */
+
+/* Alineación de texto */
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+.rpt-align-start { text-align: start !important; text-align: left !important; }
+
+/* Padding */
+.rpt-ps-3 { padding-left: 1rem !important; }
+
+/* Fuente monoespaciada */
+.rpt-font-mono { font-family: monospace !important; }
+
+/* Badge AI (reemplaza estilos inline) */
+.rpt-badge-ai {
+  border: 1px solid #00468B !important;
+  color: #00468B !important;
+  font-size: 7pt !important;
+  padding: 0 2px !important;
+  min-width: 20px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* =============================================================================
+   CLASES CMAI (Patrón Consejo Elecnor) - Paridad con mercados.css
+   ============================================================================= */
+
+/* Subtítulo CMAI - 9pt, azul corporativo */
+.rpt-cmai-subtitulo {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #00468B;
+}
+
+/* Contenedor del título corporativo - margen superior para bajar los literales */
+.rpt-cmai-titulo-container {
+  margin-top: 8px;
+}
+
+/* Separación específica para el subtítulo CMAI */
+.rpt-cmai-margin-left {
+  margin-left: 1rem !important;
+}
+
+/* Separación cabecera-contenido (V-18) - Estándar CMAI */
+.report-body {
+  margin-top: 1.5rem !important;
+}
+
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF (@media print)
+   Paridad estricta con Access
+   ============================================================================= */
 @media print {
-    /* Informe principal: misma fuente que impresión base (8pt) */
-    .rpt-table-contrataciones td {
-        font-size: 7pt !important;
-        padding-top: 1px !important;
-        padding-bottom: 1px !important;
-    }
+  /* Forzar renderizado de colores de fondo */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-    /* Subinforme: misma fuente que informe principal (8pt) */
-    .rpt-contrataciones-anno-nacional-anterior-table td,
-    .rpt-contrataciones-anno-nacional-anterior-table span,
-    .rpt-contrataciones-anno-nacional-anterior-table div {
-        font-size: 7pt !important;
-        padding: 1px 4px !important;
-    }
+  /* Contenedor papel para impresión */
+  .rpt-paper[data-informe="contrataciones"],
+  .rpt-paper--print {
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
 
-    /* Badge AI en impresión */
-    .rpt-contrataciones-anno-nacional-anterior-table .badge {
-        font-size: 7pt !important;
-    }
+  /* Header - Espacio equilibrado */
+  .rpt-header {
+    margin-bottom: 0.6rem !important;
+  }
+
+  /* Subtítulo - Espacio equilibrado */
+  .rpt-subtitle {
+    font-size: 8pt !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  /* Banner - Espacio equilibrado para separar del contenido */
+  .rpt-banner-top {
+    margin-top: 0.8rem !important;
+    margin-bottom: 0.8rem !important;
+    height: 25px !important;
+    font-size: 14pt !important;
+    font-weight: normal !important;
+  }
+
+  /* Separación cabecera-contenido en PDF */
+  .report-body {
+    margin-top: 0.8rem !important;
+  }
+
+  /* Evitar cortes dentro de filas de detalle */
+  .rpt-detail-row {
+    page-break-inside: avoid;
+  }
+
+  /* No cortar justo después de banners */
+  .rpt-banner-top {
+    page-break-after: avoid;
+  }
+
+  /* Informe principal: fuente 8pt estándar */
+  .rpt-table-contrataciones td {
+    font-size: 8pt !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+
+  /* Badge AI en impresión */
+  .rpt-badge-ai {
+    font-size: 8pt !important;
+    border: 0.3pt solid #00468B !important;
+  }
 }

@@ -1,114 +1,208 @@
-/* 
+/*
    Estilos específicos para el informe ContratacionesAI (Asociadas a Inversión)
    Hereda de informes_base.css y mantiene la paridad visual con Contrataciones
+   Estándar CMAI - Paridad con Access
 */
 
-/* [ACCIÓN 2] Anchos de columna corregidos (suman 100%) */
+/* Anchos de columna corregidos (suman 100%) */
 .rpt-col-ai {
-    width: 5%;
-    text-align: center;
+  width: 5%;
 }
 
 .rpt-col-desc {
-    width: 45%;
-    text-align: left;
+  width: 45%;
 }
 
 .rpt-col-cliente {
-    width: 38%;
-    text-align: left;
+  width: 38%;
 }
 
 .rpt-col-importe {
-    width: 12%;
-    text-align: right;
+  width: 12%;
 }
 
-/* [ACCIÓN 5] Tabla del informe AI */
+/* Tabla del informe AI - Rigidez columnar (V-15) */
 .rpt-table-contrataciones-ai {
-    width: 98% !important;
-    margin: 0 auto !important;
-    border-collapse: collapse;
+  width: 98% !important;
+  margin: 0 auto !important;
+  border-collapse: collapse;
+  table-layout: fixed !important;
 }
 
-/* Paridad de detalle con informe de Contrataciones (0.65rem ≈ 7.8pt) */
+/* Paridad de detalle con informe de Contrataciones (8pt estándar) */
 .rpt-table-contrataciones-ai td {
-    padding: 1px 4px !important;
-    font-size: 0.65rem; 
-    line-height: 1.1;
-    vertical-align: middle;
+  padding: 2px 4px !important;
+  font-size: 8pt !important;
+  line-height: 1.2;
+  vertical-align: middle;
 }
 
-/* Colores corporativos del CONSEJO ELECNOR */
-.text-orange-council {
-    color: #E38631 !important;
-}
-
-/* Cabecera de Sección (Asociado a Inversión > 0,3M) 
-   Refinado según Imagen 1: Fondo blanco, texto azul negrita, línea inferior
+/* Cabecera de Sección (Asociado a Inversión > 0,3M)
+   Refinado: Fondo blanco, texto azul negrita, línea inferior
 */
 .rpt-section-ai-header {
-    background-color: transparent !important; /* Eliminado fondo azul claro (Imagen 2) */
-    color: #00468B;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 2px 0;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    border-bottom: 2px solid #00468B; /* Línea de separación azul */
+  background-color: transparent !important;
+  color: #00468B;
+  font-weight: bold;
+  font-size: 10pt !important;
+  padding: 2px 0;
+  border-bottom: 1px solid #00468B;
 }
 
 /* Cabecera de mes (Mantener paridad con Contrataciones) */
 .rpt-month-header {
-    background-color: #D6EAF8;
-    color: #00468B;
-    font-weight: bold;
-    font-size: 0.85rem;
-    padding: 4px 10px;
-    margin-bottom: 0.5rem;
+  background-color: #D6EAF8;
+  color: #00468B;
+  font-weight: bold;
+  font-size: 8pt !important;
+  padding: 4px 10px;
+  margin: 0 auto 0.5rem auto;
+  width: 98%;
+  box-sizing: border-box;
 }
 
-/* [ACCIÓN 4] REGLAS DE IMPRESIÓN - Paridad visual PDF (7pt exactos) */
-@media print {
-    .rpt-table-contrataciones-ai td {
-        font-size: 7pt !important;
-        padding-top: 1px !important;
-        padding-bottom: 1px !important;
-    }
-
-    .rpt-section-ai-header {
-        border-bottom: 0.5pt solid #00468B !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .rpt-month-header {
-        background-color: #D6EAF8 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/* SUBINFORME: Contrataciones AI Meses Anteriores (Gris / Histórico)           */
-/* ═══════════════════════════════════════════════════════════════════════════ */
+/* =============================================================================
+   SUBINFORME: Contrataciones AI Meses Anteriores (Gris / Histórico)
+   ============================================================================= */
 
 .rpt-subreport-ai-anterior {
-    margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 /* Cabecera del subinforme en gris según diseño de Access */
 .rpt-subreport-ai-anterior .rpt-section-ai-header {
-    color: #8C8C8C !important;
-    border-bottom: 1px solid #8C8C8C !important;
+  color: #8C8C8C !important;
+  border-bottom: 1px solid #8C8C8C !important;
 }
 
 /* Detalle del subinforme en gris suave (#8C8C8C) */
 .rpt-subreport-ai-anterior td {
-    color: #8C8C8C !important;
+  color: #8C8C8C !important;
 }
 
 /* Asegurar que el badge AI también sea gris en el subinforme */
 .rpt-subreport-ai-anterior .rpt-col-ai {
-    color: #8C8C8C !important;
+  color: #8C8C8C !important;
+}
+
+/* =============================================================================
+   UTILIDADES CSS (Reemplazo de Bootstrap)
+   ============================================================================= */
+
+/* Alineación de texto */
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+.rpt-align-start { text-align: start !important; text-align: left !important; }
+
+/* Fuente monoespaciada */
+.rpt-font-mono { font-family: monospace !important; }
+
+/* Tamaño de texto pequeño (reemplaza 'small') */
+.rpt-text-small { font-size: 8pt !important; }
+
+/* Texto muted (gris) */
+.rpt-text-muted { color: #6c757d !important; }
+
+/* Espaciado */
+.rpt-mt-4 { margin-top: 1.5rem !important; }
+.rpt-mb-2 { margin-bottom: 0.5rem !important; }
+.rpt-p-5 { padding: 3rem !important; }
+
+/* =============================================================================
+   CLASES CMAI (Patrón Consejo Elecnor) - Paridad con mercados.css
+   ============================================================================= */
+
+/* Subtítulo CMAI - 9pt, azul corporativo */
+.rpt-cmai-subtitulo {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #00468B;
+}
+
+/* Contenedor del título corporativo - margen superior para bajar los literales */
+.rpt-cmai-titulo-container {
+  margin-top: 8px;
+}
+
+/* Separación específica para el subtítulo CMAI */
+.rpt-cmai-margin-left {
+  margin-left: 1rem !important;
+}
+
+/* Separación cabecera-contenido (V-18) - Estándar CMAI */
+.report-body {
+  margin-top: 1.5rem !important;
+}
+
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF (@media print)
+   Paridad estricta con Access
+   ============================================================================= */
+@media print {
+  /* Forzar renderizado de colores de fondo */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Contenedor papel para impresión */
+  .rpt-paper[data-informe="contrataciones_ai"],
+  .rpt-paper--print {
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Header - Espacio ajustado */
+  .rpt-header {
+    margin-bottom: 0.6rem !important;
+  }
+
+  /* Subtítulo - Espacio ajustado */
+  .rpt-subtitle {
+    font-size: 8pt !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  /* Banner - Espacio ajustado */
+  .rpt-banner-top {
+    margin-top: 0.8rem !important;
+    margin-bottom: 0.8rem !important;
+    height: 25px !important;
+    font-size: 14pt !important;
+    font-weight: normal !important;
+  }
+
+  /* Separación cabecera-contenido en PDF */
+  .report-body {
+    margin-top: 0.8rem !important;
+  }
+
+  /* Evitar cortes dentro de filas de detalle */
+  .rpt-detail-row {
+    page-break-inside: avoid;
+  }
+
+  /* No cortar justo después de banners */
+  .rpt-banner-top {
+    page-break-after: avoid;
+  }
+
+  /* Informe principal: fuente 8pt estándar */
+  .rpt-table-contrataciones-ai td {
+    font-size: 8pt !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+
+  /* Cabecera de sección con hairline en PDF */
+  .rpt-section-ai-header {
+    border-bottom: 0.3pt solid #00468B !important;
+  }
+
+  /* Cabecera de mes en PDF */
+  .rpt-month-header {
+    background-color: #D6EAF8 !important;
+  }
 }

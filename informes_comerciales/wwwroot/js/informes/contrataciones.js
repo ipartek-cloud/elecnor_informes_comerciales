@@ -48,15 +48,15 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarT
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
 
-        await inicializarInforme({
-            url,
-            estado,
-            renderizarPagina: _renderizarPagina,
-            inicializarEventListeners: _registrarEventos,
-            prefijoPaginacion: '',
-            claveAgrupacion: 'NONE',
-            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
-        });
+await inicializarInforme({
+      url,
+      estado,
+      renderizarPagina: _renderizarPagina,
+      inicializarEventListeners: _registrarEventos,
+      prefijoPaginacion: '',
+      claveAgrupacion: 'NONE',
+      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+    });
 
     } catch (error) {
         console.error("Error al ejecutar informe Contrataciones:", error);
@@ -82,9 +82,9 @@ async function _renderizarPagina() {
 }
 
 function _getHtmlEncabezado() {
-    const data = estado.informeGlobalData;
-    return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo Elecnor</span> <span class="ms-3 fs-6 text-primary">Informe de Contratación</span>',
+  const data = estado.informeGlobalData;
+  return getHtmlEncabezadoBase({
+    tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: 'Principales Contrataciones del Año',
         textoBanner2: 'Contratos',
         mes: data?.meta?.filtros?.mes,
@@ -127,14 +127,14 @@ async function _renderCuerpoInforme() {
         });
     }
 
-    // Renderizar SubInforme 3: Internacional Anterior (Último bloque)
-    if (data?.subInformes?.annoInternacionalAnterior?.length > 0) {
-        html += _renderSubInformeGenerico(data.subInformes.annoInternacionalAnterior, {
-            titulo: 'Anterior > 25 M',
-            mostrarMes: false,
-            claseSeccion: 'rpt-contrataciones-anno-nacional-anterior-section'
-        });
-    }
+  // Renderizar SubInforme 3: Internacional Anterior (Último bloque - sin borde inferior)
+  if (data?.subInformes?.annoInternacionalAnterior?.length > 0) {
+    html += _renderSubInformeGenerico(data.subInformes.annoInternacionalAnterior, {
+      titulo: 'Anterior > 25 M',
+      mostrarMes: false,
+      claseSeccion: 'rpt-contrataciones-last' // Clase especial para el último subinforme (sin borde)
+    });
+  }
 
     return html;
 }
@@ -146,21 +146,20 @@ async function _renderCuerpoInforme() {
 function _renderSubInformeGenerico(datos, config) {
     if (!datos || datos.length === 0) return '';
 
-    const filas = datos.map(item => {
-        const badgeAI = item.ai === 'AI' ? 
-            `<span class="badge border border-primary text-primary px-1" title="Oferta Asociada a Inversión" 
-                   style="font-size: 0.65rem; min-width: 20px; display: inline-block;">AI</span>` : '';
-                   
-        return `
-            <tr class="${RPT_CLASSES.DETAIL_ROW}">
-                <td class="rpt-col-ai text-center">${badgeAI}</td>
-                <td class="rpt-col-desc text-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
-                <td class="rpt-col-cliente text-start">${escapeHtml(item.nombreClientes_OK)}</td>
-                <td class="rpt-col-importe text-end font-monospace">${formatCurrency(item.importeContratado_OK, 0)}</td>
-                <td class="rpt-col-dirnegocio text-start ps-3">${escapeHtml(item.nombreDirNegocio_OK)}</td>
-            </tr>
-        `;
-    }).join('');
+  const filas = datos.map(item => {
+    const badgeAI = item.ai === 'AI' ?
+      `<span class="rpt-badge-ai" title="Oferta Asociada a Inversión">AI</span>` : '';
+
+    return `
+    <tr class="${RPT_CLASSES.DETAIL_ROW}">
+      <td class="rpt-col-ai rpt-align-center">${badgeAI}</td>
+      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
+      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.nombreClientes_OK)}</td>
+      <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importeContratado_OK, 0)}</td>
+      <td class="rpt-col-dirnegocio rpt-align-start rpt-ps-3">${escapeHtml(item.nombreDirNegocio_OK)}</td>
+    </tr>
+    `;
+  }).join('');
 
     const htmlMes = config.mostrarMes ? `<div class="rpt-month-header">${datos[0].meses}</div>` : '<hr class="rpt-subreport-separator">';
 
@@ -189,15 +188,15 @@ function _renderCabeceraMes(data) {
 }
 
 function _renderTablaContrataciones(data) {
-    const filas = data.datos.map(item => `
-        <tr class="${RPT_CLASSES.DETAIL_ROW}">
-            <td class="rpt-col-ai"></td>
-            <td class="rpt-col-desc text-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
-            <td class="rpt-col-cliente text-start">${escapeHtml(item.nombreClientes_OK)}</td>
-            <td class="rpt-col-importe text-end">${formatCurrency(item.importeContratado_OK, 0)}</td>
-            <td class="rpt-col-dirnegocio"></td>
-        </tr>
-    `).join('');
+  const filas = data.datos.map(item => `
+    <tr class="${RPT_CLASSES.DETAIL_ROW}">
+      <td class="rpt-col-ai"></td>
+      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
+      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.nombreClientes_OK)}</td>
+      <td class="rpt-col-importe rpt-align-end">${formatCurrency(item.importeContratado_OK, 0)}</td>
+      <td class="rpt-col-dirnegocio"></td>
+    </tr>
+  `).join('');
 
     return `
         <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones">

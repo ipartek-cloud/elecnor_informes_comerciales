@@ -47,14 +47,14 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarT
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
 
-        await inicializarInforme({
-            url,
-            estado,
-            renderizarPagina: _renderizarPagina,
-            inicializarEventListeners: _registrarEventos,
-            claveAgrupacion: 'NONE', // Es un informe de página única por ahora
-            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
-        });
+await inicializarInforme({
+      url,
+      estado,
+      renderizarPagina: _renderizarPagina,
+      inicializarEventListeners: _registrarEventos,
+      claveAgrupacion: 'NONE', // Es un informe de página única por ahora
+      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+    });
 
     } catch (error) {
         console.error("Error al ejecutar informe Contrataciones AI:", error);
@@ -87,9 +87,9 @@ async function _renderizarPagina() {
  * Genera el encabezado HTML.
  */
 function _getHtmlEncabezado() {
-    const data = estado.informeGlobalData;
-    return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="text-orange-council fs-3">Consejo Elecnor</span> <span class="ms-3 fs-6 text-primary">Informe de Contratación</span>',
+  const data = estado.informeGlobalData;
+  return getHtmlEncabezadoBase({
+    tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: data?.meta?.titulo || 'Principales Contrataciones del Año',
         textoBanner2: data?.meta?.subTitulo || 'Contratos',
         mes: data?.meta?.filtros?.mes,
@@ -113,20 +113,20 @@ async function _renderCuerpoInforme() {
     // 1. BLOQUE PRINCIPAL (MES ACTUAL)
     if (data.datos && data.datos.length > 0) {
         const mesNombre = getNombreMes(data.meta.filtros.mes);
-        const filas = data.datos.map(item => `
-            <tr class="${RPT_CLASSES.DETAIL_ROW}">
-                <td class="rpt-col-ai text-center small text-muted">${item.mercado}</td>
-                <td class="rpt-col-desc text-start">${escapeHtml(item.descripcion)}</td>
-                <td class="rpt-col-cliente text-start">${escapeHtml(item.cliente)}</td>
-                <td class="rpt-col-importe text-end font-monospace">${formatCurrency(item.importe, 0)}</td>
-            </tr>
-        `).join('');
+    const filas = data.datos.map(item => `
+    <tr class="${RPT_CLASSES.DETAIL_ROW}">
+      <td class="rpt-col-ai rpt-align-center rpt-text-small rpt-text-muted">${item.mercado}</td>
+      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
+      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
+      <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
+    </tr>
+  `).join('');
 
-        html += `
-            <div class="rpt-content-block">
-                <div class="rpt-section-ai-header mb-2 mt-4 text-primary">
-                    Asociado a Inversión > 0,3M
-                </div>
+    html += `
+    <div class="rpt-content-block">
+      <div class="rpt-section-ai-header rpt-mt-4 rpt-mb-2">
+        Asociado a Inversión > 0,3M
+      </div>
                 <div class="rpt-month-header">${mesNombre}</div>
                 <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
                     <tbody>
@@ -139,20 +139,20 @@ async function _renderCuerpoInforme() {
 
     // 2. SUBINFORME (MESES ANTERIORES ACUMULADOS) - Estilo Gris Histórico
     if (data.datosAnterior && data.datosAnterior.length > 0) {
-        const filasAnt = data.datosAnterior.map(item => `
-            <tr class="${RPT_CLASSES.DETAIL_ROW}">
-                <td class="rpt-col-ai text-center small">${item.mercado}</td>
-                <td class="rpt-col-desc text-start">${escapeHtml(item.descripcion)}</td>
-                <td class="rpt-col-cliente text-start">${escapeHtml(item.cliente)}</td>
-                <td class="rpt-col-importe text-end font-monospace">${formatCurrency(item.importe, 0)}</td>
-            </tr>
-        `).join('');
+    const filasAnt = data.datosAnterior.map(item => `
+    <tr class="${RPT_CLASSES.DETAIL_ROW}">
+      <td class="rpt-col-ai rpt-align-center rpt-text-small">${item.mercado}</td>
+      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
+      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
+      <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
+    </tr>
+  `).join('');
 
-        html += `
-            <div class="rpt-content-block rpt-subreport-ai-anterior">
-                <div class="rpt-section-ai-header mb-2 mt-4">
-                    Anterior > 0,7M
-                </div>
+    html += `
+    <div class="rpt-content-block rpt-subreport-ai-anterior">
+      <div class="rpt-section-ai-header rpt-mt-4 rpt-mb-2">
+        Anterior > 0,7M
+      </div>
                 <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
                     <tbody>
                         ${filasAnt}
@@ -163,7 +163,7 @@ async function _renderCuerpoInforme() {
     }
 
     // Si no hay ningún dato en ninguno de los bloques
-    if (!html) return `<div class="text-center p-5 text-muted">No se han encontrado registros para el periodo seleccionado.</div>`;
+    if (!html) return `<div class="rpt-align-center rpt-p-5 rpt-text-muted">No se han encontrado registros para el periodo seleccionado.</div>`;
 
     return html;
 }
