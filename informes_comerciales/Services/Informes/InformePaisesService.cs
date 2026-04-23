@@ -26,12 +26,14 @@ public class InformePaisesService
         var datosPlanos = await _repository.ObtenerPaisesAsync(anio, mes);
 
         // 2. Preparar respuesta
-        var tituloBase = umbral > 0 ? "Países Relevantes" : "Países";
+        //var tituloBase = umbral > 0 ? "Países Relevantes" : "Países";
+        var tituloBase = "Mercado internacional por países";
         var response = new PaisesResponseDto
         {
             Meta = new MetaInformeDto
             {
-                Titulo = $"{tituloBase} (Mercado Internacional)",
+                //Titulo = $"{tituloBase} (Mercado Internacional)",
+                Titulo = tituloBase,
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral },
                 FechaGeneracion = DateTime.Now,

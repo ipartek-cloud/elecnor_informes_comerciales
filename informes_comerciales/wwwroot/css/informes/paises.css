@@ -1,207 +1,255 @@
 /* =============================================================================
-   ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES
-   ============================================================================= */
+ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES
+============================================================================= */
 
 .rpt-paper[data-informe="paises"] {
-    container-type: inline-size;
-    container-name: rpt-paper;
-    max-width: 1100px;
-    margin: 0 auto;
+  container-type: inline-size;
+  container-name: rpt-paper;
+  /* Los márgenes se controlan vía JS con getStyleVars() - no aplicar padding aquí */
+  /* Las variables --rpt-padding-web y --rpt-padding-pdf se inyectan desde JS */
+  margin: 0 auto;
+  box-shadow: none;
+  border: none;
 }
 
 /* Container Queries - Ajustes para contenedores estrechos (<700px) */
 @container rpt-paper (max-width: 700px) {
-    .rpt-paises-num-cell {
-        padding-right: 8px !important;
-    }
+  .rpt-paises-num-cell {
+    padding-right: 8px !important;
+  }
 
-    .rpt-paises-new-flag {
-        font-size: 1rem;
-    }
+  .rpt-paises-new-flag {
+    font-size: 8pt;
+  }
 
-    .rpt-paises-col-porc  { width: 12%; }
-    .rpt-paises-col-contr { width: 16%; }
-    .rpt-paises-col-pos   { width: 7%; }
-    .rpt-paises-col-pais  { width: 30%; }
+  .rpt-paises-col-porc { width: 16%; }
+  .rpt-paises-col-contr { width: 13%; }
+  .rpt-paises-col-pos { width: 7%; }
+  .rpt-paises-col-pais { width: 30%; }
 }
 
-/* Layout de Columnas (Simetría) */
-.rpt-paises-col-porc  { width: 10%; }
-.rpt-paises-col-contr { width: 14%; }
-.rpt-paises-col-pos   { width: 8%; }
-.rpt-paises-col-pais  { width: 36%; }
+/* Layout de Columnas (Simetría) - Redistribuido para evitar wrap en % S/Internac */
+.rpt-paises-col-porc { width: 16%; }   /* Aumentado para evitar wrap del título */
+.rpt-paises-col-contr { width: 13%; }  /* Reducido para dar espacio a % S/Internac */
+.rpt-paises-col-pos { width: 7%; }     /* Reducido ligeramente */
+.rpt-paises-col-pais { width: 28%; }
 
 /* Cabecera: Azul corporativo Elecnor */
 thead .rpt-paises-pais-cell {
-    background-color: #00468B;
-    color: white;
-    font-weight: bold;
-    text-align: center;
+  background-color: #00468B;
+  color: white;
+  font-weight: bold;
+  text-align: center;
 }
 
 /* Detalle: Blanco con texto normal */
 tbody .rpt-paises-pais-cell {
-    color: #444;
-    font-weight: normal;
-    text-align: center;
+  color: #444;
+  font-weight: normal;
+  text-align: center;
 }
 
 .rpt-paises-pos-cell {
-    text-align: center;
+  text-align: center;
 }
 
 .rpt-paises-num-cell {
-    text-align: right;
-    padding-right: 15px !important;
+  text-align: right;
+  padding-right: 15px !important;
+}
+
+/* Separación entre cabecera del informe y datos de la tabla */
+.report-body {
+  margin-top: 2.5rem !important; /* Estándar CMAI - separación cabecera/datos */
+  padding-left: 40px !important; /* Sangría subinforme vs cabecera */
+  padding-right: 40px !important;
 }
 
 /* Banner de títulos sobre columnas */
 .rpt-paises-header-year {
-    color: #00468B;
-    font-weight: bold;
-    text-align: center;
+  color: #00468B;
+  font-weight: bold;
+  text-align: center;
 }
 
 .rpt-th-blue-segmented {
-    color: #00468B !important;
-    font-weight: bold;
+  color: #00468B !important;
+  font-weight: bold;
 }
 
 .rpt-paises-th-border {
-    border-bottom: 2px solid #00468B !important;
-    padding-bottom: 3px !important;
+  border-bottom: 0.3pt solid #00468B !important;
+  padding-bottom: 3px !important;
 }
 
 .rpt-paises-th-border-pais {
-    border-bottom: 2px solid #00468B !important;
-    padding: 2px 0 2px 0 !important;
+  border-bottom: 0.3pt solid #00468B !important;
+  padding: 2px 0 2px 0 !important;
 }
 
 /* Líneas de totales segmentadas */
 .rpt-paises-total-row {
-    font-weight: bold !important;
-    color: #00468B !important;
+  font-weight: bold !important;
+  color: #00468B !important;
+}
+
+/* Gap de Totales - Fila separadora 6px (Estándar V-11) */
+.rpt-spacer-row-totales,
+.rpt-spacer-cell-totales {
+  height: 6px !important;
+  border: none !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
 }
 
 /* Fila 1 de totales: línea separadora azul en la parte superior */
 /* Solo se aplica a las celdas deseadas mediante la clase .rpt-paises-total-line */
 .rpt-paises-total-line {
-    border-top: 2px solid #00468B !important;
+  border-top: 0.3pt solid #00468B !important;
 }
 
 /* Fila 2 de totales: Total Internacional global — sin línea, con espacio superior */
 .rpt-paises-total-global td {
-    border-top: none !important;
-    padding-top: 0.6rem !important;
-    padding-bottom: 0.2rem !important;
+  border-top: none !important;
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.2rem !important;
 }
 
-/* Nota de pie de página: gris y fuente ligeramente más pequeña */
+/* Nota de pie de página: gris y fuente 8pt */
 .rpt-paises-footer-nota {
-    color: #888;
-    font-size: 0.82em;
-    margin-bottom: 0.25rem;
+  color: #888;
+  font-size: 8pt;
+  margin-bottom: 0.25rem;
 }
 
 .rpt-paises-footer-block {
-    margin-top: 2rem;
-    font-size: clamp(0.8rem, 1vw + 0.5rem, 0.9rem);
+  margin-top: 2rem;
+  font-size: 8pt;
 }
 
 /* Flag de país nuevo (*) */
 .rpt-paises-new-flag {
-    color: #D67F00;
-    font-weight: bold;
-    font-size: clamp(1rem, 1.5vw, 1.25rem);
-    margin-right: 4px;
-    display: inline-block;
-    vertical-align: middle;
-    line-height: 1;
-    position: relative;
-    top: 2px;
+  color: #D67F00;
+  font-weight: bold;
+  font-size: 8pt;
+  margin-right: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  position: relative;
+  top: 2px;
 }
+
+/* Contenedor para asterisco de país nuevo - reemplaza estilo inline */
+.rpt-paises-asterisk-container {
+  width: 25px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Wrapper para fila de país - reemplaza d-flex de Bootstrap */
+.rpt-paises-pais-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+}
+
+/* Utilidades de alineación (reemplazan clases Bootstrap) */
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+.rpt-pad-right-15 { padding-right: 15px !important; }
+.rpt-w-100 { width: 100% !important; }
 
 /* Impresión - Paridad con Access (Margen 16mm) */
 @media print {
-    .rpt-paper[data-informe="paises"],
-    .rpt-paper--print {
-        max-width: 100% !important;
-        /* padding gestionado vía variable CSS inline (--rpt-padding-pdf) */
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
+  .rpt-paper[data-informe="paises"],
+  .rpt-paper--print {
+    max-width: 100% !important;
+    /* padding gestionado vía variable CSS inline (--rpt-padding-pdf) */
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
 
-    .rpt-paises-col-porc  { width: 10% !important; }
-    .rpt-paises-col-contr { width: 14% !important; }
-    .rpt-paises-col-pos   { width: 8% !important; }
-    .rpt-paises-col-pais  { width: 36% !important; }
+  .rpt-paises-col-porc { width: 16% !important; }   /* Aumentado para evitar wrap del título */
+  .rpt-paises-col-contr { width: 13% !important; }  /* Reducido para dar espacio a % S/Internac */
+  .rpt-paises-col-pos { width: 7% !important; }     /* Reducido ligeramente */
+  .rpt-paises-col-pais { width: 28% !important; }
 
-    .rpt-table {
-        font-size: 8pt !important;
-    }
+  .rpt-table {
+    font-size: 8pt !important;
+  }
 
-    .rpt-th-blue,
-    .rpt-paises-total-line {
-        border-bottom-width: 0.5pt !important;
-        border-top-width: 0.5pt !important;
-    }
+  .rpt-th-blue,
+  .rpt-paises-total-line {
+    border-bottom-width: 0.3pt !important;
+    border-top-width: 0.3pt !important;
+  }
 
-    .rpt-banner-top {
-        height: 25px !important;
-        font-size: 1.1rem !important;
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
-    }
+  .rpt-banner-top {
+    height: 25px !important;
+    font-size: 14pt !important;
+    font-weight: normal !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
 
-    .rpt-header-logo {
-        height: 35px !important;
-    }
+  .rpt-header-logo {
+    height: 50px !important;
+  }
 
-    .rpt-header {
-        margin-bottom: 0.5rem !important;
-        align-items: flex-start !important;
-    }
+  .rpt-header {
+    margin-bottom: 0.5rem !important;
+    align-items: flex-end !important;
+  }
 
-    .rpt-header-corporate-text {
-        font-size: 0.95rem !important;
-    }
+  .rpt-header-corporate-text {
+    font-size: 14pt !important;
+    font-weight: normal !important;
+  }
 
-    .rpt-subtitle {
-        font-size: 0.75rem !important;
-        margin-bottom: 0.5rem !important;
-    }
+  .rpt-subtitle {
+    font-size: 8pt !important;
+    margin-bottom: 0.5rem !important;
+  }
 
-    .rpt-paises-num-cell {
-        padding-right: 5px !important;
-        text-align: right !important;
-    }
+  /* Separación cabecera/datos en PDF */
+  .report-body {
+    margin-top: 2.5rem !important;
+  }
 
-    .rpt-detail-row {
-        page-break-inside: avoid;
-    }
+  .rpt-paises-num-cell {
+    padding-right: 5px !important;
+    text-align: right !important;
+  }
 
-    .rpt-header,
-    .rpt-banner-top,
-    .rpt-subtitle {
-        page-break-after: avoid;
-    }
+  .rpt-detail-row {
+    page-break-inside: avoid;
+  }
 
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
+  .rpt-header,
+  .rpt-banner-top,
+  .rpt-subtitle {
+    page-break-after: avoid;
+  }
 
-    .rpt-paises-footer-block {
-        margin-top: 1rem !important;
-        font-size: 0.8rem !important;
-    }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-    .rpt-paises-total-line {
-        margin: 0 5px !important;
-    }
+  .rpt-paises-footer-block {
+    margin-top: 1rem !important;
+    font-size: 8pt !important;
+  }
 
-    .rpt-paises-new-flag {
-        font-size: 1rem !important;
-    }
+  .rpt-paises-total-line {
+    margin: 0 5px !important;
+  }
+
+  .rpt-paises-new-flag {
+    font-size: 8pt !important;
+  }
 }
