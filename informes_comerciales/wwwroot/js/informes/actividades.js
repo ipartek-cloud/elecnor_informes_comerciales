@@ -21,15 +21,15 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
 
-        await inicializarInforme({
-            url,
-            estado,
-            renderizarPagina: _renderizarPagina,
-            inicializarEventListeners: _registrarEventos,
-            prefijoPaginacion: '',
-            claveAgrupacion: 'NONE', // Informe de página única con múltiples bloques
-            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
-        });
+await inicializarInforme({
+      url,
+      estado,
+      renderizarPagina: _renderizarPagina,
+      inicializarEventListeners: _registrarEventos,
+      prefijoPaginacion: '',
+      claveAgrupacion: 'NONE', // Informe de página única con múltiples bloques
+      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+    });
     } catch (error) {
         console.error("Error al ejecutar informe Actividades:", error);
     }
@@ -59,8 +59,8 @@ function _renderizarPagina() {
  * Genera el encabezado corporativo unificado.
  */
 function _getHtmlEncabezado() {
-    return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo Elecnor</span> <span class="ms-3 fs-6 text-primary">Informe de Contratación</span>',
+  return getHtmlEncabezadoBase({
+    tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: 'Actividades',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
@@ -88,77 +88,77 @@ function _renderBloquePais(pais) {
     const anioActual = estado.informeGlobalData.meta.filtros.anio;
     const anioAnterior = anioActual - 1;
 
-    const tableHeader = `
-        <thead>
-            <tr class="rpt-th-year">
-                <th colspan="2" class="text-center p-0">Cierre ${anioAnterior}</th>
-                <th class="rpt-col-act-nombre"></th>
-                <th colspan="3" class="text-center p-0">${anioActual}</th>
-            </tr>
-            <tr class="rpt-th-year">
-                <th colspan="2" class="rpt-act-line-segment text-center p-0" style="height: 2px;"></th>
-                <th class="rpt-col-act-nombre"></th>
-                <th colspan="3" class="rpt-act-line-segment text-center p-0" style="height: 2px;"></th>
-            </tr>
-            <tr class="rpt-act-row-spacer">
-                <th colspan="6"></th>
-            </tr>
-            <tr class="rpt-th-blue">
-                <th class="rpt-col-act-porc-ant text-center">
-                    <div class="rpt-act-header-line">% s/Merc</div>
-                </th>
-                <th class="rpt-col-act-imp-ant text-end pe-3">
-                    <div class="rpt-act-header-line">Contr.</div>
-                </th>
-                <th class="rpt-col-act-nombre text-start rpt-header-align-middle px-4">
-                    <div class="rpt-act-badge text-uppercase">${pais.nombrePais}</div>
-                </th>
-                <th class="rpt-col-act-imp-act text-end pe-3">
-                    <div class="rpt-act-header-line">Contr.</div>
-                </th>
-                <th class="rpt-col-act-var text-center">
-                    <div class="rpt-act-header-line">% ${anioAnterior}</div>
-                </th>
-                <th class="rpt-col-act-porc-act text-center">
-                    <div class="rpt-act-header-line">% s/Merc</div>
-                </th>
-            </tr>
-        </thead>
-    `;
+const tableHeader = `
+  <thead>
+    <tr class="rpt-th-year">
+      <th colspan="2" class="rpt-align-center p-0">Cierre ${anioAnterior}</th>
+      <th class="rpt-col-act-nombre"></th>
+      <th colspan="3" class="rpt-align-center p-0">${anioActual}</th>
+    </tr>
+    <tr class="rpt-th-year">
+      <th colspan="2" class="rpt-act-line-segment rpt-align-center p-0"></th>
+      <th class="rpt-col-act-nombre"></th>
+      <th colspan="3" class="rpt-act-line-segment rpt-align-center p-0"></th>
+    </tr>
+    <tr class="rpt-act-row-spacer">
+      <th colspan="6"></th>
+    </tr>
+    <tr class="rpt-th-blue">
+      <th class="rpt-col-act-porc-ant rpt-align-center">
+        <div class="rpt-act-header-line">% s/Merc</div>
+      </th>
+      <th class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">
+        <div class="rpt-act-header-line">Contr.</div>
+      </th>
+      <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle px-4">
+        <div class="rpt-act-badge rpt-text-uppercase">${pais.nombrePais}</div>
+      </th>
+      <th class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">
+        <div class="rpt-act-header-line">Contr.</div>
+      </th>
+      <th class="rpt-col-act-var rpt-align-center">
+        <div class="rpt-act-header-line">% ${anioAnterior}</div>
+      </th>
+      <th class="rpt-col-act-porc-act rpt-align-center">
+        <div class="rpt-act-header-line">% s/Merc</div>
+      </th>
+    </tr>
+  </thead>
+  `;
 
-    const filasHtml = pais.detalle.map(d => `
-        <tr class="rpt-detail-row">
-            <td class="rpt-col-act-porc-ant text-center">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
-            <td class="rpt-col-act-imp-ant text-end pe-3">${formatCurrency(d.importeAnterior / 1000, 0)}</td>
-            <td class="rpt-col-act-nombre ps-3">${d.actividad}</td>
-            <td class="rpt-col-act-imp-act text-end pe-3">${formatCurrency(d.importeActual / 1000, 0)}</td>
-            <td class="rpt-col-act-var text-center ${getVarClass(d.variacionPorcentaje)}">${d.variacionPorcentaje}</td>
-            <td class="rpt-col-act-porc-act text-center">${formatPercentage(d.porcentajeActualMercado, 0)}</td>
-        </tr>
-    `).join('');
+const filasHtml = pais.detalle.map(d => `
+    <tr class="rpt-detail-row">
+      <td class="rpt-col-act-porc-ant rpt-align-center">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
+      <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">${formatCurrency(d.importeAnterior / 1000, 0)}</td>
+      <td class="rpt-col-act-nombre rpt-ps-3">${d.actividad}</td>
+      <td class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">${formatCurrency(d.importeActual / 1000, 0)}</td>
+      <td class="rpt-col-act-var rpt-align-center ${getVarClass(d.variacionPorcentaje)}">${d.variacionPorcentaje}</td>
+      <td class="rpt-col-act-porc-act rpt-align-center">${formatPercentage(d.porcentajeActualMercado, 0)}</td>
+    </tr>
+  `).join('');
 
-    const totalesHtml = `
-        <tr class="rpt-total-row">
-            <td class="rpt-col-act-porc-ant text-center">
-                <div class="rpt-act-total-line">100%</div>
-            </td>
-            <td class="rpt-col-act-imp-ant text-end pe-3">
-                <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeAnterior / 1000, 0)}</div>
-            </td>
-            <td class="rpt-col-act-nombre">
-                <div class="rpt-act-total-line rpt-act-total-line-text">&nbsp;</div>
-            </td>
-            <td class="rpt-col-act-imp-act text-end pe-3">
-                <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeActual / 1000, 0)}</div>
-            </td>
-            <td class="rpt-col-act-var text-center">
-                <div class="rpt-act-total-line"></div>
-            </td>
-            <td class="rpt-col-act-porc-act text-center">
-                <div class="rpt-act-total-line">100%</div>
-            </td>
-        </tr>
-    `;
+const totalesHtml = `
+    <tr class="rpt-total-row">
+      <td class="rpt-col-act-porc-ant rpt-align-center">
+        <div class="rpt-act-total-line">100%</div>
+      </td>
+      <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">
+        <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeAnterior / 1000, 0)}</div>
+      </td>
+      <td class="rpt-col-act-nombre">
+        <div class="rpt-act-total-line rpt-act-total-line-text">&nbsp;</div>
+      </td>
+      <td class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">
+        <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeActual / 1000, 0)}</div>
+      </td>
+      <td class="rpt-col-act-var rpt-align-center">
+        <div class="rpt-act-total-line"></div>
+      </td>
+      <td class="rpt-col-act-porc-act rpt-align-center">
+        <div class="rpt-act-total-line">100%</div>
+      </td>
+    </tr>
+  `;
 
     return `
         <div class="rpt-bloque-actividad">
