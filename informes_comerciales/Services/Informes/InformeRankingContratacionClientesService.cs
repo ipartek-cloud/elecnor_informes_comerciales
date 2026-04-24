@@ -32,7 +32,7 @@ public class InformeRankingContratacionClientesService
             _repository.EjecutarSPObrasRankingClientesDesgloseAsync(mercado, anio, mes)
         );
 
-        // 2. Obtener datos de ambas tablas (Ranking y Desglose) + Total Mercado filtrando por contexto (Bug #2)
+        // 2. Obtener datos de ambas tablas (Ranking y Desglose) + Total Mercado filtrando por contexto
         var taskRanking = _repository.ObtenerRankingContratacionClientesAsync(mercado, anio, mes, 0.5m);
         var taskDesglose = _repository.ObtenerRankingContratacionClientesDesgloseAsync(mercado, anio, mes);
         var taskTotalMercado = _repository.ObtenerSumaTotalMercadoClientesAsync(mercado, anio);

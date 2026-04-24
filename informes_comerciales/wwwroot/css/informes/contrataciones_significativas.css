@@ -1,14 +1,17 @@
-/* Estilos: Contrataciones Significativas */
+/* =============================================================================
+   ESTILOS ESPECÍFICOS: CONTRATACIONES SIGNIFICATIVAS (V-15 Rigidez Columnar)
+   ============================================================================= */
 
-.rpt-info-complementary {
-    font-size: 0.95rem;
-    color: #666;
+.rpt-table-cont-sig {
+    table-layout: fixed !important; /* V-15 Rigidez absoluta */
+    width: 100% !important;
+    border-collapse: collapse;
 }
 
-/* Agrupador: Nombre de Direccion */
+/* Agrupador: Nombre de Dirección (V-10 Hairline) */
 .rpt-cont-sig-group-header {
-    border-bottom: 2px solid #00468B !important;
-    padding: 25px 0 0 0 !important; /* Aumentado de 12px a 25px para separación vertical */
+    border-bottom: 0.3pt solid #00468B !important;
+    padding: 25pt 0 0 0 !important;
     vertical-align: bottom;
 }
 
@@ -16,104 +19,75 @@
     background-color: #00468B;
     color: #ffffff;
     font-weight: bold;
-    padding: 2px 10px;
+    padding: 2pt 8pt;
     display: inline-block;
-    font-size: 0.95rem;
+    font-size: 9pt; /* V-06 Jerarquía */
     width: 40%;
 }
 
-/* Fila de fondo para detalles (Mes) */
-.rpt-cont-sig-month-row,
+/* Fila de fondo para detalles (Mes) - Paridad visual Access */
 .rpt-cont-sig-month-row td {
     background-color: #E2EBF4 !important;
-}
-
-/* Celda del nombre del mes (Informe Base) - Forzado P0 */
-tr.rpt-cont-sig-month-row td.rpt-cont-sig-mes-label {
     color: #00468B !important;
-    padding-left: 12px !important;
+    padding-left: 10pt !important;
+    font-size: 8pt !important;
     font-weight: bold !important;
 }
 
-/* Quitar la linea debajo de los encabezados de la tabla nativa */
-.rpt-table-cont-sig thead,
-.rpt-table-cont-sig thead th,
-.rpt-table-cont-sig thead tr {
-    border-bottom: none !important;
-}
+/* Definición de Columnas (Rejilla Alineada V-15) */
+.rpt-col-mes-cliente { width: 32%; padding-left: 8pt !important; }
+.rpt-col-mes-oferta  { width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rpt-col-mes-importe { width: 20%; padding-right: 10pt !important; }
 
-.rpt-table-cont-sig {
-    margin-top: 15px !important; /* Modificado de -10px a 15px para dar respiro */
-}
-
-/* Detalle de contratos individuales */
-.rpt-col-mes-cliente { width: 32%; text-align: left; padding-left: 8px !important; }
-.rpt-col-mes-oferta { 
-    width: 48%; 
-    text-align: left; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-    max-width: 0; 
-}
-.rpt-col-mes-importe { 
-    width: 20%; 
-    text-align: right; 
-    padding-right: 10px !important; 
-    min-width: 90px; 
-    font-variant-numeric: tabular-nums; 
-    white-space: nowrap; 
-}
-
-/* Filas de detalle (estilo Access) */
-.rpt-cont-sig-mes-item td {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    padding: 1px 6px;
-    vertical-align: middle;
-    border-bottom: none !important; /* Retirado a petición junto con el histórico */
+/* Filas de detalle (V-05, V-06) */
+.rpt-detail-row td {
+    font-size: 8pt !important;
+    line-height: 1.25;
+    padding: 2pt 6pt;
     background-color: #ffffff !important;
+    border: none !important;
 }
 
-/* Meses anteriores (histórico) */
+/* Sección "Anterior" (Histórico - V-10) */
 .rpt-cont-sig-anterior-label td {
-    padding-top: 15px !important;
-    padding-bottom: 2px !important;
-    border-bottom: 2px solid #666 !important;
+    padding-top: 12pt !important;
+    padding-bottom: 2pt !important;
+    border-bottom: 0.3pt solid #666 !important;
     font-weight: bold !important;
+    font-size: 8pt !important;
+    color: #666 !important;
 }
 
 .rpt-cont-sig-hist-row td {
-    color: #666 !important; /* RPT: Forzamos color gris */
-    border-bottom: none !important; /* Elimina límite horizontal del detalle histórico */
-    font-size: 0.78rem !important; /* Ligeramente más pequeño que el 0.85 principal */
+    color: #666 !important;
+    font-size: 7.5pt !important;
 }
 
-/* Media Print */
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF (@media print)
+   ============================================================================= */
 @media print {
+    /* Forzar fondos para banners */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
     .rpt-cont-sig-group-header {
         page-break-after: avoid;
-    }
-
-    .rpt-cont-sig-col-concepto,
-    .rpt-cont-sig-col-importe {
-        font-size: 8pt !important;
+        border-bottom: 0.3pt solid #00468B !important;
     }
 
     .rpt-table-cont-sig {
         page-break-inside: avoid;
     }
 
-    .rpt-col-mes-cliente,
-    .rpt-col-mes-oferta,
-    .rpt-col-mes-importe {
-        font-size: 8pt !important;
+    /* En impresión permitir wrapping en descripciones para no perder datos */
+    .rpt-col-mes-oferta {
+        white-space: normal !important;
+        overflow: visible !important;
+        max-width: none !important;
+        text-overflow: clip !important;
     }
 
-    /* En impresion permitir wrapping en descripciones */
-    .rpt-col-mes-oferta {
-        white-space: normal;
-        max-width: none;
-        text-overflow: clip;
+    .rpt-cont-sig-anterior-label td {
+        border-bottom: 0.3pt solid #666 !important;
     }
 }

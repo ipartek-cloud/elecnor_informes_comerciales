@@ -1,166 +1,495 @@
-/* 
-   Estilos específicos para el informe: Ranking de Contratación por Clientes
-   Basado en el diseño "industrial compacto" para paridad con Access.
+/* ==========================================================================
+ESTILOS ESPECÍFICOS: Ranking de Contratación por Clientes
+GUÍA: Print-Perfect Parity v4.2
+ ========================================================================== */
+
+/* ==========================================================================
+1. CONTENEDOR Y LAYOUT PRINCIPAL
+ ========================================================================== */
+
+.rpt-paper[data-informe="ranking_clientes"] {
+    /* Los márgenes se controlan vía JS con getStyleVars() - no aplicar padding aquí */
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+2. ENCABEZADO CORPORATIVO CMAI
+ ========================================================================== */
+
+/* NOTA: Las siguientes clases se definen en informes_base.css:
+   - .rpt-text-orange-council (línea 389)
+   - .rpt-fs-14pt, .rpt-fs-9pt, .rpt-fs-8pt, .rpt-fs-7pt (líneas 373-378)
+   - .rpt-text-corporate (línea 4, 313)
+   - .rpt-font-bold (líneas 368, 746)
+   - .rpt-ms-2 (margin-left) - definida en este archivo
 */
+
+.rpt-ms-2 {
+    margin-left: 12pt !important;
+}
+
+/* ==========================================================================
+3. SUBTÍTULO DEL INFORME
+ ========================================================================== */
 
 .rpt-ranking-subtitle {
     color: #00468B;
     font-weight: bold;
-    font-size: 1.1rem;
-    margin: 0 auto 0.5rem auto;
-    width: 80%;
+    font-size: 9pt;
+    margin: 0 0 8pt 0;
+    padding-left: 15pt;
     display: block;
     border: none;
-    padding: 0;
 }
 
+/* Estilo para el header "Acumulado" - alineado a la derecha */
+/* En Nacional: colspan="3" (Cliente+Contr+%) - En Internacional: colspan="2" (Cliente+Contr) */
+.rpt-header-acumulado {
+    font-size: 7pt !important;
+    color: #00468B;
+    text-align: right;
+    padding-bottom: 0 !important;
+    padding-right: 25pt !important;
+    font-weight: normal;
+}
+
+/* Ajuste específico para Internacional (colspan menor) */
+.rpt-header-acumulado[colspan="2"] {
+    padding-right: 15pt !important;
+}
+
+/* ==========================================================================
+4. TABLA DE RANKING - CONFIGURACIÓN RIGIDA (table-layout: fixed)
+ ========================================================================== */
+
 .rpt-ranking-table {
-    width: 80%;
+    width: 95%;
     margin: 0 auto !important;
     border-collapse: collapse;
-    font-size: 0.95rem;
-    font-family: Arial, sans-serif !important;
+    table-layout: fixed !important;
+    font-size: 8pt !important;
+    font-family: Verdana, Arial, sans-serif !important;
 }
+
+/* Asegurar que toda la tabla use 8pt */
+.rpt-ranking-table * {
+    font-size: 8pt !important;
+}
+
+/* ==========================================================================
+5. CABECERA DE LA TABLA
+ ========================================================================== */
 
 .rpt-ranking-table thead th {
     color: #00468B;
-    padding: 4px 5px;
+    padding: 3pt 4pt;
     font-weight: bold;
-    border-bottom: none; /* Eliminamos la línea continua */
+    border-bottom: none;
 }
 
-/* Bordes de cabecera segmentados (aplicados a un span/div interno para margen) */
-.rpt-th-border-blue {
-    border-bottom: 2px solid #00468B;
-    display: inline-block;
-}
-
-.rpt-th-border-gray {
-    border-bottom: 2px solid #888;
-    display: inline-block;
-}
-
-/* Cabecera Agrupada */
 .rpt-header-grouping th {
     border-bottom: none !important;
-    padding-bottom: 0 !important;
+    padding-bottom: 5px !important;
 }
 
 .rpt-header-label {
-    font-size: 0.85rem;
+    font-size: 7pt !important;
     color: #00468B;
-    padding-bottom: 2px !important;
+    padding-bottom: 2pt !important;
+    text-align: center;
 }
 
-/* Título Cliente Azul */
+/* Header azul para "Cliente" */
 .rpt-header-blue {
     background-color: #00468B;
     color: #ffffff !important;
-    padding: 4px 10px !important;
+    padding: 3pt 8pt !important;
     font-weight: bold;
     text-align: left;
 }
 
+/* Bordes de cabecera segmentados */
+.rpt-th-border-blue {
+    border-bottom: 1pt solid #00468B;
+    display: block;
+}
+
+.rpt-th-border-gray {
+    border-bottom: 1pt solid #888;
+    display: block;
+}
+
+.rpt-w-100 {
+    width: 100%;
+}
+
+.rpt-w-90 {
+    width: 90%;
+}
+
+/* ==========================================================================
+6. CUERPO DE LA TABLA
+ ========================================================================== */
+
 .rpt-ranking-table tbody td {
-    padding-top: 5.5px !important; 
-    padding-bottom: 5.5px !important;
+    padding: 2pt 4pt !important;
     border-bottom: none;
     vertical-align: middle;
 }
 
-/* Anchos de columna específicos */
-.rpt-col-row     { width: 26px; text-align: right; padding-right: 12px !important; color: #333; }
-.rpt-col-cliente { width: auto; font-weight: normal; padding-left: 8px !important; } /* Punto de compacidad máxima: 8px */
-.rpt-col-num     { width: 100px; text-align: right; font-weight: normal; } 
-.rpt-col-pct     { width: 90px; text-align: right; font-weight: normal; }
-.rpt-ranking-table tbody td.rpt-col-ant, 
-.rpt-col-ant { 
-    width: 100px; 
-    text-align: right; 
-    color: #999 !important; 
-    font-weight: normal; 
-}
-.rpt-ranking-table .rpt-col-ai { width: 15px; text-align: center; color: #999 !important; }
-
-/* Filas de totales */
-.rpt-ranking-total-row td {
-    padding-top: 12px !important;
-    padding-bottom: 8px !important;
-    border-bottom: none !important;
+/* Anchos de columna específicos - Para celdas y elementos col */
+.rpt-col-ai {
+    width: 20pt;
+    text-align: center;
+    color: #999;
 }
 
-/* Filas de desglose (Sub-informe) */
+.rpt-ranking-table col.rpt-col-ai {
+    width: 20pt !important;
+}
+
+.rpt-col-row {
+    width: 25pt;
+    text-align: right;
+    padding-right: 8pt !important;
+    color: #333;
+}
+
+.rpt-ranking-table col.rpt-col-row {
+    width: 25pt !important;
+}
+
+.rpt-col-cliente {
+    width: 98pt !important;
+    min-width: 98pt !important;
+    max-width: 98pt !important;
+    font-weight: normal;
+    padding-left: 4pt !important;
+}
+
+.rpt-ranking-table col.rpt-col-cliente {
+    width: 98pt !important;
+    min-width: 98pt !important;
+    max-width: 98pt !important;
+}
+
+/* Estilo específico para la cabecera de cliente */
+.rpt-header-blue.rpt-col-cliente {
+    width: 98pt;
+}
+
+.rpt-col-num {
+    width: 34pt;
+    text-align: right;
+    font-weight: normal;
+}
+
+.rpt-ranking-table col.rpt-col-num {
+    width: 34pt !important;
+}
+
+.rpt-col-pct {
+    width: 44pt !important;
+    min-width: 44pt !important;
+    max-width: 44pt !important;
+    text-align: right;
+    font-weight: normal;
+    white-space: nowrap !important;
+}
+
+.rpt-ranking-table col.rpt-col-pct {
+    width: 44pt !important;
+    min-width: 44pt !important;
+    max-width: 44pt !important;
+}
+
+.rpt-col-ant,
+.rpt-ranking-table th.rpt-col-ant,
+.rpt-ranking-table td.rpt-col-ant {
+    width: 34pt;
+    text-align: right;
+    color: #888 !important;
+    font-weight: normal;
+}
+
+.rpt-ranking-table col.rpt-col-ant {
+    width: 34pt !important;
+}
+
+/* Utilidades de texto */
+.rpt-text-center {
+    text-align: center !important;
+}
+
+.rpt-text-end {
+    text-align: right !important;
+}
+
+.rpt-text-primary {
+    color: #00468B !important;
+}
+
+/* Clase para celdas numéricas - usa Verdana (no monospace) para mantener coherencia tipográfica */
+.rpt-font-monospace {
+    font-family: Verdana, Arial, sans-serif !important;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+/* ==========================================================================
+7. FILAS DE DESGLOSE
+ ========================================================================== */
+
 .rpt-desglose-row td {
-    padding-top: 1.5px !important;
-    padding-bottom: 1.5px !important;
-    font-size: 0.85rem !important;
-    line-height: 1.2;
+    padding: 1pt 4pt !important;
+    font-size: 8pt !important;
+    line-height: 1.1;
     vertical-align: middle;
-    color: #999 !important; /* Mismo gris que rpt-col-ant */
+    color: #999;
 }
 
+/* Indentación visual para desglose - Mayor indentación */
 .rpt-desglose-row .rpt-col-cliente {
-    padding-left: 32px !important; /* Indentación visual clara */
-    color: #999 !important;
+    padding-left: 40pt !important;
+    color: #999;
+}
+
+.rpt-desglose-ai {
+    text-align: center;
+    color: #999;
+}
+
+.rpt-small {
+    font-size: 8pt !important;
+}
+
+.rpt-ps-4 {
+    padding-left: 40pt !important;
+}
+
+/* ==========================================================================
+8. FILAS DE TOTALES
+ ========================================================================== */
+
+.rpt-ranking-total-row td {
+    padding-top: 8pt !important;
+    padding-bottom: 4pt !important;
+    border-bottom: none !important;
 }
 
 .rpt-ranking-grand-total-row td {
-    padding-top: 15px !important;
+    padding-top: 8pt !important;
     border-bottom: none !important;
-    font-size: 1rem;
+    font-size: 8pt !important;
     color: #00468B !important;
     font-weight: bold !important;
 }
 
 .rpt-total-border-blue {
-    border-top: 2px solid #00468B !important;
+    border-top: 1pt solid #00468B !important;
 }
 
-.rpt-asterisk-legend {
-    font-size: 0.75rem;
-    color: #888;
-    font-weight: normal;
-    font-style: italic;
+/* Bordes segmentados para el pie de tabla - líneas en la parte SUPERIOR (como separadores superiores) */
+.rpt-td-border-blue {
+    border-top: 1pt solid #00468B;
+    display: block;
+    padding-top: 4pt;
+}
+
+.rpt-td-border-gray {
+    border-top: 1pt solid #888;
+    display: block;
+    padding-top: 4pt;
+}
+
+/* ==========================================================================
+9. UTILITARIOS DE LAYOUT
+ ========================================================================== */
+
+.rpt-va-bottom {
+    vertical-align: bottom !important;
+}
+
+.rpt-pb-2 {
+    padding-bottom: 8pt !important;
+}
+
+.rpt-px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.rpt-pe-3 {
+    padding-right: 12pt !important;
+}
+
+.rpt-ps-3 {
+    padding-left: 12pt !important;
+}
+
+.rpt-nowrap {
     white-space: nowrap !important;
 }
 
-/* Ajustes de Impresión */
-@media print {
-    .rpt-ranking-table {
-        font-size: 8.5pt !important;
+/* Flexbox utilities */
+.rpt-d-flex {
+    display: flex !important;
+}
+
+.rpt-justify-between {
+    justify-content: space-between !important;
+}
+
+.rpt-justify-end {
+    justify-content: flex-end !important;
+}
+
+.rpt-align-baseline {
+    align-items: baseline !important;
+}
+
+.rpt-w-100 {
+    width: 100% !important;
+}
+
+/* ==========================================================================
+10. LEYENDAS
+ ========================================================================== */
+
+    .rpt-asterisk-legend {
+        font-size: 7pt !important;
+        color: #888;
+        font-weight: normal;
+        font-style: italic;
+        white-space: nowrap !important;
     }
-    
+
+/* ==========================================================================
+11. SEPARACIÓN CABECERA-CONTENIDO (V-18)
+ ========================================================================== */
+
+.report-body {
+    margin-top: 1.5rem !important;
+}
+
+/* ==========================================================================
+12. SIN DATOS
+ ========================================================================== */
+
+.rpt-no-data {
+    text-align: center;
+    padding: 36pt;
+    color: #888;
+}
+
+/* ==========================================================================
+13. MEDIA PRINT - HAIRLINES Y AJUSTES DE IMPRESIÓN
+ ========================================================================== */
+
+@media print {
+    /* Forzar renderizado de colores de fondo */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Hairlines - 0.3pt */
+    .rpt-th-border-blue {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-th-border-gray {
+        border-bottom: 0.3pt solid #888 !important;
+    }
+
+    .rpt-total-border-blue {
+        border-top: 0.3pt solid #00468B !important;
+    }
+
+    /* Tamaños de fuente para impresión */
+    .rpt-ranking-table,
+    .rpt-ranking-table * {
+        font-size: 8pt !important;
+        font-family: Verdana, Arial, sans-serif !important;
+    }
+
     .rpt-ranking-subtitle {
-        font-size: 10pt !important;
-        margin-top: 5mm;
+        font-size: 9pt !important;
     }
 
     .rpt-ranking-table thead th {
-        border-bottom-width: 0.5pt !important;
-        padding: 2pt 5pt !important;
+        border-bottom-width: 0.3pt !important;
+        padding: 2pt 4pt !important;
     }
 
     .rpt-ranking-table tbody td {
-        padding-top: 4pt !important;
-        padding-bottom: 4pt !important;
+        padding: 2pt 4pt !important;
         border-bottom: none !important;
     }
 
+    /* Filas de desglose */
     .rpt-desglose-row td {
-        font-size: 7.5pt !important;
-        padding-top: 1pt !important;
-        padding-bottom: 1pt !important;
+        font-size: 8pt !important;
+        padding: 1pt 4pt !important;
     }
-    
+
     .rpt-desglose-row .rpt-col-cliente {
-        padding-left: 20pt !important;
+        padding-left: 40pt !important;
     }
 
-    .rpt-col-ai  { width: 14pt !important; color: #999 !important; }
-    .rpt-col-row { width: 28pt !important; padding-right: 8pt !important; text-align: right; }
-    .rpt-col-cliente { padding-left: 6pt !important; }
-    .rpt-col-num { width: 75pt !important; text-align: right; }
-    .rpt-col-pct { width: 65pt !important; text-align: right; }
-    .rpt-col-ant { width: 75pt !important; color: #999 !important; text-align: right; }
-}
+    /* Header azul en PDF */
+    .rpt-header-blue {
+        background-color: #00468B !important;
+    }
 
+    /* Anchos de columna para PDF - deben coincidir con los de web */
+    .rpt-col-ai { width: 20pt !important; }
+    .rpt-col-row { width: 25pt !important; padding-right: 8pt !important; }
+    .rpt-col-cliente { width: 98pt !important; }
+    .rpt-header-blue.rpt-col-cliente { width: 98pt !important; }
+    .rpt-col-num { width: 34pt !important; }
+    .rpt-col-pct { width: 44pt !important; }
+    .rpt-col-ant { width: 34pt !important; }
+
+    /* Banner compacto - 25px */
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 14pt !important;
+        line-height: 25px !important;
+    }
+
+    /* Page breaks */
+    .rpt-banner-top {
+        page-break-after: avoid !important;
+    }
+
+    .rpt-detail-row {
+        page-break-inside: avoid !important;
+    }
+
+    /* Separación cabecera-contenido en print */
+    .report-body {
+        margin-top: 1.5rem !important;
+    }
+
+    /* Preservar estilos del encabezado CMAI en impresión */
+    .rpt-text-orange-council {
+        color: #E38631 !important;
+    }
+
+    .rpt-fs-14pt {
+        font-size: 14pt !important;
+    }
+
+    .rpt-fs-9pt {
+        font-size: 9pt !important;
+    }
+
+    .rpt-ms-2 {
+        margin-left: 12pt !important;
+    }
+
+    .rpt-text-corporate {
+        color: #00468B !important;
+    }
+}

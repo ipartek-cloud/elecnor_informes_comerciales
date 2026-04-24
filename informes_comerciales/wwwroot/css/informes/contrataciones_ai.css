@@ -94,8 +94,11 @@
 .rpt-align-end { text-align: end !important; text-align: right !important; }
 .rpt-align-start { text-align: start !important; text-align: left !important; }
 
-/* Fuente monoespaciada */
-.rpt-font-mono { font-family: monospace !important; }
+/* Fuente para celdas numéricas - usa Verdana para coherencia tipográfica */
+.rpt-font-mono {
+    font-family: Verdana, Arial, sans-serif !important;
+    font-variant-numeric: tabular-nums;
+}
 
 /* Tamaño de texto pequeño (reemplaza 'small') */
 .rpt-text-small { font-size: 8pt !important; }

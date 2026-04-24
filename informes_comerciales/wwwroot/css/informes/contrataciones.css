@@ -93,8 +93,11 @@
 /* Padding */
 .rpt-ps-3 { padding-left: 1rem !important; }
 
-/* Fuente monoespaciada */
-.rpt-font-mono { font-family: monospace !important; }
+/* Fuente para celdas numéricas - usa Verdana para coherencia tipográfica */
+.rpt-font-mono {
+    font-family: Verdana, Arial, sans-serif !important;
+    font-variant-numeric: tabular-nums;
+}
 
 /* Badge AI (reemplaza estilos inline) */
 .rpt-badge-ai {
