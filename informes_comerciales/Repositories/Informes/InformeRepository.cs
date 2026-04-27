@@ -1432,7 +1432,7 @@ public class InformeRepository
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // INFORME: Contrataciones Significativas (RESTO DE INFORMES)
+    // INFORME: Contrataciones Significativas (COMITE)
     // ═══════════════════════════════════════════════════════════════════════════
 
     public async Task<List<ContratacionesSignificativasPoco>> ObtenerContratacionesSignificativasRiAsync(

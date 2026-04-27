@@ -1,5 +1,5 @@
 /**
- * Informe Contrataciones Significativas (Resto Informes)
+ * Informe Contrataciones Significativas (Comite)
  * Filtros: Mercado y SubDirección General
  * Variante sin histórico de meses anteriores.
  */

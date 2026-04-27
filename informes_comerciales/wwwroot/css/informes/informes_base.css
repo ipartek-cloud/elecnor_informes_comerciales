@@ -35,10 +35,10 @@
 
 /* 2. Cabeceras y Banners */
 .rpt-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end !important; /* V-03: Baseline Header - forzado para evitar sobreescrituras */
+  margin-bottom: 2rem;
 }
 
 .rpt-header-corporate-text {
@@ -378,7 +378,6 @@ Estándar: 10pt, sin negrita, azul corporativo
 .rpt-fs-7pt { font-size: 7pt !important; }
 
 /* Legacy: mantener compatibilidad */
-.rpt-font-small, [rpt-font-small] { font-size: 8pt !important; }
 .rpt-text-muted-gray, [rpt-text-muted-gray] { color: #666 !important; }
 .rpt-margin-top-15, [rpt-margin-top-15] { margin-top: 15px !important; }
 .rpt-width-100, [rpt-width-100] { width: 100px !important; }
@@ -386,14 +385,24 @@ Estándar: 10pt, sin negrita, azul corporativo
 .rpt-width-flex, [rpt-width-flex] { flex-grow: 1; max-width: 350px !important; }
 .rpt-justify-start, [rpt-justify-start] { justify-content: flex-start !important; }
 .rpt-gap-40, [rpt-gap-40] { gap: 40px !important; }
-.rpt-text-orange-council, [rpt-text-orange-council] { 
-    color: #E38631 !important; 
-    font-size: 14pt !important; 
-    font-weight: normal !important; 
+.rpt-text-orange-council, [rpt-text-orange-council] {
+  color: #E38631 !important;
+  font-size: 14pt !important;
+  font-weight: normal !important;
 }
 
 /* =============================================================================
-   ANCHOS DE COLUMNA COMPARTIDOS - P1
+V-09: HANGING INDENT (Indentación Asterisco Flotante)
+Para filas donde el asterisco (*) debe visualizarse separado sin mover el texto
+Uso típico: nombres de contrato con asterisco (*) al inicio en tablas CMAI
+============================================================================= */
+.rpt-hanging-indent {
+  padding-left: 1.5em;
+  text-indent: -1em;
+}
+
+/* =============================================================================
+ANCHOS DE COLUMNA COMPARTIDOS - P1
    Para informes que necesiten anchos específicos de un informe
    ============================================================================= */
 .rpt-col-60  { width: 50px; }
@@ -675,10 +684,17 @@ Estándar: 10pt, sin negrita, azul corporativo
     margin-bottom: 0.5rem !important;
   }
 
-    /* 10.12 CUERPO DE INFORME: Eliminar margen superior residual */
-    .report-body {
-        margin-top: 0 !important;
-    }
+/* 10.12 CUERPO DE INFORME: Eliminar margen superior residual (base) */
+.report-body {
+  margin-top: 0 !important;
+}
+
+/* V-18: Clase CMAI estándar para separación cabecera-contenido (2.5rem ~40px)
+Esta clase tiene mayor especificidad que el reset anterior y garantiza
+el estándar CMAI cuando se aplica explícitamente al report-body */
+.report-body.rpt-cmai-mt-standard {
+  margin-top: 2.5rem !important;
+}
 
     /* ==========================================================================
        FASE 2 (2026-03-20): RESETS DE LAYOUT TRIPLE BLOQUE PARA IMPRESIÓN A4

@@ -5,7 +5,7 @@ using Elecnor_Informes_Comerciales.DTOs.Informes.Response;
 namespace Elecnor_Informes_Comerciales.DTOs.Informes.ContratacionesSignificativas;
 
 /// <summary>
-/// DTO de respuesta para el informe de Contrataciones Significativas (Resto de Informes).
+/// DTO de respuesta para el informe de Contrataciones Significativas (Comite).
 /// Versión limpia sin histórico de meses anteriores.
 /// </summary>
 public class ContratacionesSignificativasRiResponseDto
