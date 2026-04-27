@@ -1,52 +1,64 @@
 /* Estilos específicos para el informe de Actividades_Objetivos (CONSEJO ELECNOR) */
 
-/* Contenedor de bloque */
+/* Contenedor de bloque y Tipografía base */
+.rpt-paper[data-informe="actividades_objetivos"],
+.rpt-paper[data-informe="actividades_objetivos"] table,
+.rpt-paper[data-informe="actividades_objetivos"] th,
+.rpt-paper[data-informe="actividades_objetivos"] td {
+    font-family: Verdana, Geneva, sans-serif !important;
+}
+
 .rpt-bloque-actividad {
-    margin-bottom: 0.8rem;
-    page-break-inside: avoid;
+  margin-bottom: 12pt;
+  page-break-inside: avoid;
 }
 
 /* Eliminar cualquier borde no deseado en el encabezado */
 .rpt-header,
 .rpt-banner-top,
 .rpt-subtitle {
-    border: none !important;
+  border: none !important;
+}
+
+/* V-18: Separación Cabecera-Contenido estándar CMAI */
+.rpt-paper[data-informe="actividades_objetivos"] .report-body {
+  margin-top: 2.5rem !important;
 }
 
 .rpt-subtitle {
-    margin-bottom: 0.8rem !important;
+  margin-bottom: 6pt !important;
 }
 
 /* Badge de encabezado de bloque (Azul Elecnor) */
 .rpt-act-badge, .rpt-act-header-badge {
-    background-color: #00468B !important;
-    color: white !important;
-    font-weight: bold;
-    font-size: 0.85rem;
-    padding: 2px 10px;
-    width: 100%;
-    display: block;
-    text-align: left;
-    border-radius: 2px;
+  background-color: #00468B !important;
+  color: white !important;
+  font-weight: bold;
+  font-size: 9pt !important;
+  padding: 2pt 10pt;
+  width: 100%;
+  display: block;
+  text-align: left;
+  border-radius: 0;
 }
 
 .rpt-header-align-middle {
-    vertical-align: middle !important;
-    position: relative;
+  vertical-align: middle !important;
+  position: relative;
 }
 
 .rpt-act-row-spacer th {
-    height: 1px !important;
-    line-height: 1px !important;
-    border: none !important;
-    padding: 0 !important;
+  height: 4pt !important;
+  line-height: 4pt !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 .rpt-table-actividades {
-    border: none !important;
-    border-top: none !important;
-    width: 95% !important;
-    margin: 0 auto !important;
+  border: none !important;
+  border-top: none !important;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 /* Asegurar que las filas de línea segmentada sean invisibles */
@@ -55,78 +67,153 @@
     background: transparent !important;
 }
 
+/* Cabeceras de tabla en Azul Elecnor (#00468B) según estándar CMAI */
 .rpt-th-year th {
-    color: #00468B !important;
-    font-weight: bold !important;
-    font-size: 0.85rem !important;
-    border-bottom: none !important;
-    vertical-align: bottom;
+  color: #00468B !important;
+  font-weight: bold !important;
+  font-size: 8pt !important;
+  border-bottom: none !important;
+  vertical-align: bottom;
 }
 
 .rpt-th-blue {
-    border-bottom: none !important;
+  border-bottom: none !important;
 }
 
 .rpt-th-blue th {
-    border: none;
-    color: #00468B !important;
-    font-weight: bold;
-    font-size: 0.85rem;
-    padding-top: 3px !important;
-    padding-bottom: 0 !important;
-    vertical-align: bottom !important;
+  border: none;
+  color: #00468B !important;
+  font-weight: bold !important;
+  font-size: 8pt !important;
+  padding-top: 2pt !important;
+  padding-bottom: 0 !important;
+  vertical-align: bottom !important;
 }
 
-/* Aumentamos la especificidad para que prevalezcan sobre los border: none base */
+/* Grosor de bordes para WEB (1.5pt - Sincronizado con Informe Gerencias) en Azul */
 .rpt-table-actividades thead th.rpt-act-th-border-bottom {
-    border-bottom: 2px solid #00468B !important;
+  border-bottom: 1.5pt solid #00468B !important;
 }
 
 table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top,
 table.rpt-table-actividades tr.rpt-row-total-actividad td.rpt-act-total-border-top {
-    border-top: 2px solid #00468B !important;
-}
-
-/* Ensure no full-width header line */
-.rpt-table-actividades thead, 
-.rpt-table-actividades thead tr,
-.rpt-table-actividades thead th {
-    border-bottom: none !important;
+  border-top: 1.5pt solid #00468B !important;
 }
 
 div.rpt-act-line-segment-top {
-    border-top: 2px solid #00468B !important;
+  border-top: 1.5pt solid #00468B !important;
 }
 
+/* Totales en Azul Elecnor (#00468B) - CORRECCIÓN DEFINITIVA DE ALINEACIÓN */
 .rpt-total-row td,
 .rpt-row-total-actividad td {
-    color: #00468B !important;
-    font-weight: bold !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    vertical-align: top !important;
-    border-top: none !important;
+  color: #00468B !important;
+  font-weight: bold !important;
+  padding-top: 4pt !important;
+  padding-bottom: 3pt !important;
+  vertical-align: middle !important;
+  line-height: 1 !important; /* Forzamos line-height unitario para evitar desplazamientos */
+  border-top: none !important;
+}
+
+/* Forzamos que las celdas numéricas en los totales no hereden paddings extra */
+.rpt-total-row td.rpt-number-cell {
+    padding-right: 5px !important;
 }
 
 /* Anchos de columna para Actividades_Objetivos (8 columnas) */
 .rpt-col-act-porc-ant { width: 8%; }
-.rpt-col-act-imp-ant  { width: 10%; }
-.rpt-col-act-nombre   { width: 32%; }
-.rpt-col-act-obj      { width: 10%; }
-.rpt-col-act-imp-act  { width: 10%; }
-.rpt-col-act-ip       { width: 8%; }
-.rpt-col-act-var      { width: 10%; }
+.rpt-col-act-imp-ant { width: 10%; }
+.rpt-col-act-nombre { width: 32%; }
+.rpt-col-act-obj { width: 10%; }
+.rpt-col-act-imp-act { width: 10%; }
+.rpt-col-act-ip { width: 8%; }
+.rpt-col-act-var { width: 10%; }
 .rpt-col-act-porc-act { width: 12%; }
 
 .rpt-detail-row td {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+  padding-top: 0.5pt !important;
+  padding-bottom: 0.5pt !important;
+  line-height: 1.05 !important;
+  font-size: 8pt !important;
+  color: #000 !important;
 }
 
 .rpt-col-act-nombre {
-    font-weight: 500;
+  font-weight: normal !important;
 }
 
-.rpt-col-act-ip {
-    color: #000 !important;
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF (@media print)
+   Garantizamos el Hairline de 0.3pt y Azul Corporativo
+   ============================================================================= */
+@media print {
+  .rpt-table-actividades thead th.rpt-act-th-border-bottom,
+  .rpt-th-blue th {
+    border-bottom: 0.3pt solid #00468B !important;
+  }
+
+  table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top,
+  table.rpt-table-actividades tr.rpt-row-total-actividad td.rpt-act-total-border-top {
+    border-top: 0.3pt solid #00468B !important;
+  }
+
+  div.rpt-act-line-segment-top {
+    border-top: 0.3pt solid #00468B !important;
+  }
+
+  /* V-18: Separación Cabecera-Contenido */
+  .rpt-paper[data-informe="actividades_objetivos"] .report-body {
+    margin-top: 2.5rem !important;
+  }
+
+  .rpt-detail-row td {
+    line-height: 1.05 !important;
+    padding-top: 0.5pt !important;
+    padding-bottom: 0.5pt !important;
+    font-size: 8pt !important;
+  }
+
+  .rpt-act-badge,
+  .rpt-act-header-badge,
+  .rpt-banner-top {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .rpt-bloque-actividad {
+    page-break-inside: avoid !important;
+  }
+
+  .rpt-header,
+  .rpt-banner-top,
+  .rpt-subtitle,
+  .rpt-th-year,
+  .rpt-th-blue {
+    page-break-after: avoid !important;
+  }
+}
+
+/* Estilos para el Título Corporativo (Sincronizado con Gerencias) */
+.rpt-text-orange-council {
+  color: #E38631 !important;
+}
+
+.rpt-cmai-subtitulo {
+  color: #00468B !important;
+  font-size: 9pt !important;
+  font-weight: normal !important;
+}
+
+.rpt-cmai-titulo-container {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.rpt-cmai-margin-left {
+  margin-left: 12pt !important;
+}
+
+.rpt-fs-14pt {
+  font-size: 14pt !important;
 }
