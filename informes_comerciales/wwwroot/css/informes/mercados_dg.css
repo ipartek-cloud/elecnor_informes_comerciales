@@ -30,6 +30,11 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
   margin-top: 0 !important;
 }
 
+/* Unificar margen header para paridad Web/PDF */
+.rpt-header {
+  margin-bottom: 6pt !important;
+}
+
 /* =============================================================================
 LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
 Define los anchos para que el informe principal y subinformes cuadren.
@@ -121,12 +126,22 @@ la línea de border-top en 3 bloques (Mensual | Concepto | Acumulado)
 
 /* =============================================================================
 UTILIDADES CSS ESPECÍFICAS PARA MERCADOS_DG
-NOTA: Las utilidades comunes (.rpt-align-*, .rpt-pad-*, .rpt-font-bold, etc.)
+NOTA: Las utilidades comunes (.align-*, .pad-*, .font-bold, etc.)
 están definidas en informes_base.css y mercados.css
 ============================================================================= */
 
+/* Utilidades de reemplazo Bootstrap */
+.rpt-w-100 { width: 100% !important; }
+.rpt-mb-0 { margin-bottom: 0 !important; }
+.rpt-mb-2 { margin-bottom: 4pt !important; }
+.rpt-mb-3 { margin-bottom: 6pt !important; }
+.rpt-mb-4 { margin-bottom: 12pt !important; }
+.rpt-mb-5 { margin-bottom: 24pt !important; }
+.rpt-mt-4 { margin-top: 12pt !important; }
+.rpt-px-3 { padding-left: 12pt !important; padding-right: 12pt !important; }
+
 /* Margen superior extra grande - específico de este informe */
-.rpt-mt-6 { margin-top: 3.5rem !important; }
+.rpt-mt-6 { margin-top: 42pt !important; }
 
 /* =============================================================================
 LITERALES DE ENCABEZADO ESPECÍFICOS CMAI (Patrón Cartera Diferida)
@@ -253,8 +268,8 @@ Las reglas generales de impresión están en informes_base.css
 
   /* Compactar banners de DG - Separación aumentada entre agrupaciones */
   .rpt-banner-top {
-    margin-top: 2.5rem !important;
-    margin-bottom: 0.8rem !important;
+    margin-top: 30pt !important;
+    margin-bottom: 10pt !important;
   }
 
   /* Evitar cortes dentro de filas de detalle */
@@ -330,13 +345,13 @@ Las reglas generales de impresión están en informes_base.css
 
   /* Header compacto */
   .rpt-header {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 6pt !important;
   }
 
   /* Subtítulo compacto — idéntico a Cartera Diferida */
   .rpt-subtitle {
     font-size: 8pt !important;
-    margin-bottom: 0.3rem !important;
+    margin-bottom: 4pt !important;
   }
 
   /* Literales del encabezado CMAI - paridad con cartera_diferida_consejo.css */
@@ -349,7 +364,7 @@ Las reglas generales de impresión están en informes_base.css
 
   /* Separador cartera diferida en PDF */
   .rpt-cd-separator {
-    margin-top: 1.5rem !important;
+    margin-top: 18pt !important;
   }
 
   /* Evitar cortes dentro de filas de detalle de cartera diferida */
