@@ -70,7 +70,7 @@ function _getHtmlEncabezado() {
     const filtros = data?.meta?.filtros || {};
 
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt">Consejo de Administración</span><span class="rpt-ms-2 rpt-fs-9pt rpt-text-corporate">Informe de Contratación</span>',
+        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt">Consejo Elecnor</span><span class="rpt-ms-2 rpt-fs-9pt rpt-text-corporate">Informe de Contratación</span>',
         textoBanner1: 'Ranking de Contratación',
         textoBanner2: 'Clientes',
         mes: filtros.mes,

@@ -86,7 +86,8 @@ public class InformeRankingContratacionClientesService
             TotalMercado = totalMercadoReal,
             Datos = datosDto,
             Meta = new { 
-                Filtros = new { anio = anio, mes = mes, mercado = mercado }
+                Filtros = new { anio = anio, mes = mes, mercado = mercado },
+                titulo = $"Ranking de Contratación {mercado}"
             }
         };
 

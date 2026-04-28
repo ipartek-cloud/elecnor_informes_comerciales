@@ -149,33 +149,33 @@ GUÍA: Print-Perfect Parity v4.2
 }
 
 .rpt-col-row {
-    width: 25pt;
+    width: 12pt;
     text-align: right;
-    padding-right: 8pt !important;
+    padding-right: 4pt !important;
     color: #333;
 }
 
 .rpt-ranking-table col.rpt-col-row {
-    width: 25pt !important;
+    width: 12pt !important;
 }
 
 .rpt-col-cliente {
-    width: 98pt !important;
-    min-width: 98pt !important;
-    max-width: 98pt !important;
+    width: 100pt !important;
+    min-width: 100pt !important;
+    max-width: 100pt !important;
     font-weight: normal;
     padding-left: 4pt !important;
 }
 
 .rpt-ranking-table col.rpt-col-cliente {
-    width: 98pt !important;
-    min-width: 98pt !important;
-    max-width: 98pt !important;
+    width: 100pt !important;
+    min-width: 100pt !important;
+    max-width: 100pt !important;
 }
 
 /* Estilo específico para la cabecera de cliente */
 .rpt-header-blue.rpt-col-cliente {
-    width: 98pt;
+    width: 100pt !important;
 }
 
 .rpt-col-num {
@@ -203,17 +203,18 @@ GUÍA: Print-Perfect Parity v4.2
     max-width: 44pt !important;
 }
 
+/* Columna Año Anterior (Ant): Reducida a 24pt */
 .rpt-col-ant,
 .rpt-ranking-table th.rpt-col-ant,
 .rpt-ranking-table td.rpt-col-ant {
-    width: 34pt;
+    width: 24pt;
     text-align: right;
     color: #888 !important;
     font-weight: normal;
 }
 
 .rpt-ranking-table col.rpt-col-ant {
-    width: 34pt !important;
+    width: 24pt !important;
 }
 
 /* Utilidades de texto */
@@ -248,9 +249,9 @@ GUÍA: Print-Perfect Parity v4.2
     color: #999;
 }
 
-/* Indentación visual para desglose - Mayor indentación */
+/* Indentación visual para desglose - 15pt validado */
 .rpt-desglose-row .rpt-col-cliente {
-    padding-left: 40pt !important;
+    padding-left: 15pt !important;
     color: #999;
 }
 
@@ -264,7 +265,7 @@ GUÍA: Print-Perfect Parity v4.2
 }
 
 .rpt-ps-4 {
-    padding-left: 40pt !important;
+    padding-left: 15pt !important;
 }
 
 /* ==========================================================================
@@ -434,7 +435,7 @@ GUÍA: Print-Perfect Parity v4.2
     }
 
     .rpt-desglose-row .rpt-col-cliente {
-        padding-left: 40pt !important;
+        padding-left: 15pt !important;
     }
 
     /* Header azul en PDF */
@@ -442,14 +443,14 @@ GUÍA: Print-Perfect Parity v4.2
         background-color: #00468B !important;
     }
 
-    /* Anchos de columna para PDF - deben coincidir con los de web */
+    /* Anchos de columna para PDF - sincronizados con web */
     .rpt-col-ai { width: 20pt !important; }
-    .rpt-col-row { width: 25pt !important; padding-right: 8pt !important; }
-    .rpt-col-cliente { width: 98pt !important; }
-    .rpt-header-blue.rpt-col-cliente { width: 98pt !important; }
+    .rpt-col-row { width: 12pt !important; }
+    .rpt-col-cliente { width: 100pt !important; }
+    .rpt-header-blue.rpt-col-cliente { width: 100pt !important; }
     .rpt-col-num { width: 34pt !important; }
     .rpt-col-pct { width: 44pt !important; }
-    .rpt-col-ant { width: 34pt !important; }
+    .rpt-col-ant { width: 24pt !important; }
 
     /* Banner compacto - 25px */
     .rpt-banner-top {
