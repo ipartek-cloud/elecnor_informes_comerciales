@@ -90,7 +90,7 @@ public class InformeContratacionesSignificativasRiService
 
     private static MetaContSigRiDto _crearMeta(int anio, int mes, string mercado, string codSubDirGeneral) => new()
     {
-        Titulo          = $"Contrataciones Significativas {mercado}",
+        Titulo          = $"Contrataciones Significativas Mercado {mercado}",
         UmbralTexto     = "Contratación > 2 M", // Enviamos el literal dinámico
         FechaGeneracion = DateTime.Now,
         Filtros         = new ContSigFiltrosDto

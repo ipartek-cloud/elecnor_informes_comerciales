@@ -126,7 +126,7 @@ function _getHtmlEncabezado() {
     return getHtmlEncabezadoBase({
         tituloCorporativo: '<span class="rpt-info-complementary ms-2">Información complementaria</span>',
         textoBanner1: 'Elecnor',
-        textoBanner2: `Contrat. significativas Mercado ${filtros.mercado || 'Nacional'}`,
+        textoBanner2: `Contrataciones Significativas Mercado ${filtros.mercado || 'Nacional'}`,
         mes: filtros.mes, anio: filtros.anio,
         nroPagina: estado.nroPagina,
         mostrarNumeroPagina: estado.mostrarNumeroPagina,

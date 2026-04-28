@@ -111,7 +111,7 @@ public class InformeContratacionesSignificativasService
                                               int mes, 
                                               string mercado, 
                                               string codSubDirGeneral) => new() {
-                                                                                    Titulo          = $"Contrataciones Significativas {mercado}",
+                                                                                    Titulo          = $"Contrataciones Significativas Mercado {mercado}",
                                                                                     FechaGeneracion = DateTime.Now,
                                                                                     Filtros = new ContSigFiltrosDto
                                                                                     {

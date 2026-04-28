@@ -100,7 +100,7 @@ function _getHtmlEncabezado() {
             <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
             <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>`,
         textoBanner1: 'Elecnor',
-        textoBanner2: `Contrat. significativas Mercado ${mercado}`,
+        textoBanner2: `Contrataciones Significativas Mercado ${mercado}`,
         mes: filtros.mes,
         anio: filtros.anio,
         nroPagina: estado.nroPagina || (mercado === 'Nacional' ? 9 : 10),
@@ -307,7 +307,7 @@ function _renderTablaMaestraInternacional() {
                         </div>
                         <div class="${RPT_CLASSES.BANNER}">
                             <span>Elecnor</span>
-                            <span>Contrat. significativas Mercado ${mercado}</span>
+                            <span>Contrataciones Significativas Mercado ${mercado}</span>
                         </div>
                         <div class="${RPT_CLASSES.SUBTITLE}">
                             <span>Cierre de ${getNombreMes(filtros.mes)} ${filtros.anio} | Miles de euros</span>
