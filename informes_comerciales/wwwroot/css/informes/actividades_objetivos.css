@@ -1,13 +1,5 @@
 /* Estilos específicos para el informe de Actividades_Objetivos (CONSEJO ELECNOR) */
 
-/* Contenedor de bloque y Tipografía base */
-.rpt-paper[data-informe="actividades_objetivos"],
-.rpt-paper[data-informe="actividades_objetivos"] table,
-.rpt-paper[data-informe="actividades_objetivos"] th,
-.rpt-paper[data-informe="actividades_objetivos"] td {
-    font-family: Verdana, Geneva, sans-serif !important;
-}
-
 .rpt-bloque-actividad {
   margin-bottom: 12pt;
   page-break-inside: avoid;
@@ -20,11 +12,7 @@
   border: none !important;
 }
 
-/* V-18: Separación Cabecera-Contenido estándar CMAI */
-.rpt-paper[data-informe="actividades_objetivos"] .report-body {
-  margin-top: 2.5rem !important;
-}
-
+/* Subtítulo específico de este informe */
 .rpt-subtitle {
   margin-bottom: 6pt !important;
 }
@@ -47,9 +35,10 @@
   position: relative;
 }
 
-.rpt-act-row-spacer th {
-  height: 4pt !important;
-  line-height: 4pt !important;
+.rpt-act-row-spacer th,
+.rpt-act-row-spacer td {
+  height: 6px !important;
+  line-height: 6px !important;
   border: none !important;
   padding: 0 !important;
 }
@@ -112,7 +101,7 @@ div.rpt-act-line-segment-top {
   padding-top: 4pt !important;
   padding-bottom: 3pt !important;
   vertical-align: middle !important;
-  line-height: 1 !important; /* Forzamos line-height unitario para evitar desplazamientos */
+  line-height: 1 !important;
   border-top: none !important;
 }
 
@@ -136,7 +125,6 @@ div.rpt-act-line-segment-top {
   padding-bottom: 0.5pt !important;
   line-height: 1.05 !important;
   font-size: 8pt !important;
-  color: #000 !important;
 }
 
 .rpt-col-act-nombre {
@@ -162,21 +150,14 @@ div.rpt-act-line-segment-top {
     border-top: 0.3pt solid #00468B !important;
   }
 
-  /* V-18: Separación Cabecera-Contenido */
-  .rpt-paper[data-informe="actividades_objetivos"] .report-body {
-    margin-top: 2.5rem !important;
-  }
-
   .rpt-detail-row td {
     line-height: 1.05 !important;
     padding-top: 0.5pt !important;
     padding-bottom: 0.5pt !important;
-    font-size: 8pt !important;
   }
 
   .rpt-act-badge,
-  .rpt-act-header-badge,
-  .rpt-banner-top {
+  .rpt-act-header-badge {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -185,35 +166,13 @@ div.rpt-act-line-segment-top {
     page-break-inside: avoid !important;
   }
 
-  .rpt-header,
-  .rpt-banner-top,
-  .rpt-subtitle,
   .rpt-th-year,
   .rpt-th-blue {
     page-break-after: avoid !important;
   }
 }
 
-/* Estilos para el Título Corporativo (Sincronizado con Gerencias) */
-.rpt-text-orange-council {
-  color: #E38631 !important;
-}
-
-.rpt-cmai-subtitulo {
-  color: #00468B !important;
-  font-size: 9pt !important;
-  font-weight: normal !important;
-}
-
 .rpt-cmai-titulo-container {
   display: inline-block;
   vertical-align: baseline;
-}
-
-.rpt-cmai-margin-left {
-  margin-left: 12pt !important;
-}
-
-.rpt-fs-14pt {
-  font-size: 14pt !important;
 }

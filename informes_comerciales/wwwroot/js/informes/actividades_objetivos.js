@@ -127,6 +127,9 @@ function _renderBloquePais(pais) {
   `).join('');
 
   const totalesHtml = `
+    <tr class="rpt-act-row-spacer">
+      <td colspan="8"></td>
+    </tr>
     <tr class="rpt-total-row">
       <td class="rpt-col-act-porc-ant rpt-align-center rpt-act-total-border-top rpt-font-bold">
         100%

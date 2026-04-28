@@ -1,5 +1,5 @@
 import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -18,8 +18,13 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostr
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'subDireccionesGenerales',
-            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
+            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
         });
+
+        // V-19: Para Sábana Continua (Tipo Internacional), forzamos 1 sola página en la navegación web
+        estado.paginasTotales = 1;
+        actualizarEstadoPaginacion(0, 1, "Vista Unificada");
+
     } catch (error) {
         console.error("Error al ejecutar informe Mercados SG Delegaciones:", error);
     }
@@ -28,21 +33,31 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostr
 function _renderizarPagina() {
     const container = document.getElementById(RPT_CLASSES.MODAL_CONTENT);
     if (!container) return;
-    const sdg = estado.informeGlobalData.subDireccionesGenerales[estado.paginaActual];
-    if (!sdg) return;
+    
+    const data = estado.informeGlobalData;
+    if (!data || !data.subDireccionesGenerales) return;
+
+    // Renderizamos TODAS las Subdirecciones una tras otra
+    const cuerpoHtml = data.subDireccionesGenerales.map((sdg, idx) => {
+        const htmlSDG = _renderSDG(sdg);
+        // Añadir salto de página físico para el PDF entre SDGs
+        return idx < data.subDireccionesGenerales.length - 1 
+            ? `${htmlSDG}<div class="rpt-page-break"></div>` 
+            : htmlSDG;
+    }).join('');
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_sg_delegaciones" role="main"${getStyleVars(estado.margenes)}>
-            ${_getHtmlEncabezado(sdg)}
-            <div class="report-body">${_renderSDG(sdg)}</div>
-        </div>`;
+    <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_sg_delegaciones" role="main"${getStyleVars(estado.margenes)}>
+        ${_getHtmlEncabezadoBase()}
+        <div class="report-body rpt-cmai-mt-standard">${cuerpoHtml}</div>
+    </div>`;
+
     container.scrollTop = 0;
-    actualizarEstadoPaginacion(estado.paginaActual, estado.paginasTotales, sdg.nombreSubDirGeneral);
 }
 
-function _getHtmlEncabezado(sdg) {
-    const encabezadoBase = getHtmlEncabezadoBase({
-        tituloCorporativo: 'Informe de Contratación',
+function _getHtmlEncabezadoBase() {
+    return getHtmlEncabezadoBase({
+        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span> <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: 'Direcciones',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
@@ -51,133 +66,145 @@ function _getHtmlEncabezado(sdg) {
         mostrarNumeroPagina: estado.mostrarNumeroPagina,
         mostrarTitulo: estado.mostrarTitulo
     });
-
-    if (!sdg) return encabezadoBase;
-
-    // Inyectar el título de la Subdirección General (naranja) debajo del banner base
-    return `
-        ${encabezadoBase}
-        <div style="text-align: center; color: #ff8c00; font-size: 1.1rem; font-weight: bold; margin-top: 10px; margin-bottom: 5px;">
-            ${sdg.nombreSubDirGeneral}
-        </div>
-    `;
 }
+
 function _renderSDG(sdg) {
     if (!sdg || !sdg.direccionesNegocio) return '';
-    return sdg.direccionesNegocio.map(dn => _renderDN(dn, sdg)).join('');
+    
+    return sdg.direccionesNegocio.map((dn, idx) => {
+        return _renderDN(dn, sdg, idx === 0);
+    }).join('');
 }
 
-function _renderDN(dn, sdg) {
+function _renderDN(dn, sdg, isFirstDN) {
     const data = estado.informeGlobalData;
     const anioAnterior = data.meta.filtros.anio - 1;
     const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
     const mesAnterior = data.meta.filtros.mes - 1;
     const mesAnteriorLabel = mesAnterior > 0 ? meses[mesAnterior - 1] : anioAnterior;
-    const isFirstDN = dn === sdg.direccionesNegocio[0];
+    const nombreSDG = sdg.nombreSubDirGeneral;
 
-    const subHeaders = ''; // Se mueven al interior del thead de la tabla
+    const titleHtml = isFirstDN ? `<div class="rpt-dg-sdg-titulo">${nombreSDG}</div>` : '';
 
     const tableHeader = `
-        <table class="rpt-table-delegaciones">
-            <colgroup>
-                <col class="rpt-dg-col-obj-m"><col class="rpt-dg-col-contr-m"><col class="rpt-dg-col-centro">
-                <col class="rpt-dg-col-obj-a"><col class="rpt-dg-col-contr-a"><col class="rpt-dg-col-ip">
-                <col class="rpt-dg-col-spacer"><col class="rpt-dg-col-var-contr"><col class="rpt-dg-col-var-cart">
-            </colgroup>
-            <thead>
-                ${isFirstDN ? `
-                <tr class="rpt-dg-subheaders-row">
-                    <th colspan="2" class="text-center"><span>Mensual</span></th>
-                    <th></th>
-                    <th colspan="3" class="text-center"><span>Acumulado</span></th>
-                    <th></th>
-                    <th colspan="2" class="text-center"><span>Var/${anioAnterior}</span></th>
-                </tr>` : ''}
-                <tr class="rpt-dg-th-columns">
-                    <th class="text-end pe-2 rpt-text-corporate">Objet.</th>
-                    <th class="text-end pe-2 rpt-text-corporate">Contr.</th>
-                    <th class="rpt-dg-header-center-name text-white" style="background-color: #00468B; border: 1px solid #00468B;">${dn.nombreDirNegocio}</th>
-                    <th class="text-end pe-2 rpt-text-corporate">Objet.</th>
-                    <th class="text-end pe-2 rpt-text-corporate">Contr.</th>
-                    <th class="text-center rpt-text-corporate">Ip</th><th></th>
-                    <th class="text-center rpt-text-corporate">Contr.</th>
-                    <th class="text-center rpt-text-corporate">Cart.(${mesAnteriorLabel})</th>
-                </tr>
-                <tr class="rpt-dg-header-line-row">
-                    <th class="rpt-dg-header-line" colspan="2"></th>
-                    <th></th>
-                    <th class="rpt-dg-header-line" colspan="3"></th>
-                    <th></th>
-                    <th class="rpt-dg-header-line" colspan="2"></th>
-                </tr>
-            </thead><tbody>`;
+    ${titleHtml}
+    <table class="rpt-table-delegaciones">
+        <colgroup>
+            <col class="rpt-dg-col-obj-m"><col class="rpt-dg-col-contr-m">
+            <col class="rpt-dg-col-sep"> <!-- Separador 1 -->
+            <col class="rpt-dg-col-centro">
+            <col class="rpt-dg-col-sep"> <!-- Separador 2 -->
+            <col class="rpt-dg-col-obj-a"><col class="rpt-dg-col-contr-a"><col class="rpt-dg-col-ip">
+            <col class="rpt-dg-col-spacer"><col class="rpt-dg-col-var-contr"><col class="rpt-dg-col-var-cart">
+        </colgroup>
+        <thead>
+            <tr class="rpt-dg-subheaders-row">
+                <th colspan="2" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Mensual</span></th>
+                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 1 -->
+                <th rpt-border-none></th> <!-- Centro -->
+                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 2 -->
+                <th colspan="3" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Acumulado</span></th>
+                <th rpt-border-none></th> <!-- Spacer -->
+                <th colspan="2" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Var/${anioAnterior}</span></th>
+            </tr>
+            <tr class="rpt-dg-th-columns">
+                <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Objet.</th>
+                <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
+                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 1 -->
+                <th class="rpt-dg-header-center-name">${dn.nombreDirNegocio}</th>
+                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 2 -->
+                <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Objet.</th>
+                <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
+                <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Ip</th>
+                <th rpt-border-none></th> <!-- Spacer -->
+                <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Contr.</th>
+                <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Cart.(${mesAnteriorLabel})</th>
+            </tr>
+            <tr class="rpt-dg-header-line-row">
+                <th class="rpt-dg-header-line" colspan="2"></th>
+                <th class="rpt-dg-col-sep"></th> <!-- Sep 1 -->
+                <th></th> <!-- Centro -->
+                <th class="rpt-dg-col-sep"></th> <!-- Sep 2 -->
+                <th class="rpt-dg-header-line" colspan="3"></th>
+                <th></th> <!-- Spacer -->
+                <th class="rpt-dg-header-line" colspan="2"></th>
+            </tr>
+        </thead>
+        <tbody>`;
 
     const filasHtml = dn.areas
         .flatMap(area => area.delegaciones.map(del => ({ ...del, area: area.area })))
         .map(del => `
             <tr class="rpt-dg-detail-row">
-                <td class="rpt-dg-col-obj-m text-end">${formatCurrency(del.mensual.objetivos, 0)}</td>
-                <td class="rpt-dg-col-contr-m text-end">${formatCurrency(del.mensual.contratacion, 0)}</td>
+                <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(del.mensual.objetivos, 0)}</td>
+                <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(del.mensual.contratacion, 0)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
                 <td class="rpt-dg-col-centro">${del.nombreDelegacion}</td>
-                <td class="rpt-dg-col-obj-a text-end">${formatCurrency(del.acumulado.objetivos, 0)}</td>
-                <td class="rpt-dg-col-contr-a text-end">${formatCurrency(del.acumulado.contratacion / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip text-center">${formatCurrency(del.acumulado.ip, 2)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
+                <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(del.acumulado.objetivos, 0)}</td>
+                <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(del.acumulado.contratacion / 1000, 0)}</td>
+                <td class="rpt-dg-col-ip rpt-align-center">${formatCurrency(del.acumulado.ip, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-dg-col-var-contr text-center">${del.variaciones.contratacion}</td>
-                <td class="rpt-dg-col-var-cart text-center">${del.variaciones.cartera}</td>
+                <td class="rpt-dg-col-var-contr rpt-align-center">${del.variaciones.contratacion}</td>
+                <td class="rpt-dg-col-var-cart rpt-align-center">${del.variaciones.cartera}</td>
             </tr>`).join('');
 
     const totalesHtml = `
+            <tr class="rpt-spacer-row-totales"><td colspan="11" class="rpt-spacer-cell-totales"></td></tr>
             <tr class="rpt-dg-total-row">
-                <td class="rpt-dg-col-obj-m text-end has-line">${formatCurrency(dn.totales.objetivosMensual, 0)}</td>
-                <td class="rpt-dg-col-contr-m text-end has-line">${formatCurrency(dn.totales.contratacionMensual, 0)}</td>
+                <td class="rpt-dg-col-obj-m rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.objetivosMensual, 0)}</td>
+                <td class="rpt-dg-col-contr-m rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.contratacionMensual, 0)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
                 <td class="rpt-dg-col-centro">&nbsp;</td>
-                <td class="rpt-dg-col-obj-a text-end has-line">${formatCurrency(dn.totales.objetivosAcumulado, 0)}</td>
-                <td class="rpt-dg-col-contr-a text-end has-line">${formatCurrency(dn.totales.contratacionAcumulado / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip text-center has-line">${formatCurrency(dn.totales.ip, 2)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
+                <td class="rpt-dg-col-obj-a rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.objetivosAcumulado, 0)}</td>
+                <td class="rpt-dg-col-contr-a rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.contratacionAcumulado / 1000, 0)}</td>
+                <td class="rpt-dg-col-ip rpt-align-center rpt-td-total">${formatCurrency(dn.totales.ip, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-dg-col-var-contr text-center has-line">${dn.totales.variacionContratacion}</td>
-                <td class="rpt-dg-col-var-cart text-center has-line">${dn.totales.variacionCartera}</td>
-            </tr>`;
+                <td class="rpt-dg-col-var-contr rpt-align-center rpt-td-total">${dn.totales.variacionContratacion}</td>
+                <td class="rpt-dg-col-var-cart rpt-align-center rpt-td-total">${dn.totales.variacionCartera}</td>
+            </tr>
+            <tr class="rpt-spacer-row-resumen"><td colspan="11"></td></tr>`;
 
     const hasNacional = dn.totales.resumen.objetivosMensualNacional !== 0 ||
-                        dn.totales.resumen.contratacionMensualNacional !== 0 ||
-                        dn.totales.resumen.objetivosAcumuladoNacional !== 0 ||
-                        dn.totales.resumen.contratacionAcumuladoNacional !== 0;
+        dn.totales.resumen.contratacionMensualNacional !== 0;
 
     const htmlNacional = hasNacional ? `
             <tr class="rpt-dg-resumen-row rpt-dg-resumen-nacional">
-                <td class="rpt-dg-col-obj-m text-end">${formatCurrency(dn.totales.resumen.objetivosMensualNacional, 0)}</td>
-                <td class="rpt-dg-col-contr-m text-end">${formatCurrency(dn.totales.resumen.contratacionMensualNacional, 0)}</td>
-                <td class="rpt-dg-col-centro">Nacional</td>
-                <td class="rpt-dg-col-obj-a text-end">${formatCurrency(dn.totales.resumen.objetivosAcumuladoNacional, 0)}</td>
-                <td class="rpt-dg-col-contr-a text-end">${formatCurrency(dn.totales.resumen.contratacionAcumuladoNacional / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip text-center">${formatCurrency(dn.totales.resumen.ipNacional, 2)}</td>
+                <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(dn.totales.resumen.objetivosMensualNacional, 0)}</td>
+                <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(dn.totales.resumen.contratacionMensualNacional, 0)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
+                <td class="rpt-dg-col-centro rpt-dg-resumen-label">Nacional</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
+                <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(dn.totales.resumen.objetivosAcumuladoNacional, 0)}</td>
+                <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(dn.totales.resumen.contratacionAcumuladoNacional / 1000, 0)}</td>
+                <td class="rpt-dg-col-ip rpt-align-center">${formatCurrency(dn.totales.resumen.ipNacional, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-dg-col-var-contr text-center"></td><td class="rpt-dg-col-var-cart text-center"></td>
+                <td class="rpt-align-center">&nbsp;</td>
+                <td class="rpt-align-center">&nbsp;</td>
             </tr>` : '';
 
     const hasInternacional = dn.totales.resumen.objetivosMensualInternacional !== 0 ||
-                             dn.totales.resumen.contratacionMensualInternacional !== 0 ||
-                             dn.totales.resumen.objetivosAcumuladoInternacional !== 0 ||
-                             dn.totales.resumen.contratacionAcumuladoInternacional !== 0;
+        dn.totales.resumen.contratacionMensualInternacional !== 0;
 
     const htmlInternacional = hasInternacional ? `
             <tr class="rpt-dg-resumen-row rpt-dg-resumen-internacional">
-                <td class="rpt-dg-col-obj-m text-end">${formatCurrency(dn.totales.resumen.objetivosMensualInternacional, 0)}</td>
-                <td class="rpt-dg-col-contr-m text-end">${formatCurrency(dn.totales.resumen.contratacionMensualInternacional, 0)}</td>
-                <td class="rpt-dg-col-centro">Internacional</td>
-                <td class="rpt-dg-col-obj-a text-end">${formatCurrency(dn.totales.resumen.objetivosAcumuladoInternacional, 0)}</td>
-                <td class="rpt-dg-col-contr-a text-end">${formatCurrency(dn.totales.resumen.contratacionAcumuladoInternacional / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip text-center">${formatCurrency(dn.totales.resumen.ipInternacional, 2)}</td>
+                <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(dn.totales.resumen.objetivosMensualInternacional, 0)}</td>
+                <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(dn.totales.resumen.contratacionMensualInternacional, 0)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
+                <td class="rpt-dg-col-centro rpt-dg-resumen-label">Internacional</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
+                <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(dn.totales.resumen.objetivosAcumuladoInternacional, 0)}</td>
+                <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(dn.totales.resumen.contratacionAcumuladoInternacional / 1000, 0)}</td>
+                <td class="rpt-dg-col-ip rpt-align-center">${formatCurrency(dn.totales.resumen.ipInternacional, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-dg-col-var-contr text-center"></td><td class="rpt-dg-col-var-cart text-center"></td>
+                <td class="rpt-align-center">&nbsp;</td>
+                <td class="rpt-align-center">&nbsp;</td>
             </tr>` : '';
 
     const resumenHtml = htmlNacional + htmlInternacional;
 
-    return `<div class="rpt-bloque-dn" data-dn="${dn.nombreDirNegocio}">
-        ${tableHeader}${filasHtml}${totalesHtml}${resumenHtml}</tbody></table></div>`;
+    return `<div class="rpt-bloque-dn" data-dn="${dn.nombreDirNegocio}">${tableHeader}${filasHtml}${totalesHtml}${resumenHtml}</tbody></table></div>`;
 }
 
 function _registrarEventos() {
@@ -185,56 +212,56 @@ function _registrarEventos() {
 }
 
 async function _imprimirInforme() {
-    const informeGlobalData = estado.informeGlobalData;
-    if (!informeGlobalData) return;
-
-    const items = informeGlobalData.subDireccionesGenerales || [];
-    if (!items.length) return;
-
-    // Variables CSS inline para márgenes (paridad con el modal)
+    const data = estado.informeGlobalData;
     const styleVars = getStyleVars(estado.margenes);
-
+    
+    // Crear capa de impresión manual para usar la técnica de Outer Table
     const capaPrint = document.createElement('div');
     capaPrint.className = 'rpt-print-layer';
-
-    /* Técnica Outer-Table para repetición nativa de cabeceras corporativas */
-    const html = items.map((sdg, idx) => `
-        <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''}"
-             ${styleVars}>
-            <table style="width:100%; border-collapse:collapse; border:none; table-layout:fixed;">
+    
+    // La Outer Table permite que el thead se repita en cada página física del PDF
+    const html = `
+        <div class="rpt-paper rpt-paper--print" data-informe="mercados_sg_delegaciones"${styleVars}>
+            <table class="rpt-print-outer-table">
                 <thead>
                     <tr>
-                        <td style="padding: 6.4mm 0 0 0; border:none;">
-                            ${_getHtmlEncabezado(sdg)}
+                        <td class="rpt-print-td-header">
+                            ${_getHtmlEncabezadoBase()}
                         </td>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <td style="padding-bottom: 6.4mm; border:none;"></td>
-                    </tr>
-                </tfoot>
                 <tbody>
                     <tr>
-                        <td style="padding:0; border:none; vertical-align:top;">
-                            <div class="report-body">${_renderSDG(sdg)}</div>
+                        <td class="rpt-print-td-body">
+                            <div class="report-body rpt-cmai-mt-standard">
+                                ${data.subDireccionesGenerales.map((sdg, idx) => {
+                                    const htmlSDG = _renderSDG(sdg);
+                                    return idx < data.subDireccionesGenerales.length - 1 
+                                        ? `${htmlSDG}<div class="rpt-page-break"></div>` 
+                                        : htmlSDG;
+                                }).join('')}
+                            </div>
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="rpt-print-td-footer">
+                            <!-- Espacio para el pie de página si fuera necesario -->
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
-    `).join('');
-
+    `;
+    
     capaPrint.innerHTML = html;
     document.body.appendChild(capaPrint);
 
-    const originalTitle = document.title;
     try {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        document.title = '';
+        await new Promise(resolve => setTimeout(resolve, 250));
         window.print();
     } finally {
-        document.title = originalTitle;
         if (document.body.contains(capaPrint)) {
             document.body.removeChild(capaPrint);
         }

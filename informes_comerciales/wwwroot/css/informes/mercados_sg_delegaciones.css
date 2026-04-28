@@ -1,106 +1,227 @@
+/* Informe Mercados SG Delegaciones - Estándar Print-Perfect */
+
+/* Contenedor principal - márgenes controlados por JS */
 .rpt-paper[data-informe="mercados_sg_delegaciones"] {
     container-type: inline-size;
     container-name: rpt-paper;
-    max-width: 1200px;
-    padding: var(--rpt-padding-web, 1.5rem) !important;
-    margin: 0 auto;
-    box-shadow: none;
-    border: none;
 }
 
-.rpt-dn-title {
+/* Título de Subdirección General (Independiente) */
+.rpt-dg-sdg-titulo {
+    color: #E38631;
+    font-size: 10pt;
     font-weight: bold;
-    font-size: 0.9rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-    margin-top: 1rem;
+    text-align: left;
+    padding: 0;
+    margin-top: 12pt;
+    margin-bottom: 15pt;
+    margin-left: calc(17.5% + 4px + 4pt); /* Sumamos el padding de la columna Centro */
+    line-height: 1.2;
 }
-.rpt-dn-title-first { color: #E38631; }
-.rpt-dn-title:not(.rpt-dn-title-first) { color: #00468B; }
 
-.rpt-dg-subheaders-row th { text-align: center; padding-bottom: 2px; }
-.rpt-dg-subheaders-row th span { color: #00468B; font-weight: bold; font-size: 0.75rem; }
+/* Cabeceras de tabla nivel 2 (Mensual/Acumulado/Var) */
+.rpt-dg-subheaders-row th {
+    text-align: center;
+    padding-bottom: 1pt;
+    vertical-align: bottom;
+}
+
+.rpt-dg-subheader-label {
+    color: #00468B;
+    font-weight: bold;
+    font-size: 8pt;
+}
 
 .rpt-table-delegaciones {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
-    font-size: 0.85rem;
-    font-family: Arial, sans-serif;
+    font-size: 8pt;
+    margin-bottom: 0;
 }
 
-.rpt-dg-col-obj-m { width: 9%; }
-.rpt-dg-col-contr-m { width: 9.5%; }
-.rpt-dg-col-centro { width: 28%; }
-.rpt-dg-col-obj-a { width: 9.5%; }
-.rpt-dg-col-contr-a { width: 9.5%; }
-.rpt-dg-col-ip { width: 7%; }
-.rpt-dg-col-spacer { width: 4%; }
+/* Columna fantasma de separación (Gutter) - CONTROL QUIRÚRGICO */
+.rpt-dg-col-sep {
+    width: 4px !important;
+    min-width: 4px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Anchos de columna optimizados */
+.rpt-dg-col-obj-m { width: 8.5%; }
+.rpt-dg-col-contr-m { width: 9%; }
+.rpt-dg-col-centro { width: 33%; }
+.rpt-dg-col-obj-a { width: 9%; }
+.rpt-dg-col-contr-a { width: 9%; }
+.rpt-dg-col-ip { width: 7.5%; }
+.rpt-dg-col-spacer { width: 3%; }
 .rpt-dg-col-var-contr { width: 8%; }
-.rpt-dg-col-var-cart { width: 8.5%; }
+.rpt-dg-col-var-cart { width: 10%; }
 
+/* Cabeceras de columna nivel 1 */
 .rpt-dg-th-columns th {
-    color: #00468B; font-weight: bold; font-size: 0.85rem;
-    padding: 4px 2px; vertical-align: bottom;
+    color: #00468B;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 2pt 1pt;
+    vertical-align: bottom;
 }
+
+/* Celda de nombre de Dirección de Negocio (Azul Elecnor) */
+.rpt-dg-th-columns th.rpt-dg-header-center-name,
 .rpt-dg-header-center-name {
-    text-align: left; padding-left: 8px; vertical-align: bottom;
+    text-align: left;
+    padding: 2pt 1pt 2pt 10pt !important;
+    vertical-align: bottom;
+    background-color: #00468B;
+    color: white !important;
+    border: 0.3pt solid #00468B;
 }
-.rpt-dg-header-line-row th { padding: 0; }
-.rpt-dg-header-line { border-bottom: 2px solid #00468B; margin: 0; }
 
+/* Línea separadora bajo cabeceras - Web: 2px, Print: 0.3pt */
+.rpt-dg-header-line {
+    border-bottom: 2px solid #00468B;
+    margin: 0;
+}
+
+/* Filas de detalle */
 .rpt-dg-detail-row td {
-    padding: 2px 4px; line-height: 1.4; font-size: 0.85rem; color: #000;
+    padding: 1pt 2pt;
+    line-height: 1.4;
+    font-size: 8pt;
+    color: #000;
 }
-.rpt-dg-col-centro { text-align: left; padding-left: 8px !important; font-weight: 500; }
 
-.rpt-dg-total-row td { color: #00468B; font-weight: bold; vertical-align: top; padding-top: 4px; padding-bottom: 6px; }
-.rpt-dg-total-row td.has-line { border-top: 2px solid #00468B; }
+.rpt-dg-col-centro {
+    text-align: left;
+    padding-left: 4pt !important;
+}
 
-.rpt-dg-resumen-row td { padding: 2px 4px; font-size: 0.85rem; color: #00468B; font-weight: bold; }
-.rpt-dg-resumen-nacional td { padding-top: 10px; }
+/* Totales - CORRECCIÓN DE ALINEACIÓN Y GAP */
+.rpt-dg-total-row td {
+    color: #00468B;
+    font-weight: bold !important;
+    vertical-align: middle !important;
+    padding-top: 4pt !important;
+    padding-bottom: 3pt !important;
+    line-height: 1 !important;
+}
 
-.rpt-bloque-dn { margin-bottom: 1.5rem; page-break-inside: avoid; }
+.rpt-dg-total-row td.rpt-td-total {
+    border-top: 2px solid #00468B;
+}
 
+/* Filas de resumen Nacional/Internacional */
+.rpt-dg-resumen-row td {
+    padding: 1pt 2pt;
+    font-size: 8pt;
+    color: #00468B !important;
+    font-weight: bold;
+    line-height: 1.4;
+    vertical-align: middle;
+}
+
+.rpt-dg-resumen-nacional td {
+    padding-top: 4pt;
+}
+
+/* Fila espaciadora física entre total (azul) y resumen Nacional/Internacional */
+.rpt-spacer-row-resumen td {
+    height: 12pt !important;
+    line-height: 12pt !important;
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.rpt-dg-resumen-label {
+    text-align: left;
+    padding-left: 4pt !important;
+    color: #00468B !important;
+}
+
+/* Bloque de Dirección de Negocio - Calibrado Final */
+.rpt-bloque-dn {
+    margin-top: 18pt !important;
+    margin-bottom: 12pt !important;
+    page-break-inside: avoid;
+}
+
+/* V-18: Separación Cabecera-Contenido Estándar CMAI */
+.rpt-paper[data-informe="mercados_sg_delegaciones"] .report-body.rpt-cmai-mt-standard {
+    margin-top: 2.5rem !important;
+}
+
+/* Salto de página entre mitades o bloques */
+.rpt-page-break {
+    page-break-after: always;
+}
+
+/* Utilidades de alineación */
+.rpt-align-center {
+    text-align: center !important;
+}
+
+.rpt-align-end {
+    text-align: right !important;
+}
+
+/* Estilos para impresión/PDF */
 @media print {
-    /* Neutralizar padding: gestionado por la estructura de tablas y thead */
-    .rpt-paper[data-informe="mercados_sg_delegaciones"],
-    .rpt-paper--print {
-        max-width: 100% !important;
-        padding: var(--rpt-padding-pdf) !important;
-        margin: 0 !important;
+    /* Reset de márgenes del papel para Outer Table */
+    .rpt-paper[data-informe="mercados_sg_delegaciones"].rpt-paper--print {
+        padding: 0 !important;
     }
-    .rpt-table-delegaciones { font-size: 8pt !important; }
 
-    /* Repetición nativa de thead */
-    .rpt-table-delegaciones thead {
+    .rpt-print-outer-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: none;
+    }
+
+    .rpt-print-td-header {
+        padding: 16mm 16mm 1.2rem 16mm !important; /* V-18 Reducido para ganar espacio en PDF */
+        border: none;
+    }
+
+    .rpt-print-td-body {
+        padding: 0 16mm !important;
+        border: none;
+        vertical-align: top;
+    }
+
+    .rpt-print-td-footer {
+        padding: 0 16mm 16mm 16mm !important;
+        border: none;
+    }
+
+    /* Forzar repetición del encabezado corporativo */
+    .rpt-print-outer-table thead {
         display: table-header-group !important;
     }
 
-    /* Visibilidad DN en PDF: Blanco sobre Azul Corporativo */
-    .rpt-dg-header-center-name {
-        color: white !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+    .rpt-dg-header-line {
+        border-bottom: 0.3pt solid #00468B !important;
     }
 
-    /* Permitir que los bloques DN se corten entre páginas para que las tablas internas puedan repetir su thead */
-    .rpt-bloque-dn {
-        page-break-inside: auto !important;
+    .rpt-dg-total-row td.rpt-td-total {
+        border-top: 0.3pt solid #00468B !important;
     }
 
-    .rpt-dg-col-obj-m { width: 10% !important; }
-    .rpt-dg-col-contr-m { width: 10% !important; }
-    .rpt-dg-col-centro { width: 33% !important; }
-    .rpt-dg-col-obj-a { width: 10% !important; }
-    .rpt-dg-col-contr-a { width: 10% !important; }
-    .rpt-dg-col-ip { width: 7% !important; }
-    .rpt-dg-col-spacer { width: 3% !important; }
-    .rpt-dg-col-var-contr { width: 8% !important; }
-    .rpt-dg-col-var-cart { width: 9% !important; }
-    .rpt-dg-header-line { border-bottom: 0.5pt solid #00468B !important; margin: 0 !important; }
-    .rpt-dg-total-row td.has-line { border-top: 0.5pt solid #00468B !important; }
-    .rpt-dg-detail-row { page-break-inside: avoid; }
-    .rpt-sub-headers-row { display: none; } /* Obsolote legacy */
-    .rpt-dg-subheaders-row { margin-bottom: 1px; }
+    .rpt-dg-detail-row td {
+        line-height: 1.05 !important;
+        padding-top: 0.5pt !important;
+        padding-bottom: 0.5pt !important;
+        font-size: 8pt !important;
+    }
+
+    /* Evitar cortes dentro de filas */
+    .rpt-dg-detail-row {
+        page-break-inside: avoid !important;
+    }
+
+    .rpt-dg-th-columns,
+    .rpt-dg-subheaders-row {
+        page-break-after: avoid !important;
+    }
 }
