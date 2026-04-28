@@ -13,6 +13,11 @@
   margin-top: 8px;
 }
 
+/* Ajuste de compactación para paridad visual (V-18/19) */
+.rpt-subtitle {
+    margin-bottom: 0.5rem !important; /* Reducido drásticamente en Web */
+}
+
 .rpt-table-cont-sig {
     table-layout: fixed !important;
     width: 100% !important;
@@ -92,9 +97,9 @@
     font-size: 7.5pt !important;
 }
 
-/* V-18: Separación Cabecera-Contenido (2.5rem estándar CMAI) */
+/* V-18: Separación Cabecera-Contenido (Compactado a 0 para paridad) */
 .rpt-cmai-mt-medium {
-    margin-top: 2.5rem !important;
+    margin-top: 0 !important;
 }
 
 /* V-09: Hanging Indent para asteriscos flotantes */
@@ -170,6 +175,20 @@
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+    }
+
+    /* Compactación extrema de cabecera Nacional en PDF */
+    .rpt-subtitle {
+        margin-bottom: 0 !important;
+    }
+
+    /* V-19: Forzar reducción del hueco residual subiendo la tabla (Apunta directamente a la tabla Nacional) */
+    .rpt-table-cont-sig:not(.rpt-table-print-master) {
+        margin-top: -30px !important;
+    }
+
+    .rpt-cmai-mt-medium {
+        margin-top: 0 !important;
     }
 
     /* Proteger cabecera corporativa de la reducción a 8pt y bold de las tablas maestras */

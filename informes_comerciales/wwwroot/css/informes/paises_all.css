@@ -1,31 +1,9 @@
 /* =============================================================================
-   ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES
+   ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES ALL
+   Hereda estructura de paises.js pero con anchos de columna propios
    ============================================================================= */
 
-.rpt-paper[data-informe="paises"] {
-    container-type: inline-size;
-    container-name: rpt-paper;
-    max-width: 1050px;
-    margin: 0 auto;
-}
-
-/* Container Queries - Ajustes para contenedores estrechos (<700px) */
-@container rpt-paper (max-width: 700px) {
-    .rpt-paises-num-cell {
-        padding-right: 8px !important;
-    }
-
-    .rpt-paises-new-flag {
-        font-size: 1rem;
-    }
-
-    .rpt-paises-col-porc  { width: 12%; }
-    .rpt-paises-col-contr { width: 16%; }
-    .rpt-paises-col-pos   { width: 7%; }
-    .rpt-paises-col-pais  { width: 30%; }
-}
-
-/* Layout de Columnas (Simetría) - Unificados con paises.css */
+/* Layout de Columnas - Unificados con paises.css */
 .rpt-paises-col-porc  { width: 16%; }
 .rpt-paises-col-contr { width: 13%; }
 .rpt-paises-col-pos   { width: 7%; }
@@ -55,7 +33,6 @@ tbody .rpt-paises-pais-cell {
     padding-right: 15px !important;
 }
 
-/* Banner de títulos sobre columnas */
 .rpt-paises-header-year {
     color: #00468B;
     font-weight: bold;
@@ -77,42 +54,36 @@ tbody .rpt-paises-pais-cell {
     padding: 2px 0 2px 0 !important;
 }
 
-/* Líneas de totales segmentadas */
 .rpt-paises-total-row {
     font-weight: bold !important;
     color: #00468B !important;
 }
 
-/* Fila 1 de totales: línea separadora azul en la parte superior */
-/* Solo se aplica a las celdas deseadas mediante la clase .rpt-paises-total-line */
 .rpt-paises-total-line {
-    border-top: 2px solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
 }
 
-/* Fila 2 de totales: Total Internacional global — sin línea, con espacio superior */
 .rpt-paises-total-global td {
     border-top: none !important;
     padding-top: 0.6rem !important;
     padding-bottom: 0.2rem !important;
 }
 
-/* Nota de pie de página: gris y fuente ligeramente más pequeña */
 .rpt-paises-footer-nota {
     color: #888;
-    font-size: 0.82em;
+    font-size: 8pt;
     margin-bottom: 0.25rem;
 }
 
 .rpt-paises-footer-block {
     margin-top: 2rem;
-    font-size: clamp(0.8rem, 1vw + 0.5rem, 0.9rem);
+    font-size: 8pt;
 }
 
-/* Flag de país nuevo (*) */
 .rpt-paises-new-flag {
     color: #D67F00;
     font-weight: bold;
-    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-size: 8pt;
     margin-right: 4px;
     display: inline-block;
     vertical-align: middle;
@@ -121,88 +92,50 @@ tbody .rpt-paises-pais-cell {
     top: 2px;
 }
 
+.rpt-paises-asterisk-container {
+    width: 25px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.rpt-paises-pais-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 0.5rem;
+}
+
+.rpt-spacer-row-totales,
+.rpt-spacer-cell-totales {
+    height: 6px !important;
+    border: none !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+}
+
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+.rpt-pad-right-15 { padding-right: 15px !important; }
+.rpt-w-100 { width: 100% !important; }
+
+/* Container Queries - Ajustes para contenedores estrechos (<700px) */
+@container rpt-paper (max-width: 700px) {
+    .rpt-paises-col-porc  { width: 12%; }
+    .rpt-paises-col-contr { width: 16%; }
+    .rpt-paises-col-pos   { width: 7%; }
+    .rpt-paises-col-pais  { width: 30%; }
+}
+
 /* Impresión - Paridad con Access (Margen 16mm) */
 @media print {
-    .rpt-paper[data-informe="paises"],
-    .rpt-paper--print {
-        max-width: 100% !important;
-        /* padding gestionado vía variable CSS inline (--rpt-padding-pdf) */
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
-
     .rpt-paises-col-porc  { width: 16% !important; }
     .rpt-paises-col-contr { width: 13% !important; }
     .rpt-paises-col-pos   { width: 7% !important; }
     .rpt-paises-col-pais  { width: 28% !important; }
 
-    .rpt-table {
-        font-size: 8pt !important;
-    }
-
-    .rpt-th-blue,
     .rpt-paises-total-line {
         border-bottom-width: 0.3pt !important;
         border-top-width: 0.3pt !important;
-    }
-
-    .rpt-banner-top {
-        height: 25px !important;
-        font-size: 14pt !important;
-        font-weight: normal !important;
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    .rpt-header-logo {
-        height: 50px !important;
-    }
-
-    .rpt-header {
-        margin-bottom: 0.5rem !important;
-        align-items: flex-start !important;
-    }
-
-    .rpt-header-corporate-text {
-        font-size: 0.95rem !important;
-    }
-
-    .rpt-subtitle {
-        font-size: 0.75rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    .rpt-paises-num-cell {
-        padding-right: 5px !important;
-        text-align: right !important;
-    }
-
-    .rpt-detail-row {
-        page-break-inside: avoid;
-    }
-
-    .rpt-header,
-    .rpt-banner-top,
-    .rpt-subtitle {
-        page-break-after: avoid;
-    }
-
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    .rpt-paises-footer-block {
-        margin-top: 1rem !important;
-        font-size: 0.8rem !important;
-    }
-
-    .rpt-paises-total-line {
-        margin: 0 5px !important;
-    }
-
-    .rpt-paises-new-flag {
-        font-size: 1rem !important;
     }
 }
