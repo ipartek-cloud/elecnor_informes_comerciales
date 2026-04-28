@@ -1,7 +1,6 @@
 /**
- * Informe Contrataciones Significativas (Comite)
- * Filtros: Mercado y SubDirección General
- * Variante sin histórico de meses anteriores.
+ * Informe: Contrataciones Significativas RI
+ * Paridad: Access (Estándar 16mm)
  */
 import {
     RPT_CLASSES, formatCurrency, getNombreMes,
@@ -14,281 +13,125 @@ import {
 } from './informes_unificados_utils.js';
 import { ApiClient, GlobalUI } from '../site.js';
 
-// --- Estado ---
 const estado = crearEstadoInforme();
 
-// --- Ejecución ---
 export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true }) {
     try {
-        // 1. Verificar si el checkbox de generación está activado
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
-        const debeGenerar = chkGenerar?.checked ?? false;
-
-        // 2. Si checkbox activado, llamar al endpoint de generación
-        if (debeGenerar) {
-            GlobalUI.showLoading('Generando contrataciones significativas...');
-
-            try {
-                // LLamada al controlador que se implementará posteriormente en otra fase
-                const genResp = await ApiClient.post('/api/ContratacionesSignificativasRi/generar', {
-                    anio: anio,
-                    mes: mes
-                }, true);
-
-                if (!genResp.ok) {
-                    const errorText = await genResp.text();
-                    GlobalUI.showAlert('Error al generar significativos: ' + errorText, 'danger');
-                    GlobalUI.hideLoading();
-                    return;
-                }
-            } catch (error) {
-                GlobalUI.showAlert('Error al conectar con el servidor', 'danger');
+        if (chkGenerar?.checked) {
+            GlobalUI.showLoading('Generando contrataciones...');
+            const genResp = await ApiClient.post('/api/ContratacionesSignificativasRi/generar', { anio, mes }, true);
+            if (!genResp.ok) {
+                GlobalUI.showAlert('Error al generar: ' + await genResp.text(), 'danger');
                 GlobalUI.hideLoading();
                 return;
             }
-
             GlobalUI.hideLoading();
         }
 
-        const subDir = codSubDir || '221';
-
-        // LLamada al controlador que se implementará posteriormente en otra fase
-        const url = `/api/ContratacionesSignificativasRi`
-            + `?anio=${anio}&mes=${mes}`
-            + `&mercado=${encodeURIComponent(mercado)}`
-            + `&codSubDirGeneral=${encodeURIComponent(subDir)}`
-            + `&_=${Date.now()}`;
-
+        const url = `/api/ContratacionesSignificativasRi?anio=${anio}&mes=${mes}&mercado=${encodeURIComponent(mercado)}&codSubDirGeneral=${encodeURIComponent(codSubDir || '221')}&_=${Date.now()}`;
+        
         estado.nroPagina = nroPagina;
-        estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
+        estado.mostrarNumeroPagina = (nroPagina != null);
         estado.mostrarTitulo = mostrarTitulo;
 
         await inicializarInforme({
             url,
             estado,
-            renderizarPagina:         _renderizarPagina,
+            renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
-            prefijoPaginacion:        'Página',
-            claveAgrupacion:          'NONE',
-            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
+            prefijoPaginacion: 'Página',
+            claveAgrupacion: 'NONE',
+            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
         });
 
     } catch (error) {
         console.error('[ContratacionesSignificativas RI] Error:', error);
-        GlobalUI.showAlert?.('Error al cargar los datos del informe', 'danger');
+        GlobalUI.showAlert?.('Error al cargar el informe', 'danger');
     }
 }
 
-// --- Renderizado ---
-async function _renderizarPagina(index = 0) {
+async function _renderizarPagina() {
     const container = document.getElementById(RPT_CLASSES.MODAL_CONTENT);
     if (!container) return;
 
     const dataArr = estado.informeGlobalData?.datos || [];
     const dataMes = estado.informeGlobalData?.datosMes || [];
-    
-    // Filtrar solo las direcciones que tienen al menos un contrato significativo
-    const direccionesConDatos = dataArr.filter(direccion => 
-        dataMes.some(item => item.nombreDirNegocio === direccion.nombreDirNegocio)
-    );
+    const direccionesConDatos = dataArr.filter(dir => dataMes.some(item => item.nombreDirNegocio === dir.nombreDirNegocio));
 
-    // Si no hay ninguna dirección con datos, mostrar mensaje
     if (direccionesConDatos.length === 0) {
         container.innerHTML = `
-            <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" role="main" ${getStyleVars(estado.margenes)}>
+            <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
                 ${_getHtmlEncabezado()}
-                <div class="report-body">
-                    <div class="text-center p-5 text-muted">No se han encontrado registros para el periodo seleccionado.</div>
-                </div>
-            </div>
-        `;
-        container.scrollTop = 0;
+                <div class="report-body text-center p-5 text-muted">No se han encontrado registros.</div>
+            </div>`;
         ocultarControlesPaginacion();
         return;
     }
 
-    // Renderizar TODAS las direcciones en una sabana continua
-    const cuerpoHtml = _renderCuerpoInforme();
-
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" role="main" ${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">
-                ${cuerpoHtml}
-            </div>
-        </div>
-    `;
+            <div class="report-body">${_renderCuerpoInforme(direccionesConDatos)}</div>
+        </div>`;
 
     container.scrollTop = 0;
     ocultarControlesPaginacion();
 }
 
-/**
- * Renderiza el cuerpo: tabla principal con todas las direcciones en una sabana.
- * Modelo similar a Ranking Contratación - una sola página con thead que se repite.
- */
-function _renderCuerpoInforme() {
-    const dataArr = estado.informeGlobalData?.datos || [];
+function _renderCuerpoInforme(direcciones) {
     const dataMes = estado.informeGlobalData?.datosMes || [];
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
-    const nombreMes = getNombreMes(filtros.mes);
     const umbralTexto = estado.informeGlobalData?.meta?.umbralTexto || 'Contratación > 2M';
 
-    // Filtrar solo las direcciones que tienen al menos un contrato significativo
-    const direccionesConDatos = dataArr.filter(direccion => 
-        dataMes.some(item => item.nombreDirNegocio === direccion.nombreDirNegocio)
-    );
+  const filaMesHtml = `
+    <tr class="rpt-cont-sig-month-row">
+      <td colspan="3" class="rpt-cont-sig-mes-label rpt-font-bold rpt-fs-10pt">${getNombreMes(filtros.mes)}</td>
+    </tr>`;
 
-    if (direccionesConDatos.length === 0) {
-        return `<div class="text-center p-5 text-muted">No se han encontrado registros para el periodo seleccionado.</div>`;
-    }
-
-    // Fila del Mes (Única al principio)
-    const filaMesHtml = `
-        <tr class="rpt-detail-row rpt-cont-sig-month-row">
-            <td colspan="3" class="rpt-cont-sig-mes-label fw-bold">
-                ${_escapeHtml(nombreMes)}
-            </td>
-        </tr>
-    `;
-
-    // Generar el contenido de cada dirección
-    const bloquesHtml = direccionesConDatos.map(direccion => {
-        const contratosDelGrupo = dataMes.filter(item => 
-            item.nombreDirNegocio === direccion.nombreDirNegocio
-        );
-
-        if (contratosDelGrupo.length === 0) return '';
-
-        // Cabecera de Dirección de Negocio (El mes ya no se repite aquí)
-        let bloque = `
-        <tr>
-            <td colspan="3" class="rpt-cont-sig-group-header" style="border-top: none;">
-                <span class="rpt-cont-sig-group-title">${_escapeHtml(direccion.nombreDirNegocio)}</span>
-            </td>
-        </tr>
-        `;
-
-        // Añadir los contratos
-        bloque += contratosDelGrupo.map(item => `
-        <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-cont-sig-mes-item">
-            <td class="rpt-col-mes-cliente">${_escapeHtml(_limpiarCliente(item.nombreCliente_OK))}</td>
-            <td class="rpt-col-mes-oferta">${_escapeHtml(item.descripcionOferta_OK)}</td>
-            <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
-        </tr>
-        `).join('');
-
-        return bloque;
+    const bloquesHtml = direcciones.map(dir => {
+        const contratos = dataMes.filter(item => item.nombreDirNegocio === dir.nombreDirNegocio);
+        return `
+            <tr>
+                <td colspan="3" class="rpt-cont-sig-group-header">
+                    <span class="rpt-cont-sig-group-title rpt-font-bold">${_escapeHtml(dir.nombreDirNegocio)}</span>
+                </td>
+            </tr>
+            ${contratos.map(item => `
+                <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-cont-sig-mes-item">
+                    <td class="rpt-col-mes-cliente">${_escapeHtml(item.nombreCliente_OK?.replace(/^ZZ_/, ''))}</td>
+                    <td class="rpt-col-mes-oferta">${_escapeHtml(item.descripcionOferta_OK)}</td>
+                    <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+                </tr>`).join('')}`;
     }).join('');
 
-    // Devolver una única tabla con thead que se repetirá en cada página del PDF
     return `
         <table class="rpt-table rpt-table-cont-sig mb-4">
             <colgroup>
-                <col class="rpt-col-mes-cliente">
-                <col class="rpt-col-mes-oferta">
-                <col class="rpt-col-mes-importe">
+                <col class="rpt-col-mes-cliente"><col class="rpt-col-mes-oferta"><col class="rpt-col-mes-importe">
             </colgroup>
-            <thead class="border-0">
-                <tr class="fw-bold border-0">
-                    <th class="rpt-text-corporate text-start ps-3 border-0 fs-6">${_escapeHtml(umbralTexto)}</th>
-                    <th class="border-0"></th>
-                    <th class="rpt-text-corporate text-end pe-3 border-0 fs-6">Mensual</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${filaMesHtml}
-                ${bloquesHtml}
-            </tbody>
-        </table>
-    `;
+  <thead>
+      <tr class="rpt-font-bold">
+        <th class="rpt-text-corporate text-start ps-3 rpt-fs-10pt">${_escapeHtml(umbralTexto)}</th>
+        <th></th>
+        <th class="rpt-text-corporate text-end pe-3 rpt-fs-10pt">Mensual</th>
+      </tr>
+    </thead>
+            <tbody>${filaMesHtml}${bloquesHtml}</tbody>
+        </table>`;
 }
 
 function _getHtmlEncabezado() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
-    const mercado = filtros.mercado || 'Nacional';
-    
     return getHtmlEncabezadoBase({
         tituloCorporativo: '<span class="rpt-info-complementary ms-2">Información complementaria</span>',
         textoBanner1: 'Elecnor',
-        textoBanner2: `Contrat. significativas Mercado ${mercado}`,
-        mes: filtros.mes,
-        anio: filtros.anio,
-        nroPagina: estado.nroPagina || null,
+        textoBanner2: `Contrat. significativas Mercado ${filtros.mercado || 'Nacional'}`,
+        mes: filtros.mes, anio: filtros.anio,
+        nroPagina: estado.nroPagina,
         mostrarNumeroPagina: estado.mostrarNumeroPagina,
         mostrarTitulo: estado.mostrarTitulo
     });
-}
-
-function _renderTablaDireccion(direccion) {
-    if (!direccion) return '';
-
-    const dataMes = estado.informeGlobalData?.datosMes || [];
-    const filtros = estado.informeGlobalData?.meta?.filtros || {};
-    const nombreMes = getNombreMes(filtros.mes);
-
-    // Filtrar los contratos correspondientes a esta Dirección de Negocio
-    const contratosDelGrupo = dataMes.filter(item => 
-        item.nombreDirNegocio === direccion.nombreDirNegocio
-    );
-    
-    // Si no hay contratos significativos para esta dirección, no mostrar nada
-    if (contratosDelGrupo.length === 0) {
-        return '';
-    }
-
-    // Cabecera de Dirección de Negocio y fila del Mes
-    let bloqueHtml = `
-    <tr>
-        <td colspan="3" class="rpt-cont-sig-group-header" style="border-top: none;">
-            <span class="rpt-cont-sig-group-title">${_escapeHtml(direccion.nombreDirNegocio)}</span>
-        </td>
-    </tr>
-    <tr class="rpt-detail-row rpt-cont-sig-month-row">
-        <td colspan="3" class="rpt-cont-sig-mes-label fw-bold">
-            ${_escapeHtml(nombreMes)}
-        </td>
-    </tr>
-    `;
-
-    // Añadir los contratos (ya sabemos que hay al menos uno)
-    bloqueHtml += contratosDelGrupo.map(item => `
-    <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-cont-sig-mes-item">
-        <td class="rpt-col-mes-cliente">${_escapeHtml(_limpiarCliente(item.nombreCliente_OK))}</td>
-        <td class="rpt-col-mes-oferta">${_escapeHtml(item.descripcionOferta_OK)}</td>
-        <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
-    </tr>
-    `).join('');
-
-    const umbralTexto = estado.informeGlobalData?.meta?.umbralTexto || 'Contratación > 2M';
-
-    return `
-        <table class="rpt-table rpt-table-cont-sig mb-4">
-            <colgroup>
-                <col class="rpt-col-mes-cliente">
-                <col class="rpt-col-mes-oferta">
-                <col class="rpt-col-mes-importe">
-            </colgroup>
-            <thead class="border-0">
-                <tr class="fw-bold border-0">
-                    <th class="rpt-text-corporate text-start ps-3 border-0 fs-6">${_escapeHtml(umbralTexto)}</th>
-                    <th class="border-0"></th>
-                    <th class="rpt-text-corporate text-end pe-3 border-0 fs-6">Mensual</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${bloqueHtml}
-            </tbody>
-        </table>
-    `;
-}
-
-/**
- * Limpia el prefijo ZZ_ del cliente (Regla Access: FGSUSTITUYE).
- */
-function _limpiarCliente(nombre) {
-    if (!nombre) return '';
-    return nombre.replace(/^ZZ_/, '');
 }
 
 function _escapeHtml(text) {
@@ -298,17 +141,17 @@ function _escapeHtml(text) {
     return div.innerHTML;
 }
 
-// --- Eventos e Impresión ---
 function _registrarEventos() {
     inicializarEventListenersBase(estado, _renderizarPagina, _imprimirInforme);
 }
 
 async function _imprimirInforme() {
-    const contenidoHtml = _renderCuerpoInforme();
     await imprimirInformeUnificado({
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
-        renderContenido: () => contenidoHtml,
+        renderContenido: () => _renderCuerpoInforme(estado.informeGlobalData?.datos.filter(dir => 
+            (estado.informeGlobalData?.datosMes || []).some(item => item.nombreDirNegocio === dir.nombreDirNegocio)
+        )),
         modoAgrupacion: 'NONE',
         margenes: estado.margenes
     });
