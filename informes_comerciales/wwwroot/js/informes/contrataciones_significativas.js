@@ -160,10 +160,10 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
     const headerHtml = mostrarHeader ? `
         <thead>
             <tr class="rpt-font-bold">
-                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-8pt">Contratación &gt;1M</th>
+                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-10pt">Contratación &gt;1M</th>
                 <th></th>
                 <th rpt-border-none></th>
-                <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-8pt">Mensual</th>
+                <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
             </tr>
         </thead>` : '';
 
@@ -320,10 +320,10 @@ function _renderTablaMaestraInternacional() {
             </tfoot>
             <tbody>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-8pt">Contratación &gt;1M</th>
+                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-10pt">Contratación &gt;1M</th>
                     <th></th>
                     <th rpt-border-none></th>
-                    <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-8pt">Mensual</th>
+                    <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
                 </tr>
                 ${rowsHtml}
             </tbody>

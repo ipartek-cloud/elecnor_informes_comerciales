@@ -8,6 +8,10 @@
     border-collapse: collapse;
 }
 
+.rpt-table-cont-sig thead th {
+    padding-bottom: 5px !important;
+}
+
 /* Agrupador: Dirección de Negocio (V-10 Hairline) */
 .rpt-cont-sig-group-header {
     border-bottom: 0.3pt solid #00468B !important;
@@ -30,7 +34,7 @@
     background-color: #E2EBF4 !important;
     color: #00468B !important;
     padding-left: 10pt !important;
-    font-size: 8pt !important;
+    font-size: 9pt !important;
     font-weight: bold !important;
 }
 
@@ -42,8 +46,8 @@
 /* Filas de detalle (V-05, V-06) */
 .rpt-detail-row td {
     font-size: 8pt !important;
-    line-height: 1.25;
-    padding: 2pt 6pt;
+    line-height: 1.25 !important;
+    padding: 3px 5px !important;
     background-color: #ffffff !important;
     border: none !important;
 }

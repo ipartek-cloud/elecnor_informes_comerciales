@@ -39,11 +39,12 @@
 
 /* Estructura de Tabla */
 .rpt-table-cont-sig {
-    margin-top: 10px !important;
+    margin-top: 0 !important;
 }
 
 .rpt-table-cont-sig thead th {
     border-bottom: none !important;
+    padding-bottom: 20px !important;
 }
 
 /* Definición de Columnas */

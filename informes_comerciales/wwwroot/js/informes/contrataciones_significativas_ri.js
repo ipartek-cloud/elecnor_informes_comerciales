@@ -63,7 +63,7 @@ async function _renderizarPagina() {
         container.innerHTML = `
             <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
                 ${_getHtmlEncabezado()}
-                <div class="report-body text-center p-5 text-muted">No se han encontrado registros.</div>
+                <div class="report-body rpt-cmai-mt-medium text-center p-5 text-muted">No se han encontrado registros.</div>
             </div>`;
         ocultarControlesPaginacion();
         return;
@@ -72,7 +72,7 @@ async function _renderizarPagina() {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">${_renderCuerpoInforme(direccionesConDatos)}</div>
+            <div class="report-body rpt-cmai-mt-medium">${_renderCuerpoInforme(direccionesConDatos)}</div>
         </div>`;
 
     container.scrollTop = 0;
@@ -86,7 +86,7 @@ function _renderCuerpoInforme(direcciones) {
 
   const filaMesHtml = `
     <tr class="rpt-cont-sig-month-row">
-      <td colspan="3" class="rpt-cont-sig-mes-label rpt-font-bold rpt-fs-10pt">${getNombreMes(filtros.mes)}</td>
+      <td colspan="3" class="rpt-cont-sig-mes-label rpt-font-bold rpt-fs-9pt">${getNombreMes(filtros.mes)}</td>
     </tr>`;
 
     const bloquesHtml = direcciones.map(dir => {
