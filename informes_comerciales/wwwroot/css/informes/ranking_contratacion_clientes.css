@@ -25,7 +25,24 @@ GUÍA: Print-Perfect Parity v4.2
 */
 
 .rpt-ms-2 {
-    margin-left: 12pt !important;
+  margin-left: 12pt !important;
+}
+
+/* Clases para título corporativo CMAI */
+.rpt-cmai-titulo-container {
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: bottom;
+}
+
+.rpt-cmai-subtitulo {
+  font-size: 9pt !important;
+  color: #00468B !important;
+  font-weight: normal !important;
+}
+
+.rpt-cmai-margin-left {
+  margin-left: 12pt !important;
 }
 
 /* ==========================================================================
@@ -129,12 +146,27 @@ GUÍA: Print-Perfect Parity v4.2
 
 /* ==========================================================================
 6. CUERPO DE LA TABLA
- ========================================================================== */
+========================================================================== */
 
 .rpt-ranking-table tbody td {
-    padding: 2pt 4pt !important;
-    border-bottom: none;
-    vertical-align: middle;
+  padding: 2pt 4pt !important;
+  border-bottom: none;
+  vertical-align: middle;
+}
+
+/* Compactación de filas de detalle */
+.rpt-detail-row td {
+  line-height: 1.05 !important;
+  padding-top: 0.5pt !important;
+  padding-bottom: 0.5pt !important;
+}
+
+@media print {
+  .rpt-detail-row td {
+    line-height: 1.05 !important;
+    padding-top: 0.5pt !important;
+    padding-bottom: 0.5pt !important;
+  }
 }
 
 /* Anchos de columna específicos - Para celdas y elementos col */
@@ -355,9 +387,30 @@ GUÍA: Print-Perfect Parity v4.2
 
 /* ==========================================================================
 10. LEYENDAS
- ========================================================================== */
+========================================================================== */
 
-    .rpt-asterisk-legend {
+/* Fila separadora antes de totales */
+.rpt-spacer-row-totales,
+.rpt-spacer-cell-totales {
+  height: 6px !important;
+  border: none !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
+}
+
+@media print {
+  .rpt-spacer-row-totales,
+  .rpt-spacer-cell-totales {
+    height: 6px !important;
+    border: none !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+  }
+}
+
+.rpt-asterisk-legend {
         font-size: 7pt !important;
         color: #888;
         font-weight: normal;
@@ -366,11 +419,17 @@ GUÍA: Print-Perfect Parity v4.2
     }
 
 /* ==========================================================================
-11. SEPARACIÓN CABECERA-CONTENIDO (V-18)
- ========================================================================== */
+11. SEPARACIÓN CABECERA-CONTENIDO
+========================================================================== */
 
 .report-body {
-    margin-top: 1.5rem !important;
+  margin-top: 2.5rem !important;
+}
+
+@media print {
+  .report-body {
+    margin-top: 2.5rem !important;
+  }
 }
 
 /* ==========================================================================

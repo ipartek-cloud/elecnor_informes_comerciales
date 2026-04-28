@@ -69,10 +69,13 @@ function _getHtmlEncabezado() {
     const data = estado.informeGlobalData;
     const filtros = data?.meta?.filtros || {};
 
-    return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt">Consejo Elecnor</span><span class="rpt-ms-2 rpt-fs-9pt rpt-text-corporate">Informe de Contratación</span>',
-        textoBanner1: 'Ranking de Contratación',
-        textoBanner2: 'Clientes',
+  return getHtmlEncabezadoBase({
+    tituloCorporativo: `
+      <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
+      <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>
+    `,
+    textoBanner1: 'Ranking de Contratación',
+    textoBanner2: 'Clientes',
         mes: filtros.mes,
         anio: filtros.anio,
         nroPagina: estado.nroPagina || 7,
@@ -169,9 +172,11 @@ function _renderCuerpoInforme() {
                 </thead>
                 <tbody>
                     ${filasHtml}
-                </tbody>
-                <tfoot>
-                    <tr class="rpt-ranking-total-row">
+  </tbody>
+  <tfoot>
+  <!-- Fila separadora antes de totales -->
+  <tr class="rpt-spacer-row-totales"><td colspan="${esInternacional ? 4 : 6}" class="rpt-spacer-cell-totales"></td></tr>
+  <tr class="rpt-ranking-total-row">
                         <td colspan="${esInternacional ? 2 : 3}"></td>
                         <td class="rpt-col-num rpt-text-corporate rpt-font-bold">
                             <div class="rpt-td-border-blue rpt-w-100 rpt-text-end rpt-font-monospace">${formatCurrency((data.sumaTop30 || 0) / 1000, 0)}</div>
