@@ -32,7 +32,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: { web: '3rem', pdf: '6.4mm', maxWidth: '1050px' }
+            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
         });
     } catch (error) {
         console.error("Error al ejecutar informe PaisesAll:", error);
@@ -62,7 +62,7 @@ function _renderizarPagina() {
 
 function _getHtmlEncabezado() {
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council fs-3">Consejo Elecnor</span> <span class="ms-3 fs-6">Informe de Contratación</span>',
+        tituloCorporativo: `<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-subtitulo rpt-cmai-titulo-container rpt-cmai-margin-left">Informe de Contratación</span>`,
         textoBanner1: 'Elecnor',
         textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Países Relevantes',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
@@ -93,7 +93,7 @@ async function _imprimirInforme() {
  */
 function _renderTablaPaises() {
     const data = estado.informeGlobalData;
-    if (!data || !data.paises) return '<p class="text-center">No hay datos disponibles para este periodo.</p>';
+    if (!data || !data.paises) return '<p class="rpt-align-center">No hay datos disponibles para este periodo.</p>';
 
     const anioActual = data.meta.filtros.anio;
     const anioAnterior = anioActual - 1;
@@ -116,13 +116,13 @@ function _renderTablaPaises() {
                     <th colspan="3">${anioActual}</th>
                 </tr>
                 <tr class="rpt-th-blue-segmented">
-                    <th class="text-center rpt-paises-th-border">% S/Total</th>
-                    <th class="text-end pe-3 rpt-paises-th-border">Contr.</th>
-                    <th class="text-center rpt-paises-th-border">Pos.</th>
+                    <th class="rpt-align-center rpt-paises-th-border">% S/Total</th>
+                    <th class="rpt-align-end rpt-paises-th-border rpt-pad-right-15">Contr.</th>
+                    <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
                     <th class="rpt-paises-pais-cell rpt-paises-th-border-pais">País</th>
-                    <th class="text-center rpt-paises-th-border">Pos.</th>
-                    <th class="text-end pe-3 rpt-paises-th-border">Contr.</th>
-                    <th class="text-center rpt-paises-th-border">% S/Total</th>
+                    <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
+                    <th class="rpt-align-end rpt-paises-th-border rpt-pad-right-15">Contr.</th>
+                    <th class="rpt-align-center rpt-paises-th-border">% S/Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -134,13 +134,13 @@ function _renderTablaPaises() {
 
         html += `
             <tr class="rpt-detail-row">
-                <td class="text-center">${porcAnterior}%</td>
+                <td class="rpt-align-center">${porcAnterior}%</td>
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
                 <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
 
                 <td class="rpt-paises-pais-cell">
-                    <div class="d-flex align-items-center justify-content-start ps-2">
-                        <span style="width: 25px; display: inline-block; flex-shrink: 0;">
+                    <div class="rpt-paises-pais-wrapper">
+                        <span class="rpt-paises-asterisk-container">
                             ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}
                         </span>
                         <span>${p.pais}</span>
@@ -149,7 +149,7 @@ function _renderTablaPaises() {
 
                 <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeActual / 1000, 0)}</td>
-                <td class="text-center">${porcActual}%</td>
+                <td class="rpt-align-center">${porcActual}%</td>
             </tr>
         `;
     });
@@ -164,15 +164,16 @@ function _renderTablaPaises() {
 
     html += `
             </tbody>
+            <tr class="rpt-spacer-row-totales"><td colspan="7" class="rpt-spacer-cell-totales"></td></tr>
             <tfoot class="rpt-paises-total-row">
                 <tr>
-                    <td class="text-center rpt-paises-total-line">${subtotalPorcAnterior}%</td>
+                    <td class="rpt-align-center rpt-paises-total-line">${subtotalPorcAnterior}%</td>
                     <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
                     <td></td>
                     <td class="rpt-paises-total-line"></td>
                     <td></td>
                     <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
-                    <td class="text-center rpt-paises-total-line">${subtotalPorcActual}%</td>
+                    <td class="rpt-align-center rpt-paises-total-line">${subtotalPorcActual}%</td>
                 </tr>
                 <!-- Fila 2: Total Global -->
                 <tr class="rpt-paises-total-global">

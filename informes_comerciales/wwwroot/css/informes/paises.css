@@ -61,8 +61,6 @@ tbody .rpt-paises-pais-cell {
 /* Separación entre cabecera del informe y datos de la tabla */
 .report-body {
   margin-top: 2.5rem !important; /* Estándar CMAI - separación cabecera/datos */
-  padding-left: 40px !important; /* Sangría subinforme vs cabecera */
-  padding-right: 40px !important;
 }
 
 /* Banner de títulos sobre columnas */

@@ -2,13 +2,25 @@
    ESTILOS ESPECÍFICOS: CONTRATACIONES SIGNIFICATIVAS (V-15 Rigidez Columnar)
    ============================================================================= */
 
+/* Literales de encabezado corporativo */
+.rpt-cmai-subtitulo {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #00468B;
+}
+
+.rpt-cmai-titulo-container {
+  margin-top: 8px;
+}
+
 .rpt-table-cont-sig {
     table-layout: fixed !important;
     width: 100% !important;
     border-collapse: collapse;
 }
 
-.rpt-table-cont-sig thead th {
+.rpt-table-cont-sig thead th,
+.rpt-table-cont-sig .rpt-table-header-columns th {
     padding-bottom: 5px !important;
 }
 
@@ -39,9 +51,22 @@
 }
 
 /* Definición de Columnas (Alineación V-15) */
-.rpt-col-mes-cliente { width: 32%; padding-left: 8pt !important; }
-.rpt-col-mes-oferta  { width: 47%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rpt-col-mes-importe { width: 20%; padding-right: 10pt !important; }
+.rpt-col-mes-cliente {
+    width: 32%;
+    padding-left: 8pt !important;
+}
+
+.rpt-col-mes-oferta {
+    width: 47%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rpt-col-mes-importe {
+    width: 20%;
+    padding-right: 10pt !important;
+}
 
 /* Filas de detalle (V-05, V-06) */
 .rpt-detail-row td {
@@ -79,8 +104,8 @@
 }
 
 /* V-12: Segmentación (Columnas Fantasma 10px) */
-[rpt-border-none] { 
-    border: none !important; 
+[rpt-border-none] {
+    border: none !important;
 }
 
 /* =============================================================================
@@ -107,17 +132,25 @@
 .rpt-table-print-master thead::before {
     content: "";
     display: block;
-    height: 16mm;
+    height: 8mm;
 }
 
-/* Anulación en Pág 1 para evitar duplicidad con rpt-paper */
-.rpt-paper--print:first-child .rpt-table-print-master {
-    margin-top: -16mm !important;
+/* Anulación de padding en contenedor maestro para evitar duplicidad (Doble margen) */
+.rpt-paper--print[data-mercado="Internacional"] {
+    padding-top: 0 !important;
 }
 
-.rpt-print-thead-cell .rpt-header-text-corporate { margin-bottom: 0.5rem; }
-.rpt-print-thead-cell .rpt-header { margin-bottom: 0 !important; }
-.rpt-print-thead-cell .rpt-subtitle { margin-bottom: 1rem !important; }
+.rpt-print-thead-cell .rpt-header-text-corporate {
+    margin-bottom: 0.5rem;
+}
+
+.rpt-print-thead-cell .rpt-header {
+    margin-bottom: 0 !important;
+}
+
+.rpt-print-thead-cell .rpt-subtitle {
+    margin-bottom: 1rem !important;
+}
 
 /* Margen inferior automático (tfoot) en cada página física */
 .rpt-print-tfoot-master {
@@ -134,7 +167,40 @@
    ESTILOS DE IMPRESIÓN / PDF (@media print)
    ============================================================================= */
 @media print {
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Proteger cabecera corporativa de la reducción a 8pt y bold de las tablas maestras */
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
+        font-size: 14pt !important;
+        font-weight: normal !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
+        font-size: 9pt !important;
+        font-weight: normal !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-titulo-container {
+        margin-top: 8px !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-page-number {
+        font-size: 10pt !important;
+        font-weight: normal !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top span {
+        font-size: 14pt !important;
+        font-weight: normal !important;
+    }
+    
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle {
+        font-size: 8pt !important;
+        font-weight: normal !important;
+    }
 
     .rpt-cont-sig-group-header {
         page-break-after: avoid !important;
@@ -142,7 +208,8 @@
     }
 
     .rpt-table-cont-sig {
-        page-break-inside: auto !important; /* Flujo continuo en Internacional */
+        page-break-inside: auto !important;
+        /* Flujo continuo en Internacional */
     }
 
     /* Nacional: Evita saltos dentro de bloques pequeños */

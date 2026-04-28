@@ -200,7 +200,7 @@ async function _imprimirInforme() {
         const capaPrint = document.createElement('div');
         capaPrint.className = 'rpt-print-layer';
         capaPrint.innerHTML = `
-            <div class="rpt-paper rpt-paper--print" data-informe="contrataciones_significativas" ${styleVars}>
+            <div class="rpt-paper rpt-paper--print" data-informe="contrataciones_significativas" data-mercado="Internacional" ${styleVars}>
                 <div class="report-body">
                     ${contenidoHtml}
                 </div>
@@ -296,7 +296,7 @@ function _renderTablaMaestraInternacional() {
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
-                            <div class="rpt-header-text-corporate">
+                            <div class="rpt-text-corporate rpt-header-corporate-text">
                                 <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
                                 <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
                             </div>
@@ -310,7 +310,7 @@ function _renderTablaMaestraInternacional() {
                             <span>Contrataciones Significativas Mercado ${mercado}</span>
                         </div>
                         <div class="${RPT_CLASSES.SUBTITLE}">
-                            <span>Cierre de ${getNombreMes(filtros.mes)} ${filtros.anio} | Miles de euros</span>
+                            Cierre de ${getNombreMes(filtros.mes)} ${filtros.anio} | Miles de euros
                         </div>
                     </th>
                 </tr>
