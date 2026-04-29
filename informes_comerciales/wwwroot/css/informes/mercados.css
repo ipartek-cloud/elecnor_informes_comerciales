@@ -244,14 +244,12 @@ Las reglas generales de impresión están en informes_base.css
     font-size: 8pt !important;
   }
 
-/* Compactación de interlineado y tipografía 8pt para filas de detalle */
-.rpt-detail-row td,
-.rpt-mercado-detail-row td {
-    line-height: 1.05 !important;
-    padding-top: 0.5px !important;
-    padding-bottom: 0.5px !important;
+/* Compactación de interlineado y tipografía 8pt para filas de detalle - 
+   Valores alineados con guía: line-height: 1.2, padding: 1.5px (líneas 37-42) */
+  .rpt-detail-row td,
+  .rpt-mercado-detail-row td {
     font-size: 8pt !important;
-}
+  }
 
 /* Bordes Hairline 0.3pt estilo Access */
 .rpt-th-blue,

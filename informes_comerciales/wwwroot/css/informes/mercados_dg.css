@@ -291,6 +291,11 @@ Las reglas generales de impresión están en informes_base.css
     margin-bottom: 10pt !important;
   }
 
+  /* Reducir a la mitad el espacio entre encabezado y primer subinforme */
+  .rpt-mt-6 {
+    margin-top: 21pt !important;
+  }
+
   /* Evitar cortes dentro de filas de detalle */
   .rpt-detail-row {
     page-break-inside: avoid;
@@ -311,13 +316,11 @@ Las reglas generales de impresión están en informes_base.css
     font-size: 8pt !important;
   }
 
-  /* Compactación de interlineado y tipografía 8pt para filas de detalle */
+  /* Compactación de interlineado y tipografía 8pt para filas de detalle -
+   Valores alineados con guía: line-height: 1.2, padding: 1.5px (líneas 37-45) */
   .rpt-detail-row td,
   .rpt-mercado-detail-row td,
   .rpt-cd-detail-row td {
-    line-height: 1.05 !important;
-    padding-top: 0.5px !important;
-    padding-bottom: 0.5px !important;
     font-size: 8pt !important;
   }
 
