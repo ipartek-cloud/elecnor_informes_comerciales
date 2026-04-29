@@ -62,7 +62,7 @@ function _renderizarPagina() {
 
 function _getHtmlEncabezado() {
     return getHtmlEncabezadoBase({
-        tituloCorporativo: `<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-subtitulo rpt-cmai-titulo-container rpt-cmai-margin-left">Informe de Contratación</span>`,
+        tituloCorporativo: `<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span><span class="rpt-cmai-subtitulo rpt-cmai-titulo-container rpt-cmai-margin-left">Informe de Contratación</span>`,
         textoBanner1: 'Elecnor',
         textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Países Relevantes',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,

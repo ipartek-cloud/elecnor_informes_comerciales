@@ -124,7 +124,7 @@ function _renderCuerpoInforme(direcciones) {
 function _getHtmlEncabezado() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-info-complementary ms-2">Información complementaria</span>',
+        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="rpt-info-complementary ms-2">Información complementaria</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: `Contrataciones Significativas Mercado ${filtros.mercado || 'Nacional'}`,
         mes: filtros.mes, anio: filtros.anio,

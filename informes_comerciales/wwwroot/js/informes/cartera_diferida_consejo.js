@@ -105,7 +105,7 @@ function _getHtmlEncabezado() {
 
     return `
         ${getHtmlEncabezadoBase({
-            tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span> <span class="ms-3 rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
+            tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="ms-3 rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
             textoBanner1: 'Elecnor',
             textoBanner2: 'Mercados',
             mes,
@@ -255,7 +255,7 @@ function _renderTripleBlock(agrup) {
         <div class="rpt-triple-container rpt-mt-6 mb-0 rpt-align-flex-end">
             <div class="rpt-block-mensual">
                 <div class="rpt-font-bold rpt-text-small rpt-text-corporate text-center mb-1">Mensual</div>
-                <table class="rpt-block-table">
+                <table class="rpt-block-table rpt-header-table-border">
                     <thead>
                         <tr class="rpt-th-blue" rpt-border-top-none>
                             <th class="rpt-number-cell w-50 pe-3 pb-1" rpt-border-top-none>Objet.</th>
@@ -269,7 +269,7 @@ function _renderTripleBlock(agrup) {
             </div>
             <div class="rpt-block-acumulado">
                 <div class="rpt-font-bold rpt-text-small rpt-text-corporate text-center mb-1">Acumulado</div>
-                <table class="rpt-block-table">
+                <table class="rpt-block-table rpt-header-table-border">
                     <colgroup>
                         <col class="rpt-col-width-20">
                         <col class="rpt-col-width-20">

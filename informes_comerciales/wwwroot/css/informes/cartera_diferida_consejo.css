@@ -60,6 +60,17 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     border-top: none !important;
 }
 
+/* Corrección para asegurar la visualización del borde inferior en tablas de cabecera aisladas */
+.rpt-header-table-border {
+    border-bottom: 2px solid #00468B !important;
+}
+
+@media print {
+    .rpt-header-table-border {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+}
+
 /* Alturas de filas */
 .rpt-row-height-20, [rpt-row-height-20] { height: 20px; }
 .rpt-row-height-18, [rpt-row-height-18] { height: 18px; }

@@ -97,7 +97,7 @@ function _getHtmlEncabezado() {
     
     return getHtmlEncabezadoBase({
         tituloCorporativo: `
-            <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
+            <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span>
             <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>`,
         textoBanner1: 'Elecnor',
         textoBanner2: `Contrataciones Significativas Mercado ${mercado}`,
@@ -320,7 +320,7 @@ function _renderTablaMaestraNacional() {
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
                             <div class="rpt-text-corporate rpt-header-corporate-text">
-                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
+                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span>
                                 <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
                             </div>
                             <div class="d-flex flex-column align-items-end">
@@ -418,7 +418,7 @@ function _renderTablaMaestraInternacional() {
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
                             <div class="rpt-text-corporate rpt-header-corporate-text">
-                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
+                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span>
                                 <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
                             </div>
                             <div class="d-flex flex-column align-items-end">

@@ -343,6 +343,7 @@ Estándar: 10pt, sin negrita, azul corporativo
    Soporte dual: .clase y [atributo] para compatibilidad con código JS antiguo
    ============================================================================= */
 .rpt-pad-right-15, [rpt-pad-right-15] { padding-right: 15px !important; }
+.rpt-d-none, [rpt-d-none] { display: none !important; }
 /* ============================================
    ESTÁNDARES TIPOGRÁFICOS - UNIDAD PT
    REGLA: Siempre usar pt, nunca rem

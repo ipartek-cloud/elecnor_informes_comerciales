@@ -84,7 +84,7 @@ async function _renderizarPagina() {
 function _getHtmlEncabezado() {
   const data = estado.informeGlobalData;
   return getHtmlEncabezadoBase({
-    tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
+    tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: 'Principales Contrataciones del Año',
         textoBanner2: 'Contratos',
         mes: data?.meta?.filtros?.mes,
