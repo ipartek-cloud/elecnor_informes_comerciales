@@ -106,7 +106,7 @@ tbody .rpt-paises-pais-cell {
   color: #00468B !important;
 }
 
-/* Gap de Totales - Fila separadora 6px (Estándar V-11) */
+/* Gap de Totales - Fila separadora 6px */
 .rpt-spacer-row-totales,
 .rpt-spacer-cell-totales {
   height: 6px !important;

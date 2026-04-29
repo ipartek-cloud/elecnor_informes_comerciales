@@ -22,7 +22,7 @@
   box-sizing: border-box;
 }
 
-/* Tabla del bloque principal y subinformes genéricos - Rigidez columnar (V-15) */
+/* Tabla del bloque principal y subinformes genéricos - Rigidez columnar */
 .rpt-table-contrataciones {
   width: 98% !important;
   margin: 0 auto !important; /* Mismo centrado que la cabecera */
@@ -140,7 +140,7 @@
   margin-left: 1rem !important;
 }
 
-/* Separación cabecera-contenido (V-18) - Estándar CMAI */
+/* Separación cabecera-contenido - Estándar CMAI */
 .report-body {
   margin-top: 1.5rem !important;
 }

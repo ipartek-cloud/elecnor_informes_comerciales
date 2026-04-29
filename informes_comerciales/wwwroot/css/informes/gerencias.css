@@ -8,7 +8,7 @@
   container-name: rpt-paper;
 }
 
-/* Separación estándar cabecera-contenido (V-18) - Aumentada por feedback visual */
+/* Separación estándar cabecera-contenido - Aumentada por feedback visual */
 .report-body {
   margin-top: 45pt !important;
 }
@@ -41,7 +41,7 @@
 }
 
 @media print {
-  /* V-21: Padding delegado a getStyleVars. */
+  /* Padding delegado a getStyleVars. */
   .rpt-paper[data-informe="gerencias"],
   .rpt-paper--print {
     padding: var(--rpt-padding-pdf, 16mm) !important;
@@ -52,7 +52,7 @@
     border: none !important;
   }
 
-  /* V-13: Color Adjust y Forzado de Colores Corporativos */
+  /* Color Adjust y Forzado de Colores Corporativos */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -64,7 +64,7 @@
   .rpt-text-corporate, .rpt-gerencias-group-header { color: #00468B !important; }
   .rpt-banner-top { background-color: #00468B !important; color: white !important; }
 
-  /* V-10: Hairlines 0.3pt - Bordes finos estilo Access para PDF */
+  /* Hairlines 0.3pt - Bordes finos estilo Access para PDF */
   .rpt-ger-header-line {
     border-bottom: 0.3pt solid #00468B !important;
     margin: 0 3pt;
@@ -81,7 +81,7 @@
     color: #00468B !important;
   }
 
-  /* Jerarquía tipográfica PDF (V-06) y Forzado de Fuente (Verdana) */
+  /* Jerarquía tipográfica PDF y Forzado de Fuente (Verdana) */
   .rpt-gerencias-layout {
     font-size: 8pt !important;
     font-family: Verdana, Geneva, sans-serif !important;

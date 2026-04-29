@@ -37,7 +37,7 @@
 .rpt-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end !important; /* V-03: Baseline Header - forzado para evitar sobreescrituras */
+  align-items: flex-end !important; /* Baseline Header - forzado para evitar sobreescrituras */
   margin-bottom: 2rem;
 }
 
@@ -393,7 +393,7 @@ Estándar: 10pt, sin negrita, azul corporativo
 }
 
 /* =============================================================================
-V-09: HANGING INDENT (Indentación Asterisco Flotante)
+HANGING INDENT (Indentación Asterisco Flotante)
 Para filas donde el asterisco (*) debe visualizarse separado sin mover el texto
 Uso típico: nombres de contrato con asterisco (*) al inicio en tablas CMAI
 ============================================================================= */
@@ -690,7 +690,7 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
   margin-top: 0 !important;
 }
 
-/* V-18: Clase CMAI estándar para separación cabecera-contenido (2.5rem ~40px)
+/* Clase CMAI estándar para separación cabecera-contenido (2.5rem ~40px)
 Esta clase tiene mayor especificidad que el reset anterior y garantiza
 el estándar CMAI cuando se aplica explícitamente al report-body */
 .report-body.rpt-cmai-mt-standard {

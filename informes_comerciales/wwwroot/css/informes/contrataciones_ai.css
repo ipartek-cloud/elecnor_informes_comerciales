@@ -21,7 +21,7 @@
   width: 12%;
 }
 
-/* Tabla del informe AI - Rigidez columnar (V-15) */
+/* Tabla del informe AI - Rigidez columnar */
 .rpt-table-contrataciones-ai {
   width: 98% !important;
   margin: 0 auto !important;
@@ -132,7 +132,7 @@
   margin-left: 1rem !important;
 }
 
-/* Separación cabecera-contenido (V-18) - Estándar CMAI */
+/* Separación cabecera-contenido - Estándar CMAI */
 .report-body {
   margin-top: 1.5rem !important;
 }

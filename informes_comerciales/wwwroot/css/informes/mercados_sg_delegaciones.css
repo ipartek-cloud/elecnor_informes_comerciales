@@ -147,7 +147,7 @@
     page-break-inside: avoid;
 }
 
-/* V-18: Separación Cabecera-Contenido Estándar CMAI */
+/* Separación Cabecera-Contenido Estándar CMAI */
 .rpt-paper[data-informe="mercados_sg_delegaciones"] .report-body.rpt-cmai-mt-standard {
     margin-top: 2.5rem !important;
 }
@@ -180,7 +180,7 @@
     }
 
     .rpt-print-td-header {
-        padding: 16mm 16mm 1.2rem 16mm !important; /* V-18 Reducido para ganar espacio en PDF */
+        padding: 16mm 16mm 1.2rem 16mm !important; /* Separación reducida para ganar espacio en PDF */
         border: none;
     }
 

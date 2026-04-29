@@ -98,14 +98,19 @@
 
 /* Div de línea de total: aplicado dentro de cada td para efecto segmentado */
 .rpt-act-total-line {
-    border-top: 2px solid #00468B !important;
-    margin: 0 4px;
-    padding-top: 4px;
+  border-top: 2px solid #00468B !important;
+  margin: 0 4px;
+  padding-top: 4px;
 }
 
 /* Variante para la columna de nombre */
 .rpt-act-total-line-text {
-    margin: 0 1rem;
+  margin: 0 1rem;
+}
+
+/* Eliminar línea horizontal del total en columna central (nombre de actividad) */
+.rpt-total-row .rpt-col-act-nombre .rpt-act-total-line {
+  border-top: none !important;
 }
 
 /* Anchos de columna optimizados */

@@ -247,14 +247,24 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 }
 
 /* =============================================================================
-   SUBINFORMES CMAI - BORDES EN TOTALES
-   Eliminar bordes laterales e inferior en celdas de totales de subinformes
-   Solo mantener border-top que indica que es fila de totales
-   ============================================================================= */
+ SUBINFORMES CMAI - BORDES EN TOTALES
+ Eliminar bordes laterales e inferior en celdas de totales de subinformes
+ Solo mantener border-top que indica que es fila de totales
+ ============================================================================= */
 .rpt-table-triple tfoot .rpt-td-total {
-    border-left: none !important;
-    border-right: none !important;
-    border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+
+/* Eliminar línea horizontal del total en columna de concepto (columna central de subinformes) */
+.rpt-table-triple tfoot td.rpt-td-total:empty {
+  border-top: none !important;
+}
+
+/* Eliminar línea horizontal del total en columna central del informe principal (Mercado) */
+.rpt-block-labels .rpt-total-row-blue td {
+  border-top: none !important;
 }
 
 

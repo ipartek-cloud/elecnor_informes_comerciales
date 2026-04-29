@@ -132,15 +132,20 @@ Clases para reemplazar estilos inline del JS
 }
 
 /* =============================================================================
-TOTALES - Usa rpt-td-total de informes_base.css
-Las columnas separadoras rpt-col-10px + [rpt-border-none] segmentan
-la línea de border-top en 3 bloques (Mensual | Concepto | Acumulado)
-============================================================================= */
+ TOTALES - Usa rpt-td-total de informes_base.css
+ Las columnas separadoras rpt-col-10px + [rpt-border-none] segmentan
+ la línea de border-top en 3 bloques (Mensual | Concepto | Acumulado)
+ ============================================================================= */
 
 /* Fila de detalle - Altura automática con line-height compacto */
 .rpt-mercado-detail-row {
   height: auto;
   line-height: 1.05;
+}
+
+/* Eliminar línea horizontal del total en columna de descripción (aplica Web y PDF) */
+.rpt-mercado-layout .rpt-td-total[data-label="Descripción"] {
+  border-top: none !important;
 }
 
 /* =============================================================================
@@ -324,7 +329,7 @@ Las reglas generales de impresión están en informes_base.css
     font-size: 8pt !important;
   }
 
-  /* Bordes Hairline 0.3pt estilo Access (V-10) */
+  /* Bordes Hairline 0.3pt estilo Access */
   .rpt-th-blue,
   .rpt-th-blue th,
   .rpt-mercado-th-border,
@@ -340,6 +345,16 @@ Las reglas generales de impresión están en informes_base.css
     border-bottom: none !important;
   }
 
+  /* Eliminar línea horizontal del pie en columna central (Cartera Diferida) */
+  .rpt-cd-total-cell {
+    border-top: none !important;
+  }
+
+  /* Eliminar línea horizontal del total en columna de descripción */
+  .rpt-mercado-layout .rpt-td-total[data-label="Descripción"] {
+    border-top: none !important;
+  }
+
   [rpt-border-none] {
     border: none !important;
   }
@@ -350,7 +365,7 @@ Las reglas generales de impresión están en informes_base.css
     border-radius: 0 !important;
   }
 
-  /* Banner compacto - 14pt (V-04) */
+  /* Banner compacto - 14pt */
   .rpt-banner-top {
     height: 25px !important;
     font-size: 14pt !important;
