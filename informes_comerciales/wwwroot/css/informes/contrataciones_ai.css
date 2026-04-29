@@ -195,11 +195,20 @@
   /* Informe principal: fuente 8pt estándar */
   .rpt-table-contrataciones-ai td {
     font-size: 8pt !important;
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
   }
 
   /* Cabecera de sección con hairline en PDF */
+  .rpt-section-ai-header,
+  .rpt-subreport-ai-anterior .rpt-section-ai-header {
+    border-bottom-width: 0.3pt !important;
+  }
+
+  /* Cabecera de mes en PDF */
+  .rpt-month-header {
+    background-color: #D6EAF8 !important;
+  }
+}
+e en PDF */
   .rpt-section-ai-header {
     border-bottom: 0.3pt solid #00468B !important;
   }

@@ -25,9 +25,28 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
   white-space: nowrap;
 }
 
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
+.rpt-mercado-detail-row td,
+.rpt-cd-detail-row td,
+.rpt-detail-row td {
+    line-height: 1.25 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+@media print {
+    .rpt-mercado-detail-row td,
+    .rpt-cd-detail-row td,
+    .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding-top: 1.5px !important;
+        padding-bottom: 1.5px !important;
+    }
+}
+
 /* Márgenes de bloques */
 .report-body {
-  margin-top: 0 !important;
+  /* Separación controlada por clase rpt-cmai-mt-standard */
 }
 
 /* Unificar margen header para paridad Web/PDF */

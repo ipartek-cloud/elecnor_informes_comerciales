@@ -38,7 +38,7 @@ function _renderizarPagina(index) {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="mercados" data-pagina-index="0" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">
+            <div class="report-body rpt-cmai-mt-standard">
                 ${_renderContructorCompleto()}
             </div>
         </div>

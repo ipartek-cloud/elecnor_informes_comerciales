@@ -21,15 +21,15 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
 
-await inicializarInforme({
-      url,
-      estado,
-      renderizarPagina: _renderizarPagina,
-      inicializarEventListeners: _registrarEventos,
-      prefijoPaginacion: '',
-      claveAgrupacion: 'NONE', // Informe de página única con múltiples bloques
-      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
-    });
+        await inicializarInforme({
+            url,
+            estado,
+            renderizarPagina: _renderizarPagina,
+            inicializarEventListeners: _registrarEventos,
+            prefijoPaginacion: '',
+            claveAgrupacion: 'NONE', // Informe de página única con múltiples bloques
+            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+        });
     } catch (error) {
         console.error("Error al ejecutar informe Actividades:", error);
     }
@@ -45,7 +45,7 @@ function _renderizarPagina() {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="actividades" role="main" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">
+            <div class="report-body rpt-cmai-mt-standard">
                 ${_renderCuerpoInforme()}
             </div>
         </div>
@@ -59,8 +59,8 @@ function _renderizarPagina() {
  * Genera el encabezado corporativo unificado.
  */
 function _getHtmlEncabezado() {
-  return getHtmlEncabezadoBase({
-    tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
+    return getHtmlEncabezadoBase({
+        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span><span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: 'Actividades',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
@@ -88,7 +88,7 @@ function _renderBloquePais(pais) {
     const anioActual = estado.informeGlobalData.meta.filtros.anio;
     const anioAnterior = anioActual - 1;
 
-const tableHeader = `
+    const tableHeader = `
   <thead>
     <tr class="rpt-th-year">
       <th colspan="2" class="rpt-align-center p-0">Cierre ${anioAnterior}</th>
@@ -126,7 +126,7 @@ const tableHeader = `
   </thead>
   `;
 
-const filasHtml = pais.detalle.map(d => `
+    const filasHtml = pais.detalle.map(d => `
     <tr class="rpt-detail-row">
       <td class="rpt-col-act-porc-ant rpt-align-center">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
       <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">${formatCurrency(d.importeAnterior / 1000, 0)}</td>
@@ -137,7 +137,10 @@ const filasHtml = pais.detalle.map(d => `
     </tr>
   `).join('');
 
-const totalesHtml = `
+    const totalesHtml = `
+    <tr class="rpt-spacer-row-totales">
+      <td colspan="6" class="rpt-spacer-cell-totales"></td>
+    </tr>
     <tr class="rpt-total-row">
       <td class="rpt-col-act-porc-ant rpt-align-center">
         <div class="rpt-act-total-line">100%</div>

@@ -5,7 +5,7 @@
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 // ===============================================================================
@@ -37,7 +37,8 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: 'Año',
-            claveAgrupacion: 'agrupaciones'
+            claveAgrupacion: 'agrupaciones',
+            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
         });
     } catch (error) {
         throw error; // El manager lo capturará
@@ -60,9 +61,9 @@ function _renderizarPagina(index) {
     const agrupacion = estado.informeGlobalData.agrupaciones[index];
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_diferida_consejo" data-anio-index="${index}" role="main">
+        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_diferida_consejo" data-anio-index="${index}" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">
+            <div class="report-body rpt-cmai-mt-standard">
                 ${_renderTripleBlock(agrupacion)}
                 <div class="rpt-sub-report-wrapper d-flex flex-column align-items-center">
                     ${agrupacion.subMercadosAI?.length > 0 ? `

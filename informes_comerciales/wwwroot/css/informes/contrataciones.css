@@ -37,17 +37,26 @@
 
 /* Anchos de columna unificados para alineación vertical */
 .rpt-col-ai { width: 3%; }
-.rpt-col-desc      { width: 42%; }
-.rpt-col-cliente   { width: 29%; }
+.rpt-col-desc      { width: 40%; }
+.rpt-col-cliente   { width: 24%; }
 .rpt-col-importe   { width: 13%; }
-.rpt-col-dirnegocio { width: 12%; }
+.rpt-col-dirnegocio { width: 19%; }
 
-/* Padding de celdas y tamaño de fuente afinado (8pt estándar) */
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
 .rpt-table-contrataciones td {
-  padding: 2px 4px !important;
-  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.65rem */
-  line-height: 1.2;
-  vertical-align: middle;
+    line-height: 1.25 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    font-size: 8pt !important;
+    vertical-align: middle;
+}
+
+@media print {
+    .rpt-table-contrataciones td {
+        line-height: 1.2 !important;
+        padding-top: 1.5px !important;
+        padding-bottom: 1.5px !important;
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
@@ -156,7 +165,14 @@
     border: none !important;
   }
 
-  /* Header - Espacio equilibrado */
+  /* Grosor hairline 0.3pt para bordes y separadores */
+  .rpt-section-title,
+  .rpt-subreport-separator,
+  .rpt-badge-ai {
+    border-width: 0.3pt !important;
+    border-bottom-width: 0.3pt !important;
+    border-top-width: 0.3pt !important;
+  }
   .rpt-header {
     margin-bottom: 0.6rem !important;
   }

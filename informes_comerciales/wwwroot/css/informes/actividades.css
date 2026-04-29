@@ -16,7 +16,7 @@
   background-color: #00468B !important;
   color: white !important;
   font-weight: bold;
-  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.85rem */
+  font-size: 8pt !important;
   padding: 2px 10px;
   width: 100%;
   display: block;
@@ -32,84 +32,83 @@
 
 /* Espacio vacío mínimo entre el año y la cabecera técnica */
 .rpt-act-row-spacer th {
-    height: 1px !important; /* Mínimo posible */
+    height: 1px !important;
     line-height: 1px !important;
     border: none !important;
     padding: 0 !important;
 }
 
-/* Tabla de actividades - Rigidez columnar (V-15) */
+/* Tabla de actividades - Rigidez columnar */
 .rpt-table-actividades {
   border-top: none !important;
   width: 95% !important;
   margin: 0 auto !important;
-  table-layout: fixed !important; /* Rigidez columnar */
+  table-layout: fixed !important;
 }
 
 /* Encabezados de año/periodo */
 .rpt-th-year th {
   color: #00468B !important;
   font-weight: bold !important;
-  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.85rem */
-  border-bottom: none !important;
+  font-size: 8pt !important;
+  border: none !important; /* Eliminamos bordes continuos */
   vertical-align: bottom;
 }
 
-/* Fila de nombres de columna (SIN BORDES GLOBALES) - PATRÓN UNIFICADO DE CABECERAS */
+/* Fila de nombres de columna (SIN BORDES GLOBALES) */
 .rpt-th-blue {
   border-bottom: none !important;
 }
 
-/* Celda de cabecera: Contenedor sin padding inferior para alinear líneas internas */
+/* Celda de cabecera: Eliminación de líneas continuas parásitas */
 .rpt-th-blue th {
-  border: none;
+  border: none !important; /* MATA LA LÍNEA CONTINUA DE BASE.CSS */
   color: #00468B !important;
-  font-weight: bold;
-  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.85rem */
+  font-weight: bold !important;
+  font-size: 8pt !important;
   padding-top: 3px !important;
-  padding-bottom: 0 !important; /* Sin padding inferior para alinear líneas internas */
+  padding-bottom: 0 !important;
   vertical-align: bottom !important;
 }
 
-/* --- PATRÓN UNIFICADO DE TOTALES (Estilo Mercados/Cartera) --- */
+/* --- PATRÓN DE LÍNEAS SEGMENTADAS --- */
 
-/* Div de línea de cabecera: aplicado dentro de cada th */
+/* Div de línea de cabecera: aplicado dentro de cada th para efecto segmentado */
 .rpt-act-header-line {
   border-bottom: 2px solid #00468B !important;
   margin: 0 4px;
-  padding-bottom: 4px; /* Espacio entre el texto y la línea */
+  padding-bottom: 4px;
 }
 
-/* Línea segmentada superior (reemplaza style inline) */
+/* Línea superior opcional (actualmente oculta por petición de usuario) */
 .rpt-act-line-segment {
+  border: none !important;
   height: 2px !important;
 }
 
-/* --- PATRÓN UNIFICADO DE TOTALES (Estilo Mercados/Cartera) --- */
-
-/* Celda de total: Contenedor sin padding para alinear líneas internas */
+/* Celda de total: Sin bordes continuos */
 .rpt-total-row td {
   color: #00468B !important;
   font-weight: bold !important;
-  padding-top: 0 !important; /* Vital para que el div interno suba al tope */
+  padding-top: 0 !important;
   padding-bottom: 4px !important;
   vertical-align: top !important;
-  border-top: none !important; /* Eliminamos el borde de la celda para usar el de los divs */
+  border-top: none !important;
 }
 
-/* Div de línea de total: aplicado dentro de cada td de la fila de total */
+/* Div de línea de total: aplicado dentro de cada td para efecto segmentado */
 .rpt-act-total-line {
     border-top: 2px solid #00468B !important;
-    margin: 0 4px; /* Crea el efecto de segmentación/gaps entre columnas */
-    padding-top: 4px; /* Espacio entre la línea y el texto del número */
+    margin: 0 4px;
+    padding-top: 4px;
 }
 
-/* Variante para la columna de nombre (que suele estar vacía en el total) */
+/* Variante para la columna de nombre */
 .rpt-act-total-line-text {
     margin: 0 1rem;
 }
 
-/* Anchos de columna optimizados para el informe de Actividades */
+/* Anchos de columna optimizados */
 .rpt-col-act-porc-ant { width: 10%; }
 .rpt-col-act-imp-ant  { width: 14%; }
 .rpt-col-act-nombre   { width: 38%; }
@@ -117,10 +116,11 @@
 .rpt-col-act-var      { width: 12%; }
 .rpt-col-act-porc-act { width: 12%; }
 
-/* Ajuste de márgenes específicos para este informe */
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
 .rpt-detail-row td {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+    line-height: 1.25 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
 }
 
 /* Ajuste de alineación para la columna de nombre de actividad */
@@ -129,62 +129,42 @@
 }
 
 /* =============================================================================
-   UTILIDADES CSS (Reemplazo de Bootstrap)
+   UTILIDADES CSS
    ============================================================================= */
-
-/* Alineación de texto */
 .rpt-align-center { text-align: center !important; }
 .rpt-align-end { text-align: end !important; text-align: right !important; }
 .rpt-align-start { text-align: start !important; text-align: left !important; }
-
-/* Padding */
 .rpt-pad-right-15 { padding-right: 15px !important; }
 .rpt-ps-3 { padding-left: 1rem !important; }
-
-/* Transformación de texto */
 .rpt-text-uppercase { text-transform: uppercase !important; }
 
 /* =============================================================================
-   CLASES CMAI (Patrón Consejo Elecnor) - Paridad con mercados.css
+   CLASES CMAI
    ============================================================================= */
-
-/* Subtítulo CMAI - 9pt, azul corporativo */
 .rpt-cmai-subtitulo {
   font-size: 9pt;
   font-weight: normal;
   color: #00468B;
 }
-
-/* Contenedor del título corporativo - margen superior para bajar los literales */
 .rpt-cmai-titulo-container {
   margin-top: 8px;
 }
-
-/* Separación específica para el subtítulo CMAI */
 .rpt-cmai-margin-left {
   margin-left: 1rem !important;
 }
-
-/* Separación cabecera-contenido (V-18) - Estándar CMAI para Web */
-/* Nota: En PDF se elimina completamente (ver @media print) */
 .report-body {
   margin-top: 2.5rem !important;
 }
 
 /* =============================================================================
-   ESTILOS DE IMPRESIÓN / PDF (@media print)
-   Paridad estricta con Access - Hairline 0.3pt
-   Nota: Las clases CMAI (.rpt-cmai-*) y .report-body se heredan automáticamente
-   con !important desde el bloque principal, no es necesario redefinirlas.
+   ESTILOS DE IMPRESIÓN / PDF (BLOQUE ÚNICO)
    ============================================================================= */
 @media print {
-  /* Forzar renderizado de colores de fondo */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Contenedor papel para impresión */
   .rpt-paper[data-informe="actividades"],
   .rpt-paper--print {
     max-width: 100% !important;
@@ -193,36 +173,7 @@
     border: none !important;
   }
 
-  /* Compactar banners - Separación estándar CMAI + Banner compacto 14pt */
-  .rpt-banner-top {
-    margin-top: 2.5rem !important;
-    margin-bottom: 0.8rem !important;
-    height: 25px !important;
-    font-size: 14pt !important;
-    font-weight: normal !important;
-  }
-
-  /* No cortar justo después de banners */
-  .rpt-banner-top {
-    page-break-after: avoid;
-  }
-
-  /* Evitar cortes dentro de filas de detalle */
-  .rpt-detail-row {
-    page-break-inside: avoid;
-  }
-
-  /* Tipografía unificada 8pt */
-  .rpt-table {
-    font-size: 8pt !important;
-  }
-
-  /* Badge compacto en impresión */
-  .rpt-act-badge {
-    border-radius: 0 !important;
-  }
-
-  /* Bordes Hairline 0.3pt estilo Access (V-10) */
+  /* Líneas segmentadas con grosor Hairline 0.3pt estilo Access */
   .rpt-act-header-line {
     border-bottom: 0.3pt solid #00468B !important;
   }
@@ -231,31 +182,45 @@
     border-top: 0.3pt solid #00468B !important;
   }
 
-  .rpt-th-blue th {
-    border-bottom: 0.3pt solid #00468B !important;
+  /* ELIMINACIÓN RADICAL DE LÍNEAS CONTINUAS EN PDF */
+  .rpt-th-blue th, 
+  .rpt-total-row td,
+  .rpt-th-year th {
+    border: none !important;
   }
 
-  /* Header - Espacio generoso para legibilidad en PDF */
+  .rpt-detail-row td {
+    line-height: 1.2 !important;
+    padding-top: 1.5px !important;
+    padding-bottom: 1.5px !important;
+    font-size: 8pt !important;
+  }
+
+  .rpt-banner-top {
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.8rem !important;
+    height: 25px !important;
+    font-size: 14pt !important;
+  }
+
+  .rpt-table {
+    font-size: 8pt !important;
+  }
+
   .rpt-header {
     margin-bottom: 0.8rem !important;
   }
 
-  /* Subtítulo - Espacio generoso en PDF */
   .rpt-subtitle {
     font-size: 8pt !important;
     margin-bottom: 0.5rem !important;
   }
 
-  /* Banner - Espacio generoso para separar del contenido */
-  .rpt-banner-top {
-    margin-top: 1rem !important;
-    margin-bottom: 1rem !important;
-  }
-
-  /* Separación generosa entre banner y tabla */
   .report-body {
     margin-top: 0.8rem !important;
   }
-}
 
-/* Nota: Los estilos de impresión están definidos en el bloque @media print anterior */
+  .rpt-detail-row {
+    page-break-inside: avoid;
+  }
+}

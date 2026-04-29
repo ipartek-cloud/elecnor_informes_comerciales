@@ -70,7 +70,7 @@ function _renderizarPagina(index) {
   role="main"
   ${getStyleVars(estado.margenes)}>
 ${_getHtmlEncabezado()}
-<div class="report-body">
+<div class="report-body rpt-cmai-mt-standard">
   ${_renderContenido()}
 </div>
 </div>

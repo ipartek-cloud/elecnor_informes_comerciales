@@ -58,6 +58,21 @@ tbody .rpt-paises-pais-cell {
   padding-right: 15px !important;
 }
 
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
+.rpt-paises-table .rpt-detail-row td {
+    line-height: 1.25 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+@media print {
+    .rpt-paises-table .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding-top: 1.5px !important;
+        padding-bottom: 1.5px !important;
+    }
+}
+
 /* Separación entre cabecera del informe y datos de la tabla */
 .report-body {
   margin-top: 2.5rem !important; /* Estándar CMAI - separación cabecera/datos */

@@ -69,8 +69,9 @@
   border-bottom: none !important;
 }
 
+/* Celda de cabecera: Eliminación de líneas continuas parásitas */
 .rpt-th-blue th {
-  border: none;
+  border: none !important;
   color: #00468B !important;
   font-weight: bold !important;
   font-size: 8pt !important;
@@ -79,23 +80,17 @@
   vertical-align: bottom !important;
 }
 
-/* Grosor de bordes para WEB (1.5pt - Sincronizado con Informe Gerencias) en Azul */
+/* Grosor de bordes para WEB (1.5pt) en Azul */
 .rpt-table-actividades thead th.rpt-act-th-border-bottom {
   border-bottom: 1.5pt solid #00468B !important;
 }
 
-table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top,
-table.rpt-table-actividades tr.rpt-row-total-actividad td.rpt-act-total-border-top {
+table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
   border-top: 1.5pt solid #00468B !important;
 }
 
-div.rpt-act-line-segment-top {
-  border-top: 1.5pt solid #00468B !important;
-}
-
-/* Totales en Azul Elecnor (#00468B) - CORRECCIÓN DEFINITIVA DE ALINEACIÓN */
-.rpt-total-row td,
-.rpt-row-total-actividad td {
+/* Totales en Azul Elecnor (#00468B) */
+.rpt-total-row td {
   color: #00468B !important;
   font-weight: bold !important;
   padding-top: 4pt !important;
@@ -105,7 +100,6 @@ div.rpt-act-line-segment-top {
   border-top: none !important;
 }
 
-/* Forzamos que las celdas numéricas en los totales no hereden paddings extra */
 .rpt-total-row td.rpt-number-cell {
     padding-right: 5px !important;
 }
@@ -120,11 +114,20 @@ div.rpt-act-line-segment-top {
 .rpt-col-act-var { width: 10%; }
 .rpt-col-act-porc-act { width: 12%; }
 
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
 .rpt-detail-row td {
-  padding-top: 0.5pt !important;
-  padding-bottom: 0.5pt !important;
-  line-height: 1.05 !important;
-  font-size: 8pt !important;
+    line-height: 1.25 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    font-size: 8pt !important;
+}
+
+@media print {
+    .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding-top: 1.5px !important;
+        padding-bottom: 1.5px !important;
+    }
 }
 
 .rpt-col-act-nombre {
@@ -136,30 +139,16 @@ div.rpt-act-line-segment-top {
    Garantizamos el Hairline de 0.3pt y Azul Corporativo
    ============================================================================= */
 @media print {
-  .rpt-table-actividades thead th.rpt-act-th-border-bottom,
-  .rpt-th-blue th {
-    border-bottom: 0.3pt solid #00468B !important;
-  }
-
-  table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top,
-  table.rpt-table-actividades tr.rpt-row-total-actividad td.rpt-act-total-border-top {
-    border-top: 0.3pt solid #00468B !important;
-  }
-
-  div.rpt-act-line-segment-top {
-    border-top: 0.3pt solid #00468B !important;
-  }
-
-  .rpt-detail-row td {
-    line-height: 1.05 !important;
-    padding-top: 0.5pt !important;
-    padding-bottom: 0.5pt !important;
-  }
-
-  .rpt-act-badge,
-  .rpt-act-header-badge {
+  * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  .rpt-table-actividades thead th.rpt-act-th-border-bottom,
+  .rpt-th-blue th,
+  table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
+    border-width: 0.3pt !important;
+    border-color: #00468B !important;
   }
 
   .rpt-bloque-actividad {
@@ -169,6 +158,15 @@ div.rpt-act-line-segment-top {
   .rpt-th-year,
   .rpt-th-blue {
     page-break-after: avoid !important;
+  }
+
+  .rpt-banner-top {
+    height: 25px !important;
+    font-size: 14pt !important;
+  }
+
+  .report-body {
+    margin-top: 1.25rem !important; /* Reducido a la mitad para PDF */
   }
 }
 

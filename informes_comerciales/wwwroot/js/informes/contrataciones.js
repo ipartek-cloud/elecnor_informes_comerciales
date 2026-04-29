@@ -72,7 +72,7 @@ async function _renderizarPagina() {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones" role="main" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">
+            <div class="report-body rpt-cmai-mt-standard">
                 ${cuerpoInformeHtml}
             </div>
         </div>

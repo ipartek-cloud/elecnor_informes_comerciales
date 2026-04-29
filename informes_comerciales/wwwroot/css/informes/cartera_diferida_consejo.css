@@ -183,12 +183,21 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     width: 980px !important;
 }
 
-.rpt-table-triple th, .rpt-table-triple td {
-    padding: 0px 4px;
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
+.rpt-table-triple th, .rpt-table-triple td,
+.rpt-triple-container .rpt-detail-row td {
+    padding: 3px 5px !important;
     font-size: 8pt;
     vertical-align: bottom;
-    height: 19px;
-    line-height: normal;
+    line-height: 1.25 !important;
+}
+
+@media print {
+    .rpt-table-triple th, .rpt-table-triple td,
+    .rpt-triple-container .rpt-detail-row td {
+        padding: 1.5px 5px !important;
+        line-height: 1.2 !important;
+    }
 }
 
 .rpt-table-triple thead th {
