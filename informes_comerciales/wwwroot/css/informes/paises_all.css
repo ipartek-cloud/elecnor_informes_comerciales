@@ -24,6 +24,21 @@ tbody .rpt-paises-pais-cell {
     text-align: center;
 }
 
+/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
+.rpt-paises-table .rpt-detail-row td {
+    line-height: 1.25 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+@media print {
+    .rpt-paises-table .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding-top: 1.5px !important;
+        padding-bottom: 1.5px !important;
+    }
+}
+
 .rpt-paises-pos-cell {
     text-align: center;
 }

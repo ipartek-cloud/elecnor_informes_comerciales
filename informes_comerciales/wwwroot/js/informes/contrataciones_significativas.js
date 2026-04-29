@@ -219,15 +219,136 @@ async function _imprimirInforme() {
             }
         }
     } else {
-        // MODO PDF NACIONAL: Impresión estándar paginada.
-        await imprimirInformeUnificado({
-            informeGlobalData: estado.informeGlobalData,
-            getHtmlEncabezado: _getHtmlEncabezado,
-            renderContenido: (dir) => _renderTablaDireccion(dir, true),
-            modoAgrupacion: 'datos',
-            margenes: estado.margenes
-        });
+        // MODO PDF NACIONAL: Implementación "Master Table" para soportar paginación limpia.
+        const styleVars = getStyleVars(estado.margenes);
+        const contenidoHtml = _renderTablaMaestraNacional();
+
+        const capaPrint = document.createElement('div');
+        capaPrint.className = 'rpt-print-layer';
+        capaPrint.innerHTML = `
+            <div class="rpt-paper rpt-paper--print" data-informe="contrataciones_significativas" data-mercado="Nacional" ${styleVars}>
+                <div class="report-body">
+                    ${contenidoHtml}
+                </div>
+            </div>`;
+        document.body.appendChild(capaPrint);
+
+        const originalTitle = document.title;
+        try {
+            await new Promise(resolve => setTimeout(resolve, 300));
+            document.title = '';
+            window.print();
+        } finally {
+            document.title = originalTitle;
+            if (document.body.contains(capaPrint)) {
+                document.body.removeChild(capaPrint);
+            }
+        }
     }
+}
+
+/**
+ * Genera la Tabla Maestra exclusiva para el PDF Nacional.
+ * Utiliza múltiples tbodies para forzar el salto de página por Dirección de Negocio,
+ * repitiendo la cabecera corporativa y los títulos de columna en cada salto de página natural.
+ */
+function _renderTablaMaestraNacional() {
+    const dataArr = estado.informeGlobalData?.datos || [];
+    const dataMes = estado.informeGlobalData?.datosMes || [];
+    const dataAnterior = estado.informeGlobalData?.datosMesesAnteriores || [];
+    const nombreMes = getNombreMes(estado.informeGlobalData?.meta?.filtros?.mes);
+    const filtros = estado.informeGlobalData?.meta?.filtros || {};
+    const mercado = filtros.mercado || 'Nacional';
+    const nroPagina = estado.nroPagina || 9;
+
+    let tbodiesHtml = '';
+
+    dataArr.forEach((direccion, idx) => {
+        const contratosMes = dataMes.filter(item => item.nombreDirNegocio === direccion.nombreDirNegocio);
+        const contratosAnt = dataAnterior.filter(item => item.nombreDirNegocio === direccion.nombreDirNegocio);
+
+        let rowsHtml = `
+            <tr class="rpt-cont-sig-group-start">
+                <td colspan="4" class="rpt-cont-sig-group-header">
+                    <span class="rpt-cont-sig-group-title">${escapeHtml(direccion.nombreDirNegocio)}</span>
+                </td>
+            </tr>
+            <tr class="rpt-cont-sig-month-row">
+                <td colspan="4" class="rpt-cont-sig-mes-label rpt-font-bold">${escapeHtml(nombreMes)}</td>
+            </tr>`;
+
+        rowsHtml += contratosMes.map(item => `
+            <tr class="rpt-detail-row">
+                <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
+                <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
+                <td rpt-border-none></td>
+                <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+            </tr>`).join('');
+
+        if (contratosAnt.length > 0) {
+            rowsHtml += `
+                <tr class="rpt-spacer-row-totales">
+                    <td colspan="4" class="rpt-spacer-cell-totales"></td>
+                </tr>
+                <tr class="rpt-cont-sig-anterior-label">
+                    <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
+                </tr>`;
+            rowsHtml += contratosAnt.map(item => `
+                <tr class="rpt-detail-row rpt-cont-sig-hist-row">
+                    <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
+                    <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
+                    <td rpt-border-none></td>
+                    <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+                </tr>`).join('');
+        }
+
+        // Cada dirección va en su propio tbody. Se fuerza salto de página antes (excepto en el primero)
+        const pageBreakClass = idx > 0 ? 'rpt-page-break' : '';
+        tbodiesHtml += `<tbody class="rpt-group-tbody ${pageBreakClass}">${rowsHtml}</tbody>`;
+    });
+
+    return `
+        <table class="rpt-table rpt-table-cont-sig rpt-table-print-master">
+            <colgroup>
+                <col class="rpt-col-mes-cliente">
+                <col class="rpt-col-mes-oferta">
+                <col class="rpt-col-10px">
+                <col class="rpt-col-mes-importe">
+            </colgroup>
+            <thead class="rpt-print-thead-corporate">
+                <tr class="rpt-print-thead-row">
+                    <th colspan="4" class="rpt-print-thead-cell">
+                        <div class="${RPT_CLASSES.HEADER}">
+                            <div class="rpt-text-corporate rpt-header-corporate-text">
+                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
+                                <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
+                            </div>
+                            <div class="d-flex flex-column align-items-end">
+                                <span class="rpt-page-number">${nroPagina}</span>
+                                <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
+                            </div>
+                        </div>
+                        <div class="${RPT_CLASSES.BANNER}">
+                            <span>Elecnor</span>
+                            <span>Contrataciones Significativas Mercado ${mercado}</span>
+                        </div>
+                        <div class="${RPT_CLASSES.SUBTITLE}">
+                            Cierre de ${getNombreMes(filtros.mes)} ${filtros.anio} | Miles de euros
+                        </div>
+                    </th>
+                </tr>
+                <tr class="rpt-font-bold rpt-table-header-columns">
+                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-10pt">Contratación &gt;1M</th>
+                    <th></th>
+                    <th rpt-border-none></th>
+                    <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                </tr>
+            </thead>
+            <tfoot class="rpt-print-tfoot-master">
+                <tr><td colspan="4" class="rpt-print-tfoot-cell"></td></tr>
+            </tfoot>
+            ${tbodiesHtml}
+        </table>`;
 }
 
 /**

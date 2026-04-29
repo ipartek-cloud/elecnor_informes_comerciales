@@ -1,5 +1,5 @@
 /* =============================================================================
-   ESTILOS ESPECÍFICOS: CONTRATACIONES SIGNIFICATIVAS (V-15 Rigidez Columnar)
+   ESTILOS ESPECÍFICOS: CONTRATACIONES SIGNIFICATIVAS
    ============================================================================= */
 
 /* Literales de encabezado corporativo */
@@ -13,7 +13,7 @@
   margin-top: 8px;
 }
 
-/* Ajuste de compactación para paridad visual (V-18/19) */
+/* Ajuste de compactación para paridad visual */
 .rpt-subtitle {
     margin-bottom: 0.5rem !important; /* Reducido drásticamente en Web */
 }
@@ -29,7 +29,7 @@
     padding-bottom: 5px !important;
 }
 
-/* Agrupador: Dirección de Negocio (V-10 Hairline) */
+/* Agrupador: Dirección de Negocio */
 .rpt-cont-sig-group-header {
     border-bottom: 0.3pt solid #00468B !important;
     padding: 12pt 0 0 0 !important;
@@ -55,7 +55,7 @@
     font-weight: bold !important;
 }
 
-/* Definición de Columnas (Alineación V-15) */
+/* Definición de Columnas */
 .rpt-col-mes-cliente {
     width: 32%;
     padding-left: 8pt !important;
@@ -73,7 +73,7 @@
     padding-right: 10pt !important;
 }
 
-/* Filas de detalle (V-05, V-06) */
+/* Filas de detalle */
 .rpt-detail-row td {
     font-size: 8pt !important;
     line-height: 1.25 !important;
@@ -82,7 +82,7 @@
     border: none !important;
 }
 
-/* Sección Histórica "Anterior" (V-10) */
+/* Sección Histórica "Anterior" */
 .rpt-cont-sig-anterior-label td {
     padding-top: 12pt !important;
     padding-bottom: 2pt !important;
@@ -97,18 +97,18 @@
     font-size: 7.5pt !important;
 }
 
-/* V-18: Separación Cabecera-Contenido (Compactado a 0 para paridad) */
+/* Separación Cabecera-Contenido */
 .rpt-cmai-mt-medium {
     margin-top: 0 !important;
 }
 
-/* V-09: Hanging Indent para asteriscos flotantes */
+/* Identación para asteriscos flotantes */
 .rpt-hanging-indent {
     padding-left: 1.5em;
     text-indent: -1em;
 }
 
-/* V-12: Segmentación (Columnas Fantasma 10px) */
+/* Segmentación: Columnas sin borde */
 [rpt-border-none] {
     border: none !important;
 }
@@ -141,7 +141,7 @@
 }
 
 /* Anulación de padding en contenedor maestro para evitar duplicidad (Doble margen) */
-.rpt-paper--print[data-mercado="Internacional"] {
+.rpt-paper--print[data-informe="contrataciones_significativas"] {
     padding-top: 0 !important;
 }
 
@@ -180,11 +180,6 @@
     /* Compactación extrema de cabecera Nacional en PDF */
     .rpt-subtitle {
         margin-bottom: 0 !important;
-    }
-
-    /* V-19: Forzar reducción del hueco residual subiendo la tabla (Apunta directamente a la tabla Nacional) */
-    .rpt-table-cont-sig:not(.rpt-table-print-master) {
-        margin-top: -30px !important;
     }
 
     .rpt-cmai-mt-medium {
