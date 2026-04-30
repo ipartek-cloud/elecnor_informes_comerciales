@@ -30,6 +30,14 @@ window.cargarInforme = async function (btn, nombreInforme) {
         btn = null;
     }
 
+    // Forzar Subdirección si el botón lo exige explícitamente
+    if (btn && btn.dataset && btn.dataset.subdireccion) {
+        const cmbSubDir = document.getElementById('cmbSubDireccionGeneral');
+        if (cmbSubDir) {
+            cmbSubDir.value = btn.dataset.subdireccion;
+        }
+    }
+
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
     

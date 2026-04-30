@@ -362,6 +362,7 @@ function _renderTablaMaestraInternacional() {
     const nombreMes = getNombreMes(estado.informeGlobalData?.meta?.filtros?.mes);
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     const mercado = filtros.mercado || 'Internacional';
+    const nroPagina = estado.nroPagina || 10;
 
     let rowsHtml = '';
 
@@ -422,7 +423,7 @@ function _renderTablaMaestraInternacional() {
                                 <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
                             </div>
                             <div class="d-flex flex-column align-items-end">
-                                <span class="rpt-page-number">10</span>
+                                <span class="rpt-page-number">${nroPagina}</span>
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
                             </div>
                         </div>

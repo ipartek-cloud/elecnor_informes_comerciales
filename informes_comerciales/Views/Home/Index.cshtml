@@ -8,8 +8,8 @@
         
         <!-- ==================== CARD 1: FILTROS DE INFORME ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header">
-                <h5 class="mb-0"><i class="fas fa-filter"></i> Filtros de Informe</h5>
+            <div class="card-header rpt-index-header text-center">
+                <h5 class="mb-0" style="font-family: Verdana;">Filtros</h5>
             </div>
             <div class="card-body">
                 <div class="row g-3 align-items-center">
@@ -53,66 +53,104 @@
 
         <!-- ==================== CARD 2: CONSEJO ELECNOR ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header">
-                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> CONSEJO ELECNOR</h5>
+            <div class="card-header rpt-index-header text-center">
+                <h5 class="mb-0" style="font-family: Verdana;">CONSEJO ELECNOR</h5>
             </div>
             <div class="card-body p-0">
                 <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start p-3">
                     
-                    <!-- CARTERA -->
+                    <!-- ENCABEZADOS DE COLUMNA -->
+                    <div class="d-flex align-items-center gap-2 w-100 mb-2">
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <div class="rpt-header-index-col text-center w-100">
+                                Informe
+                            </div>
+                        </div>
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <div class="rpt-header-index-col text-center w-100">
+                                Anexo
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILA 1 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Cartera Diferida -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'cartera_diferida_consejo')"
                                     data-input-pag="inputPaginaCartera"
-                                    aria-label="Ver informe Cartera Diferida">
-                                Cartera Diferida
+                                    aria-label="Ver informe Mercado-AI-Cart. Producción-Cart. Diferida">
+                                Mercado-AI-Cart. Producción-Cart. Diferida
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaCartera"
                                    name="inputPaginaCartera" value="1" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Cartera Diferida DG Servicios -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    style="background-color: #e3f2fd;"
+                                    onclick="Swal.fire({ title: 'Informe Pendiente', text: 'El informe Cartera Diferida DG Servicios - DG Proyectos está pendiente de desarrollo.', icon: 'info', confirmButtonColor: '#005596' })"
+                                    aria-label="Cartera Diferida DG Servicios - DG Proyectos (Pendiente)">
+                                Cartera Diferida DG Servicios - DG Proyectos
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaCarteraDG" name="inputPaginaCarteraDG" value="1" min="1" aria-label="Página">
+                        </div>
                     </div>
 
-                    <!-- MERCADOS -->
+                    <!-- FILA 2 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Mercados -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'mercados')"
                                     data-input-pag="inputPaginaMercados"
-                                    aria-label="Ver informe Mercados">
-                                Mercados
+                                    aria-label="Ver informe Mercado-Direcciones Generales-Unidades Negocio">
+                                Mercado-Direcciones Generales-Unidades Negocio
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaMercados"
                                    name="inputPaginaMercados" value="2" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Cartera Diferida Mercados -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    style="background-color: #e3f2fd;"
+                                    onclick="Swal.fire({ title: 'Informe Pendiente', text: 'El informe Cartera Diferida Mercados - Clientes está pendiente de desarrollo.', icon: 'info', confirmButtonColor: '#005596' })"
+                                    aria-label="Cartera Diferida Mercados - Clientes (Pendiente)">
+                                Cartera Diferida Mercados - Clientes
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaCarteraMercados" name="inputPaginaCarteraMercados" value="2" min="1" aria-label="Página">
+                        </div>
                     </div>
 
-                    <!-- PAISES RELEVANTES + PAISES -->
+                    <!-- FILA 3 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Paises Relevantes -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises')"
                                     data-umbral="100000"
                                     data-input-pag="inputPaginaPaisesRelevantes"
-                                    aria-label="Ver informe Paises Relevantes">
-                                Paises Relevantes (Mercado Internacional)
+                                    aria-label="Ver informe Paises">
+                                Paises
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaisesRelevantes"
                                    name="inputPaginaPaisesRelevantes" value="3" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Paises -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises')"
                                     data-umbral="0"
                                     data-input-pag="inputPaginaPaises"
-                                    aria-label="Ver informe Paises">
-                                Paises (Mercado Internacional)
+                                    aria-label="Ver informe Todos los Paises">
+                                Todos los Paises
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaises"
@@ -121,105 +159,176 @@
                         </div>
                     </div>
 
-                    <!-- ACTIVIDADES -->
-                    <div class="input-group rpt-input-group-index">
-                        <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                onclick="cargarInforme(this, 'actividades')"
-                                data-input-pag="inputPaginaActividades"
-                                aria-label="Ver informe Actividades">
-                            Actividades
-                        </button>
-                        <input type="number" class="form-control rpt-input-page" 
-                               id="inputPaginaActividades" 
-                               name="inputPaginaActividades" value="4" min="1" 
-                               aria-label="Página" title="Página inicial">
+                    <!-- FILA 4 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Actividades -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'actividades')"
+                                    data-input-pag="inputPaginaActividades"
+                                    aria-label="Ver informe Actividades">
+                                Actividades
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" 
+                                   id="inputPaginaActividades" 
+                                   name="inputPaginaActividades" value="4" min="1" 
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Mercado Internacional DG Países -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    style="background-color: #e3f2fd;"
+                                    onclick="Swal.fire({ title: 'Informe Pendiente', text: 'El informe Mercado Internacional DG - Países está pendiente de desarrollo.', icon: 'info', confirmButtonColor: '#005596' })"
+                                    aria-label="Mercado Internacional DG - Países (Pendiente)">
+                                Mercado Internacional DG - Países
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaMercadoIntDG" name="inputPaginaMercadoIntDG" value="4" min="1" aria-label="Página">
+                        </div>
                     </div>
 
-                    <!-- CONTRATACIONES + CONTRATACIONES AI -->
+                    <!-- FILA 5 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Contrataciones -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones')"
                                     data-input-pag="inputPaginaContrataciones"
-                                    aria-label="Ver informe Contrataciones">
-                                Contrataciones
+                                    aria-label="Ver informe Princip Contrataciones Naciona-Internacional">
+                                Princip Contrataciones Naciona-Internacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContrataciones"
                                    name="inputPaginaContrataciones" value="5" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Mercado Internacional DG Elecnor Value -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    style="background-color: #e3f2fd;"
+                                    onclick="Swal.fire({ title: 'Informe Pendiente', text: 'El informe Mercado Internacional DG - Elecnor Value está pendiente de desarrollo.', icon: 'info', confirmButtonColor: '#005596' })"
+                                    aria-label="Mercado Internacional DG - Elecnor Value (Pendiente)">
+                                Mercado Internacional DG - Elecnor Value
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaMercadoIntValue" name="inputPaginaMercadoIntValue" value="5" min="1" aria-label="Página">
+                        </div>
+                    </div>
+
+                    <!-- FILA 6 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Contrataciones AI -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_ai')"
                                     data-input-pag="inputPaginaContratacionesAI"
-                                    aria-label="Ver informe Contrataciones AI">
-                                Contrataciones AI
+                                    aria-label="Ver informe Contrataciones Asociada a Inversion">
+                                Contrataciones Asociada a Inversion
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContratacionesAI"
                                    name="inputPaginaContratacionesAI" value="6" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Contrataciones Significativas Nac. -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas')"
+                                    data-input-pag="inputPaginaContratacionesSignificativasNacionalesServicios"
+                                    data-mercado="Nacional"
+                                    data-subdireccion="221"
+                                    aria-label="Ver informe Contratación Significativa Nacional DG Servicios">
+                                Contratación Significativa Nacional DG Servicios
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContratacionesSignificativasNacionalesServicios"
+                                   name="inputPaginaContratacionesSignificativasNacionalesServicios" value="6" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
-                    <!-- RANKING NACIONAL + INTERNACIONAL -->
+                    <!-- FILA 7 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Ranking Nac. -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                     data-input-pag="inputPaginaRankingClientesNacionales"
                                     data-mercado="Nacional"
-                                    aria-label="Ver informe Ranking Contratación Clientes Nacionales">
-                                Ranking Contratación Nacional
+                                    aria-label="Ver informe Ranking Clientes Nacionales">
+                                Ranking Clientes Nacionales
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaRankingClientesNacionales"
                                    name="inputPaginaRankingClientesNacionales" value="7" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Contratación Significativa Nacional DG Proyectos -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'contrataciones_significativas')"
+                                    data-input-pag="inputPaginaContratacionesSignificativasNacionalesProyectos"
+                                    data-mercado="Nacional"
+                                    data-subdireccion="286"
+                                    aria-label="Ver informe Contratación Significativa Nacional DG Proyectos">
+                                Contratación Significativa Nacional DG Proyectos
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" 
+                                   id="inputPaginaContratacionesSignificativasNacionalesProyectos" 
+                                   name="inputPaginaContratacionesSignificativasNacionalesProyectos" value="7" min="1" 
+                                   aria-label="Página">
+                        </div>
+                    </div>
+
+                    <!-- FILA 8 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Ranking Int. -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                     data-input-pag="inputPaginaRankingClientesInternacionales"
                                     data-mercado="Internacional"
-                                    aria-label="Ver informe Ranking Contratación Internacional">
-                                Ranking Contratación Internacional
+                                    aria-label="Ver informe Ranking Clientes Intenacionales">
+                                Ranking Clientes Intenacionales
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaRankingClientesInternacionales"
                                    name="inputPaginaRankingClientesInternacionales" value="8" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                    </div>
-
-                    <!-- CONTRATACIONES SIGNIFICATIVAS NAC. + INT. -->
-                    <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
+                        <!-- Contrataciones Significativas Int. -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
-                                    data-input-pag="inputPaginaContratacionesSignificativasNacionales"
-                                    data-mercado="Nacional"
-                                    aria-label="Ver informe Contrataciones Significativas Mercado Nacional">
-                                Contrataciones Significativas Mercado Nacional
+                                    data-input-pag="inputPaginaContratacionesSignificativasInternacionalesServicios"
+                                    data-mercado="Internacional"
+                                    data-subdireccion="221"
+                                    aria-label="Ver informe Contratación Significativa Internacional DG Servicios">
+                                Contratación Significativa Internacional DG Servicios
                             </button>
                             <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaContratacionesSignificativasNacionales"
-                                   name="inputPaginaContratacionesSignificativasNacionales" value="9" min="1"
+                                   id="inputPaginaContratacionesSignificativasInternacionalesServicios"
+                                   name="inputPaginaContratacionesSignificativasInternacionalesServicios" value="8" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="input-group rpt-input-group-index">
+                    </div>
+
+                    <!-- FILA 9 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Vacío Izquierda (invisible pero ocupa espacio) -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Contratación Significativa Internacional DG Proyectos -->
+                        <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas')"
-                                    data-input-pag="inputPaginaContratacionesSignificativasInternacionales"
+                                    data-input-pag="inputPaginaContratacionesSignificativasInternacionalesProyectos"
                                     data-mercado="Internacional"
-                                    aria-label="Ver informe Contrataciones Significativas Mercado Internacional">
-                                Contrataciones Significativas Mercado Internacional
+                                    data-subdireccion="286"
+                                    aria-label="Ver informe Contratación Significativa Internacional DG Proyectos">
+                                Contratación Significativa Internacional DG Proyectos
                             </button>
-                            <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaContratacionesSignificativasInternacionales"
-                                   name="inputPaginaContratacionesSignificativasInternacionales" value="10" min="1"
-                                   aria-label="Página" title="Página inicial">
+                            <input type="number" class="form-control rpt-input-page" 
+                                   id="inputPaginaContratacionesSignificativasInternacionalesProyectos" 
+                                   name="inputPaginaContratacionesSignificativasInternacionalesProyectos" value="9" min="1" 
+                                   aria-label="Página">
                         </div>
                     </div>
 
@@ -229,8 +338,8 @@
 
         <!-- ==================== CARD 3: COMITE ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header">
-                <h5 class="mb-0"><i class="fas fa-file-invoice"></i> COMITE</h5>
+            <div class="card-header rpt-index-header text-center">
+                <h5 class="mb-0" style="font-family: Verdana;">COMITE</h5>
             </div>
             <div class="card-body p-0">
                 <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">

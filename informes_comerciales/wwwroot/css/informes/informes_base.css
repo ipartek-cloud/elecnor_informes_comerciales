@@ -848,3 +848,13 @@ el estándar CMAI cuando se aplica explícitamente al report-body */
     box-shadow: 0 4px 8px rgba(47, 79, 136, 0.15) !important; /* Sombra sutil de profundidad */
     transform: translateY(-1px);    /* Micro-animación de elevación */
 }
+
+/* Encabezado de columnas Informe / Anexo en Index */
+.rpt-header-index-col {
+    background: #e9ecef !important;    /* Fondo gris claro de los botones */
+    color: #00468B !important;         /* Texto en azul corporativo */
+    border: 1px solid #ced4da !important;
+    font-weight: bold !important;
+    padding: 6px 0 !important;
+    border-radius: 0 !important;
+}
