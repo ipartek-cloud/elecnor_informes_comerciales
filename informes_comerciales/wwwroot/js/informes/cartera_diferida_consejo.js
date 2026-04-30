@@ -105,7 +105,7 @@ function _getHtmlEncabezado() {
 
     return `
         ${getHtmlEncabezadoBase({
-            tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="ms-3 rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
+            tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span> <span class="ms-3 rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
             textoBanner1: 'Elecnor',
             textoBanner2: 'Mercados',
             mes,
