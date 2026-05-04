@@ -908,6 +908,10 @@
     <Build Include="dbo\Tables\DirGeneral_Orden.sql" />
     <Build Include="dbo\Tables\rptContratacion_SG_Mercado.sql" />
     <Build Include="dbo\Views\OfertaAsociadaInversion_1.sql" />
+    <Build Include="dbo\Tables\rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises.sql" />
+    <Build Include="dbo\Tables\rptCarteraContratacionDetalle_DGDesarrolloInternacional_Org_Pais.sql" />
+    <Build Include="dbo\Tables\rptCartera_Contratacion_Resumen_SDG.sql" />
+    <Build Include="dbo\Tables\CO005BPH .sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_RPSIC.scmp" />

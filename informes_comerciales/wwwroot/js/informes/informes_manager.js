@@ -85,7 +85,10 @@ window.cargarInforme = async function (btn, nombreInforme) {
                 mercado: mercado,
                 umbral: btn?.dataset?.umbral || null,
                 codSubDir: _codSubDir,
-                mostrarTitulo: mostrarTitulo
+                mostrarTitulo: mostrarTitulo,
+                limiteImporte: btn?.dataset?.limiteimporte || null,
+                limitePaises: btn?.dataset?.limitepaises || null,
+                informe: btn?.dataset?.informe || null
             };
 
             await modulo.ejecutar(parametros);

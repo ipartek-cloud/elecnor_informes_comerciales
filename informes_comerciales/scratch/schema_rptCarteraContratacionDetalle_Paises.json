@@ -1,0 +1,575 @@
+﻿{
+    "SqlDefinition":  null,
+    "Rows":  [
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  10890,
+                     "ImporteCarteraOferta":  47452,
+                     "Pais":  "España",
+                     "NomCliente":  "GENERACION EOLICA CASTILLA LA MANCHA S.A.",
+                     "DesOferta":  "FV Hibridación Gecama",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  860675.33894
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  19166,
+                     "Pais":  "España",
+                     "NomCliente":  "ADIF ALTA VELOCIDAD",
+                     "DesOferta":  "Proy. constructivo de las instalaciones de línea aérea de contacto y sistemas asociados para el tramo Vitoria- Bilbao-San Sebastián de la línea de alta velocidad Madrid-Valladolid- Norte 3.25/20830.0037",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  860675.33894
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  73569,
+                     "ImporteCarteraOferta":  16000,
+                     "Pais":  "España",
+                     "NomCliente":  "NEDGIA CATALUNYA SA",
+                     "DesOferta":  "* Cartera diferida CM 2026. 24-044-00010_MTO GAS_CM-RFP24_RGE_NMC_NEDGIA",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  860675.33894
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  12189,
+                     "ImporteCarteraOferta":  13850,
+                     "Pais":  "España",
+                     "NomCliente":  "RED ELECTRICA DE ESPAÑA, S.A.U.",
+                     "DesOferta":  "ACUERDO MARCO REE 2023",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  860675.33894
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  7472,
+                     "ImporteCarteraOferta":  467186,
+                     "Pais":  "Letonia",
+                     "NomCliente":  "RB Rail AS",
+                     "DesOferta":  "RAIL BALTICA ENERGY SUBSYSTEM DESIGN AND BUILD",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  467186.50700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  166582,
+                     "Pais":  "Estados Unidos",
+                     "NomCliente":  "PSE\u0026G",
+                     "DesOferta":  "Obras varias Hawkeye",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  353937.77600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  510424,
+                     "ImporteCarteraOferta":  26000,
+                     "Pais":  "Estados Unidos",
+                     "NomCliente":  "CON EDISON",
+                     "DesOferta":  "* Cartera diferida CM 2026. AACONED GAS QUEENS 2018",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  353937.77600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  454129,
+                     "ImporteCarteraOferta":  26000,
+                     "Pais":  "Estados Unidos",
+                     "NomCliente":  "CON EDISON",
+                     "DesOferta":  "* Cartera diferida CM 2026. CONED WESTCHERTER GAS 2018",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  353937.77600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  42970,
+                     "ImporteCarteraOferta":  87780,
+                     "Pais":  "Brasil",
+                     "NomCliente":  "ISA CTEEP \u0026#26; COMPANHIA DE",
+                     "DesOferta":  "Lote 7 del Leilão 01/2023 LT y subestaciones",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  314422.10700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  84832,
+                     "ImporteCarteraOferta":  81984,
+                     "Pais":  "Brasil",
+                     "NomCliente":  "ISA CTEEP \u0026#26; COMPANHIA DE",
+                     "DesOferta":  "Lote 1 del Leilão 01/2023 LT y subestaciones",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  314422.10700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  75885,
+                     "ImporteCarteraOferta":  46859,
+                     "Pais":  "Brasil",
+                     "NomCliente":  "CELEO REDES BRASIL, SA",
+                     "DesOferta":  "LT 500KV Marimbondo 2 -Campinas C1,CS",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  314422.10700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  526871,
+                     "ImporteCarteraOferta":  45911,
+                     "Pais":  "Brasil",
+                     "NomCliente":  "ENEVA",
+                     "DesOferta":  "Construcción Complejo Azulão 950 MW",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  314422.10700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  23291,
+                     "Pais":  "Brasil",
+                     "NomCliente":  "CELEO REDES BRASIL, SA",
+                     "DesOferta":  "Leilão de Transmisión 002/2023 - Lote 3 - Subestaciones y LTs - Energia",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  314422.10700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  8000,
+                     "ImporteCarteraOferta":  59693,
+                     "Pais":  "Chile",
+                     "NomCliente":  "ATLAS RENEWABLE ENERGY",
+                     "DesOferta":  "COPIAPÓ PV + BESS",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  186234.98400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  51141,
+                     "Pais":  "Chile",
+                     "NomCliente":  "CHARRUA TRANSM. ENERGIA",
+                     "DesOferta":  "SE. Decreto Nº4 obras de ampliaciones Sistema Nacional: Proyecto 5",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  186234.98400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  40176,
+                     "Pais":  "Chile",
+                     "NomCliente":  "CHARRUA TRANSM. ENERGIA",
+                     "DesOferta":  "TENDIDO SEGUNDO CIRCUITO 500KV CHARRUA - ANCOA",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  186234.98400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  29396,
+                     "Pais":  "Chile",
+                     "NomCliente":  "CELEO REDES CHILE LTDA.",
+                     "DesOferta":  "Nueva S/E Margarita y Nueva Línea 2x110 kV Margarita - Agua Santa DGGR",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  186234.98400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  55049,
+                     "ImporteCarteraOferta":  29724,
+                     "Pais":  "Italia",
+                     "NomCliente":  "ENEL DISTRIBUZIONE SPA",
+                     "DesOferta":  "* Cartera diferida CM 2026. JA10164065 - MULTISERVIZIO PROV. AL-AT-BI-VC",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  181906.11300
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  95989,
+                     "ImporteCarteraOferta":  20170,
+                     "Pais":  "Italia",
+                     "NomCliente":  "ENEL DISTRIBUZIONE SPA",
+                     "DesOferta":  "* Cartera diferida CM 2026. CABINE PRIMARIE - PIEMONTE E LIGURIA - JA10137327",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  181906.11300
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  8860,
+                     "ImporteCarteraOferta":  44931,
+                     "Pais":  "República Dominicana",
+                     "NomCliente":  "EMPRESA DE TRANSMISION ELECTRICA DOMINICANA (ETED)",
+                     "DesOferta":  "LICITACIÓN PÚBLICA NACIONAL ETED-CCC-LPN-2023-0040: CONSTRUCCIÓN DE LA SUBESTACIÓN AZUA II 345/138 KV Y AMPLIACIÓN SUBESTACIÓN PUNTA CATALINA 345 KV",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  177317.67600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  42446,
+                     "Pais":  "República Dominicana",
+                     "NomCliente":  "GENERADORA SAN FELIPE LIMITED PARTNERSHIP",
+                     "DesOferta":  "LL.TT. 345 y138 kV GSF-Nueva SE Boca Chica–SE Cabreto",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  177317.67600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  27093,
+                     "ImporteCarteraOferta":  23591,
+                     "Pais":  "República Dominicana",
+                     "NomCliente":  "EMPRESA DE TRANSMISION ELECTRICA DOMINICANA (ETED)",
+                     "DesOferta":  "CONSTRUCCIÓN DE LA LINEA DE TRANSMISIÓN 345KV PUNTA CATALINA - AZUA II",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  177317.67600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  14923,
+                     "Pais":  "República Dominicana",
+                     "NomCliente":  "CONS.ENERG P.CANA MACAO",
+                     "DesOferta":  "L.T. 69 kV Macao - Sumidero Nisibon (Post.Met)",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  177317.67600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  40000,
+                     "Pais":  "Angola",
+                     "NomCliente":  "VOITH HYDRO",
+                     "DesOferta":  "Serviços de equipamento e gestão do acampamento do AH de Caculo Cabaça",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  107055.23400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  62364,
+                     "ImporteCarteraOferta":  31183,
+                     "Pais":  "Angola",
+                     "NomCliente":  "RNT EP",
+                     "DesOferta":  "LT 220 kV Lomaum - Belen do Dango y CH",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  107055.23400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  27590,
+                     "Pais":  "Angola",
+                     "NomCliente":  "REDE NACIONAL DE TRANSPORTE, EMPRESA PÚBLICA",
+                     "DesOferta":  "TRANSMISIÓN LOMAUN-HUAMBO 220kV",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  107055.23400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  115005,
+                     "ImporteCarteraOferta":  56814,
+                     "Pais":  "Perú",
+                     "NomCliente":  "CELEO CONCESIONES E INVERSIONES SL",
+                     "DesOferta":  "Línea de Transmisión 500 kV Subestación Piura Nueva - Frontera + SE",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  83206.76000
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  5650,
+                     "ImporteCarteraOferta":  13981,
+                     "Pais":  "Perú",
+                     "NomCliente":  "ZELESTRA INGENIERIA",
+                     "DesOferta":  "SE elevadora 220 kV Babilonia y ampliación San José_D. Energía",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  83206.76000
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  1173815,
+                     "ImporteCarteraOferta":  36080,
+                     "Pais":  "Australia",
+                     "NomCliente":  "TRANSGRID",
+                     "DesOferta":  "Project Energy Connect (RFT Phase B)",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  74345.84500
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  11500,
+                     "ImporteCarteraOferta":  26942,
+                     "Pais":  "Australia",
+                     "NomCliente":  "ENGIE AUSTRALIA \u0026 NEW ZELAND",
+                     "DesOferta":  "BOP BESS PELICAN POINT 200mw/400mwH",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  74345.84500
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  8000,
+                     "ImporteCarteraOferta":  30904,
+                     "Pais":  "Reino Unido",
+                     "NomCliente":  "FAUGHAN STABILITY LTD",
+                     "DesOferta":  "COOLKEERAGH LOW CARBON INERTIA SYSTEM PROJECT",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  57887.39400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  12000,
+                     "ImporteCarteraOferta":  24546,
+                     "Pais":  "Reino Unido",
+                     "NomCliente":  "BUSH HILL STABILITY LIMITED",
+                     "DesOferta":  "COLERAINE LOW CARBON INERTIA SYSTEM PROJECT",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  57887.39400
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  80684,
+                     "ImporteCarteraOferta":  48946,
+                     "Pais":  "Nueva Zelanda",
+                     "NomCliente":  "HARMONY ENERGY NEW ZEALAND",
+                     "DesOferta":  "EW TAHUEI",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  48946.41800
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  10,
+                     "ImporteCarteraOferta":  20987,
+                     "Pais":  "Alemania",
+                     "NomCliente":  "TENNET TSO GMBH",
+                     "DesOferta":  "LAT380KV AUDORF - KASSOE. LOS 2 (RENOV) Handewitt - Jardelung",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  40545.36800
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Portugal",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  37517.10300
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Irlanda",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  22857.43600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "México",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  19390.25700
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  23560,
+                     "ImporteCarteraOferta":  18183,
+                     "Pais":  "Dinamarca",
+                     "NomCliente":  "FEMERN A/S",
+                     "DesOferta":  "Femern tunnel (Energy)",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  18183.44900
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Uruguay",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  10155.66900
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Colombia",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  5311.07900
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Lituania",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  4492.20000
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Honduras",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  3048.00000
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Argentina",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  2454.63000
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Omán",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  1296.99500
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Camerún",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  1100.00000
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Guinea",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  948.00200
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Zambia",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  620.17600
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Panamá",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  68.19500
+                 },
+                 {
+                     "AnioInforme":  2025,
+                     "ImporteContratadoOferta":  0,
+                     "ImporteCarteraOferta":  0,
+                     "Pais":  "Andorra",
+                     "NomCliente":  "",
+                     "DesOferta":  "",
+                     "MesInforme":  12,
+                     "ImporteCarteraPais":  60.00000
+                 }
+             ],
+    "Columns":  [
+                    {
+                        "COLUMN_NAME":  "AnioInforme",
+                        "DATA_TYPE":  3,
+                        "CHARACTER_MAXIMUM_LENGTH":  null,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  10,
+                        "NUMERIC_SCALE":  null,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "DesOferta",
+                        "DATA_TYPE":  130,
+                        "CHARACTER_MAXIMUM_LENGTH":  0,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  null,
+                        "NUMERIC_SCALE":  null,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "ImporteCarteraOferta",
+                        "DATA_TYPE":  131,
+                        "CHARACTER_MAXIMUM_LENGTH":  null,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  18,
+                        "NUMERIC_SCALE":  0,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "ImporteCarteraPais",
+                        "DATA_TYPE":  131,
+                        "CHARACTER_MAXIMUM_LENGTH":  null,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  28,
+                        "NUMERIC_SCALE":  5,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "ImporteContratadoOferta",
+                        "DATA_TYPE":  131,
+                        "CHARACTER_MAXIMUM_LENGTH":  null,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  18,
+                        "NUMERIC_SCALE":  0,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "MesInforme",
+                        "DATA_TYPE":  3,
+                        "CHARACTER_MAXIMUM_LENGTH":  null,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  10,
+                        "NUMERIC_SCALE":  null,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "NomCliente",
+                        "DATA_TYPE":  130,
+                        "CHARACTER_MAXIMUM_LENGTH":  0,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  null,
+                        "NUMERIC_SCALE":  null,
+                        "IS_AUTOINCREMENT":  false
+                    },
+                    {
+                        "COLUMN_NAME":  "Pais",
+                        "DATA_TYPE":  130,
+                        "CHARACTER_MAXIMUM_LENGTH":  0,
+                        "IS_NULLABLE":  true,
+                        "NUMERIC_PRECISION":  null,
+                        "NUMERIC_SCALE":  null,
+                        "IS_AUTOINCREMENT":  false
+                    }
+                ],
+    "PrimaryKeys":  {
+
+                    },
+    "Type":  "TABLE",
+    "SourceProvider":  "Microsoft.ACE.OLEDB.16.0",
+    "TargetName":  "rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises"
+}

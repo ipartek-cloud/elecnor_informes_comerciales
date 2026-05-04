@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(C:\\TrabajoVBNet\\Elecnor\\elecnor_informes_comerciales\\informes_comerciales\\../**)"
-    ]
-  }
-}

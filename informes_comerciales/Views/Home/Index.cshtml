@@ -40,6 +40,13 @@
                         </select>
                     </div>
                     <div class="col-auto ms-auto">
+                        <label for="inputLimiteMonto" class="col-form-label fw-bold">Límite Monto (miles)</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" class="form-control" id="inputLimiteMonto" name="inputLimiteMonto" 
+                               value="15000" step="1000" style="width: 120px;" aria-label="Límite de monto">
+                    </div>
+                    <div class="col-auto">
                         <label for="cmbSubDireccionGeneral" class="col-form-label fw-bold">SubDirección</label>
                     </div>
                     <div class="col-auto">
@@ -220,8 +227,8 @@
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_ai')"
                                     data-input-pag="inputPaginaContratacionesAI"
-                                    aria-label="Ver informe Contrataciones Asociada a Inversion">
-                                Contrataciones Asociada a Inversion
+                                    aria-label="Ver informe Contratación Asociada a Inversión">
+                                Contratación Asociada a Inversión
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContratacionesAI"
@@ -532,6 +539,29 @@
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaisesRelevantesComite"
                                    name="inputPaginaPaisesRelevantesComite" value="9" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                    </div>
+
+                    <!-- FILA 10 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Cartera Contratación (Detalle) Nacional - Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle')"
+                                    data-mercado="Todo"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="1000"
+                                    data-informe="9.1"
+                                    data-input-pag="inputPaginaCarteraContratacionDetalle"
+                                    aria-label="Ver informe Cartera Contratación (Detalle) Nacional - Internacional">
+                                Cartera Contratación (Detalle) Nacional - Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraContratacionDetalle"
+                                   name="inputPaginaCarteraContratacionDetalle" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
                         <!-- Vacío Derecha -->
