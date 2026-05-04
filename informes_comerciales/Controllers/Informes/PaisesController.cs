@@ -24,7 +24,8 @@ public class PaisesController : ControllerBase
     /// - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes) -> "Países Relevantes (Mercado Internacional)"
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> Get(int anio, int mes, int? nroPagina, int umbral = 0)
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina, [FromQuery] int umbral = 0)
     {
         // Validaciones básicas
         if (anio > DateTime.Now.Year + 1)
@@ -43,7 +44,8 @@ public class PaisesController : ControllerBase
     /// Título: "Países Relevantes". Umbral fijo: 100000 (relevantes).
     /// </summary>
     [HttpGet("paises_all")]
-    public async Task<IActionResult> GetPaisesAll(int anio, int mes, int? nroPagina)
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    public async Task<IActionResult> GetPaisesAll([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
     {
         // Validaciones básicas
         if (anio > DateTime.Now.Year + 1)

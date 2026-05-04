@@ -24,7 +24,7 @@ public class InformeRankingContratacionClientesService
     /// <summary>
     /// Genera los datos del informe y retorna el DTO estructurado para la vista.
     /// </summary>
-    public async Task<RankingContratacionClientesResponseDto> ObtenerRankingAsync(string mercado, int anio, int mes)
+    public async Task<RankingContratacionClientesResponseDto> ObtenerRankingAsync(string mercado, int anio, int mes, int? nroPagina)
     {
         // 1. Ejecutar los generadores en paralelo (usando conexiones independientes administradas en Repo)
         await Task.WhenAll(
@@ -86,7 +86,7 @@ public class InformeRankingContratacionClientesService
             TotalMercado = totalMercadoReal,
             Datos = datosDto,
             Meta = new { 
-                Filtros = new { anio = anio, mes = mes, mercado = mercado },
+                Filtros = new { anio = anio, mes = mes, mercado = mercado, nroPagina = nroPagina },
                 titulo = $"Ranking de Contratación {mercado}"
             }
         };

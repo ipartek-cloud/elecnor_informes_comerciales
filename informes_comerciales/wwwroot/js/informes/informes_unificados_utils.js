@@ -241,7 +241,8 @@ export async function imprimirInformeUnificado(opciones) {
         getHtmlEncabezado,
         renderContenido,
         modoAgrupacion = null,
-        margenes = null
+        margenes = null,
+        nombreInforme = 'unificado'
     } = opciones;
 
     if (!informeGlobalData) return;
@@ -256,10 +257,21 @@ export async function imprimirInformeUnificado(opciones) {
     const modoNormalizado = (typeof modoAgrupacion === 'string') ? modoAgrupacion.trim().toUpperCase() : '';
     const esPaginaUnica = (modoNormalizado === 'NONE');
 
-    // Caso especial: informe de página única (modoAgrupacion = 'NONE')
+    // Renderizado para modo de impresión/PDF
     if (esPaginaUnica) {
         const html = `
-            <div class="rpt-paper rpt-paper--print" data-informe="una-pagina"${styleVars}>
+            <style>
+                @media print {
+                    .rpt-paper--${nombreInforme} .rpt-header {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    .rpt-paper--${nombreInforme} .report-body {
+                        margin-top: 10px !important;
+                    }
+                }
+            </style>
+            <div class="rpt-paper rpt-paper--print rpt-paper--${nombreInforme}" data-informe="${nombreInforme}"${styleVars}>
                 ${getHtmlEncabezado()}
                 <div class="report-body">
                     ${renderContenido()}
@@ -292,14 +304,27 @@ export async function imprimirInformeUnificado(opciones) {
 
     if (!Array.isArray(items) || items.length === 0) return;
 
-    const html = items.map((item, idx) => `
-        <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''}"${styleVars}>
-            ${getHtmlEncabezado(item)}
-            <div class="report-body">
-                ${renderContenido(item)}
+    const html = `
+        <style>
+            @media print {
+                .rpt-paper--${nombreInforme} .rpt-header {
+                    margin-bottom: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                .rpt-paper--${nombreInforme} .report-body {
+                    margin-top: 10px !important;
+                }
+            }
+        </style>
+        ${items.map((item, idx) => `
+            <div class="rpt-paper rpt-paper--print ${idx < items.length - 1 ? 'rpt-page-break' : ''} rpt-paper--${nombreInforme}" data-informe="${nombreInforme}"${styleVars}>
+                ${getHtmlEncabezado(item)}
+                <div class="report-body">
+                    ${renderContenido(item)}
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('')}
+    `;
 
     capaPrint.innerHTML = html;
     document.body.appendChild(capaPrint);

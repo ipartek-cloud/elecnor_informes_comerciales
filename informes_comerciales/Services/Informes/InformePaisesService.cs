@@ -37,7 +37,8 @@ public class InformePaisesService
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral },
                 FechaGeneracion = DateTime.Now,
-                Usuario = "Sistema"
+                Usuario = "Sistema",
+                NroPagina = nroPagina
             }
         };
 
@@ -67,7 +68,8 @@ public class InformePaisesService
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = 100000 },
                 FechaGeneracion = DateTime.Now,
-                Usuario = "Sistema"
+                Usuario = "Sistema",
+                NroPagina = nroPagina
             }
         };
 

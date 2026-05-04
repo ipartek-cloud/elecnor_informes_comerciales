@@ -22,7 +22,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             _informeRepository = informeRepository;
         }
 
-        public async Task<MercadosDGResponseDto> ObtenerInformeMercadosDGAsync(int anio, int mes)
+        public async Task<MercadosDGResponseDto> ObtenerInformeMercadosDGAsync(int anio, int mes, int? nroPagina)
         {
             var taskMercados = _informeRepository.ObtenerMercadosAsync(anio, mes);
             var taskCarteraDiferida = _informeRepository.ObtenerMercadosDGCarteraDiferidaAsync(anio, mes);
@@ -38,8 +38,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 {
                     Titulo = "Mercados",
                     Descripcion = "Informe de Contratación — D.G. Infraestructuras",
-                    Filtros = new { anio = anio, mes = mes },
-                    FechaGeneracion = DateTime.Now
+                    Filtros = new { anio = anio, mes = mes, nroPagina = nroPagina },
+                    FechaGeneracion = DateTime.Now,
+                    NroPagina = nroPagina
                 }
             };
 

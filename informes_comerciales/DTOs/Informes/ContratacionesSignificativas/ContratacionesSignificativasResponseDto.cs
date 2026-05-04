@@ -44,6 +44,7 @@ public class ContSigFiltrosDto
     public int Mes { get; set; }
     public string Mercado { get; set; } = string.Empty;
     public string CodSubDirGeneral { get; set; } = string.Empty;
+    public int? NroPagina { get; set; }
 }
 
 /// <summary>

@@ -25,7 +25,7 @@ public class InformeGerenciasService
     /// <summary>
     /// Obtiene el informe completo de Gerencias con todos los cálculos aplicados.
     /// </summary>
-    public async Task<GerenciasResponseDto> ObtenerInformeGerenciasAsync(int anio, int mes)
+    public async Task<GerenciasResponseDto> ObtenerInformeGerenciasAsync(int anio, int mes, int? nroPagina)
     {
         var datosPlanos = await _informeRepository.ObtenerGerenciasAsync(anio, mes);
 
@@ -35,9 +35,10 @@ public class InformeGerenciasService
             {
                 Titulo = "Gerencias",
                 Descripcion = "Informe de Contratación, Objetivos y Cartera por Gerencia",
-                Filtros = new { Anio = anio, Mes = mes },
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                 FechaGeneracion = DateTime.Now,
-                Usuario = "Sistema"
+                Usuario = "Sistema",
+                NroPagina = nroPagina
             }
         };
 

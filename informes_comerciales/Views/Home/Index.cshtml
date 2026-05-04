@@ -336,112 +336,190 @@
             </div>
         </div>
 
-        <!-- ==================== CARD 3: COMITE ==================== -->
+        <!-- ==================== CARD 3: COMITÉ ==================== -->
         <div class="card mb-4 rpt-index-card">
             <div class="card-header rpt-index-header text-center">
-                <h5 class="mb-0" style="font-family: Verdana;">COMITE</h5>
+                <h5 class="mb-0" style="font-family: Verdana;">COMITÉ</h5>
             </div>
             <div class="card-body p-0">
                 <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">
                     
-                    <!-- D.G. INFRAESTRUCTURAS X MERCADO -->
+                    <!-- ENCABEZADOS DE COLUMNA -->
+                    <div class="d-flex align-items-center gap-2 w-100 mb-2">
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <div class="rpt-header-index-col text-center w-100">
+                                Comité Elecnor
+                            </div>
+                        </div>
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <div class="rpt-header-index-col text-center w-100">
+                                Comité Internacional
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILA 1 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- Mercados -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'mercados_dg')"
+                                    data-input-pag="inputPaginaComiteMercados"
                                     aria-label="Ver informe Mercados">
                                 Mercados
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaComiteMercados"
+                                   name="inputPaginaComiteMercados" value="1" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
-                    <!-- GERENCIAS -->
+                    <!-- FILA 2 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- Gerencias -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'gerencias')"
+                                    data-input-pag="inputPaginaGerencias"
                                     aria-label="Ver informe Gerencias">
                                 Gerencias
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaGerencias"
+                                   name="inputPaginaGerencias" value="2" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
-                    <!-- ACTIVIDADES OBJETIVOS -->
+                    <!-- FILA 3 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- Actividades Objetivos -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'actividades_objetivos')"
+                                    data-input-pag="inputPaginaActividadesObjetivos"
                                     aria-label="Ver informe Actividades Objetivos">
                                 Actividades Objetivos
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaActividadesObjetivos"
+                                   name="inputPaginaActividadesObjetivos" value="3" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
-                    <!-- S.G. DELEGACIONES MERCADOS -->
+                    <!-- FILA 4 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- S.G. DELEGACIONES MERCADOS -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'mercados_sg_delegaciones')"
+                                    data-input-pag="inputPaginaMercadosSGDelegaciones"
                                     aria-label="Ver informe S.G. Delegaciones x Mercados">
                                 S.G. Delegaciones x Mercados
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaMercadosSGDelegaciones"
+                                   name="inputPaginaMercadosSGDelegaciones" value="4" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
-                    <!-- RANKING CONTRATACIÓN NACIONAL + INTERNACIONAL -->
+                    <!-- FILA 5 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- RANKING CONTRATACIÓN NACIONAL -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                     data-mercado="Nacional"
                                     data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaRankingNacionalComite"
                                     aria-label="Ver informe Ranking Contratación Nacional">
                                 Ranking Contratación Nacional
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaRankingNacionalComite"
+                                   name="inputPaginaRankingNacionalComite" value="5" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- RANKING CONTRATACIÓN INTERNACIONAL -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                     data-mercado="Internacional"
                                     data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaRankingInternacionalComite"
                                     aria-label="Ver informe Ranking Contratación Internacional">
                                 Ranking Contratación Internacional
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaRankingInternacionalComite"
+                                   name="inputPaginaRankingInternacionalComite" value="5" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
                     </div>
 
-                    <!-- CONTRATACIONES SIGNIFICATIVAS NACIONAL + INTERNACIONAL -->
+                    <!-- FILA 6 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- CONTRATACIONES SIGNIFICATIVAS NACIONAL -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
                                     data-mercado="Nacional"
                                     data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaContratacionesSignificativasNacionalComite"
                                     aria-label="Ver informe Contrataciones Significativas Mercado Nacional">
                                 Contrataciones Significativas Mercado Nacional
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContratacionesSignificativasNacionalComite"
+                                   name="inputPaginaContratacionesSignificativasNacionalComite" value="6" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- CONTRATACIONES SIGNIFICATIVAS INTERNACIONAL -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
                                     data-mercado="Internacional"
                                     data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaContratacionesSignificativasInternacionalComite"
                                     aria-label="Ver informe Contrataciones Significativas Mercado Internacional">
                                 Contrataciones Significativas Mercado Internacional
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaContratacionesSignificativasInternacionalComite"
+                                   name="inputPaginaContratacionesSignificativasInternacionalComite" value="6" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
                     </div>
 
-                    <!-- PAÍSES RELEVANTES (NACIONAL + INTERNACIONAL) -->
+                    <!-- FILA 7 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <div class="input-group rpt-input-group-index">
-                            <button class="btn rpt-btn-light rpt-btn-index rpt-btn-index-alone flex-fill text-start" type="button"
+                        <!-- PAÍSES RELEVANTES -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises_all')"
                                     data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaPaisesRelevantesComite"
                                     aria-label="Ver informe Países Relevantes">
                                 Países Relevantes
                             </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaPaisesRelevantesComite"
+                                   name="inputPaginaPaisesRelevantesComite" value="7" min="1"
+                                   aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
                 </div>
             </div>

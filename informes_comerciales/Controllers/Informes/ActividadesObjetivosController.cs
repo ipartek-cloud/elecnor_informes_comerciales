@@ -21,15 +21,15 @@ public class ActividadesObjetivosController : ControllerBase
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes" })]
-    public async Task<IActionResult> Get(int anio, int mes)
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
     {
         try
         {
             if (anio > DateTime.Now.Year)
                 return BadRequest("El año de consulta no puede ser superior al año actual.");
 
-            var result = await _service.ObtenerInformeAsync(anio, mes);
+            var result = await _service.ObtenerInformeAsync(anio, mes, nroPagina);
 
             if (result == null || result.Paises.Count == 0)
                 return NotFound("No se encontraron resultados para el periodo seleccionado.");

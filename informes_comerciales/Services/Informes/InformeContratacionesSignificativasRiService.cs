@@ -20,7 +20,7 @@ public class InformeContratacionesSignificativasRiService
         await _repository.EjecutarSPObrasRPTAsync(anio, mes);
     }
 
-    public async Task<ContratacionesSignificativasRiResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral)
+    public async Task<ContratacionesSignificativasRiResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina = null)
     {
         // ═══════════════════════════════════════════════════════
         // 1. Definir umbral (2M para RI)
@@ -45,7 +45,7 @@ public class InformeContratacionesSignificativasRiService
         {
             return new ContratacionesSignificativasRiResponseDto
             {
-                Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral),
+                Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral, nroPagina),
                 Datos        = new(),
                 TotalGeneral = 0m,
                 DatosMes     = new()
@@ -81,24 +81,26 @@ public class InformeContratacionesSignificativasRiService
         // ═══════════════════════════════════════════════════════
         return new ContratacionesSignificativasRiResponseDto
         {
-            Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral),
+            Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral, nroPagina),
             Datos        = datosDto,
             TotalGeneral = totalGeneral,
             DatosMes     = datosMesDto
         };
     }
 
-    private static MetaContSigRiDto _crearMeta(int anio, int mes, string mercado, string codSubDirGeneral) => new()
+    private static MetaContSigRiDto _crearMeta(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina) => new()
     {
         Titulo          = $"Contrataciones Significativas Mercado {mercado}",
         UmbralTexto     = "Contratación > 2 M", // Enviamos el literal dinámico
         FechaGeneracion = DateTime.Now,
+        NroPagina       = nroPagina,
         Filtros         = new ContSigFiltrosDto
         {
             Anio             = anio,
             Mes              = mes,
             Mercado          = mercado,
-            CodSubDirGeneral = codSubDirGeneral
+            CodSubDirGeneral = codSubDirGeneral,
+            NroPagina        = nroPagina
         }
     };
 }

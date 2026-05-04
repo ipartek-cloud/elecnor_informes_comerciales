@@ -13,7 +13,10 @@ const estado = crearEstadoInforme();
  */
 export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
   try {
-    const url = `/api/ActividadesObjetivos?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+    let url = `/api/ActividadesObjetivos?anio=${anio}&mes=${mes}`;
+    if (nroPagina) url += `&nroPagina=${nroPagina}`;
+    url += `&_=${Date.now()}`;
+
     estado.nroPagina = nroPagina;
     estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
     estado.mostrarTitulo = mostrarTitulo;
@@ -37,7 +40,7 @@ function _renderizarPagina() {
   if (!container) return;
 
   container.innerHTML = `
-  <div class="${RPT_CLASSES.PAPER}" data-informe="actividades_objetivos" role="main" ${getStyleVars(estado.margenes)}>
+  <div class="${RPT_CLASSES.PAPER} rpt-paper--actividades_objetivos" data-informe="actividades_objetivos" role="main" ${getStyleVars(estado.margenes)}>
     ${_getHtmlEncabezado()}
     <div class="report-body rpt-cmai-mt-standard">
       ${_renderCuerpoInforme()}
@@ -186,6 +189,7 @@ async function _imprimirInforme() {
     getHtmlEncabezado: _getHtmlEncabezado,
     renderContenido: _renderCuerpoInforme,
     modoAgrupacion: 'NONE',
-    margenes: estado.margenes
+    margenes: estado.margenes,
+    nombreInforme: 'actividades_objetivos'
   });
 }

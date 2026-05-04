@@ -6,7 +6,9 @@ const estado = crearEstadoInforme();
 export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostrarTitulo }) {
     try {
         const subDir = codSubDir || '221';
-        const url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&codSubDirGeneral=${encodeURIComponent(subDir)}&_=${Date.now()}`;
+        let url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&codSubDirGeneral=${encodeURIComponent(subDir)}`;
+        if (nroPagina) url += `&nroPagina=${nroPagina}`;
+        url += `&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);

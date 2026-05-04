@@ -15,7 +15,7 @@ public class InformeMercadosSGDelegacionesService
         _repository = repository;
     }
 
-    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, string codSubDirGeneral = "221")
+    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, string codSubDirGeneral = "221", int? nroPagina = null)
     {
         var datosPlanos = await _repository.ObtenerMercadosSGDelegacionesAsync(anio, mes, codSubDirGeneral, CodSdgOrdenDel);
 
@@ -25,9 +25,10 @@ public class InformeMercadosSGDelegacionesService
             {
                 Titulo = "S.G. Delegaciones x Mercados",
                 Descripcion = "Direccion General - Informe de Contratacion por Delegaciones",
-                Filtros = new { Anio = anio, Mes = mes },
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                 FechaGeneracion = DateTime.Now,
-                Usuario = "Sistema"
+                Usuario = "Sistema",
+                NroPagina = nroPagina
             }
         };
 

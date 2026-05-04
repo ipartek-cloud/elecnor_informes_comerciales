@@ -27,4 +27,5 @@ public class MetaContSigRiDto
     public string UmbralTexto { get; set; } = "> 2 M"; // Para pintar dinámicamente en el frontend
     public ContSigFiltrosDto Filtros { get; set; } = new();
     public DateTime FechaGeneracion { get; set; } = DateTime.Now;
+    public int? NroPagina { get; set; }
 }

@@ -386,7 +386,7 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<PaisesPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
@@ -471,7 +471,7 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<PaisesPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
@@ -539,7 +539,7 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 120);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<ActividadPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
@@ -625,7 +625,7 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
 
             var resultado = (await _connection.QueryAsync<ActividadObjetivoPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
@@ -676,7 +676,7 @@ public class InformeRepository
             Mes = mes,
             Importe = importe,
             Pais = pais
-        }, commandTimeout: 60)).ToList();
+        }, commandTimeout: 300)).ToList();
     }
 
     public async Task EjecutarSPObrasAsync(int anio, int mes)
@@ -689,7 +689,7 @@ public class InformeRepository
         await conn.ExecuteAsync(sqlExec, new {
             Anio = anio,
             Mes = mes
-        }, commandTimeout: 120);
+        }, commandTimeout: 300);
     }
 
     /// <summary>
@@ -705,7 +705,7 @@ public class InformeRepository
         await conn.ExecuteAsync(sqlExec, new {
             Anio = anio,
             Mes = mes
-        }, commandTimeout: 120);
+        }, commandTimeout: 300);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -758,7 +758,7 @@ public class InformeRepository
                 Importe = importe,
                 Pais = pais
             },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
     // ═══════════════════════════════════════════════════════════════════════════
@@ -810,7 +810,7 @@ public class InformeRepository
                 Importe = importe,
                 Pais = pais
             },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -864,7 +864,7 @@ public class InformeRepository
                 Importe = importe,
                 Pais = pais
             },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -907,7 +907,7 @@ public class InformeRepository
         return (await conn.QueryAsync<ContratacionesAIPoco>(
             sqlSelect,
             new { Anio = anio, Mes = mes, Importe = importe },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -929,7 +929,7 @@ public class InformeRepository
         await conn.ExecuteAsync(sqlExec, new {
             Anio = anio,
             Mes = mes
-        }, commandTimeout: 120);
+        }, commandTimeout: 300);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -973,7 +973,7 @@ public class InformeRepository
         return (await conn.QueryAsync<ContratacionesAIPoco>(
             sqlSelect,
             new { Anio = anio, Mes = mes, Importe = importe },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -1192,7 +1192,7 @@ public class InformeRepository
         return (await conn.QueryAsync<RankingContratacionClientesPoco>(
             sqlSelect,
             new {Importe = importe },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
     
@@ -1236,7 +1236,7 @@ public class InformeRepository
         return (await conn.QueryAsync<RankingContratacionClientesDesglosePoco>(
             sql, 
             new { Mercado = mercado, Año = anio, Mes = mes }, 
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -1250,7 +1250,7 @@ public class InformeRepository
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
-        return await conn.ExecuteScalarAsync<decimal>(sqlSum, new { Mercado = mercado, Anio = anio }, commandTimeout: 30);
+        return await conn.ExecuteScalarAsync<decimal>(sqlSum, new { Mercado = mercado, Anio = anio }, commandTimeout: 300);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1320,7 +1320,7 @@ public class InformeRepository
                                                                                 Mercado          = mercado,
                                                                                 CodSubDirGeneral = codSubDirGeneral
                                                                             },
-                                                                            commandTimeout: 60
+                                                                            commandTimeout: 300
                                                                         )).ToList();
     }
 
@@ -1373,7 +1373,7 @@ public class InformeRepository
                 CodSubDirGeneral = codSubDirGeneral,
                 Importe          = importe
             },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -1427,7 +1427,7 @@ public class InformeRepository
                 CodSubDirGeneral = codSubDirGeneral,
                 Importe          = importe
             },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -1466,7 +1466,7 @@ public class InformeRepository
                                                                                 Mercado          = mercado,
                                                                                 CodSubDirGeneral = codSubDirGeneral
                                                                             },
-                                                                            commandTimeout: 60
+                                                                            commandTimeout: 300
                                                                         )).ToList();
     }
 
@@ -1511,7 +1511,7 @@ public class InformeRepository
                 CodSubDirGeneral = codSubDirGeneral,
                 Importe          = importe
             },
-            commandTimeout: 60
+            commandTimeout: 300
         )).ToList();
     }
 
@@ -1576,9 +1576,9 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction);
-            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction);
-            var resultado = (await _connection.QueryAsync<GerenciasPoco>(sqlSelect, parametros, transaction)).ToList();
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction, commandTimeout: 300);
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction, commandTimeout: 300);
+            var resultado = (await _connection.QueryAsync<GerenciasPoco>(sqlSelect, parametros, transaction, commandTimeout: 300)).ToList();
 
             transaction.Commit();
             return resultado;
@@ -1699,7 +1699,7 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, parametros, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 60);
+            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
 
             var resultado = (await _connection.QueryAsync<MercadoSGDelegacionPoco>(sqlSelect, parametros, transaction: transaction)).ToList();

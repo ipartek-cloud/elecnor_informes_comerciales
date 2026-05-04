@@ -159,15 +159,6 @@ table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
   .rpt-th-blue {
     page-break-after: avoid !important;
   }
-
-  .rpt-banner-top {
-    height: 25px !important;
-    font-size: 14pt !important;
-  }
-
-  .report-body {
-    margin-top: 1.25rem !important; /* Reducido a la mitad para PDF */
-  }
 }
 
 .rpt-cmai-titulo-container {

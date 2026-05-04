@@ -21,7 +21,7 @@ public class InformeActividadesObjetivosService
     /// <summary>
     /// Obtiene el informe completo de Actividades_Objetivos.
     /// </summary>
-    public async Task<ActividadesObjetivosResponseDto> ObtenerInformeAsync(int anio, int mes)
+    public async Task<ActividadesObjetivosResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina)
     {
         var datosPlanos = await _repository.ObtenerActividadesObjetivosAsync(anio, mes);
 
@@ -31,9 +31,10 @@ public class InformeActividadesObjetivosService
             {
                 Titulo = "Actividades Objetivos",
                 Descripcion = "Consejo Administración - Informe de Contratación con Objetivos",
-                Filtros = new { Anio = anio, Mes = mes },
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina },
                 FechaGeneracion = DateTime.Now,
-                Usuario = "Sistema"
+                Usuario = "Sistema",
+                NroPagina = nroPagina
             }
         };
 

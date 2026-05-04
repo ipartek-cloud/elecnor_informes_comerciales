@@ -20,7 +20,10 @@ const estado = crearEstadoInforme();
  */
 export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo }) {
     try {
-        const url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}&_=${Date.now()}`;
+        let url = `/api/ranking-contratacion-clientes?anio=${anio || 0}&mes=${mes || 0}&mercado=${mercado || 'Nacional'}`;
+        if (nroPagina) url += `&nroPagina=${nroPagina}`;
+        url += `&_=${Date.now()}`;
+        
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;

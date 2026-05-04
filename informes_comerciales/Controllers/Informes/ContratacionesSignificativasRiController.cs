@@ -21,7 +21,8 @@ public class ContratacionesSignificativasRiController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] string mercado = "Nacional", [FromQuery] string codSubDirGeneral = "221")
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] string mercado = "Nacional", [FromQuery] string codSubDirGeneral = "221", [FromQuery] int? nroPagina = null)
     {
         if (anio > DateTime.Now.Year)
             return BadRequest("El año de consulta no puede ser superior al año actual.");
@@ -30,7 +31,7 @@ public class ContratacionesSignificativasRiController : ControllerBase
         if (mes < 1 || mes > 12)
             return BadRequest("El mes debe estar entre 1 y 12.");
 
-        var resultado = await _service.ObtenerInformeAsync(anio, mes, mercado, codSubDirGeneral);
+        var resultado = await _service.ObtenerInformeAsync(anio, mes, mercado, codSubDirGeneral, nroPagina);
         return Ok(resultado);
     }
 

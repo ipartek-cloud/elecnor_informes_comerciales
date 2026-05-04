@@ -34,7 +34,9 @@ const MARGENES_GERENCIA = {
  */
 export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
-        const url = `/api/Gerencias?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+        let url = `/api/Gerencias?anio=${anio}&mes=${mes}`;
+        if (nroPagina) url += `&nroPagina=${nroPagina}`;
+        url += `&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
