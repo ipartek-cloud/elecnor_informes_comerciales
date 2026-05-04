@@ -129,28 +129,28 @@
 
                     <!-- FILA 3 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- Paises Relevantes -->
+                        <!-- Países Relevantes -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises')"
                                     data-umbral="100000"
                                     data-input-pag="inputPaginaPaisesRelevantes"
-                                    aria-label="Ver informe Paises">
-                                Paises
+                                    aria-label="Ver informe Países">
+                                Países
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaisesRelevantes"
                                    name="inputPaginaPaisesRelevantes" value="3" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Paises -->
+                        <!-- Países -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'paises')"
                                     data-umbral="0"
                                     data-input-pag="inputPaginaPaises"
-                                    aria-label="Ver informe Todos los Paises">
-                                Todos los Paises
+                                    aria-label="Ver informe Todos los Países">
+                                Todos los Países
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaises"
@@ -193,8 +193,8 @@
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'contrataciones')"
                                     data-input-pag="inputPaginaContrataciones"
-                                    aria-label="Ver informe Princip Contrataciones Naciona-Internacional">
-                                Princip Contrataciones Naciona-Internacional
+                                    aria-label="Ver informe Principales Contrataciones Nacionales - Internacionales">
+                                Principales Contrataciones Nacionales - Internacionales
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContrataciones"
@@ -286,8 +286,8 @@
                                     onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                     data-input-pag="inputPaginaRankingClientesInternacionales"
                                     data-mercado="Internacional"
-                                    aria-label="Ver informe Ranking Clientes Intenacionales">
-                                Ranking Clientes Intenacionales
+                                    aria-label="Ver informe Ranking Clientes Internacionales">
+                                Ranking Clientes Internacionales
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaRankingClientesInternacionales"
@@ -422,8 +422,8 @@
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'mercados_sg_delegaciones')"
                                     data-input-pag="inputPaginaMercadosSGDelegaciones"
-                                    aria-label="Ver informe S.G. Delegaciones x Mercados">
-                                S.G. Delegaciones x Mercados
+                                    aria-label="Ver informe DG - Unidades Negocio - Delegaciones">
+                                DG - Unidades Negocio - Delegaciones
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaMercadosSGDelegaciones"
@@ -436,40 +436,6 @@
 
                     <!-- FILA 5 -->
                     <div class="d-flex align-items-center gap-2 w-100">
-                        <!-- RANKING CONTRATACIÓN NACIONAL -->
-                        <div class="input-group rpt-input-group-index flex-fill">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
-                                    data-mercado="Nacional"
-                                    data-mostrar-titulo="false"
-                                    data-input-pag="inputPaginaRankingNacionalComite"
-                                    aria-label="Ver informe Ranking Contratación Nacional">
-                                Ranking Contratación Nacional
-                            </button>
-                            <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaRankingNacionalComite"
-                                   name="inputPaginaRankingNacionalComite" value="5" min="1"
-                                   aria-label="Página" title="Página inicial">
-                        </div>
-                        <!-- RANKING CONTRATACIÓN INTERNACIONAL -->
-                        <div class="input-group rpt-input-group-index flex-fill">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
-                                    data-mercado="Internacional"
-                                    data-mostrar-titulo="false"
-                                    data-input-pag="inputPaginaRankingInternacionalComite"
-                                    aria-label="Ver informe Ranking Contratación Internacional">
-                                Ranking Contratación Internacional
-                            </button>
-                            <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaRankingInternacionalComite"
-                                   name="inputPaginaRankingInternacionalComite" value="5" min="1"
-                                   aria-label="Página" title="Página inicial">
-                        </div>
-                    </div>
-
-                    <!-- FILA 6 -->
-                    <div class="d-flex align-items-center gap-2 w-100">
                         <!-- CONTRATACIONES SIGNIFICATIVAS NACIONAL -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
@@ -477,14 +443,20 @@
                                     data-mercado="Nacional"
                                     data-mostrar-titulo="false"
                                     data-input-pag="inputPaginaContratacionesSignificativasNacionalComite"
-                                    aria-label="Ver informe Contrataciones Significativas Mercado Nacional">
-                                Contrataciones Significativas Mercado Nacional
+                                    aria-label="Ver informe Contrataciones Significativas Nacionales">
+                                Contrataciones Significativas Nacionales
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContratacionesSignificativasNacionalComite"
-                                   name="inputPaginaContratacionesSignificativasNacionalComite" value="6" min="1"
+                                   name="inputPaginaContratacionesSignificativasNacionalComite" value="5" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                    </div>
+
+                    <!-- FILA 6 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
                         <!-- CONTRATACIONES SIGNIFICATIVAS INTERNACIONAL -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
@@ -492,17 +464,61 @@
                                     data-mercado="Internacional"
                                     data-mostrar-titulo="false"
                                     data-input-pag="inputPaginaContratacionesSignificativasInternacionalComite"
-                                    aria-label="Ver informe Contrataciones Significativas Mercado Internacional">
-                                Contrataciones Significativas Mercado Internacional
+                                    aria-label="Ver informe Contrataciones Significativas Internacionales">
+                                Contrataciones Significativas Internacionales
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaContratacionesSignificativasInternacionalComite"
                                    name="inputPaginaContratacionesSignificativasInternacionalComite" value="6" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
                     <!-- FILA 7 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- RANKING CLIENTES NACIONALES -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                    data-mercado="Nacional"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaRankingNacionalComite"
+                                    aria-label="Ver informe Ranking Clientes Nacionales">
+                                Ranking Clientes Nacionales
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaRankingNacionalComite"
+                                   name="inputPaginaRankingNacionalComite" value="7" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                    </div>
+
+                    <!-- FILA 8 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- RANKING CLIENTES INTERNACIONALES -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
+                                    data-mercado="Internacional"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaRankingInternacionalComite"
+                                    aria-label="Ver informe Ranking Clientes Internacionales">
+                                Ranking Clientes Internacionales
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaRankingInternacionalComite"
+                                   name="inputPaginaRankingInternacionalComite" value="8" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                    </div>
+
+                    <!-- FILA 9 -->
                     <div class="d-flex align-items-center gap-2 w-100">
                         <!-- PAÍSES RELEVANTES -->
                         <div class="input-group rpt-input-group-index flex-fill">
@@ -510,12 +526,12 @@
                                     onclick="cargarInforme(this, 'paises_all')"
                                     data-mostrar-titulo="false"
                                     data-input-pag="inputPaginaPaisesRelevantesComite"
-                                    aria-label="Ver informe Países Relevantes">
-                                Países Relevantes
+                                    aria-label="Ver informe Ranking Países (Incluye España)">
+                                Ranking Países (Incluye España)
                             </button>
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaPaisesRelevantesComite"
-                                   name="inputPaginaPaisesRelevantesComite" value="7" min="1"
+                                   name="inputPaginaPaisesRelevantesComite" value="9" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
                         <!-- Vacío Derecha -->
