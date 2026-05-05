@@ -650,15 +650,30 @@ public class InformeRepository
     /// Suma total de cartera sobre CarterasContratacionSQL.
     /// Equivalente a txtTotalImporte en Access (PieDelGrupo1_Format).
     /// </summary>
-    public async Task<decimal?> ObtenerTotalCarteraGeneralAsync(int anio, int mes)
+    public async Task<decimal?> ObtenerTotalCarteraGeneralAsync(int anio, int mes, int todoInternacional)
     {
-        const string sql = @"
-            SELECT SUM(ISNULL(C.ImporteEUR, 0))
-            FROM CarterasContratacionSQL C WITH (NOLOCK)
-            LEFT JOIN Sumarigrama S WITH (NOLOCK)
-                ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
-            WHERE C.AnioInforme = @Anio
-              AND C.MesInforme = @Mes";
+        string sql;
+        if (todoInternacional == 1)
+        {
+            sql = @"
+                SELECT SUM(ISNULL(C.ImporteEUR, 0))
+                FROM CarterasContratacionSQL C WITH (NOLOCK)
+                LEFT JOIN Sumarigrama S WITH (NOLOCK)
+                    ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
+                WHERE C.AnioInforme = @Anio
+                  AND C.MesInforme = @Mes";
+        }
+        else
+        {
+            sql = @"
+                SELECT SUM(ISNULL(C.ImporteEUR, 0))
+                FROM CarterasContratacionSQL C WITH (NOLOCK)
+                LEFT JOIN Sumarigrama S WITH (NOLOCK)
+                    ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
+                WHERE C.AnioInforme = @Anio
+                  AND C.MesInforme = @Mes
+                  AND C.Pais <> 'Nacional'";
+        }
 
         using var conn = new SqlConnection(_connectionString);
         return await conn.ExecuteScalarAsync<decimal?>(sql, new { Anio = anio, Mes = mes });

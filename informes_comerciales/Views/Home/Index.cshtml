@@ -565,8 +565,24 @@
                                    name="inputPaginaCarteraContratacionDetalle" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Cartera Contratación (Detalle) Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle')"
+                                    data-mercado="Internacional"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="1000"
+                                    data-informe="9.1"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraContratacionDetalleInt"
+                                    aria-label="Ver informe Cartera Contratación (Detalle) Internacional">
+                                Cartera Contratación (Detalle) Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraContratacionDetalleInt"
+                                   name="inputPaginaCarteraContratacionDetalleInt" value="10" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
                 </div>
             </div>

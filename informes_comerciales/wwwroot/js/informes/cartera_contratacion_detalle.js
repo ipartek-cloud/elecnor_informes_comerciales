@@ -88,13 +88,18 @@ function _getHtmlEncabezado() {
         ? Math.round(Number(filtros.limiteImporte) / 1000)
         : 13;
 
+    const esInternacional = filtros.mercado && filtros.mercado.toLowerCase() === 'internacional';
+    const textoBanner2 = esInternacional
+        ? 'Cartera de Contratación (Detalle) Internacional'
+        : 'Cartera de Contratación (Detalle)';
+
     const headerBase = getHtmlEncabezadoBase({
         tituloCorporativo: `
             <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo Elecnor</span>
             <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>
         `,
         textoBanner1: 'Elecnor',
-        textoBanner2: 'Cartera de Contratación (Detalle)',
+        textoBanner2: textoBanner2,
         mes: filtros.mes,
         anio: filtros.anio,
         nroPagina: estado.nroPagina,

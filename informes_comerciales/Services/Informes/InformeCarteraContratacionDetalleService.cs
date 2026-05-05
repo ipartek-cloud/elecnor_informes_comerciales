@@ -27,7 +27,7 @@ public class InformeCarteraContratacionDetalleService
         // Ejecutar consultas en paralelo para minimizar latencia
         var tDatos = _repository.ObtenerCarteraContratacionDetalleAsync(
             anio, mes, todoInternacional, limiteImporte, limitePaises, informe);
-        var tTotalGeneral = _repository.ObtenerTotalCarteraGeneralAsync(anio, mes);
+        var tTotalGeneral = _repository.ObtenerTotalCarteraGeneralAsync(anio, mes, todoInternacional);
 
         await Task.WhenAll(tDatos, tTotalGeneral);
 
