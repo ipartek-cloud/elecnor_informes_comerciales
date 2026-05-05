@@ -1,0 +1,211 @@
+/**
+ * Cartera Contratacion (Detalle) - Estilos Especificos
+ */
+
+.rpt-ccd-table {
+    table-layout: fixed !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rpt-ccd-col-proyecto { width: 43%; }
+.rpt-ccd-col-cliente  { width: 35%; }
+.rpt-ccd-col-cartera  { width: 10%; }
+.rpt-ccd-col-total    { width: 10%; }
+
+.rpt-ccd-subtitulo-bar {
+    margin-top: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.rpt-ccd-subtitulo-bar .rpt-subtitle-indicator {
+    color: #00468B;
+    font-weight: bold;
+}
+
+.rpt-ccd-table thead th {
+    border-bottom: 0.5pt solid #00468B !important;
+}
+
+@media screen {
+    .rpt-paper[data-informe="cartera_contratacion_detalle"] .report-body.rpt-cmai-mt-standard {
+        margin-top: 0.5rem !important;
+    }
+    .rpt-ccd-subtitulo-bar {
+        margin-bottom: 0.1rem;
+    }
+}
+
+.rpt-ccd-table .rpt-detail-row td {
+    line-height: 1.25 !important;
+    padding: 3px 5px !important;
+    vertical-align: top;
+}
+
+.rpt-ccd-subtotal-row td {
+    border-top: none !important;
+    border-bottom: none !important;
+    padding-top: 2px !important;
+    color: #00468B !important;
+}
+
+.rpt-ccd-subtotal-row td:nth-child(2),
+.rpt-ccd-subtotal-row td:nth-child(3) {
+    border-top: 0.5pt solid #00468B !important;
+    border-bottom: none !important;
+}
+
+.rpt-ccd-grand-total-row td {
+    border-top: none !important;
+    padding-top: 4px !important;
+    color: #00468B !important;
+}
+
+
+
+.rpt-ccd-total-general {
+    margin-top: 0.8rem;
+}
+
+.rpt-ccd-table .rpt-detail-row {
+    page-break-inside: avoid !important;
+}
+
+.rpt-ccd-total-general table,
+.rpt-ccd-table thead {
+    page-break-after: avoid !important;
+}
+
+@media print {
+    .rpt-ccd-table thead th {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-ccd-table .rpt-total-row-blue td {
+        border-top: 0.3pt solid #00468B !important;
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-ccd-subtotal-row td {
+        border-top: none !important;
+    }
+
+    .rpt-ccd-subtotal-row td:nth-child(2),
+    .rpt-ccd-subtotal-row td:nth-child(3) {
+        border-top: 0.3pt solid #00468B !important;
+        border-bottom: none !important;
+    }
+
+    .rpt-ccd-grand-total-row td {
+        border-top: none !important;
+    }
+
+
+
+    .rpt-ccd-table .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding: 1.5px 5px !important;
+    }
+
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 14pt !important;
+        line-height: 25px !important;
+    }
+}
+
+@media print {
+    .rpt-ccd-table .rpt-th-blue {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* TABLA MAESTRA PARA PDF (Paginación Sin Agrupación)                     */
+/* ════════════════════════════════════════════════════════════════════════ */
+
+.rpt-table-print-master {
+    width: 100% !important;
+    border: none !important;
+}
+
+.rpt-print-thead-corporate {
+    display: table-header-group !important;
+}
+
+.rpt-print-thead-cell {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.rpt-print-tfoot-master {
+    display: table-footer-group !important;
+}
+
+.rpt-print-tfoot-cell {
+    height: 16mm !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Anulación de padding superior en contenedor maestro para evitar duplicidad */
+.rpt-paper--print[data-informe="cartera_contratacion_detalle"] {
+    padding-top: 0 !important;
+}
+
+/* El margen superior se gestiona dentro del thead mediante pseudo-elemento */
+.rpt-table-print-master thead::before {
+    content: "";
+    display: block;
+    height: 8mm;
+}
+
+/* Compactación de márgenes internos del encabezado dentro de la celda maestra */
+.rpt-print-thead-cell .rpt-header {
+    margin-bottom: 0 !important;
+}
+
+.rpt-print-thead-cell .rpt-subtitle {
+    margin-bottom: 0.5rem !important;
+}
+
+@media print {
+    /* Blindaje de fuentes corporativas contra estilos heredados de <th> */
+    .rpt-table-print-master .rpt-print-thead-cell * {
+        font-weight: normal !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
+        font-size: 14pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
+        font-size: 9pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-page-number {
+        font-size: 10pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top span {
+        font-size: 14pt !important;
+    }
+
+    /* Eliminar línea horizontal debajo del encabezado corporativo en la celda maestra */
+    .rpt-table-print-master thead .rpt-print-thead-row .rpt-print-thead-cell {
+        border-bottom: none !important;
+    }
+
+    /* Hairline para literales de columna en thead maestro */
+    .rpt-table-print-master thead tr.rpt-table-header-columns th {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    /* Eliminar márgenes del indicador de umbral en impresión */
+    .rpt-ccd-subtitulo-bar {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+}

@@ -54,6 +54,16 @@ window.cargarInforme = async function (btn, nombreInforme) {
     // Capturar si se debe mostrar el título
     const mostrarTitulo = btn?.dataset?.mostrarTitulo !== 'false';
 
+    // Resolver limiteImporte: inputLimiteMonto vs data-limiteimporte del botón
+    const limiteImporteInput = document.getElementById('inputLimiteMonto');
+    const valorInputMonto = limiteImporteInput ? parseFloat(limiteImporteInput.value) : 0;
+    const limiteImporteDefault = btn?.dataset?.limiteimporte ? parseFloat(btn.dataset.limiteimporte) : null;
+    const limiteImporteFinal = (!valorInputMonto || valorInputMonto === 0) && limiteImporteDefault
+        ? limiteImporteDefault
+        : (valorInputMonto || limiteImporteDefault || 13000);
+
+    let exito = false;
+
     try {
         GlobalUI.showLoading();
 
@@ -86,12 +96,13 @@ window.cargarInforme = async function (btn, nombreInforme) {
                 umbral: btn?.dataset?.umbral || null,
                 codSubDir: _codSubDir,
                 mostrarTitulo: mostrarTitulo,
-                limiteImporte: btn?.dataset?.limiteimporte || null,
+                limiteImporte: limiteImporteFinal,
                 limitePaises: btn?.dataset?.limitepaises || null,
                 informe: btn?.dataset?.informe || null
             };
 
             await modulo.ejecutar(parametros);
+            exito = true;
         } else {
             console.error(`El informe '${nombreInforme}' no exporta la función 'ejecutar'.`);
             GlobalUI.showAlert('Error en la estructura del informe', 'error');
@@ -102,5 +113,9 @@ window.cargarInforme = async function (btn, nombreInforme) {
         GlobalUI.showAlert('No se pudo cargar el componente del informe', 'error');
     } finally {
         GlobalUI.hideLoading();
+        if (exito && limiteImporteFinal !== null) {
+            const valorMiles = Math.round(limiteImporteFinal / 1000);
+            GlobalUI.showAlert(`Limite Monto (miles): ${valorMiles}`, 'info', 'Filtro aplicado');
+        }
     }
 };

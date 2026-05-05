@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                     initUI(true);
-                    GlobalUI.showAlert('Bienvenido al sistema.', 'success', 'Login OK');
+                    GlobalUI.showAlert(`Bienvenido al sistema, ${jwtPayload.NombreUsuario}.`, 'success', 'Login OK');
                     
                     // Cargar combo de SubDirecciones después del login
                     cargarSubDirecciones();

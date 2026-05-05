@@ -21,6 +21,7 @@ export const GlobalUI = {
             icon: iconMap[tipo] || 'info',
             title: titulo || mensaje,
             text: titulo ? mensaje : undefined,
+            width: '400px',
             showConfirmButton: false,
             timer: tipo !== 'danger' ? 5000 : undefined,
             timerProgressBar: tipo !== 'danger',

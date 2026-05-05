@@ -17,7 +17,7 @@
                         <label for="txtAnno" class="col-form-label fw-bold">Año</label>
                     </div>
                     <div class="col-auto">
-                        <input type="number" class="form-control" id="txtAnno" name="txtAnno" min="2000" max="2100"
+                        <input type="number" class="form-control text-center" id="txtAnno" name="txtAnno" min="2000" max="2100"
                             value="@DateTime.Now.Year" aria-label="Seleccionar año de consulta">
                     </div>
                     <div class="col-auto">
@@ -40,17 +40,17 @@
                         </select>
                     </div>
                     <div class="col-auto ms-auto">
-                        <label for="inputLimiteMonto" class="col-form-label fw-bold">Límite Monto (miles)</label>
+                        <label for="inputLimiteMonto" class="col-form-label fw-bold">Límite Monto</label>
                     </div>
                     <div class="col-auto">
-                        <input type="number" class="form-control" id="inputLimiteMonto" name="inputLimiteMonto" 
-                               value="15000" step="1000" style="width: 120px;" aria-label="Límite de monto">
+                        <input type="number" class="form-control text-center" id="inputLimiteMonto" name="inputLimiteMonto" 
+                               value="0" step="1000" style="width: 120px;" aria-label="Límite de monto">
                     </div>
                     <div class="col-auto">
                         <label for="cmbSubDireccionGeneral" class="col-form-label fw-bold">SubDirección</label>
                     </div>
                     <div class="col-auto">
-                        <select class="form-control rpt-combo-subdireccion" id="cmbSubDireccionGeneral" name="cmbSubDireccionGeneral" 
+                        <select class="form-control rpt-combo-subdireccion text-center" id="cmbSubDireccionGeneral" name="cmbSubDireccionGeneral" 
                                 style="min-width: 250px;" aria-label="Seleccionar SubDirección General">
                         </select>
                     </div>
@@ -555,6 +555,7 @@
                                     data-limiteimporte="13000"
                                     data-limitepaises="1000"
                                     data-informe="9.1"
+                                    data-mostrar-titulo="false"
                                     data-input-pag="inputPaginaCarteraContratacionDetalle"
                                     aria-label="Ver informe Cartera Contratación (Detalle) Nacional - Internacional">
                                 Cartera Contratación (Detalle) Nacional - Internacional
@@ -707,6 +708,7 @@
     <link rel="stylesheet" href="~/css/informes/mercados_dg.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/gerencias.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/actividades_objetivos.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/cartera_contratacion_detalle.css" asp-append-version="true" />
 }
 
 @section Scripts {

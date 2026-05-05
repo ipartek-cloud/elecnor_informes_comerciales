@@ -13,6 +13,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.ContratacionesSignificativas;
 using Elecnor_Informes_Comerciales.Models.Informes.MercadosDG;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias;
 using Elecnor_Informes_Comerciales.Models.Informes.MercadosSGDelegaciones;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalle;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -644,6 +645,24 @@ public class InformeRepository
     // INFORME PRINCIPAL: Principales Contrataciones del Año
     // └─ Método: ObtenerContratacionesAsync()
     // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Suma total de cartera sobre CarterasContratacionSQL.
+    /// Equivalente a txtTotalImporte en Access (PieDelGrupo1_Format).
+    /// </summary>
+    public async Task<decimal?> ObtenerTotalCarteraGeneralAsync(int anio, int mes)
+    {
+        const string sql = @"
+            SELECT SUM(ISNULL(C.ImporteEUR, 0))
+            FROM CarterasContratacionSQL C WITH (NOLOCK)
+            LEFT JOIN Sumarigrama S WITH (NOLOCK)
+                ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
+            WHERE C.AnioInforme = @Anio
+              AND C.MesInforme = @Mes";
+
+        using var conn = new SqlConnection(_connectionString);
+        return await conn.ExecuteScalarAsync<decimal?>(sql, new { Anio = anio, Mes = mes });
+    }
 
     /// <summary>
     /// Obtiene los datos para el informe de Principales Contrataciones del Año.
@@ -1714,6 +1733,72 @@ public class InformeRepository
         }
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Cartera Contratación Detalle
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<CarteraContratacionDetallePoco>> ObtenerCarteraContratacionDetalleAsync(
+        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
+    {
+        const string sqlDelete = @"DELETE FROM rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises 
+                                   WHERE AnioInforme = @Anio AND MesInforme = @Mes";
+        
+        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
+
+        const string sqlInsert = @"INSERT INTO rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises
+                                            (AnioInforme, MesInforme, Pais, NomCliente, DesOferta, ImporteCarteraOferta, ImporteContratadoOferta, ImporteCarteraPais)
+                                       VALUES
+                                            (@AnioInforme, @MesInforme, @Pais, @NomCliente, @DesOferta, @ImporteCarteraOferta, @ImporteContratadoOferta, @ImporteCarteraPais)";
+        
+        const string sqlSelect = @"SELECT AnioInforme, MesInforme, Pais, DesOferta, NomCliente, ImporteCarteraOferta, ImporteContratadoOferta, ImporteCarteraPais
+                                   FROM rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises WITH (NOLOCK)
+                                   WHERE AnioInforme = @Anio 
+                                     AND MesInforme = @Mes 
+                                     AND (ISNULL(ImporteCarteraOferta, 0) + ISNULL(ImporteContratadoOferta, 0)) <> 0";
+
+        var parametros = new { 
+            Anio = anio, Mes = mes, TodoInternacional = todoInternacional, 
+            LimiteImporte = limiteImporte, LimitePaises = limitePaises, Informe = informe 
+        };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, parametros, transaction: transaction);
+
+            var datosSp = (await _connection.QueryAsync<CarteraContratacionDetallePoco>(sqlExec, parametros, transaction, commandTimeout: 600)).ToList();
+
+            if (datosSp.Count > 0)
+            {
+                var datosTransformados = datosSp.Select(d => new
+                {
+                    d.AnioInforme,
+                    d.MesInforme,
+                    d.Pais,
+                    d.NomCliente,
+                    d.DesOferta,
+                    d.ImporteCarteraOferta,
+                    ImporteContratadoOferta = (d.ImporteContratadoOferta ?? 0) / 1000m,
+                    d.ImporteCarteraPais
+                }).ToList();
+
+                await _connection.ExecuteAsync(sqlInsert, datosTransformados, transaction: transaction, commandTimeout: 600);
+            }
+
+            var resultado = (await _connection.QueryAsync<CarteraContratacionDetallePoco>(sqlSelect, parametros, transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
 
 }
 
