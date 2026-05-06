@@ -57,6 +57,14 @@ window.cargarInforme = async function (btn, nombreInforme) {
     // Solo mostrar toast de límite de monto si el informe declara usarlo explícitamente
     const aplicaLimiteMonto = btn?.dataset?.limiteimporte !== undefined;
 
+    // Resolver limitePaises: inputLimiteNumeroPaises vs data-limitepaises del botón
+    const limitePaisesInput = document.getElementById('inputLimiteNumeroPaises');
+    const valorInputPaises = limitePaisesInput ? parseInt(limitePaisesInput.value, 10) : 0;
+    const limitePaisesDefault = btn?.dataset?.limitepaises ? parseInt(btn.dataset.limitepaises, 10) : null;
+    const limitePaisesFinal = (!valorInputPaises || valorInputPaises === 0) && limitePaisesDefault
+        ? limitePaisesDefault
+        : (valorInputPaises || limitePaisesDefault || 20);
+
     let exito = false;
 
     try {
@@ -92,7 +100,7 @@ window.cargarInforme = async function (btn, nombreInforme) {
                 codSubDir: _codSubDir,
                 mostrarTitulo: mostrarTitulo,
                 limiteImporte: limiteImporteFinal,
-                limitePaises: btn?.dataset?.limitepaises || null,
+                limitePaises: limitePaisesFinal,
                 informe: btn?.dataset?.informe || null
             };
 

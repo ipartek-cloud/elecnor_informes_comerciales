@@ -15,6 +15,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.Gerencias;
 using Elecnor_Informes_Comerciales.Models.Informes.MercadosSGDelegaciones;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalle;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionResumenSDG;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalleOrgPaises;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1814,6 +1815,30 @@ public class InformeRepository
             transaction.Rollback();
             throw;
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Cartera Contratación Detalle Organización Países
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<CarteraContratacionDetalleOrgPaisesPoco>> ObtenerCarteraContratacionDetalleOrgPaisesAsync(
+        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
+    {
+        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
+
+        var parametros = new { Anio = anio, Mes = mes, TodoInternacional = todoInternacional, 
+                               LimiteImporte = limiteImporte, LimitePaises = limitePaises, Informe = informe};
+
+        var datos = (await _connection.QueryAsync<CarteraContratacionDetalleOrgPaisesPoco>(sqlExec, parametros, commandTimeout: 600)).ToList();
+
+        // Replicar transformación VBA: ImporteContratadoOferta / 1000
+        foreach (var fila in datos)
+        {
+            fila.ImporteContratadoOferta = (fila.ImporteContratadoOferta ?? 0) / 1000m;
+        }
+
+        // Filtrar registros vacíos
+        return datos.Where(d => (d.ImporteCarteraOferta ?? 0) + (d.ImporteContratadoOferta ?? 0) != 0).ToList();
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

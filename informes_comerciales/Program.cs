@@ -75,6 +75,7 @@ builder.Services.AddScoped<InformeContratacionesSignificativasService>();
 builder.Services.AddScoped<InformeContratacionesSignificativasRiService>();
 builder.Services.AddScoped<InformeGerenciasService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetalleService>();
+builder.Services.AddScoped<InformeCarteraContratacionDetalleOrgPaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionResumenSDGService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
