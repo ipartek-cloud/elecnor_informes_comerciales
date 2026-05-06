@@ -87,13 +87,24 @@
 /* TOTALES Y PIE                                                          */
 /* ════════════════════════════════════════════════════════════════════════ */
 .rpt-ccdop-grand-total-row td {
-    border-top: 0.5pt solid #00468B !important;
     padding-top: 4px !important;
     color: #00468B !important;
 }
 
+.rpt-ccdop-totals-border {
+    border-top: 0.5pt solid #00468B !important;
+}
+
 .rpt-ccdop-total-general {
     margin-top: 0.8rem;
+}
+
+/* Alineaciones de texto */
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+
+.rpt-ccdop-total-label {
+    padding-right: 0 !important;
 }
 
 /* ════════════════════════════════════════════════════════════════════════ */
@@ -121,7 +132,7 @@
         border-bottom: 0.3pt solid #00468B !important;
     }
 
-    .rpt-ccdop-grand-total-row td {
+    .rpt-ccdop-totals-border {
         border-top: 0.3pt solid #00468B !important;
     }
 

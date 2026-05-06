@@ -191,9 +191,16 @@ function _renderPieInforme(data) {
             </colgroup>
             <tbody>
                 <tr class="rpt-ccdop-grand-total-row rpt-font-bold">
-                    <td colspan="2" class="rpt-align-center rpt-fs-9pt">Total Cartera Contratación (miles de euros)</td>
-                    <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.sumaCarteraPaisAnterior ?? 0, 0)}</td>
-                    <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.sumaCarteraPais ?? 0, 0)}</td>
+                    <td colspan="2"></td>
+                    <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt rpt-ccdop-totals-border">${formatCurrency(totales.sumaCarteraPaisAnterior ?? 0, 0)}</td>
+                    <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt rpt-ccdop-totals-border">${formatCurrency(totales.sumaCarteraPais ?? 0, 0)}</td>
+                    <td></td>
+                </tr>
+                <tr class="rpt-ccdop-grand-total-row rpt-font-bold">
+                    <td colspan="2" class="rpt-align-end rpt-fs-9pt rpt-ccdop-total-label">Total Cartera Contratación (miles de euros)</td>
+                    <td colspan="2" class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-9pt rpt-text-corporate">
+                        ${formatCurrency(totales.totalCarteraGeneral ?? 0, 0)}
+                    </td>
                     <td></td>
                 </tr>
             </tbody>
@@ -315,9 +322,16 @@ function _renderFilasPiePDF(data) {
 
     return `
         <tr class="rpt-ccdop-grand-total-row rpt-font-bold">
-            <td colspan="2" class="rpt-align-center rpt-fs-9pt">Total Cartera Contratación (miles de euros)</td>
-            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.sumaCarteraPaisAnterior ?? 0, 0)}</td>
-            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.sumaCarteraPais ?? 0, 0)}</td>
+            <td colspan="2"></td>
+            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt rpt-ccdop-totals-border">${formatCurrency(totales.sumaCarteraPaisAnterior ?? 0, 0)}</td>
+            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt rpt-ccdop-totals-border">${formatCurrency(totales.sumaCarteraPais ?? 0, 0)}</td>
+            <td></td>
+        </tr>
+        <tr class="rpt-ccdop-grand-total-row rpt-font-bold">
+            <td colspan="2" class="rpt-align-end rpt-fs-9pt rpt-ccdop-total-label">Total Cartera Contratación (miles de euros)</td>
+            <td colspan="2" class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-9pt rpt-text-corporate">
+                ${formatCurrency(totales.totalCarteraGeneral ?? 0, 0)}
+            </td>
             <td></td>
         </tr>
     `;

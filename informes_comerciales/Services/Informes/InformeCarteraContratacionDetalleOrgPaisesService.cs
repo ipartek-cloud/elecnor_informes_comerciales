@@ -106,11 +106,15 @@ public class InformeCarteraContratacionDetalleOrgPaisesService
 
         response.Agrupaciones = agrupaciones;
 
+        // ══════════════════════════════════════════════════════════════════════
+        // TOTALES GLOBALES: Suma de lo que se muestra en el informe (detalles visibles).
+        // Importante: No sumar ImporteCarteraPais/DN de datosFiltrados porque se repite por fila.
+        // ══════════════════════════════════════════════════════════════════════
         response.Totales = new CarteraContratacionDetalleOrgPaisesTotalesDto
         {
-            SumaCarteraPais = datosOrdenados.Sum(x => x.ImporteCarteraPais ?? 0),
-            SumaCarteraPaisAñoAnterior = datosOrdenados.Sum(x => x.ImporteCarteraPaisAñoAnterior ?? 0),
-            TotalCarteraGeneral = totalGeneral
+            SumaCarteraPais = datosFiltrados.Sum(x => x.ImporteCarteraOferta ?? 0),
+            SumaCarteraPaisAñoAnterior = datosFiltrados.Sum(x => x.ImporteCarteraOfertaAñoAnterior ?? 0),
+            TotalCarteraGeneral = (totalGeneral ?? 0) / 1000
         };
 
         return response;
