@@ -69,12 +69,12 @@
                     <!-- ENCABEZADOS DE COLUMNA -->
                     <div class="d-flex align-items-center gap-2 w-100 mb-2">
                         <div class="input-group rpt-input-group-index flex-fill">
-                            <div class="rpt-header-index-col text-center w-100">
+                            <div class="rpt-header-index-col--blue text-center w-100">
                                 Informe
                             </div>
                         </div>
                         <div class="input-group rpt-input-group-index flex-fill">
-                            <div class="rpt-header-index-col text-center w-100">
+                            <div class="rpt-header-index-col--blue text-center w-100">
                                 Anexo
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                                     aria-label="Cartera Diferida DG Servicios - DG Proyectos (Pendiente)">
                                 Cartera Diferida DG Servicios - DG Proyectos
                             </button>
-                            <input type="number" class="form-control rpt-input-page" id="inputPaginaCarteraDG" name="inputPaginaCarteraDG" value="1" min="1" aria-label="Página">
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaCarteraDG" name="inputPaginaCarteraDG" value="1" min="1" aria-label="Página" style="background-color: #e3f2fd;">
                         </div>
                     </div>
 
@@ -130,7 +130,7 @@
                                     aria-label="Cartera Diferida Mercados - Clientes (Pendiente)">
                                 Cartera Diferida Mercados - Clientes
                             </button>
-                            <input type="number" class="form-control rpt-input-page" id="inputPaginaCarteraMercados" name="inputPaginaCarteraMercados" value="2" min="1" aria-label="Página">
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaCarteraMercados" name="inputPaginaCarteraMercados" value="2" min="1" aria-label="Página" style="background-color: #e3f2fd;">
                         </div>
                     </div>
 
@@ -189,7 +189,7 @@
                                     aria-label="Mercado Internacional DG - Países (Pendiente)">
                                 Mercado Internacional DG - Países
                             </button>
-                            <input type="number" class="form-control rpt-input-page" id="inputPaginaMercadoIntDG" name="inputPaginaMercadoIntDG" value="4" min="1" aria-label="Página">
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaMercadoIntDG" name="inputPaginaMercadoIntDG" value="4" min="1" aria-label="Página" style="background-color: #e3f2fd;">
                         </div>
                     </div>
 
@@ -216,7 +216,7 @@
                                     aria-label="Mercado Internacional DG - Elecnor Value (Pendiente)">
                                 Mercado Internacional DG - Elecnor Value
                             </button>
-                            <input type="number" class="form-control rpt-input-page" id="inputPaginaMercadoIntValue" name="inputPaginaMercadoIntValue" value="5" min="1" aria-label="Página">
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaMercadoIntValue" name="inputPaginaMercadoIntValue" value="5" min="1" aria-label="Página" style="background-color: #e3f2fd;">
                         </div>
                     </div>
 
@@ -354,12 +354,12 @@
                     <!-- ENCABEZADOS DE COLUMNA -->
                     <div class="d-flex align-items-center gap-2 w-100 mb-2">
                         <div class="input-group rpt-input-group-index flex-fill">
-                            <div class="rpt-header-index-col text-center w-100">
+                            <div class="rpt-header-index-col--blue text-center w-100">
                                 Comité Elecnor
                             </div>
                         </div>
                         <div class="input-group rpt-input-group-index flex-fill">
-                            <div class="rpt-header-index-col text-center w-100">
+                            <div class="rpt-header-index-col--blue text-center w-100">
                                 Comité Internacional
                             </div>
                         </div>
@@ -584,6 +584,40 @@
                                    aria-label="Página" title="Página inicial">
                         </div>
                     </div>
+
+                    <!-- FILA 11 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Cartera Contratación DG (Resumen) Nacional - Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_resumen_sdg')"
+                                    data-mercado="Todo"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraContratacionResumenDG"
+                                    aria-label="Ver informe Cartera Contratación DG (Resumen) Nacional - Internacional">
+                                Cartera Contratación DG (Resumen) Nacional - Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraContratacionResumenDG"
+                                   name="inputPaginaCarteraContratacionResumenDG" value="11" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Cartera Contratación DG (Resumen) Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_resumen_sdg')"
+                                    data-mercado="Internacional"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraContratacionResumenDGInt"
+                                    aria-label="Ver informe Cartera Contratación DG (Resumen) Internacional">
+                                Cartera Contratación DG (Resumen) Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraContratacionResumenDGInt"
+                                   name="inputPaginaCarteraContratacionResumenDGInt" value="11" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -725,6 +759,7 @@
     <link rel="stylesheet" href="~/css/informes/gerencias.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/actividades_objetivos.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/cartera_contratacion_detalle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/cartera_contratacion_resumen_sdg.css" asp-append-version="true" />
 }
 
 @section Scripts {

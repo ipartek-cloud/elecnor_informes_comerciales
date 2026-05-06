@@ -90,7 +90,7 @@ function _getHtmlEncabezado() {
 
     const esInternacional = filtros.mercado && filtros.mercado.toLowerCase() === 'internacional';
     const textoBanner2 = esInternacional
-        ? 'Cartera de Contratación (Detalle) Internacional'
+        ? 'Cartera de Contratación Internacional (Detalle)'
         : 'Cartera de Contratación (Detalle)';
 
     const headerBase = getHtmlEncabezadoBase({

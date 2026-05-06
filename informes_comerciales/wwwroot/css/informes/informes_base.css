@@ -858,3 +858,12 @@ el estándar CMAI cuando se aplica explícitamente al report-body */
     padding: 6px 0 !important;
     border-radius: 0 !important;
 }
+/* Encabezado de columnas Informe / Anexo en Index (Variante Azul Prueba) */
+.rpt-header-index-col--blue {
+    background: #00468B !important;    /* Fondo azul corporativo */
+    color: white !important;           /* Texto en blanco */
+    border: 1px solid #003a74 !important;
+    font-weight: bold !important;
+    padding: 6px 0 !important;
+    border-radius: 0 !important;       /* Rectangulares por petición del usuario */
+}

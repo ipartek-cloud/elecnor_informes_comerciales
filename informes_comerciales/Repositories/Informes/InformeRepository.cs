@@ -14,6 +14,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.MercadosDG;
 using Elecnor_Informes_Comerciales.Models.Informes.Gerencias;
 using Elecnor_Informes_Comerciales.Models.Informes.MercadosSGDelegaciones;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalle;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionResumenSDG;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1813,6 +1814,27 @@ public class InformeRepository
             transaction.Rollback();
             throw;
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Cartera Contratación (Resumen SDG)
+    // └─ Método: ObtenerCarteraContratacionResumenSDGAsync()
+    // └─ Nota: El SP devuelve datos finales; no se requiere tabla temporal.
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Ejecuta el SP spCartera_Contratacion_Resumen_SDG y devuelve el dataset plano.
+    /// </summary>
+    public async Task<List<CarteraContratacionResumenSDGPoco>> ObtenerCarteraContratacionResumenSDGAsync(int anio, int mes, int todoInt)
+    {
+        const string sqlExec = "EXEC spCartera_Contratacion_Resumen_SDG @Anio, @Mes, @TodoInt";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        var parametros = new { Anio = anio, Mes = mes, TodoInt = todoInt };
+
+        return (await conn.QueryAsync<CarteraContratacionResumenSDGPoco>( sqlExec, parametros, commandTimeout: 300)).ToList();
     }
 
 }

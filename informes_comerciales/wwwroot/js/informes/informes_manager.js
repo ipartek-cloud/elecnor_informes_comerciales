@@ -62,6 +62,9 @@ window.cargarInforme = async function (btn, nombreInforme) {
         ? limiteImporteDefault
         : (valorInputMonto || limiteImporteDefault || 13000);
 
+    // Solo mostrar toast de límite de monto si el informe declara usarlo explícitamente
+    const aplicaLimiteMonto = btn?.dataset?.limiteimporte !== undefined;
+
     let exito = false;
 
     try {
@@ -113,7 +116,7 @@ window.cargarInforme = async function (btn, nombreInforme) {
         GlobalUI.showAlert('No se pudo cargar el componente del informe', 'error');
     } finally {
         GlobalUI.hideLoading();
-        if (exito && limiteImporteFinal !== null) {
+        if (exito && aplicaLimiteMonto) {
             const valorMiles = Math.round(limiteImporteFinal / 1000);
             GlobalUI.showAlert(`Limite Monto (miles): ${valorMiles}`, 'info', 'Filtro aplicado');
         }
