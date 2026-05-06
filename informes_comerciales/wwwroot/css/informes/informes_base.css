@@ -863,7 +863,7 @@ el estándar CMAI cuando se aplica explícitamente al report-body */
     background: #00468B !important;    /* Fondo azul corporativo */
     color: white !important;           /* Texto en blanco */
     border: 1px solid #003a74 !important;
-    font-weight: bold !important;
+    font-weight: normal !important;    /* Peso normal por petición del usuario */
     padding: 6px 0 !important;
     border-radius: 0 !important;       /* Rectangulares por petición del usuario */
 }

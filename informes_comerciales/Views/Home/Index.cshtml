@@ -8,11 +8,11 @@
         
         <!-- ==================== CARD 1: FILTROS DE INFORME ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header text-center">
-                <h5 class="mb-0" style="font-family: Verdana;">Filtros</h5>
+            <div class="card-header rpt-index-header--blue text-center">
+                <h5 class="mb-0" style="font-family: Verdana; color: var(--elecnor-orange);">Filtros</h5>
             </div>
             <div class="card-body">
-                <div class="row g-3 align-items-center">
+                <div class="row g-3 align-items-center justify-content-center rpt-filters-row">
                     <div class="col-auto">
                         <label for="txtAnno" class="col-form-label fw-bold">Año</label>
                     </div>
@@ -39,7 +39,7 @@
                             <option value="12" selected="@(defaultMonth == 12 ? "selected" : null)">Diciembre</option>
                         </select>
                     </div>
-                    <div class="col-auto ms-auto">
+                    <div class="col-auto">
                         <label for="inputLimiteMonto" class="col-form-label fw-bold">Límite Monto</label>
                     </div>
                     <div class="col-auto">
@@ -47,11 +47,18 @@
                                value="0" step="1000" style="width: 120px;" aria-label="Límite de monto">
                     </div>
                     <div class="col-auto">
+                        <label for="inputLimiteNumeroPaises" class="col-form-label fw-bold">Límite Países</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" class="form-control text-center" id="inputLimiteNumeroPaises" name="inputLimiteNumeroPaises" 
+                               value="20" min="0" style="width: 80px;" aria-label="Límite de número de países">
+                    </div>
+                    <div class="col-auto">
                         <label for="cmbSubDireccionGeneral" class="col-form-label fw-bold">SubDirección</label>
                     </div>
                     <div class="col-auto">
                         <select class="form-control rpt-combo-subdireccion text-center" id="cmbSubDireccionGeneral" name="cmbSubDireccionGeneral" 
-                                style="min-width: 250px;" aria-label="Seleccionar SubDirección General">
+                                style="min-width: 220px;" aria-label="Seleccionar SubDirección General">
                         </select>
                     </div>
                 </div>
@@ -60,8 +67,8 @@
 
         <!-- ==================== CARD 2: CONSEJO ELECNOR ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header text-center">
-                <h5 class="mb-0" style="font-family: Verdana;">CONSEJO ELECNOR</h5>
+            <div class="card-header rpt-index-header--blue text-center">
+                <h5 class="mb-0" style="font-family: Verdana; color: var(--elecnor-orange);">CONSEJO ELECNOR</h5>
             </div>
             <div class="card-body p-0">
                 <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start p-3">
@@ -345,8 +352,8 @@
 
         <!-- ==================== CARD 3: COMITÉ ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header text-center">
-                <h5 class="mb-0" style="font-family: Verdana;">COMITÉ</h5>
+            <div class="card-header rpt-index-header--blue text-center">
+                <h5 class="mb-0" style="font-family: Verdana; color: var(--elecnor-orange);">COMITÉ</h5>
             </div>
             <div class="card-body p-0">
                 <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">
@@ -624,9 +631,9 @@
 
         <!-- ==================== CARD 4: OPCIONES DE GENERACIÓN ==================== -->
         <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header">
-                <h5 class="mb-0 text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">
-                    <i class="fas fa-cogs"></i> Opciones de Generación
+            <div class="card-header rpt-index-header--blue text-center">
+                <h5 class="mb-0 text-uppercase" style="font-family: Verdana; color: var(--elecnor-orange);">
+                    Opciones de Generación
                 </h5>
             </div>
             <div class="card-body">
