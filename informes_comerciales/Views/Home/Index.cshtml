@@ -53,14 +53,7 @@
                         <input type="number" class="form-control text-center" id="inputLimiteNumeroPaises" name="inputLimiteNumeroPaises" 
                                value="20" min="0" style="width: 80px;" aria-label="Límite de número de países">
                     </div>
-                    <div class="col-auto">
-                        <label for="cmbSubDireccionGeneral" class="col-form-label fw-bold">SubDirección</label>
-                    </div>
-                    <div class="col-auto">
-                        <select class="form-control rpt-combo-subdireccion text-center" id="cmbSubDireccionGeneral" name="cmbSubDireccionGeneral" 
-                                style="min-width: 220px;" aria-label="Seleccionar SubDirección General">
-                        </select>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -625,6 +618,92 @@
                                    aria-label="Página" title="Página inicial">
                         </div>
                     </div>
+
+                    <!-- FILA 12 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Cartera Contratación DG Servicios (Detalle) Nacional - Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'Cartera_Contratacion_Detalle_Organizacion_Paises')"
+                                    data-mercado="Todo"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="20"
+                                    data-informe="8.1"
+                                    data-mostrar-titulo="false"
+                                    data-subdireccion="221"
+                                    data-input-pag="inputPaginaCarteraDetalleServicios"
+                                    aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Nacional - Internacional">
+                                Cartera Contratación DG Servicios (Detalle) Nacional - Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetalleServicios"
+                                   name="inputPaginaCarteraDetalleServicios" value="12" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Cartera Contratación DG Servicios (Detalle) Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'Cartera_Contratacion_Detalle_Organizacion_Paises')"
+                                    data-mercado="Internacional"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="20"
+                                    data-informe="8.1"
+                                    data-mostrar-titulo="false"
+                                    data-subdireccion="221"
+                                    data-input-pag="inputPaginaCarteraDetalleServiciosInt"
+                                    aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Internacional">
+                                Cartera Contratación DG Servicios (Detalle) Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetalleServiciosInt"
+                                   name="inputPaginaCarteraDetalleServiciosInt" value="12" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                    </div>
+
+                    <!-- FILA 13 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Cartera Contratación DG Proyectos (Detalle) Nacional - Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'Cartera_Contratacion_Detalle_Organizacion_Paises')"
+                                    data-mercado="Todo"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="20"
+                                    data-informe="8.1"
+                                    data-mostrar-titulo="false"
+                                    data-subdireccion="286"
+                                    data-input-pag="inputPaginaCarteraDetalleProyectos"
+                                    aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Nacional - Internacional">
+                                Cartera Contratación DG Proyectos (Detalle) Nacional - Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetalleProyectos"
+                                   name="inputPaginaCarteraDetalleProyectos" value="13" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Cartera Contratación DG Proyectos (Detalle) Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'Cartera_Contratacion_Detalle_Organizacion_Paises')"
+                                    data-mercado="Internacional"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="20"
+                                    data-informe="8.1"
+                                    data-mostrar-titulo="false"
+                                    data-subdireccion="286"
+                                    data-input-pag="inputPaginaCarteraDetalleProyectosInt"
+                                    aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Internacional">
+                                Cartera Contratación DG Proyectos (Detalle) Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetalleProyectosInt"
+                                   name="inputPaginaCarteraDetalleProyectosInt" value="13" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>

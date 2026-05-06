@@ -809,31 +809,6 @@ el estándar CMAI cuando se aplica explícitamente al report-body */
     width: 485px !important; /* Ancho suficiente para el literal más largo + input página */
 }
 
-/* Estilo para el combo de SubDirección General */
-.rpt-combo-subdireccion {
-    height: 38px !important;
-    border: 1px solid #ced4da !important;
-    color: #00468B !important;
-    font-weight: 400 !important; /* Sin negrita */
-    padding: 0 10px !important;
-    font-size: 1rem !important;
-    border-radius: 6px !important;
-    background-color: white !important;
-    cursor: pointer !important;
-}
-
-.rpt-combo-subdireccion:focus {
-    border-color: #00468B !important;
-    box-shadow: 0 0 0 0.2rem rgba(0, 70, 139, 0.25) !important;
-    outline: none !important;
-}
-
-/* Opciones del combo */
-.rpt-combo-subdireccion option {
-    padding: 8px 5px !important;
-    color: #00468B !important;
-}
-
 .rpt-btn-light {
     background: #e9ecef !important; /* Gris suave de Bootstrap */
     color: #495057 !important;     /* Gris oscuro para el texto */

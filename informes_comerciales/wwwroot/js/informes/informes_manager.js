@@ -30,14 +30,6 @@ window.cargarInforme = async function (btn, nombreInforme) {
         btn = null;
     }
 
-    // Forzar Subdirección si el botón lo exige explícitamente
-    if (btn && btn.dataset && btn.dataset.subdireccion) {
-        const cmbSubDir = document.getElementById('cmbSubDireccionGeneral');
-        if (cmbSubDir) {
-            cmbSubDir.value = btn.dataset.subdireccion;
-        }
-    }
-
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
     
@@ -88,7 +80,7 @@ window.cargarInforme = async function (btn, nombreInforme) {
         const modulo = _registroModulos[nombreInforme];
 
         if (modulo && modulo.ejecutar) {
-            const _codSubDir = document.getElementById('cmbSubDireccionGeneral')?.value || null;
+            const _codSubDir = btn?.dataset?.subdireccion || null;
             
             // Construir objeto de parámetros (Context Object) para evitar colisiones posicionales
             const parametros = {

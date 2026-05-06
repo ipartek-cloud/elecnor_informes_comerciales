@@ -16,11 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const isLogged = !!sessionStorage.getItem('jwt_token');
     initUI(isLogged);
 
-    // Cargar combo de SubDirecciones SOLO si ya está logueado
-    if (isLogged) {
-        cargarSubDirecciones();
-    }
-
     // Bindeo Submit Login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -56,9 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     initUI(true);
                     GlobalUI.showAlert(`Bienvenido, ${jwtPayload.NombreUsuario}.`, 'success', 'Login OK');
-                    
-                    // Cargar combo de SubDirecciones después del login
-                    cargarSubDirecciones();
                 } else {
                     const dataError = await resp.json();
                     errMsg.textContent = dataError.message || "Credenciales incorrectas.";
@@ -163,39 +155,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-// =============================================================================
-// FUNCIONES AUXILIARES
-// =============================================================================
 
-/**
- * Carga el combo de SubDirecciones Generales al cargar la página.
- * El primer elemento se selecciona automáticamente por defecto.
- */
-async function cargarSubDirecciones() {
-    try {
-        const resp = await ApiClient.get('/api/Catalogo/subdirecciones', true);
-        if (!resp.ok) {
-            console.error('Error al cargar SubDirecciones:', resp.status);
-            return;
-        }
-
-        const data = await resp.json();
-        const combo = document.getElementById('cmbSubDireccionGeneral');
-
-        if (!combo) return;
-
-        combo.innerHTML = '';
-
-        data.forEach((sd, index) => {
-            const option = document.createElement('option');
-            option.value = sd.codSubDirGeneral;
-            option.textContent = sd.nombreSubDirGeneral;
-            if (index === 0) {
-                option.selected = true;
-            }
-            combo.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Error cargando SubDirecciones:', error);
-    }
-}
