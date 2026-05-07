@@ -1,0 +1,237 @@
+/**
+ * Cartera Contratación Países (Detalle) — Estilos Específicos
+ */
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* TABLA PRINCIPAL                                                        */
+/* ════════════════════════════════════════════════════════════════════════ */
+.rpt-ccdp-table {
+    table-layout: fixed !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Anchos de columna (proporciones basadas en coordenadas Access) */
+.rpt-ccdp-col-cliente   { width: 38%; }
+.rpt-ccdp-col-proyecto  { width: 32%; }
+.rpt-ccdp-col-anterior  { width: 10%; }
+.rpt-ccdp-col-actual    { width: 10%; }
+.rpt-ccdp-col-total     { width: 10%; }
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* SUBTÍTULO DE FILTRO (Cartera > X M)                                    */
+/* ════════════════════════════════════════════════════════════════════════ */
+.rpt-ccdp-subtitulo-bar {
+    margin-top: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.rpt-ccdp-subtitulo-bar .rpt-subtitle-indicator {
+    color: #00468B;
+    font-weight: bold;
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* HEADERS DE GRUPO (País)                                                */
+/* ════════════════════════════════════════════════════════════════════════ */
+.rpt-ccdp-pais-header td {
+    padding-top: 6px !important;
+    padding-bottom: 2px !important;
+    color: #000000 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* DETALLE Y LITERALES                                                    */
+/* ════════════════════════════════════════════════════════════════════════ */
+
+/* Línea inferior bajo "Acumulado" (solo columnas año anterior y actual) */
+.rpt-ccdp-table thead .rpt-ccdp-acumulado-border {
+    border-bottom: 0.5pt solid #00468B !important;
+}
+
+.rpt-ccdp-table thead th {
+    border-bottom: none !important;
+}
+
+/* Borde inferior solo en la última fila del thead (columnas) */
+.rpt-ccdp-table thead tr:last-child th {
+    border-bottom: 0.5pt solid #00468B !important;
+}
+
+/* Alineación derecha y padding consistente para headers numéricos */
+.rpt-ccdp-table thead th.rpt-number-cell {
+    text-align: right !important;
+    padding-right: 5px !important;
+}
+
+.rpt-ccdp-table .rpt-detail-row td {
+    line-height: 1.25 !important;
+    padding: 3px 5px !important;
+    vertical-align: top;
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* TOTALES Y PIE                                                          */
+/* ════════════════════════════════════════════════════════════════════════ */
+.rpt-ccdp-grand-total-row td {
+    padding-top: 4px !important;
+    color: #00468B !important;
+}
+
+.rpt-ccdp-totals-border {
+    border-top: 0.5pt solid #00468B !important;
+}
+
+.rpt-ccdp-total-general {
+    margin-top: 0.8rem;
+}
+
+.rpt-align-center { text-align: center !important; }
+.rpt-align-end { text-align: end !important; text-align: right !important; }
+
+.rpt-ccdp-total-label {
+    padding-right: 0 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* PANTALLA: Separación compacta cabecera-contenido                       */
+/* ════════════════════════════════════════════════════════════════════════ */
+@media screen {
+    .rpt-paper[data-informe="cartera_contratacion_detalle_paises"] .report-body.rpt-cmai-mt-standard {
+        margin-top: 0.5rem !important;
+    }
+    .rpt-ccdp-subtitulo-bar {
+        margin-bottom: 0.1rem;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* IMPRESIÓN (@media print)                                               */
+/* ════════════════════════════════════════════════════════════════════════ */
+@media print {
+    .rpt-ccdp-table thead tr:last-child th {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-ccdp-totals-border {
+        border-top: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-ccdp-table .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding: 1.5px 5px !important;
+    }
+
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 14pt !important;
+        line-height: 25px !important;
+        page-break-after: avoid !important;
+    }
+
+    .rpt-ccdp-pais-header {
+        page-break-after: avoid !important;
+    }
+
+    .rpt-ccdp-table .rpt-detail-row {
+        page-break-inside: avoid !important;
+    }
+
+    .rpt-ccdp-subtitulo-bar {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════════════ */
+/* TABLA MAESTRA PARA PDF (Paginación Sin Agrupación)                     */
+/* ════════════════════════════════════════════════════════════════════════ */
+.rpt-table-print-master {
+    width: 100% !important;
+    border: none !important;
+}
+
+.rpt-print-thead-corporate {
+    display: table-header-group !important;
+}
+
+.rpt-print-thead-cell {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.rpt-print-tfoot-master {
+    display: table-footer-group !important;
+}
+
+.rpt-print-tfoot-cell {
+    height: 16mm !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Anulación de padding superior en contenedor maestro */
+.rpt-paper--print[data-informe="cartera_contratacion_detalle_paises"] {
+    padding-top: 0 !important;
+}
+
+/* Margen superior gestionado dentro del thead */
+.rpt-table-print-master thead::before {
+    content: "";
+    display: block;
+    height: 8mm;
+}
+
+/* Compactación de márgenes internos del encabezado */
+.rpt-print-thead-cell .rpt-header {
+    margin-bottom: 0 !important;
+}
+
+.rpt-print-thead-cell .rpt-subtitle {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Blindaje de fuentes corporativas contra estilos heredados de <th> */
+@media print {
+    .rpt-table-print-master .rpt-print-thead-cell * {
+        font-weight: normal !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
+        font-size: 14pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
+        font-size: 9pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-page-number {
+        font-size: 10pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top span {
+        font-size: 14pt !important;
+    }
+
+    .rpt-table-print-master thead tr.rpt-table-header-columns th {
+        border-bottom: none !important;
+    }
+
+    .rpt-table-print-master thead tr.rpt-table-header-columns .rpt-ccdp-acumulado-border {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-table-print-master thead tr.rpt-table-header-columns:last-child th {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-table-print-master thead tr.rpt-table-header-columns th.rpt-number-cell {
+        text-align: right !important;
+        padding-right: 5px !important;
+    }
+
+    .rpt-table-print-master thead .rpt-print-thead-row .rpt-print-thead-cell {
+        border-bottom: none !important;
+    }
+}

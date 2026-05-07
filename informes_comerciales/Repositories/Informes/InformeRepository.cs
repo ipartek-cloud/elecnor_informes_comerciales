@@ -16,6 +16,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.MercadosSGDelegaciones;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalle;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionResumenSDG;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalleOrgPaises;
+using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetallePaises;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1836,6 +1837,36 @@ public class InformeRepository
 
         // Filtrar registros vacíos
         return datos.Where(d => (d.ImporteCarteraOferta ?? 0) + (d.ImporteContratadoOferta ?? 0) != 0).ToList();
+    }
+
+    // Informe: Cartera Contratación Detalle Países
+    public async Task<List<CarteraContratacionDetallePaisesPoco>> ObtenerCarteraContratacionDetallePaisesAsync(
+        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
+    {
+        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
+
+        var parametros = new
+        {
+            Anio = anio,
+            Mes = mes,
+            TodoInternacional = todoInternacional,
+            LimiteImporte = limiteImporte,
+            LimitePaises = limitePaises,
+            Informe = informe
+        };
+
+        var datos = (await _connection.QueryAsync<CarteraContratacionDetallePaisesPoco>(sqlExec, parametros, commandTimeout: 600)).ToList();
+
+        // Transformación: ImporteContratadoOferta / 1000 (paridad VBA)
+        foreach (var fila in datos)
+        {
+            fila.ImporteContratadoOferta = (fila.ImporteContratadoOferta ?? 0) / 1000m;
+        }
+
+        // Filtro post-query: excluir ofertas cuya suma cartera + contratado sea cero
+        // (paridad exacta con HAVING del subinforme Access)
+        //return datos.Where(d => (d.ImporteCarteraOferta ?? 0) + (d.ImporteContratadoOferta ?? 0) != 0).ToList();
+        return datos.ToList();
     }
 
     // Informe: Cartera Contratación (Resumen SDG)
