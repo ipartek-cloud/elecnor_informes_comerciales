@@ -586,7 +586,7 @@
                                    name="inputPaginaPaisesRelevantesComite" value="9" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Cartera Contratación DG Proyectos (Detalle) – Internacional -->
+                        <!-- Cartera Contratación DG Servicios (Detalle) – Internacional -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'cartera_contratacion_detalle_org_paises')"
@@ -595,14 +595,14 @@
                                     data-limitepaises="20"
                                     data-informe="8.1"
                                     data-mostrar-titulo="false"
-                                    data-subdireccion="286"
-                                    data-input-pag="inputPaginaCarteraDetalleProyectosInt"
-                                    aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Internacional">
-                                Cartera Contratación DG Proyectos (Detalle) – Internacional
+                                    data-subdireccion="221"
+                                    data-input-pag="inputPaginaCarteraDetalleServiciosInt"
+                                    aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Internacional">
+                                Cartera Contratación DG Servicios (Detalle) – Internacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaCarteraDetalleProyectosInt"
-                                   name="inputPaginaCarteraDetalleProyectosInt" value="9" min="1"
+                                   id="inputPaginaCarteraDetalleServiciosInt"
+                                   name="inputPaginaCarteraDetalleServiciosInt" value="9" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
                     </div>
@@ -627,7 +627,7 @@
                                    name="inputPaginaCarteraContratacionDetalle" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Cartera Contratación DG Servicios (Detalle) – Internacional -->
+                        <!-- Cartera Contratación DG Proyectos (Detalle) – Internacional -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                     onclick="cargarInforme(this, 'cartera_contratacion_detalle_org_paises')"
@@ -636,14 +636,14 @@
                                     data-limitepaises="20"
                                     data-informe="8.1"
                                     data-mostrar-titulo="false"
-                                    data-subdireccion="221"
-                                    data-input-pag="inputPaginaCarteraDetalleServiciosInt"
-                                    aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Internacional">
-                                Cartera Contratación DG Servicios (Detalle) – Internacional
+                                    data-subdireccion="286"
+                                    data-input-pag="inputPaginaCarteraDetalleProyectosInt"
+                                    aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Internacional">
+                                Cartera Contratación DG Proyectos (Detalle) – Internacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaCarteraDetalleServiciosInt"
-                                   name="inputPaginaCarteraDetalleServiciosInt" value="10" min="1"
+                                   id="inputPaginaCarteraDetalleProyectosInt"
+                                   name="inputPaginaCarteraDetalleProyectosInt" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
                     </div>
@@ -665,8 +665,24 @@
                                    name="inputPaginaCarteraContratacionResumenDG" value="11" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Cartera Contratación Paises (Detalle) Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle_paises')"
+                                    data-mercado="Internacional"
+                                    data-limiteimporte="17000"
+                                    data-limitepaises="20"
+                                    data-informe="9.1"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraDetallePaisesInt"
+                                    aria-label="Ver informe Cartera Contratación Paises (Detalle) Internacional">
+                                Cartera Contratación Paises (Detalle) Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetallePaisesInt"
+                                   name="inputPaginaCarteraDetallePaisesInt" value="11" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
                     <!-- FILA 12 -->
@@ -713,6 +729,30 @@
                             <input type="number" class="form-control rpt-input-page"
                                    id="inputPaginaCarteraDetalleProyectos"
                                    name="inputPaginaCarteraDetalleProyectos" value="13" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                    </div>
+
+                    <!-- FILA 14 -->
+                    <div class="d-flex align-items-center gap-2 w-100">
+                        <!-- Cartera Contratación Paises (Detalle) Nacional - Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle_paises')"
+                                    data-mercado="Todo"
+                                    data-limiteimporte="17000"
+                                    data-limitepaises="20"
+                                    data-informe="9.1"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraDetallePaises"
+                                    aria-label="Ver informe Cartera Contratación Paises (Detalle) Nacional - Internacional">
+                                Cartera Contratación Paises (Detalle) Nacional - Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetallePaises"
+                                   name="inputPaginaCarteraDetallePaises" value="14" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
                         <!-- Vacío Derecha -->
