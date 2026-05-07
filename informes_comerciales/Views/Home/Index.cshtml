@@ -380,8 +380,16 @@
                                    name="inputPaginaComiteMercados" value="1" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Mercado Internacional DG – Elecnor Value (Pendiente) -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    style="background-color: #e3f2fd;"
+                                    onclick="Swal.fire({ title: 'Informe Pendiente', text: 'El informe Mercado Internacional DG – Elecnor Value está pendiente de desarrollo.', icon: 'info', confirmButtonColor: '#005596' })"
+                                    aria-label="Mercado Internacional DG – Elecnor Value (Pendiente)">
+                                Mercado Internacional DG – Elecnor Value
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaComiteMercadoIntValue" name="inputPaginaComiteMercadoIntValue" value="1" min="1" aria-label="Página" style="background-color: #e3f2fd;">
+                        </div>
                     </div>
 
                     <!-- FILA 2 -->
@@ -399,8 +407,16 @@
                                    name="inputPaginaGerencias" value="2" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Mercado Internacional DG – Países (Pendiente) -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    style="background-color: #e3f2fd;"
+                                    onclick="Swal.fire({ title: 'Informe Pendiente', text: 'El informe Mercado Internacional DG – Países está pendiente de desarrollo.', icon: 'info', confirmButtonColor: '#005596' })"
+                                    aria-label="Mercado Internacional DG – Países (Pendiente)">
+                                Mercado Internacional DG – Países
+                            </button>
+                            <input type="number" class="form-control rpt-input-page" id="inputPaginaComiteMercadoIntPaises" name="inputPaginaComiteMercadoIntPaises" value="2" min="1" aria-label="Página" style="background-color: #e3f2fd;">
+                        </div>
                     </div>
 
                     <!-- FILA 3 -->
@@ -418,7 +434,7 @@
                                    name="inputPaginaActividadesObjetivos" value="3" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
+                        <!-- Vacío Internacional (Pág 3) -->
                         <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
@@ -437,7 +453,7 @@
                                    name="inputPaginaMercadosSGDelegaciones" value="4" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
+                        <!-- Vacío Internacional (Pág 4) -->
                         <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
@@ -458,7 +474,7 @@
                                    name="inputPaginaContratacionesSignificativasNacionalComite" value="5" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
+                        <!-- Vacío Internacional (Pág 5) -->
                         <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
@@ -479,7 +495,7 @@
                                    name="inputPaginaContratacionesSignificativasInternacionalComite" value="6" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
+                        <!-- Vacío Internacional (Pág 6) -->
                         <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
@@ -500,8 +516,24 @@
                                    name="inputPaginaRankingNacionalComite" value="7" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Cartera Contratación (Detalle) – Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle')"
+                                    data-mercado="Internacional"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="1000"
+                                    data-informe="9.1"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraContratacionDetalleInt"
+                                    aria-label="Ver informe Cartera Contratación (Detalle) Internacional">
+                                Cartera Contratación (Detalle) – Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraContratacionDetalleInt"
+                                   name="inputPaginaCarteraContratacionDetalleInt" value="7" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
                     <!-- FILA 8 -->
@@ -521,8 +553,21 @@
                                    name="inputPaginaRankingInternacionalComite" value="8" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Cartera Contratación x DG (Resumen) – Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_resumen_sdg')"
+                                    data-mercado="Internacional"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaCarteraContratacionResumenDGInt"
+                                    aria-label="Ver informe Cartera Contratación DG (Resumen) Internacional">
+                                Cartera Contratación x DG (Resumen) – Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraContratacionResumenDGInt"
+                                   name="inputPaginaCarteraContratacionResumenDGInt" value="8" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
                     <!-- FILA 9 -->
@@ -541,8 +586,25 @@
                                    name="inputPaginaPaisesRelevantesComite" value="9" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Derecha -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Cartera Contratación DG Proyectos (Detalle) – Internacional -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle_org_paises')"
+                                    data-mercado="Internacional"
+                                    data-limiteimporte="13000"
+                                    data-limitepaises="20"
+                                    data-informe="8.1"
+                                    data-mostrar-titulo="false"
+                                    data-subdireccion="286"
+                                    data-input-pag="inputPaginaCarteraDetalleProyectosInt"
+                                    aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Internacional">
+                                Cartera Contratación DG Proyectos (Detalle) – Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaCarteraDetalleProyectosInt"
+                                   name="inputPaginaCarteraDetalleProyectosInt" value="9" min="1"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
                     <!-- FILA 10 -->
@@ -565,22 +627,23 @@
                                    name="inputPaginaCarteraContratacionDetalle" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Cartera Contratación (Detalle) Internacional -->
+                        <!-- Cartera Contratación DG Servicios (Detalle) – Internacional -->
                         <div class="input-group rpt-input-group-index flex-fill">
                             <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle')"
+                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle_org_paises')"
                                     data-mercado="Internacional"
                                     data-limiteimporte="13000"
-                                    data-limitepaises="1000"
-                                    data-informe="9.1"
+                                    data-limitepaises="20"
+                                    data-informe="8.1"
                                     data-mostrar-titulo="false"
-                                    data-input-pag="inputPaginaCarteraContratacionDetalleInt"
-                                    aria-label="Ver informe Cartera Contratación (Detalle) Internacional">
-                                Cartera Contratación (Detalle) Internacional
+                                    data-subdireccion="221"
+                                    data-input-pag="inputPaginaCarteraDetalleServiciosInt"
+                                    aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Internacional">
+                                Cartera Contratación DG Servicios (Detalle) – Internacional
                             </button>
                             <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaCarteraContratacionDetalleInt"
-                                   name="inputPaginaCarteraContratacionDetalleInt" value="10" min="1"
+                                   id="inputPaginaCarteraDetalleServiciosInt"
+                                   name="inputPaginaCarteraDetalleServiciosInt" value="10" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
                     </div>
@@ -602,21 +665,8 @@
                                    name="inputPaginaCarteraContratacionResumenDG" value="11" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Cartera Contratación DG (Resumen) Internacional -->
-                        <div class="input-group rpt-input-group-index flex-fill">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'cartera_contratacion_resumen_sdg')"
-                                    data-mercado="Internacional"
-                                    data-mostrar-titulo="false"
-                                    data-input-pag="inputPaginaCarteraContratacionResumenDGInt"
-                                    aria-label="Ver informe Cartera Contratación DG (Resumen) Internacional">
-                                Cartera Contratación DG (Resumen) Internacional
-                            </button>
-                            <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaCarteraContratacionResumenDGInt"
-                                   name="inputPaginaCarteraContratacionResumenDGInt" value="11" min="1"
-                                   aria-label="Página" title="Página inicial">
-                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
                     <!-- FILA 12 -->
@@ -640,25 +690,8 @@
                                    name="inputPaginaCarteraDetalleServicios" value="12" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Cartera Contratación DG Servicios (Detalle) Internacional -->
-                        <div class="input-group rpt-input-group-index flex-fill">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle_org_paises')"
-                                    data-mercado="Internacional"
-                                    data-limiteimporte="13000"
-                                    data-limitepaises="20"
-                                    data-informe="8.1"
-                                    data-mostrar-titulo="false"
-                                    data-subdireccion="221"
-                                    data-input-pag="inputPaginaCarteraDetalleServiciosInt"
-                                    aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Internacional">
-                                Cartera Contratación DG Servicios (Detalle) Internacional
-                            </button>
-                            <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaCarteraDetalleServiciosInt"
-                                   name="inputPaginaCarteraDetalleServiciosInt" value="12" min="1"
-                                   aria-label="Página" title="Página inicial">
-                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
                     <!-- FILA 13 -->
@@ -682,25 +715,8 @@
                                    name="inputPaginaCarteraDetalleProyectos" value="13" min="1"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Cartera Contratación DG Proyectos (Detalle) Internacional -->
-                        <div class="input-group rpt-input-group-index flex-fill">
-                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                    onclick="cargarInforme(this, 'cartera_contratacion_detalle_org_paises')"
-                                    data-mercado="Internacional"
-                                    data-limiteimporte="13000"
-                                    data-limitepaises="20"
-                                    data-informe="8.1"
-                                    data-mostrar-titulo="false"
-                                    data-subdireccion="286"
-                                    data-input-pag="inputPaginaCarteraDetalleProyectosInt"
-                                    aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Internacional">
-                                Cartera Contratación DG Proyectos (Detalle) Internacional
-                            </button>
-                            <input type="number" class="form-control rpt-input-page"
-                                   id="inputPaginaCarteraDetalleProyectosInt"
-                                   name="inputPaginaCarteraDetalleProyectosInt" value="13" min="1"
-                                   aria-label="Página" title="Página inicial">
-                        </div>
+                        <!-- Vacío Derecha -->
+                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
                     </div>
 
 

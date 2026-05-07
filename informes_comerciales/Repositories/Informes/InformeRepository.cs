@@ -1817,10 +1817,7 @@ public class InformeRepository
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // INFORME: Cartera Contratación Detalle Organización Países
-    // ═══════════════════════════════════════════════════════════════════════════
-
+    // Informe: Cartera Contratación Detalle Organización Países
     public async Task<List<CarteraContratacionDetalleOrgPaisesPoco>> ObtenerCarteraContratacionDetalleOrgPaisesAsync(
         int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
     {
@@ -1831,7 +1828,7 @@ public class InformeRepository
 
         var datos = (await _connection.QueryAsync<CarteraContratacionDetalleOrgPaisesPoco>(sqlExec, parametros, commandTimeout: 600)).ToList();
 
-        // Replicar transformación VBA: ImporteContratadoOferta / 1000
+        // Transformación: ImporteContratadoOferta / 1000 (VBA Parity)
         foreach (var fila in datos)
         {
             fila.ImporteContratadoOferta = (fila.ImporteContratadoOferta ?? 0) / 1000m;
@@ -1841,15 +1838,7 @@ public class InformeRepository
         return datos.Where(d => (d.ImporteCarteraOferta ?? 0) + (d.ImporteContratadoOferta ?? 0) != 0).ToList();
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // INFORME: Cartera Contratación (Resumen SDG)
-    // └─ Método: ObtenerCarteraContratacionResumenSDGAsync()
-    // └─ Nota: El SP devuelve datos finales; no se requiere tabla temporal.
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    /// <summary>
-    /// Ejecuta el SP spCartera_Contratacion_Resumen_SDG y devuelve el dataset plano.
-    /// </summary>
+    // Informe: Cartera Contratación (Resumen SDG)
     public async Task<List<CarteraContratacionResumenSDGPoco>> ObtenerCarteraContratacionResumenSDGAsync(int anio, int mes, int todoInt)
     {
         const string sqlExec = "EXEC spCartera_Contratacion_Resumen_SDG @Anio, @Mes, @TodoInt";

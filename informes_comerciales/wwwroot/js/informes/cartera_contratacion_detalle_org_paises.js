@@ -72,7 +72,9 @@ function _getHtmlEncabezado() {
     const umbralMiles = filtros.limiteImporte
         ? Math.round(Number(filtros.limiteImporte) / 1000)
         : 13;
-    const tipoDg = filtros.codSubDirGeneral === '286' ? 'Proyectos' : 'Servicios';
+    
+    // Usamos el título dinámico del backend si existe, si no, usamos el fallback
+    const tituloInforme = meta?.titulo || `Cartera Contratación DG ${filtros.codSubDirGeneral === '286' ? 'Proyectos' : 'Servicios'} (Detalle)`;
 
     const headerBase = getHtmlEncabezadoBase({
         tituloCorporativo: `
@@ -80,7 +82,7 @@ function _getHtmlEncabezado() {
             <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>
         `,
         textoBanner1: 'Elecnor',
-        textoBanner2: `Cartera Contratación DG ${tipoDg} (Detalle)`,
+        textoBanner2: tituloInforme,
         mes: filtros.mes,
         anio: filtros.anio,
         nroPagina: estado.nroPagina,
@@ -224,9 +226,7 @@ function _registrarEventos() {
     inicializarEventListenersBase(estado, _renderizarPagina, _imprimirInforme);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TABLA MAESTRA PARA PDF (thead repetido en cada página)
-// ═══════════════════════════════════════════════════════════════════════════════
+// Renderización de Tabla Maestra para PDF (thead repetido)
 function _renderTablaMaestraPDF() {
     const data = estado.informeGlobalData;
     const meta = data?.meta;

@@ -23,6 +23,7 @@ public class InformeCarteraContratacionDetalleOrgPaisesService
         int anio, int mes, int? nroPagina, decimal limiteImporte, int limitePaises, string mercado, string informe, string? codSubDirGeneral)
     {
         int todoInternacional = mercado.Equals("Todo", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
+        string sufijoMercado = mercado.Equals("Internacional", StringComparison.OrdinalIgnoreCase) ? " Internacional" : "";
 
         // Ejecutar consultas en paralelo para minimizar latencia
         var tDatos = _repository.ObtenerCarteraContratacionDetalleOrgPaisesAsync(anio, mes, todoInternacional, limiteImporte, limitePaises, informe);
@@ -37,7 +38,7 @@ public class InformeCarteraContratacionDetalleOrgPaisesService
         {
             Meta = new MetaInformeDto
             {
-                Titulo = $"Cartera Contratación DG {(codSubDirGeneral == "286" ? "Proyectos" : "Servicios")} (Detalle)",
+                Titulo = $"Cartera Contratación DG {(codSubDirGeneral == "286" ? "Proyectos" : "Servicios")}{sufijoMercado} (Detalle)",
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, Mercado = mercado, LimiteImporte = limiteImporte, LimitePaises = limitePaises, CodSubDirGeneral = codSubDirGeneral },
                 FechaGeneracion = DateTime.Now,
@@ -49,18 +50,12 @@ public class InformeCarteraContratacionDetalleOrgPaisesService
         if (datosPlanos == null || !datosPlanos.Any())
             return response;
 
-        // ═══════════════════════════════════════════════════════════════════════
-        // FILTRO POST-QUERY: CodSubDirGeneral (286=Proyectos, 221=Servicios)
-        // El SP 8.1 no filtra por CodSubDirGeneral; lo hacemos aquí.
-        // ═══════════════════════════════════════════════════════════════════════
+        // Filtro post-query por Dirección General (286=Proyectos, 221=Servicios)
         var datosFiltrados = string.IsNullOrEmpty(codSubDirGeneral)
             ? datosPlanos
             : datosPlanos.Where(x => x.CodSubDirGeneral == codSubDirGeneral).ToList();
 
-        // ══════════════════════════════════════════════════════════════════════
-        // ORDENAMIENTO: EXCLUSIVAMENTE EN SERVICE.
-        // Criterio: NombreDirNegocio ASC (alfabético), luego ImporteCarteraPais DESC, luego ImporteCarteraOferta DESC.
-        // ═══════════════════════════════════════════════════════════════════════
+        // Ordenación: DN alfabético, Importe País DESC, Importe Oferta DESC
         var datosOrdenados = datosFiltrados
             .OrderBy(x => x.NombreDirNegocio)
             .ThenByDescending(x => x.ImporteCarteraPais ?? 0)
@@ -106,15 +101,21 @@ public class InformeCarteraContratacionDetalleOrgPaisesService
 
         response.Agrupaciones = agrupaciones;
 
-        // ══════════════════════════════════════════════════════════════════════
-        // TOTALES GLOBALES: Suma de lo que se muestra en el informe (detalles visibles).
-        // Importante: No sumar ImporteCarteraPais/DN de datosFiltrados porque se repite por fila.
-        // ══════════════════════════════════════════════════════════════════════
+        // Totales: Suma de los totales únicos por País
+        var totalesPorPais = datosFiltrados
+            .GroupBy(x => new { x.NombreDirNegocio, x.Pais })
+            .Select(g => new 
+            { 
+                ImporteActual = g.First().ImporteCarteraPais ?? 0,
+                ImporteAnterior = g.First().ImporteCarteraPaisAñoAnterior ?? 0
+            })
+            .ToList();
+
         response.Totales = new CarteraContratacionDetalleOrgPaisesTotalesDto
         {
-            SumaCarteraPais = datosFiltrados.Sum(x => x.ImporteCarteraOferta ?? 0),
-            SumaCarteraPaisAñoAnterior = datosFiltrados.Sum(x => x.ImporteCarteraOfertaAñoAnterior ?? 0),
-            TotalCarteraGeneral = (totalGeneral ?? 0) / 1000
+            SumaCarteraPais = totalesPorPais.Sum(x => x.ImporteActual),
+            SumaCarteraPaisAñoAnterior = totalesPorPais.Sum(x => x.ImporteAnterior),
+            TotalCarteraGeneral = totalGeneral
         };
 
         return response;
