@@ -319,10 +319,13 @@ function _renderTablaMaestraNacional() {
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
-                            <div class="rpt-text-corporate rpt-header-corporate-text">
-                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span>
-                                <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
-                            </div>
+                            ${estado.mostrarTitulo !== false
+                                ? `<div class="rpt-text-corporate rpt-header-corporate-text">
+                                       <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span>
+                                       <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
+                                   </div>`
+                                : '<div></div>'
+                            }
                             <div class="d-flex flex-column align-items-end">
                                 ${estado.mostrarNumeroPagina !== false && nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
@@ -418,10 +421,13 @@ function _renderTablaMaestraInternacional() {
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
-                            <div class="rpt-text-corporate rpt-header-corporate-text">
-                                <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span>
-                                <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
-                            </div>
+                            ${estado.mostrarTitulo !== false
+                                ? `<div class="rpt-text-corporate rpt-header-corporate-text">
+                                       <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span>
+                                       <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
+                                   </div>`
+                                : '<div></div>'
+                            }
                             <div class="d-flex flex-column align-items-end">
                                 ${estado.mostrarNumeroPagina !== false && nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
