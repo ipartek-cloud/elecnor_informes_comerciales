@@ -22,6 +22,91 @@ export function limpiarCssInformes() {
     links.forEach(link => link.remove());
 }
 
+/**
+ * Inicializa los bocadillos de previsualización (Tooltips) para los botones de informe.
+ * Utiliza Tippy.js para mostrar los filtros reales que se aplicarán.
+ */
+function inicializarTooltipsFiltros() {
+    if (typeof tippy === 'undefined') return;
+
+    // Destruir instancias previas para evitar duplicados
+    tippy.destroyAll?.();
+
+    tippy('.btn.rpt-btn-index', {
+        theme: 'elecnor',
+        placement: 'top',
+        allowHTML: true,
+        animation: 'fade',
+        arrow: true,
+        onShow(instance) {
+            const btn = instance.reference;
+            const ds = btn.dataset;
+            
+            // 1. Obtener valores globales (Inputs)
+            const valorInputMonto = parseFloat(document.getElementById('inputLimiteMonto')?.value || 0);
+            const valorInputPaises = parseInt(document.getElementById('inputLimiteNumeroPaises')?.value || 0, 10);
+
+            // 2. Obtener valores por defecto del botón
+            const limiteImporteDefault = ds.limiteimporte ? parseFloat(ds.limiteimporte) : null;
+            const limitePaisesDefault = ds.limitepaises ? parseInt(ds.limitepaises, 10) : null;
+
+            // 3. Resolver Jerarquía (REPLICA EXACTA DE CARGARINFORME)
+            // Lógica: Si el input es 0 o vacío, manda el botón. Si el input tiene valor, manda el input.
+            const montoReal = (!valorInputMonto || valorInputMonto === 0) && limiteImporteDefault
+                ? limiteImporteDefault
+                : (valorInputMonto || limiteImporteDefault || 13000);
+
+            const paisesReal = (!valorInputPaises || valorInputPaises === 0) && limitePaisesDefault
+                ? limitePaisesDefault
+                : (valorInputPaises || limitePaisesDefault || 20);
+
+            let umbral = ds.umbral;
+
+            // 4. Construir HTML del bocadillo
+            let content = `<div class="p-1">`;
+            content += `<div class="mb-1"><strong>Filtros Activos</strong></div>`;
+            
+            let tieneInfo = false;
+
+            // B. Filtro de Monto
+            if (ds.limiteimporte !== undefined || ds.informe?.includes('cartera') || ds.informe?.includes('detalle')) {
+                const valorM = montoReal / 1000;
+                // Formatear a 1 decimal y convertir de nuevo a número para eliminar .0 si existe
+                const displayMonto = Number(valorM.toFixed(1));
+                content += `<div>Monto: ${displayMonto}M</div>`;
+                tieneInfo = true;
+            }
+
+            // C. Filtro de Países
+            if (ds.limitepaises !== undefined || ds.informe?.includes('cartera') || ds.informe?.includes('detalle')) {
+                content += `<div>Países: ${paisesReal}</div>`;
+                tieneInfo = true;
+            }
+
+            // D. Umbral de Filtrado
+            if (umbral !== undefined && umbral !== null && umbral !== "") {
+                const num = parseFloat(umbral);
+                const displayUmbral = num === 0 ? "0" : Math.round(num / 1000) + "k";
+                content += `<div>Umbral: ${displayUmbral}</div>`;
+                tieneInfo = true;
+            }
+
+            content += `</div>`;
+
+            if (!tieneInfo) return false;
+
+            instance.setContent(content);
+        }
+    });
+}
+
+// Inicializar cuando el DOM esté listo o se cargue el script
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarTooltipsFiltros);
+} else {
+    inicializarTooltipsFiltros();
+}
+
 window.cargarInforme = async function (btn, nombreInforme) {
 
     // Mantener compatibilidad si se llama solo con nombreInforme
