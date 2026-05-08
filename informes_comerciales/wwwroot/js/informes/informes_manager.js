@@ -34,8 +34,11 @@ window.cargarInforme = async function (btn, nombreInforme) {
     const mes  = document.getElementById('txtMes').value;
     
     // Capturar nro de página si el botón indica un input de origen
+    // Normalizar: parsear a entero y tratar 0 como null (sin número de página)
     const idInputPag = btn?.dataset?.inputPag;
-    const nroPagina  = idInputPag ? document.getElementById(idInputPag)?.value : null;
+    const rawPag = idInputPag ? document.getElementById(idInputPag)?.value : null;
+    const nroPagina = rawPag != null ? parseInt(rawPag, 10) : null;
+    const nroPaginaFinal = nroPagina > 0 ? nroPagina : null;
 
     // Capturar mercado si existe (para informes duales como Ranking Clientes)
     const mercado = btn?.dataset?.mercado;
@@ -94,7 +97,7 @@ window.cargarInforme = async function (btn, nombreInforme) {
             const parametros = {
                 anio: anio,
                 mes: mes,
-                nroPagina: nroPagina,
+                nroPagina: nroPaginaFinal,
                 mercado: mercado,
                 umbral: btn?.dataset?.umbral || null,
                 codSubDir: _codSubDir,

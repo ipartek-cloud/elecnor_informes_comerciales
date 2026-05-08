@@ -65,7 +65,7 @@ function _getHtmlEncabezado() {
         textoBanner2: 'Actividades',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
-        nroPagina: estado.nroPagina || 4, // Usar el nro de página del estado o 4 por defecto
+        nroPagina: estado.nroPagina || 4,
         mostrarNumeroPagina: estado.mostrarNumeroPagina,
         mostrarTitulo: estado.mostrarTitulo
     });

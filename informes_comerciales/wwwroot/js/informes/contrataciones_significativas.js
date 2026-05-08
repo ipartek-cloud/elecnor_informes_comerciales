@@ -324,7 +324,7 @@ function _renderTablaMaestraNacional() {
                                 <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
                             </div>
                             <div class="d-flex flex-column align-items-end">
-                                <span class="rpt-page-number">${nroPagina}</span>
+                                ${estado.mostrarNumeroPagina !== false && nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
                             </div>
                         </div>
@@ -423,7 +423,7 @@ function _renderTablaMaestraInternacional() {
                                 <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
                             </div>
                             <div class="d-flex flex-column align-items-end">
-                                <span class="rpt-page-number">${nroPagina}</span>
+                                ${estado.mostrarNumeroPagina !== false && nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
                             </div>
                         </div>
