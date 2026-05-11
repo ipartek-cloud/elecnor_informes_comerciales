@@ -78,6 +78,7 @@ builder.Services.AddScoped<InformeCarteraContratacionDetalleService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetalleOrgPaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetallePaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionResumenSDGService>();
+builder.Services.AddScoped<InformeActividadesInternacionalDetalleService>();
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // Catálogos

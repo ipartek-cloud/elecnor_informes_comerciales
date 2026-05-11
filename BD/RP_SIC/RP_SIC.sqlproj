@@ -912,6 +912,7 @@
     <Build Include="dbo\Tables\rptCarteraContratacionDetalle_DGDesarrolloInternacional_Org_Pais.sql" />
     <Build Include="dbo\Tables\rptCartera_Contratacion_Resumen_SDG.sql" />
     <Build Include="dbo\Tables\CO005BPH .sql" />
+    <Build Include="dbo\Tables\rptContratacion_Actividad_SubActividad.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_RPSIC.scmp" />

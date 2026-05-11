@@ -17,6 +17,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalle;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionResumenSDG;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalleOrgPaises;
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetallePaises;
+using Elecnor_Informes_Comerciales.Models.Informes.ActividadesInternacionalDetalle;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -1880,6 +1881,102 @@ public class InformeRepository
         var parametros = new { Anio = anio, Mes = mes, TodoInt = todoInt };
 
         return (await conn.QueryAsync<CarteraContratacionResumenSDGPoco>( sqlExec, parametros, commandTimeout: 300)).ToList();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Detalle Actividades Internacional
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<ActividadesInternacionalDetallePoco>> ObtenerActividadesInternacionalDetalleAsync(int anio, int mes)
+    {
+        const string sqlDelete = "DELETE FROM rptContratacion_Actividad_SubActividad";
+
+        const string sqlExec = "EXEC spContratacion_Actividades_SubActividades @Anio, @Mes";
+
+        const string sqlInsertManual = @"INSERT INTO rptContratacion_Actividad_SubActividad
+                                                (Año, Orden, CodActividad, Actividad, CodAct1, CodAct2, Pais,
+                                                 ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Desglose_AñoAnterior)
+                                         VALUES
+                                                (@Año, @Orden, @CodActividad, @Actividad, @CodAct1, @CodAct2, @Pais,
+                                                 @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @Desglose_AñoAnterior)";
+
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad_SubActividad SET Año = @Anio WHERE Año IS NULL";
+
+        const string sqlSelect = @" ;WITH Resumen AS (
+                                        SELECT
+                                            r.Año, r.Pais, r.Actividad AS ActividadPrincipal,
+                                            CAST(NULL AS NVARCHAR(255)) AS ActividadDetalle,
+                                            SUM(r.ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
+                                            SUM(r.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior,
+                                            r.Orden,
+                                            ISNULL(MAX(obj.Importe), 0) AS ImporteObjetivos,
+                                            0 AS EsSubActividad
+                                        FROM dbo.rptContratacion_Actividad_SubActividad r
+                                        LEFT JOIN dbo.vwObjetivosActividadesAGRUPInternacional obj
+                                            ON r.Actividad = obj.Agrupacion AND r.Año = obj.Año
+                                        WHERE r.Desglose_AñoAnterior = 0
+                                          AND r.Pais = 'internacional'
+                                          AND r.Año = @Anio
+                                        GROUP BY r.Año, r.Pais, r.Actividad, r.Orden
+
+                                        UNION ALL
+
+                                        SELECT
+                                            r.Año, r.Pais, s.Descrip_Activ_Espec AS ActividadPrincipal,
+                                            s.Descrip_Activ_Espec_Desglose AS ActividadDetalle,
+                                            SUM(r.ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
+                                            SUM(r.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior,
+                                            s.Ord_Descrip_Activ_Espec_Desglose AS Orden,
+                                            0 AS ImporteObjetivos,
+                                            1 AS EsSubActividad
+                                        FROM dbo.rptContratacion_Actividad_SubActividad r
+                                        INNER JOIN dbo.SubActividadesSQL s
+                                            ON r.Actividad = s.Descrip_Activ_Espec AND r.CodAct2 = s.CDAC2
+                                        WHERE r.Pais = 'internacional'
+                                          AND r.Año = @Anio
+                                          AND s.Descrip_Activ_Espec_Desglose <> ''
+                                        GROUP BY r.Año, r.Pais, s.Descrip_Activ_Espec, 
+                                                 s.Descrip_Activ_Espec_Desglose, s.Ord_Descrip_Activ_Espec_Desglose
+                                    )
+                                    SELECT * FROM Resumen";
+
+        var parametros = new { Anio = anio, Mes = mes };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            var datosSp = (await _connection.QueryAsync<dynamic>(sqlExec, parametros, transaction: transaction)).ToList();
+
+            foreach (var fila in datosSp)
+            {
+                await _connection.ExecuteAsync(sqlInsertManual, new {
+                    Año = anio,
+                    Orden = (int?)fila.Orden,
+                    CodActividad = (string?)fila.CodActividad,
+                    Actividad = (string?)fila.Actividad,
+                    CodAct1 = (string?)fila.CodAct1,
+                    CodAct2 = (string?)fila.CodAct2,
+                    Pais = (string?)fila.Pais,
+                    ImporteContratadoAcumulado = (decimal?)fila.ImporteContratadoAcumulado,
+                    ImporteContratadoAcumuladoAñoAnterior = (decimal?)fila.ImporteContratadoAcumuladoAñoAnterior,
+                    Desglose_AñoAnterior = (int?)fila.Desglose_AñoAnterior
+                }, transaction: transaction);
+            }
+
+            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction);
+            var resultado = (await _connection.QueryAsync<ActividadesInternacionalDetallePoco>(sqlSelect, parametros, transaction)).ToList();
+            transaction.Commit();
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
 }

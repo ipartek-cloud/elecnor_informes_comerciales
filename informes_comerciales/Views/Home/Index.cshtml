@@ -436,8 +436,21 @@
                                    name="inputPaginaActividadesObjetivos" value="3" min="0"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Internacional (Pág 3) -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Países (Comité Internacional) -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'paises')"
+                                    data-umbral="0"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaComitePaises"
+                                    aria-label="Ver informe Mercado Internacional por Países">
+                                Mercado Internacional por Países
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaComitePaises"
+                                   name="inputPaginaComitePaises" value="3" min="0"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
                     <!-- FILA 4 -->
@@ -456,8 +469,20 @@
                                    name="inputPaginaMercadosSGDelegaciones" value="4" min="0"
                                    aria-label="Página" title="Página inicial">
                         </div>
-                        <!-- Vacío Internacional (Pág 4) -->
-                        <div class="input-group rpt-input-group-index flex-fill" style="visibility: hidden;"></div>
+                        <!-- Detalle Actividades Internacional (Comité Internacional) -->
+                        <div class="input-group rpt-input-group-index flex-fill">
+                            <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                    onclick="cargarInforme(this, 'actividades_internacional_detalle')"
+                                    data-mostrar-titulo="false"
+                                    data-input-pag="inputPaginaComiteActividadesInt"
+                                    aria-label="Ver informe Detalle Actividades Internacional">
+                                Detalle Actividades Internacional
+                            </button>
+                            <input type="number" class="form-control rpt-input-page"
+                                   id="inputPaginaComiteActividadesInt"
+                                   name="inputPaginaComiteActividadesInt" value="4" min="0"
+                                   aria-label="Página" title="Página inicial">
+                        </div>
                     </div>
 
                     <!-- FILA 5 -->

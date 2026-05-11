@@ -1,0 +1,211 @@
+﻿/* =============================================================================
+   ESTILOS ESPECÍFICOS: Detalle Actividades Internacional
+   Patrón: Sábana continua (sin paginación real)
+   Fuente: Verdana 8pt | Color datos: #000 | Banner: #00468B
+   ============================================================================= */
+
+/* ─── Tabla principal ─── */
+.rpt-table-act-int-det {
+    table-layout: fixed !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* ─── Anchos de columna ─── */
+.rpt-col-pct-ant      { width: 12%; }
+.rpt-col-contr-ant    { width: 12%; }
+.rpt-col-actividad    { width: 34%; padding-left: 0 !important; text-align: left !important; }
+.rpt-col-objetivo     { width: 12%; }
+.rpt-col-contr-actual { width: 12%; }
+.rpt-col-ip           { width: 6%;  }
+.rpt-col-pct-actual   { width: 12%; }
+
+/* ─── Encabezados de año ─── */
+.rpt-th-year th {
+    color: #00468B !important;
+    font-weight: bold !important;
+    font-size: 8pt !important;
+    border: none !important;
+    vertical-align: bottom;
+}
+
+.rpt-act-line-segment {
+    border: none !important;
+    border-bottom: 2px solid #00468B !important;
+    height: 2px !important;
+}
+
+.rpt-act-row-spacer th {
+    height: 1px !important;
+    line-height: 1px !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* ─── Encabezados de columna ── */
+.rpt-th-blue th {
+    border: none !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+    font-size: 8pt !important;
+    padding-top: 3px !important;
+    padding-bottom: 0 !important;
+    vertical-align: bottom !important;
+}
+
+.rpt-col-internacional-header {
+    background-color: #00468B !important;
+    padding: 2px 10px !important;
+}
+
+.rpt-th-blue th.rpt-col-internacional-header {
+    color: white !important;
+}
+
+.rpt-col-internacional-header .rpt-act-header-line {
+    border-bottom: none !important;
+}
+
+.rpt-act-header-line {
+    border-bottom: 2px solid #00468B !important;
+    margin: 0 4px;
+    padding-bottom: 4px;
+}
+
+/* ─── Filas de actividad principal ─── */
+.rpt-act-principal td {
+    font-weight: normal !important;
+    background-color: transparent !important;
+}
+
+/* ─── Filas de subactividad ─── */
+.rpt-act-sub td {
+    font-weight: normal !important;
+    font-size: 8pt !important;
+    color: #666 !important;
+}
+
+.rpt-table-act-int-det .rpt-detail-row .rpt-sub-indent {
+    padding-left: 20px !important;
+    font-style: normal;
+}
+
+/* ─── Fila de totales ─── */
+.rpt-total-row td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    vertical-align: top !important;
+    border-top: none !important;
+}
+
+/* Línea discontinua por columna (misma técnica que cabeceras) */
+.rpt-total-line {
+    border-top: 2px solid #00468B !important;
+    margin: 0 4px !important;
+    padding-top: 2px !important;
+    display: block;
+}
+
+/* ─── Espaciado de filas ─── */
+.rpt-table-act-int-det .rpt-detail-row td {
+    line-height: 1.25 !important;
+    padding: 3px 5px !important;
+}
+
+/* ─── Spacer antes de totales ─── */
+.rpt-spacer-row-totales {
+    height: 6px !important;
+}
+
+.rpt-spacer-cell-totales {
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* ─── Alineación numérica ─── */
+.rpt-number-cell {
+    text-align: right !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.rpt-align-start { text-align: left !important; }
+.rpt-align-end   { text-align: right !important; }
+.rpt-align-center { text-align: center !important; }
+
+/* ─── CMAI ─── */
+.rpt-cmai-subtitulo {
+    font-size: 9pt;
+    font-weight: normal;
+    color: #00468B;
+}
+.rpt-cmai-titulo-container {
+    margin-top: 8px;
+}
+.rpt-cmai-margin-left {
+    margin-left: 1rem !important;
+}
+.report-body {
+    margin-top: 2.5rem !important;
+}
+
+/* =============================================================================
+   MEDIA PRINT (PDF)
+   ============================================================================= */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .rpt-table-act-int-det .rpt-detail-row td {
+        line-height: 1.2 !important;
+        padding: 1.5px 5px !important;
+        font-size: 8pt !important;
+    }
+
+    .rpt-act-sub td {
+        font-size: 8pt !important;
+    }
+
+    .rpt-total-row td {
+        border-top: none !important;
+    }
+
+    .rpt-total-line {
+        border-top: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-act-header-line {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-spacer-row-totales {
+        height: 4px !important;
+    }
+
+    .rpt-banner-top {
+        margin-top: 1.5rem !important;
+        margin-bottom: 0.8rem !important;
+        height: 25px !important;
+        font-size: 14pt !important;
+    }
+
+    .rpt-header {
+        margin-bottom: 0.8rem !important;
+    }
+
+    .rpt-subtitle {
+        font-size: 8pt !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-body {
+        margin-top: 0.8rem !important;
+    }
+
+    .rpt-detail-row {
+        page-break-inside: avoid;
+    }
+}

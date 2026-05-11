@@ -2651,6 +2651,30 @@
       <Name>ObjetivosActividadSQL</Name>
       <Name>IX_ObjetivosActividadSQL_Año_CodCentro</Name>
     </SelectedItem>
+    <SelectedItem Type="Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlTable, Microsoft.Data.Tools.Schema.Sql, Version=170.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <Name>dbo</Name>
+      <Name>CO005BPH </Name>
+    </SelectedItem>
+    <SelectedItem Type="Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlIndex, Microsoft.Data.Tools.Schema.Sql, Version=170.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <Name>dbo</Name>
+      <Name>CO005BPH </Name>
+      <Name>IX_CO005BPH_Usuario</Name>
+    </SelectedItem>
+    <SelectedItem Type="Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlIndex, Microsoft.Data.Tools.Schema.Sql, Version=170.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <Name>dbo</Name>
+      <Name>CO005BPH </Name>
+      <Name>IX_CO005BPH_CDOFT</Name>
+    </SelectedItem>
+    <SelectedItem Type="Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlIndex, Microsoft.Data.Tools.Schema.Sql, Version=170.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <Name>dbo</Name>
+      <Name>CO005BPH </Name>
+      <Name>IX_CO005BPH_Usuario_AñoCierre</Name>
+    </SelectedItem>
+    <SelectedItem Type="Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlIndex, Microsoft.Data.Tools.Schema.Sql, Version=170.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <Name>dbo</Name>
+      <Name>CO005BPH </Name>
+      <Name>IX_CO005BPH_Usuario_CTRO_OBRA_OBRAL_AñoCierre</Name>
+    </SelectedItem>
   </ExcludedSourceElements>
   <ExcludedTargetElements>
     <SelectedItem Type="Microsoft.Data.Tools.Schema.Sql.SchemaModel.SqlScalarFunction, Microsoft.Data.Tools.Schema.Sql, Version=170.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">

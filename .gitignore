@@ -48,6 +48,7 @@ packages/
 
 # IA
 .agent/
+.agents/
 .gemini/
 .memory/
 artifacts/
