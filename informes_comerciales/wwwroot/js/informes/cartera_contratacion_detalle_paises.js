@@ -8,7 +8,7 @@ import {
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme,
-    getHtmlEncabezadoBase, getStyleVars
+    getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado
 } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -306,28 +306,15 @@ function _renderFilasPiePDF(data) {
 }
 
 async function _imprimirInforme() {
-    const contenidoHtml = _renderTablaMaestraPDF();
-    const styleVars = getStyleVars(estado.margenes);
-
-    const capaPrint = document.createElement('div');
-    capaPrint.className = 'rpt-print-layer';
-    capaPrint.innerHTML = `
-        <div class="rpt-paper rpt-paper--print" data-informe="cartera_contratacion_detalle_paises" ${styleVars}>
-            <div class="report-body">
-                ${contenidoHtml}
-            </div>
-        </div>`;
-    document.body.appendChild(capaPrint);
-
-    const originalTitle = document.title;
-    try {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        document.title = '';
-        window.print();
-    } finally {
-        document.title = originalTitle;
-        if (document.body.contains(capaPrint)) {
-            document.body.removeChild(capaPrint);
-        }
-    }
+    await imprimirInformeUnificado({
+        informeGlobalData: estado.informeGlobalData,
+        // Este informe usa el patrón "Tabla Maestra PDF": la cabecera vive dentro
+        // del <thead> de _renderTablaMaestraPDF() para que el navegador la repita
+        // en cada salto de página físico. Por ello NO se inyecta cabecera exterior.
+        getHtmlEncabezado: () => '',
+        renderContenido: () => _renderTablaMaestraPDF(),
+        modoAgrupacion: 'NONE',
+        margenes: estado.margenes,
+        nombreInforme: 'cartera_contratacion_detalle_paises'
+    });
 }
