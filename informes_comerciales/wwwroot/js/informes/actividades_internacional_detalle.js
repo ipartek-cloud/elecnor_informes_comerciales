@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Módulo para el informe Detalle Actividades Internacional.
  * Patrón: Sábana continua (claveAgrupacion: 'NONE').
  */
@@ -70,7 +70,7 @@ function _renderizarPagina(index = 0) {
                 <td class="rpt-col-actividad">${escapeHtml(act.nombre)}</td>
                 <td class="rpt-col-objetivo rpt-number-cell">${_formatActividad(act.importeObjetivos, 0)}</td>
                 <td class="rpt-col-contr-actual rpt-number-cell">${_formatActividad(act.importeContratadoAcumulado / 1000, 0)}</td>
-                <td class="rpt-col-ip rpt-number-cell">${_formatActividad(act.indiceProduccion, 2)}</td>
+                <td class="rpt-col-ip rpt-align-center">${_formatActividad(act.indiceProduccion, 2)}</td>
                 <td class="rpt-col-pct-actual rpt-number-cell">${_formatActividad(act.porcentajeSobreMercado, 0, true)}</td>
             </tr>`;
 
@@ -83,7 +83,7 @@ function _renderizarPagina(index = 0) {
                         <td class="rpt-col-actividad rpt-sub-indent">${escapeHtml(sub.nombre)}</td>
                         <td class="rpt-col-objetivo rpt-number-cell">${_formatSubActividad(0, 0)}</td>
                         <td class="rpt-col-contr-actual rpt-number-cell">${_formatSubActividad(sub.importeContratadoAcumulado / 1000, 0)}</td>
-                        <td class="rpt-col-ip rpt-number-cell">${_formatSubActividad(0, 2)}</td>
+                        <td class="rpt-col-ip rpt-align-center">${_formatSubActividad(0, 2)}</td>
                         <td class="rpt-col-pct-actual rpt-number-cell">${_formatSubActividad(sub.porcentajeSobreMercado, 0, true)}</td>
                     </tr>`;
             });
@@ -99,7 +99,7 @@ function _renderizarPagina(index = 0) {
             <td class="rpt-col-actividad"></td>
             <td class="rpt-col-objetivo rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeObjetivos, 0)}</div></td>
             <td class="rpt-col-contr-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeContratadoAcumulado / 1000, 0)}</div></td>
-            <td class="rpt-col-ip rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.indiceProduccion, 2)}</div></td>
+            <td class="rpt-col-ip rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.indiceProduccion, 2)}</div></td>
             <td class="rpt-col-pct-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercado, 0, true)}</div></td>
         </tr>`;
 
@@ -207,7 +207,7 @@ function _renderTablaParaPdf() {
                 <td class="rpt-col-actividad">${escapeHtml(act.nombre)}</td>
                 <td class="rpt-col-objetivo rpt-number-cell">${_formatActividad(act.importeObjetivos, 0)}</td>
                 <td class="rpt-col-contr-actual rpt-number-cell">${_formatActividad(act.importeContratadoAcumulado / 1000, 0)}</td>
-                <td class="rpt-col-ip rpt-number-cell">${_formatActividad(act.indiceProduccion, 2)}</td>
+                <td class="rpt-col-ip rpt-align-center">${_formatActividad(act.indiceProduccion, 2)}</td>
                 <td class="rpt-col-pct-actual rpt-number-cell">${_formatActividad(act.porcentajeSobreMercado, 0, true)}</td>
             </tr>`;
 
@@ -220,7 +220,7 @@ function _renderTablaParaPdf() {
                         <td class="rpt-col-actividad rpt-sub-indent">${escapeHtml(sub.nombre)}</td>
                         <td class="rpt-col-objetivo rpt-number-cell">${_formatSubActividad(0, 0)}</td>
                         <td class="rpt-col-contr-actual rpt-number-cell">${_formatSubActividad(sub.importeContratadoAcumulado / 1000, 0)}</td>
-                        <td class="rpt-col-ip rpt-number-cell">${_formatSubActividad(0, 2)}</td>
+                        <td class="rpt-col-ip rpt-align-center">${_formatSubActividad(0, 2)}</td>
                         <td class="rpt-col-pct-actual rpt-number-cell">${_formatSubActividad(sub.porcentajeSobreMercado, 0, true)}</td>
                     </tr>`;
             });
@@ -236,7 +236,7 @@ function _renderTablaParaPdf() {
             <td class="rpt-col-actividad"></td>
             <td class="rpt-col-objetivo rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeObjetivos, 0)}</div></td>
             <td class="rpt-col-contr-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeContratadoAcumulado / 1000, 0)}</div></td>
-            <td class="rpt-col-ip rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.indiceProduccion, 2)}</div></td>
+            <td class="rpt-col-ip rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.indiceProduccion, 2)}</div></td>
             <td class="rpt-col-pct-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercado, 0, true)}</div></td>
         </tr>`;
 

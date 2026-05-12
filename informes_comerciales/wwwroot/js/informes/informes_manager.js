@@ -11,6 +11,32 @@
 import { GlobalUI } from '../site.js';
 
 // Registro interno: { [nombreInforme]: moduloImportado }
+/**
+ * Registro oficial de informes habilitados en el sistema (V-22).
+ * El nombre de la clave debe coincidir con el nombre del archivo .js en wwwroot/js/informes/
+ */
+const _whitelistInformes = {
+    'cartera_diferida_consejo': 'Cartera Diferida Consejo',
+    'mercados': 'Mercados',
+    'mercados_dg': 'Mercados DG',
+    'mercados_sg_delegaciones': 'Mercados SG Delegaciones',
+    'paises': 'Países',
+    'paises_all': 'Países (Todos)',
+    'actividades': 'Actividades',
+    'actividades_objetivos': 'Actividades Objetivos',
+    'contrataciones': 'Contrataciones',
+    'contrataciones_ai': 'Contrataciones AI',
+    'contrataciones_significativas': 'Contrataciones Significativas',
+    'contrataciones_significativas_ri': 'Contrataciones Significativas RI',
+    'ranking_contratacion_clientes': 'Ranking Contratación Clientes',
+    'gerencias': 'Gerencias',
+    'cartera_contratacion_detalle': 'Cartera Contratación (Detalle)',
+    'cartera_contratacion_resumen_sdg': 'Cartera Contratación (Resumen)',
+    'cartera_contratacion_detalle_org_paises': 'Cartera Contratación (Detalle Org. Países)',
+    'cartera_contratacion_detalle_paises': 'Cartera Contratación (Detalle Países)',
+    'actividades_internacional_detalle': 'Detalle Actividades Internacional'
+};
+
 const _registroModulos = {};
 
 /**
@@ -118,6 +144,13 @@ window.cargarInforme = async function (btn, nombreInforme) {
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
     
+    // 0. Validar si el informe está registrado (V-22)
+    if (!_whitelistInformes[nombreInforme]) {
+        console.error(`El informe '${nombreInforme}' no está registrado en el manager.`);
+        GlobalUI.showAlert('Informe no autorizado o inexistente', 'error');
+        return;
+    }
+
     // Capturar nro de página si el botón indica un input de origen
     // Normalizar: parsear a entero y tratar 0 como null (sin número de página)
     const idInputPag = btn?.dataset?.inputPag;

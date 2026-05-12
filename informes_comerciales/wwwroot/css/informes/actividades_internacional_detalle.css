@@ -1,4 +1,4 @@
-﻿/* =============================================================================
+/* =============================================================================
    ESTILOS ESPECÍFICOS: Detalle Actividades Internacional
    Patrón: Sábana continua (sin paginación real)
    Fuente: Verdana 8pt | Color datos: #000 | Banner: #00468B
@@ -132,7 +132,11 @@
 
 .rpt-align-start { text-align: left !important; }
 .rpt-align-end   { text-align: right !important; }
-.rpt-align-center { text-align: center !important; }
+.rpt-align-center {
+    text-align: center !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
 
 /* ─── CMAI ─── */
 .rpt-cmai-subtitulo {
