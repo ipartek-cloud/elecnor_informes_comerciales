@@ -144,7 +144,16 @@ window.cargarInforme = async function (btn, nombreInforme) {
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
     
-    // 0. Validar si el informe está registrado (V-22)
+    // 0. Verificar si está activado el modo HTML Portable
+    const chkPortable = document.getElementById('chkGenerarHtmlPortable');
+    if (chkPortable && chkPortable.checked) {
+        const labelBoton = btn?.textContent?.trim() || nombreInforme;
+        const mesesSeleccionados = await _mostrarSelectorMeses(labelBoton, mes);
+        if (mesesSeleccionados) {
+            _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelBoton);
+        }
+        return;
+    }
     if (!_whitelistInformes[nombreInforme]) {
         console.error(`El informe '${nombreInforme}' no está registrado en el manager.`);
         GlobalUI.showAlert('Informe no autorizado o inexistente', 'error');
@@ -243,3 +252,170 @@ window.cargarInforme = async function (btn, nombreInforme) {
         }
     }
 };
+
+/**
+ * Muestra un modal con checkboxes para seleccionar qué meses incluir en el HTML Portable.
+ * Retorna un array con los números de mes seleccionados, o null si el usuario cancela.
+ */
+async function _mostrarSelectorMeses(nombreInforme, mesHasta) {
+    const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const mesMax = parseInt(mesHasta, 10);
+
+    let html = '<div style="text-align:left;max-height:350px;overflow-y:auto">';
+    html += `<p style="font-size:14px;margin-bottom:10px"><strong>Informe:</strong> ${nombreInforme}</p>`;
+    for (let m = 1; m <= mesMax; m++) {
+        html += `<div style="margin:4px 0"><label style="cursor:pointer;font-size:14px"><input type="checkbox" class="swal-mes-check" value="${m}" checked style="margin-right:8px">${MESES[m-1]}</label></div>`;
+    }
+    html += '</div>';
+
+    const result = await Swal.fire({
+        title: 'Seleccionar meses',
+        html: html,
+        showCancelButton: true,
+        confirmButtonText: 'Generar HTML',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#00468B',
+        preConfirm: () => {
+            const checks = document.querySelectorAll('.swal-mes-check:checked');
+            if (checks.length === 0) {
+                Swal.showValidationMessage('Seleccione al menos un mes');
+                return false;
+            }
+            return Array.from(checks).map(c => parseInt(c.value, 10));
+        }
+    });
+
+    return result.isConfirmed ? result.value : null;
+}
+
+/**
+ * Genera y descarga un informe HTML Portable (Self-Contained).
+ * Captura todos los filtros data-* del botón, construye la petición al endpoint API
+ * y gestiona la descarga del archivo .html generado por el servidor.
+ */
+async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelInforme) {
+    try {
+        GlobalUI.showLoading('Generando informe portable...');
+
+        const anio = document.getElementById('txtAnno').value;
+        const mes = document.getElementById('txtMes').value;
+
+        // 1. Construir URL base del endpoint
+        let url = `/api/InformePortable/${encodeURIComponent(nombreInforme)}?anio=${anio}&mes=${mes}`;
+
+        // 1b. Añadir meses seleccionados y label del informe
+        if (labelInforme) {
+            url += `&label=${encodeURIComponent(labelInforme)}`;
+        }
+
+        // 1b. Añadir meses seleccionados (ej: &meses=1,3,4)
+        if (mesesSeleccionados && mesesSeleccionados.length > 0) {
+            url += `&meses=${mesesSeleccionados.join(',')}`;
+        }
+
+        // 1b. Capturar número de página desde el input asociado al botón (si existe)
+        const idInputPag = btn?.dataset?.inputPag;
+        if (idInputPag) {
+            const rawPag = document.getElementById(idInputPag)?.value;
+            const nroPagina = rawPag != null ? parseInt(rawPag, 10) : null;
+            if (nroPagina > 0) {
+                url += `&nroPagina=${nroPagina}`;
+            }
+        }
+
+        // 2. Capturar todos los filtros data-* del botón y agregarlos como query params
+        if (btn && btn.dataset) {
+            for (const [key, value] of Object.entries(btn.dataset)) {
+                // Ignorar atributos propios del manager (inputPag, etc.)
+                if (key === 'inputPag') continue;
+                if (value !== undefined && value !== null && value !== '') {
+                    url += `&${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                }
+            }
+        }
+
+        // 3. También capturar los inputs globales si aplican (umbral, limiteImporte, limitePaises)
+        const umbralGlobal = document.getElementById('inputUmbral')?.value;
+        if (umbralGlobal) {
+            url += `&umbral=${encodeURIComponent(umbralGlobal)}`;
+        }
+
+        const limiteMontoGlobal = document.getElementById('inputLimiteMonto')?.value;
+        if (limiteMontoGlobal && parseFloat(limiteMontoGlobal) > 0) {
+            url += `&limiteImporte=${encodeURIComponent(limiteMontoGlobal)}`;
+        }
+
+        const limitePaisesGlobal = document.getElementById('inputLimiteNumeroPaises')?.value;
+        if (limitePaisesGlobal && parseInt(limitePaisesGlobal, 10) > 0) {
+            url += `&limitePaises=${encodeURIComponent(limitePaisesGlobal)}`;
+        }
+
+        // 4. Verificar autenticación antes de la petición
+        const token = sessionStorage.getItem('jwt_token');
+        if (!token) {
+            GlobalUI.showAlert('Sesión no iniciada. Por favor, recargue la página y vuelva a autenticarse.', 'warning');
+            return;
+        }
+
+        // 5. Realizar la petición Fetch al endpoint (con JWT para autenticación)
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'text/html',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                GlobalUI.showAlert('Su sesión ha expirado. Recargue la página y vuelva a iniciar sesión.', 'warning');
+            } else if (response.status === 400) {
+                const errorText = await response.text();
+                GlobalUI.showAlert(`Error en la petición: ${errorText}`, 'error');
+            } else {
+                GlobalUI.showAlert('Error al generar el informe portable. Intente de nuevo.', 'error');
+            }
+            return;
+        }
+
+        // 6. Convertir la respuesta a blob y descargar el archivo
+        const blob = await response.blob();
+        const contentDisposition = response.headers.get('content-disposition');
+        const MESES_ABREV = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const sufijoMeses = mesesSeleccionados && mesesSeleccionados.length > 0
+            ? '_' + mesesSeleccionados.map(m => MESES_ABREV[m-1]).join('_')
+            : '';
+        const nombreArchivo = (labelInforme || nombreInforme).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        let fileName = `${nombreArchivo}${sufijoMeses}.html`;
+
+        // Intentar extraer el nombre del archivo desde el header Content-Disposition
+        if (contentDisposition) {
+            const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+            if (match && match[1]) {
+                fileName = match[1].replace(/['"]/g, '');
+            }
+        }
+
+        // Crear enlace temporal para descarga automática
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+
+        // Limpieza
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(downloadUrl);
+        }, 100);
+
+        GlobalUI.showAlert('Informe portable descargado correctamente', 'success');
+
+    } catch (error) {
+        console.error('Error al generar HTML portable:', error);
+        GlobalUI.showAlert('Error al generar el informe portable. Verifique su conexión e inténtelo de nuevo.', 'error');
+    } finally {
+        GlobalUI.hideLoading();
+    }
+}

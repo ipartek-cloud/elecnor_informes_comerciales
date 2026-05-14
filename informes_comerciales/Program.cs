@@ -79,6 +79,13 @@ builder.Services.AddScoped<InformeCarteraContratacionDetalleOrgPaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetallePaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionResumenSDGService>();
 builder.Services.AddScoped<InformeActividadesInternacionalDetalleService>();
+
+// Servicios de HTML Portable (Self-Contained)
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<AssetInliningService>();
+builder.Services.AddSingleton<HtmlAssemblerService>();
+builder.Services.AddScoped<InformePortableService>();
+Console.WriteLine("[DI] Servicios HTML Portable registrados.");
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
 
 // Catálogos
