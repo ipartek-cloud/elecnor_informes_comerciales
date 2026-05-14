@@ -423,7 +423,7 @@ body.modal-open {
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
     font-weight: 700 !important;
     font-size: 1.1rem !important;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 2px 2px 5px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
     margin-bottom: 0;
 }
 
@@ -570,7 +570,7 @@ body.modal-open {
     background-color: #8a95a1; /* Gris más oscuro para que la letra blanca sea legible */
     font-size: 1rem; /* Aumentado ligeramente */
     /* Sombra doble: una nítida para relieve y una difuminada para profundidad */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 2px 2px 5px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
 .rpt-nav-tabs .nav-link:hover {
