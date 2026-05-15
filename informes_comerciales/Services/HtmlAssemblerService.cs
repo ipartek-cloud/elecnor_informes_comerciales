@@ -292,27 +292,36 @@ public class HtmlAssemblerService
 
     /// <summary>
     /// Verifica si los datos de un mes contienen información real (colecciones no vacías).
+    /// Búsqueda recursiva para soportar DTOs con estructura jerárquica anidada (ej: ContratacionesResponseDto).
     /// </summary>
     private static bool MesTieneDatosReales(object? datos)
     {
         if (datos == null) return false;
 
         var type = datos.GetType();
-        var properties = type.GetProperties();
 
+        // Tipos simples/valor sin datos de negocio
+        if (type.IsPrimitive || type == typeof(string) || type == typeof(decimal)
+            || type == typeof(DateTime) || type.IsEnum || type.IsValueType)
+            return false;
+
+        // Si es una colección, verificar si tiene elementos
+        if (datos is System.Collections.IEnumerable enumerable && !(type == typeof(string)))
+        {
+            foreach (var item in enumerable)
+                return true;
+            return false;
+        }
+
+        // Objeto complejo: buscar recursivamente en sus propiedades
+        var properties = type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
         foreach (var prop in properties)
         {
+            if (prop.GetIndexParameters().Length > 0) continue;
+
             var value = prop.GetValue(datos);
             if (value == null) continue;
-
-            // Verificar si es una colección (excepto string)
-            if (value is System.Collections.IEnumerable enumerable && !(value is string))
-            {
-                foreach (var item in enumerable)
-                {
-                    return true; // Al menos una colección no está vacía
-                }
-            }
+            if (MesTieneDatosReales(value)) return true;
         }
 
         return false;
