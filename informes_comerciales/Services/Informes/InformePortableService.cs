@@ -63,9 +63,18 @@ public class InformePortableService
         List<int>? mesesSeleccionados,
         Dictionary<string, string>? filtros)
     {
+        // Normalizar filtros a case-insensitive: los data-* del frontend llegan en minúsculas (ej: "limitepaises")
+        // pero los parámetros de servicio usan camelCase (ej: "limitePaises").
+        var filtrosNormalizados = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (filtros != null)
+        {
+            foreach (var kvp in filtros)
+                filtrosNormalizados[kvp.Key] = kvp.Value;
+        }
+
         _logger.LogInformation(
             "[InformePortable] Generando informe portable: {Tipo}, Año: {Anio}, Meses: {Meses}, Filtros: {@Filtros}",
-            tipoInforme, anio, mesesSeleccionados != null ? string.Join(",", mesesSeleccionados) : $"1-{mesHasta}", filtros);
+            tipoInforme, anio, mesesSeleccionados != null ? string.Join(",", mesesSeleccionados) : $"1-{mesHasta}", filtrosNormalizados);
 
         if (!_serviceMap.ContainsKey(tipoInforme))
         {
@@ -82,7 +91,7 @@ public class InformePortableService
         {
             try
             {
-                var datosMes = await ObtenerDatosMesAsync(scope, tipoInforme, anio, mes, filtros);
+                var datosMes = await ObtenerDatosMesAsync(scope, tipoInforme, anio, mes, filtrosNormalizados);
                 if (datosMes != null)
                 {
                     datosPorMes[mes] = datosMes;
@@ -108,7 +117,7 @@ public class InformePortableService
 
         // 3. Ensamblar el HTML final
         var html = await _htmlAssemblerService.AssembleHtmlAsync(
-            tipoInforme, anio, mesHasta, mesesAIterar, datosPorMes, filtros);
+            tipoInforme, anio, mesHasta, mesesAIterar, datosPorMes, filtrosNormalizados);
 
         return html;
     }
@@ -209,7 +218,7 @@ public class InformePortableService
                 }
                 else
                 {
-                    args.Add(GetDefaultValue(param.ParameterType));
+                    args.Add(ResolveDefaultValue(param));
                 }
                 continue;
             }
@@ -238,7 +247,7 @@ public class InformePortableService
                 if (filtros != null && filtros.TryGetValue("mercado", out var mercado))
                     args.Add(mercado);
                 else
-                    args.Add(null);
+                    args.Add(ResolveDefaultValue(param));
                 continue;
             }
 
@@ -251,7 +260,7 @@ public class InformePortableService
                 else if (filtros != null && filtros.TryGetValue("codSubDir", out var codSubDir))
                     args.Add(codSubDir);
                 else
-                    args.Add(null);
+                    args.Add(param.HasDefaultValue ? param.DefaultValue : "221");
                 continue;
             }
 
@@ -308,11 +317,22 @@ public class InformePortableService
                 continue;
             }
 
-            // Para cualquier otro parámetro, usar default
-            args.Add(GetDefaultValue(param.ParameterType));
+            // Para cualquier otro parámetro, usar el valor por defecto del método si existe
+            args.Add(ResolveDefaultValue(param));
         }
 
         return args;
+    }
+
+    /// <summary>
+    /// Resuelve el valor por defecto para un parámetro, respetando el default de C# si existe
+    /// (necesario para reflection, que no aplica valores por defecto automáticamente).
+    /// </summary>
+    private static object? ResolveDefaultValue(ParameterInfo param)
+    {
+        if (param.HasDefaultValue)
+            return param.DefaultValue;
+        return GetDefaultValue(param.ParameterType);
     }
 
     /// <summary>
