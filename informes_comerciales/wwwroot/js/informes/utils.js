@@ -17,7 +17,7 @@
 // =============================================================================
 export const RPT_CLASSES = Object.freeze({
     HEADER: 'rpt-header',
-    BANNER: 'rpt-banner-top mb-1',
+    BANNER: 'rpt-banner-top rpt-mb-1',
     SUBTITLE: 'rpt-subtitle',
     PAPER: 'rpt-paper',
     TABLE: 'rpt-table',
@@ -288,16 +288,16 @@ export function formatPercentage(val, decimals = 0) {
  * @returns {string} Clase CSS (text-success, text-warning, text-danger)
  */
 export function getIpClass(ip) {
-    if (ip >= 1) return 'text-success';
-    if (ip >= 0.8) return 'text-warning';
-    return 'text-danger';
+    if (ip >= 1) return 'rpt-text-success';
+    if (ip >= 0.8) return 'rpt-text-warning';
+    return 'rpt-text-danger';
 }
 
 export function getVarClass(val) {
-    if (!val || typeof val !== 'string') return 'text-muted';
-    if (val.startsWith('-')) return 'text-danger';
-    if (val === '0%' || val === '-') return 'text-muted';
-    return 'text-success';
+    if (!val || typeof val !== 'string') return 'rpt-text-muted';
+    if (val.startsWith('-')) return 'rpt-text-danger';
+    if (val === '0%' || val === '-') return 'rpt-text-muted';
+    return 'rpt-text-success';
 }
 
 /**

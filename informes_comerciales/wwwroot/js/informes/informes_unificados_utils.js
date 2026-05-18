@@ -177,7 +177,7 @@ export function getHtmlEncabezadoBase(opciones) {
     return `
         <div class="${RPT_CLASSES.HEADER}">
             ${htmlTitulo}
-            <div class="d-flex flex-column align-items-end">
+            <div class="rpt-d-flex rpt-flex-column rpt-align-items-end">
                 ${htmlPagina}
                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
             </div>

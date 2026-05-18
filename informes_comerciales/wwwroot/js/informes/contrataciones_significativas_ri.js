@@ -65,7 +65,7 @@ async function _renderizarPagina() {
         container.innerHTML = `
             <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
                 ${_getHtmlEncabezado()}
-                <div class="report-body rpt-cmai-mt-medium text-center p-5 text-muted">No se han encontrado registros.</div>
+                <div class="report-body rpt-cmai-mt-medium rpt-text-center rpt-p-5 rpt-text-muted">No se han encontrado registros.</div>
             </div>`;
         ocultarControlesPaginacion();
         return;
@@ -108,15 +108,15 @@ function _renderCuerpoInforme(direcciones) {
     }).join('');
 
     return `
-        <table class="rpt-table rpt-table-cont-sig mb-4">
+        <table class="rpt-table rpt-table-cont-sig rpt-mb-4">
             <colgroup>
                 <col class="rpt-col-mes-cliente"><col class="rpt-col-mes-oferta"><col class="rpt-col-mes-importe">
             </colgroup>
   <thead>
       <tr class="rpt-font-bold">
-        <th class="rpt-text-corporate text-start ps-3 rpt-fs-10pt">${_escapeHtml(umbralTexto)}</th>
+        <th class="rpt-text-corporate rpt-text-start rpt-ps-3 rpt-fs-10pt">${_escapeHtml(umbralTexto)}</th>
         <th></th>
-        <th class="rpt-text-corporate text-end pe-3 rpt-fs-10pt">Mensual</th>
+        <th class="rpt-text-corporate rpt-text-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
       </tr>
     </thead>
             <tbody>${filaMesHtml}${bloquesHtml}</tbody>
@@ -126,7 +126,7 @@ function _renderCuerpoInforme(direcciones) {
 function _getHtmlEncabezado() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="rpt-info-complementary ms-2">Información complementaria</span>',
+        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="rpt-info-complementary rpt-ms-2">Información complementaria</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: `Contrataciones Significativas Mercado ${filtros.mercado || 'Nacional'}`,
         mes: filtros.mes, anio: filtros.anio,

@@ -46,16 +46,7 @@ public class HtmlAssemblerService
         sb.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />");
         sb.AppendLine($"<title>Informe {tipoInforme} - {anio}</title>");
 
-        // 2. Inyectar Bootstrap CSS (solo utilidades usadas)
-        var bootstrapCss = await _assetInliningService.GetAssetContentAsync("lib/bootstrap/bootstrap-util.min.css");
-        if (!string.IsNullOrWhiteSpace(bootstrapCss))
-        {
-            sb.AppendLine("<style>");
-            sb.AppendLine(MinifyCss(bootstrapCss));
-            sb.AppendLine("</style>");
-        }
-
-        // 3. Inyectar CSS base de informes
+        // 2. Inyectar CSS base de informes
         var cssBase = await _assetInliningService.GetAssetContentAsync("css/informes/informes_base.css");
         sb.AppendLine("<style>");
         sb.AppendLine(MinifyCss(cssBase));

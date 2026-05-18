@@ -91,14 +91,14 @@ function _renderBloquePais(pais) {
     const tableHeader = `
   <thead>
     <tr class="rpt-th-year">
-      <th colspan="2" class="rpt-align-center p-0">Cierre ${anioAnterior}</th>
+      <th colspan="2" class="rpt-align-center rpt-p-0">Cierre ${anioAnterior}</th>
       <th class="rpt-col-act-nombre"></th>
-      <th colspan="3" class="rpt-align-center p-0">${anioActual}</th>
+      <th colspan="3" class="rpt-align-center rpt-p-0">${anioActual}</th>
     </tr>
     <tr class="rpt-th-year">
-      <th colspan="2" class="rpt-act-line-segment rpt-align-center p-0"></th>
+      <th colspan="2" class="rpt-act-line-segment rpt-align-center rpt-p-0"></th>
       <th class="rpt-col-act-nombre"></th>
-      <th colspan="3" class="rpt-act-line-segment rpt-align-center p-0"></th>
+      <th colspan="3" class="rpt-act-line-segment rpt-align-center rpt-p-0"></th>
     </tr>
     <tr class="rpt-act-row-spacer">
       <th colspan="6"></th>
@@ -110,7 +110,7 @@ function _renderBloquePais(pais) {
       <th class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">
         <div class="rpt-act-header-line">Contr.</div>
       </th>
-      <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle px-4">
+      <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-px-4">
         <div class="rpt-act-badge rpt-text-uppercase">${pais.nombrePais}</div>
       </th>
       <th class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">

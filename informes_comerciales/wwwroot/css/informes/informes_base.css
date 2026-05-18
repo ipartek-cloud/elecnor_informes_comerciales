@@ -523,7 +523,7 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
 }
 
 /* Permitir override a ancho completo */
-.rpt-sub-report-container.w-100 {
+.rpt-sub-report-container.rpt-w-100 {
     width: 100% !important;
 }
 
@@ -549,6 +549,74 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
     padding: 0 !important;
     line-height: 0 !important;
     font-size: 0 !important;
+}
+
+/* =============================================================================
+   UTILITY CLASSES (Reemplazo de Bootstrap utilities)
+   Centralizadas aquí para eliminar dependencia de bootstrap-util.min.css
+   Todas las reglas usan !important para garantizar especificidad.
+   ============================================================================= */
+
+/* --- DISPLAY --- */
+.rpt-d-flex                    { display: flex !important; }
+.rpt-flex-column               { flex-direction: column !important; }
+.rpt-d-print-table-cell        { display: table-cell !important; }
+
+/* --- ALIGNMENT (Flexbox) --- */
+.rpt-align-items-center        { align-items: center !important; }
+.rpt-align-items-end           { align-items: flex-end !important; }
+
+/* --- JUSTIFY --- */
+.rpt-justify-between           { justify-content: space-between !important; }
+.rpt-justify-end               { justify-content: flex-end !important; }
+
+/* --- GAP --- */
+.rpt-gap-1                     { gap: 0.25rem !important; }
+.rpt-gap-4                     { gap: 1.5rem !important; }
+
+/* --- MARGIN --- */
+.rpt-mb-0                      { margin-bottom: 0 !important; }
+.rpt-mb-1                      { margin-bottom: 0.25rem !important; }
+.rpt-mb-2                      { margin-bottom: 0.5rem !important; }
+.rpt-ms-2                      { margin-left: 0.5rem !important; }
+.rpt-ms-3                      { margin-left: 1rem !important; }
+
+/* --- PADDING --- */
+.rpt-p-0                       { padding: 0 !important; }
+.rpt-p-1                       { padding: 0.25rem !important; }
+.rpt-p-5                       { padding: 3rem !important; }
+.rpt-pb-1                      { padding-bottom: 0.25rem !important; }
+.rpt-ps-2                      { padding-left: 0.5rem !important; }
+.rpt-ps-3                      { padding-left: 1rem !important; }
+.rpt-ps-4                      { padding-left: 1.5rem !important; }
+.rpt-pe-3                      { padding-right: 1rem !important; }
+.rpt-pe-4                      { padding-right: 1.5rem !important; }
+.rpt-px-3                      { padding-left: 1rem !important; padding-right: 1rem !important; }
+.rpt-px-4                      { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+.rpt-py-1                      { padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; }
+
+/* --- TEXT ALIGNMENT --- */
+.rpt-text-start                { text-align: left !important; }
+.rpt-text-center               { text-align: center !important; }
+.rpt-text-end                  { text-align: right !important; }
+.rpt-align-center              { text-align: center !important; }
+.rpt-align-end                 { text-align: end !important; text-align: right !important; }
+.rpt-align-start               { text-align: start !important; text-align: left !important; }
+.rpt-text-uppercase            { text-transform: uppercase !important; }
+
+/* --- TEXT COLORS (colores semánticos Bootstrap) --- */
+.rpt-text-success              { color: #198754 !important; }
+.rpt-text-warning              { color: #ffc107 !important; }
+.rpt-text-danger               { color: #dc3545 !important; }
+.rpt-text-muted                { color: #6c757d !important; }
+
+/* --- WIDTH --- */
+.rpt-w-50                      { width: 50% !important; }
+.rpt-w-100                     { width: 100% !important; }
+
+/* --- PRINT --- */
+@media print {
+    .rpt-d-print-table-cell    { display: table-cell !important; }
 }
 
 /* =============================================================================

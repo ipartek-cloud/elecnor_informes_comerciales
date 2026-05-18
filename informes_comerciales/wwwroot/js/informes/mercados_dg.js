@@ -343,7 +343,7 @@ function _renderCarteraDiferida() {
 
   return `
   <div class="rpt-cd-separator rpt-mt-4 rpt-mb-3">
-    <table class="rpt-table rpt-table-stackable rpt-mercado-layout w-100">
+    <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-w-100">
       <colgroup>
         <col class="rpt-cd-col-vacia">
         <col class="rpt-cd-col-cart">

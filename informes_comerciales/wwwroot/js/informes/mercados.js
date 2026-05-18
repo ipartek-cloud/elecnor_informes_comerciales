@@ -162,7 +162,7 @@ function _renderCabeceraSubinforme(tituloCentral = 'Mercado') {
 
 function _renderRptBanner(txtIzquierda, txtDerecha = "") {
     return `
-        <div class="${RPT_CLASSES.BANNER} d-flex justify-content-between rpt-px-3 rpt-mt-4 rpt-mb-3">
+        <div class="${RPT_CLASSES.BANNER} rpt-d-flex rpt-justify-between rpt-px-3 rpt-mt-4 rpt-mb-3">
             <span>${txtIzquierda}</span>
             <span>${txtDerecha}</span>
         </div>
@@ -173,13 +173,13 @@ function _renderContructorCompleto(esImpresion = false) {
     const data = estado.informeGlobalData;
     if (!data) return '';
 
-    let html = `<div class="w-100 ${esImpresion ? '' : 'rpt-mb-4'}">`;
+    let html = `<div class="rpt-w-100 ${esImpresion ? '' : 'rpt-mb-4'}">`;
 
     // 1) BLOQUE GLOBAL: Mercado
     // El banner principal ya se incluye en el encabezado (_getHtmlEncabezado).
     html += `
         <div class="rpt-mt-6 rpt-mb-4">
-            <table class="rpt-table rpt-table-stackable rpt-mercado-layout mb-0 w-100">
+            <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
                 ${_renderCabeceraCompartida('Mercado')}
                 <tbody>
     `;
@@ -203,7 +203,7 @@ ${_construirHtmlFila('', data.totalGlobal.mensual, data.totalGlobal.acumulado, t
         // Bloque A: DirNegocio (Nacional / Internacional)
         html += `
             <div class="rpt-mb-2">
-                <table class="rpt-table rpt-table-stackable rpt-mercado-layout mb-0 w-100">
+                <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
                     ${_renderCabeceraSubinforme(dn.nombre)}
                     <tbody>
         `;
@@ -221,7 +221,7 @@ ${_construirHtmlFila('', dn.total.mensual, dn.total.acumulado, true)}
     // Bloque B: Unidades de Negocio
     html += `
     <div class="rpt-mb-5">
-    <table class="rpt-table rpt-table-stackable rpt-mercado-layout mb-0 w-100">
+    <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
       ${_renderCabeceraSubinforme('Unidades de Negocio')}
       <tbody>
       `;

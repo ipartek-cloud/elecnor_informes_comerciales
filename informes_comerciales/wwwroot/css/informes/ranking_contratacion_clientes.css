@@ -136,10 +136,6 @@ GUÍA: Estándar Print-Perfect
     display: block;
 }
 
-.rpt-w-100 {
-    width: 100%;
-}
-
 .rpt-w-90 {
     width: 90%;
 }
@@ -249,15 +245,6 @@ GUÍA: Estándar Print-Perfect
     width: 24pt !important;
 }
 
-/* Utilidades de texto */
-.rpt-text-center {
-    text-align: center !important;
-}
-
-.rpt-text-end {
-    text-align: right !important;
-}
-
 .rpt-text-primary {
     color: #00468B !important;
 }
@@ -365,10 +352,6 @@ GUÍA: Estándar Print-Perfect
 }
 
 /* Flexbox utilities */
-.rpt-d-flex {
-    display: flex !important;
-}
-
 .rpt-justify-between {
     justify-content: space-between !important;
 }
@@ -379,10 +362,6 @@ GUÍA: Estándar Print-Perfect
 
 .rpt-align-baseline {
     align-items: baseline !important;
-}
-
-.rpt-w-100 {
-    width: 100% !important;
 }
 
 /* ==========================================================================

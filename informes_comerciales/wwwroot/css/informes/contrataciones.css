@@ -99,9 +99,6 @@
 .rpt-align-end { text-align: end !important; text-align: right !important; }
 .rpt-align-start { text-align: start !important; text-align: left !important; }
 
-/* Padding */
-.rpt-ps-3 { padding-left: 1rem !important; }
-
 /* Fuente para celdas numéricas - usa Verdana para coherencia tipográfica */
 .rpt-font-mono {
     font-family: Verdana, Arial, sans-serif !important;

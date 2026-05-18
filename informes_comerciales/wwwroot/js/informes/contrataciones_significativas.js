@@ -72,7 +72,7 @@ async function _renderizarPagina(index = 0) {
     } else {
         // MODO WEB NACIONAL: Una dirección por página (siempre muestra literales).
         const direccion = data.datos[index];
-        cuerpoHtml = direccion ? _renderTablaDireccion(direccion, true) : '<div class="text-center p-5 rpt-text-muted-gray">No hay registros disponibles.</div>';
+        cuerpoHtml = direccion ? _renderTablaDireccion(direccion, true) : '<div class="rpt-text-center rpt-p-5 rpt-text-muted-gray">No hay registros disponibles.</div>';
     }
 
     container.innerHTML = `
@@ -326,7 +326,7 @@ function _renderTablaMaestraNacional() {
                                    </div>`
                                 : '<div></div>'
                             }
-                            <div class="d-flex flex-column align-items-end">
+                            <div class="rpt-d-flex rpt-flex-column rpt-align-items-end">
                                 ${estado.mostrarNumeroPagina !== false && nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
                             </div>
@@ -428,7 +428,7 @@ function _renderTablaMaestraInternacional() {
                                    </div>`
                                 : '<div></div>'
                             }
-                            <div class="d-flex flex-column align-items-end">
+                            <div class="rpt-d-flex rpt-flex-column rpt-align-items-end">
                                 ${estado.mostrarNumeroPagina !== false && nroPagina ? `<span class="rpt-page-number">${nroPagina}</span>` : ''}
                                 <img src="/images/logoElecnor.png" alt="Logo Elecnor" class="rpt-header-logo">
                             </div>

@@ -103,14 +103,6 @@
 /* Tamaño de texto pequeño (reemplaza 'small') */
 .rpt-text-small { font-size: 8pt !important; }
 
-/* Texto muted (gris) */
-.rpt-text-muted { color: #6c757d !important; }
-
-/* Espaciado */
-.rpt-mt-4 { margin-top: 1.5rem !important; }
-.rpt-mb-2 { margin-bottom: 0.5rem !important; }
-.rpt-p-5 { padding: 3rem !important; }
-
 /* =============================================================================
    CLASES CMAI (Patrón Consejo Elecnor) - Paridad con mercados.css
    ============================================================================= */

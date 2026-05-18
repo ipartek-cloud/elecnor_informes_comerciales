@@ -89,8 +89,8 @@ function inicializarTooltipsFiltros() {
             let umbral = ds.umbral;
 
             // 4. Construir HTML del bocadillo
-            let content = `<div class="p-1">`;
-            content += `<div class="mb-1"><strong>Filtros Activos</strong></div>`;
+            let content = `<div class="rpt-p-1">`;
+            content += `<div class="rpt-mb-1"><strong>Filtros Activos</strong></div>`;
             
             let tieneInfo = false;
 
