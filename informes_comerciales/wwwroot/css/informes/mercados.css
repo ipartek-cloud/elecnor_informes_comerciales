@@ -48,7 +48,7 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
 }
 
 /* Utilidades de Margen Personalizadas (Paridad con Cartera Diferida) */
-.rpt-mt-6 { margin-top: 3.5rem !important; }
+.rpt-mt-6 { margin-top: 0 !important; }
 
 /* =============================================================================
 LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
@@ -271,6 +271,11 @@ border: none !important;
     font-weight: normal !important;
   }
 
+  /* Banner de DG: override a 12pt para jerarquía visual (más pequeño que banner principal) */
+  .rpt-banner-dg {
+    font-size: 12pt !important;
+  }
+
   /* Padding numérico reducido unificado (incluye totales para alinear Ip/Var) */
   .rpt-number-cell,
   .rpt-pad-right-15,
@@ -286,7 +291,9 @@ border: none !important;
 
   /* Subtítulo compacto — idéntico a Cartera Diferida */
   .rpt-subtitle {
+    color: #00468B !important;
     font-size: 8pt !important;
+    text-align: right !important;
     margin-bottom: 0.3rem !important;  /* Reducido para igualar densidad con Cartera Diferida */
   }
 

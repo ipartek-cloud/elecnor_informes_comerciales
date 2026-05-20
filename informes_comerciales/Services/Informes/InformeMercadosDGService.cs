@@ -57,7 +57,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
 
             var globalMercados = datosValidos.GroupBy(d => d.Pais)
                                              .Select(g => CrearFilaDato(g.Key, g, true, true, mesActual))
-                                             .OrderBy(f => f.Nombre)
+                                             .OrderByDescending(f => f.Nombre)
                                              .ToList();
 
             response.ResumenGlobal.AddRange(globalMercados);
@@ -95,7 +95,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                                                         Acumulado = SumarValores(gSDG.GroupBy(p => p.Pais).Select(gP => CrearFilaDato(gP.Key!, gP, false, true, mesActual).Acumulado))
                                                     }
                                                 })
-                                                .OrderBy(d => d.Nombre)
+                                                .OrderByDescending(d => d.Nombre)
                                                 .ToList();
 
             foreach (var dn in response.DirNegocios)

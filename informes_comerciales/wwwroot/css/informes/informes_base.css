@@ -117,7 +117,7 @@
 }
 
 .rpt-header-logo {
-    height: 50px;
+    height: 10mm;
     width: auto;
 }
 
@@ -146,12 +146,28 @@ Estándar: 10pt, sin negrita, azul corporativo
     border-radius: 0;
 }
 
+/* Subtítulo del informe */
 .rpt-subtitle {
     color: #00468B !important;
     font-size: 8pt;
     text-align: right;
     margin-top: 2px;
-    margin-bottom: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Cuerpo del informe */
+.report-body {
+    margin-top: 0 !important;
+}
+
+/* Clase CMAI estándar para separación cabecera-contenido (10px) */
+.report-body.rpt-cmai-mt-standard {
+    margin-top: 10px !important;
+}
+
+/* Banner de Dirección de Negocio (DG) – fuente reducida respecto al banner principal */
+.rpt-banner-dg {
+    font-size: 12pt !important;
 }
 
 /* 3. Títulos de Secciones */
@@ -781,6 +797,12 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
         height: 25px !important;
         font-size: 14pt !important;
         font-weight: normal !important;
+        margin-top: 20pt !important;
+    }
+
+    /* Banner de Dirección de Negocio (DG) en impresión */
+    .rpt-banner-dg {
+        font-size: 12pt !important;
     }
 
     /* 10.5 LOGOTIPO (Mantenemos tamaño web 50px, eliminamos reducción a 35px) */
@@ -818,21 +840,11 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
 
   /* 10.11 SUBTÍTULO COMPACTO: Estandarizado a 8pt */
   .rpt-subtitle {
+    color: #00468B !important;
     font-size: 8pt !important;
+    text-align: right !important;
     margin-bottom: 0.5rem !important;
   }
-
-/* 10.12 CUERPO DE INFORME: Eliminar margen superior residual (base) */
-.report-body {
-  margin-top: 0 !important;
-}
-
-/* Clase CMAI estándar para separación cabecera-contenido (2.5rem ~40px)
-Esta clase tiene mayor especificidad que el reset anterior y garantiza
-el estándar CMAI cuando se aplica explícitamente al report-body */
-.report-body.rpt-cmai-mt-standard {
-  margin-top: 2.5rem !important;
-}
 
     /* ==========================================================================
        FASE 2 (2026-03-20): RESETS DE LAYOUT TRIPLE BLOQUE PARA IMPRESIÓN A4

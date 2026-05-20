@@ -6,50 +6,45 @@
 <div class="container-fluid">
     <div id="mainContent" class="d-none">
         
-        <!-- ==================== CARD 1: FILTROS DE INFORME ==================== -->
-        <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header--blue text-center">
-                <h5 class="mb-0">Filtros</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-3 align-items-center justify-content-center rpt-filters-row">
-                    <div class="col-auto">
-                        <label for="txtAnno" class="col-form-label fw-bold">Año</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="number" class="form-control text-center" id="txtAnno" name="txtAnno" min="2000" max="2100"
-                            value="@DateTime.Now.Year" aria-label="Seleccionar año de consulta">
-                    </div>
-                    <div class="col-auto">
-                        <label for="txtMes" class="col-form-label fw-bold">Mes</label>
-                    </div>
-                    <div class="col-auto">
-                        <select class="form-control" id="txtMes" name="txtMes" aria-label="Seleccionar mes de consulta">
-                            <option value="1" selected="@(defaultMonth == 1 ? "selected" : null)">Enero</option>
-                            <option value="2" selected="@(defaultMonth == 2 ? "selected" : null)">Febrero</option>
-                            <option value="3" selected="@(defaultMonth == 3 ? "selected" : null)">Marzo</option>
-                            <option value="4" selected="@(defaultMonth == 4 ? "selected" : null)">Abril</option>
-                            <option value="5" selected="@(defaultMonth == 5 ? "selected" : null)">Mayo</option>
-                            <option value="6" selected="@(defaultMonth == 6 ? "selected" : null)">Junio</option>
-                            <option value="7" selected="@(defaultMonth == 7 ? "selected" : null)">Julio</option>
-                            <option value="8" selected="@(defaultMonth == 8 ? "selected" : null)">Agosto</option>
-                            <option value="9" selected="@(defaultMonth == 9 ? "selected" : null)">Septiembre</option>
-                            <option value="10" selected="@(defaultMonth == 10 ? "selected" : null)">Octubre</option>
-                            <option value="11" selected="@(defaultMonth == 11 ? "selected" : null)">Noviembre</option>
-                            <option value="12" selected="@(defaultMonth == 12 ? "selected" : null)">Diciembre</option>
-                        </select>
-                    </div>
-                    <div class="col-auto">
-                        <div class="d-flex align-items-center" style="height: 38px; gap: 6px;">
-                            <label class="fw-bold mb-0" for="chkGenerarHtmlPortable" style="cursor: pointer; font-size: 0.9rem;">
-                                HTML Portable
-                            </label>
-                            <input class="form-check-input" type="checkbox" id="chkGenerarHtmlPortable" name="chkGenerarHtmlPortable"
-                                   style="cursor: pointer; margin: 0;" aria-label="Generar informe HTML portable (offline)">
-                        </div>
-                    </div>
-
+        <!-- ==================== FILTROS DE INFORME ==================== -->
+        <div class="mb-4 p-3 bg-light bg-opacity-50 rounded">
+            <div class="row g-3 align-items-center justify-content-start rpt-filters-row">
+                <div class="col-auto">
+                    <label for="txtAnno" class="col-form-label fw-bold">Año</label>
                 </div>
+                <div class="col-auto">
+                    <input type="number" class="form-control text-center" id="txtAnno" name="txtAnno" min="2000" max="2100"
+                        value="@DateTime.Now.Year" aria-label="Seleccionar año de consulta">
+                </div>
+                <div class="col-auto">
+                    <label for="txtMes" class="col-form-label fw-bold">Mes</label>
+                </div>
+                <div class="col-auto">
+                    <select class="form-control" id="txtMes" name="txtMes" aria-label="Seleccionar mes de consulta">
+                        <option value="1" selected="@(defaultMonth == 1 ? "selected" : null)">Enero</option>
+                        <option value="2" selected="@(defaultMonth == 2 ? "selected" : null)">Febrero</option>
+                        <option value="3" selected="@(defaultMonth == 3 ? "selected" : null)">Marzo</option>
+                        <option value="4" selected="@(defaultMonth == 4 ? "selected" : null)">Abril</option>
+                        <option value="5" selected="@(defaultMonth == 5 ? "selected" : null)">Mayo</option>
+                        <option value="6" selected="@(defaultMonth == 6 ? "selected" : null)">Junio</option>
+                        <option value="7" selected="@(defaultMonth == 7 ? "selected" : null)">Julio</option>
+                        <option value="8" selected="@(defaultMonth == 8 ? "selected" : null)">Agosto</option>
+                        <option value="9" selected="@(defaultMonth == 9 ? "selected" : null)">Septiembre</option>
+                        <option value="10" selected="@(defaultMonth == 10 ? "selected" : null)">Octubre</option>
+                        <option value="11" selected="@(defaultMonth == 11 ? "selected" : null)">Noviembre</option>
+                        <option value="12" selected="@(defaultMonth == 12 ? "selected" : null)">Diciembre</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex align-items-center" style="height: 38px; gap: 6px;">
+                        <label class="fw-bold mb-0" for="chkGenerarHtmlPortable" style="cursor: pointer; font-size: 0.9rem;">
+                            HTML Portable
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="chkGenerarHtmlPortable" name="chkGenerarHtmlPortable"
+                               style="cursor: pointer; margin: 0;" aria-label="Generar informe HTML portable (offline)">
+                    </div>
+                </div>
+
             </div>
         </div>
 

@@ -162,7 +162,7 @@ function _renderCabeceraSubinforme(tituloCentral = 'Mercado') {
 
 function _renderRptBanner(txtIzquierda, txtDerecha = "") {
     return `
-        <div class="${RPT_CLASSES.BANNER} rpt-d-flex rpt-justify-between rpt-px-3 rpt-mt-4 rpt-mb-3">
+        <div class="${RPT_CLASSES.BANNER} rpt-banner-dg rpt-d-flex rpt-justify-between rpt-px-3 rpt-mt-4 rpt-mb-3">
             <span>${txtIzquierda}</span>
             <span>${txtDerecha}</span>
         </div>

@@ -147,10 +147,7 @@
     page-break-inside: avoid;
 }
 
-/* Separación Cabecera-Contenido Estándar CMAI */
-.rpt-paper[data-informe="mercados_sg_delegaciones"] .report-body.rpt-cmai-mt-standard {
-    margin-top: 1rem !important;
-}
+/* Separación Cabecera-Contenido: hereda el estándar CMAI de informes_base.css */
 
 /* Salto de página entre mitades o bloques */
 .rpt-page-break {

@@ -182,7 +182,7 @@ function _renderCabeceraSubinforme(tituloCentral = 'Mercado') {
  */
 function _renderRptBanner(txtIzquierda, txtDerecha = "") {
   return `
-  <div class="${RPT_CLASSES.BANNER} rpt-px-3 rpt-mt-4 rpt-mb-3">
+  <div class="${RPT_CLASSES.BANNER} rpt-banner-dg rpt-px-3 rpt-mt-4 rpt-mb-3">
     <span>${txtIzquierda}</span>
     <span>${txtDerecha}</span>
   </div>
@@ -345,62 +345,72 @@ function _renderCarteraDiferida() {
   <div class="rpt-cd-separator rpt-mt-4 rpt-mb-3">
     <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-w-100">
       <colgroup>
-        <col class="rpt-cd-col-vacia">
-        <col class="rpt-cd-col-cart">
-        <col class="rpt-cd-col-cart">
-        <col class="rpt-cd-col-concepto">
-        <col class="rpt-cd-col-proy">
-        <col class="rpt-cd-col-proy">
-        <col class="rpt-cd-col-vacia">
+        <col class="rpt-mercado-col-obj-m">
+        <col class="rpt-mercado-col-contr-m">
+        <col class="rpt-col-10px">
+        <col class="rpt-mercado-col-desc">
+        <col class="rpt-col-10px">
+        <col class="rpt-mercado-col-obj-a">
+        <col class="rpt-mercado-col-contr-a">
+        <col class="rpt-mercado-col-ip">
+        <col class="rpt-mercado-col-var">
       </colgroup>
       <thead>
         <tr class="rpt-cd-row-spacer">
-          <th colspan="7"></th>
+          <th colspan="9"></th>
         </tr>
         <tr class="rpt-font-bold">
-          <th></th>
           <th colspan="2" class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Cart.</th>
+          <th rpt-border-none></th>
           <th></th>
+          <th rpt-border-none></th>
           <th colspan="2" class="rpt-align-center rpt-text-corporate rpt-fs-8pt"></th>
+          <th></th>
           <th></th>
         </tr>
         <tr class="rpt-cd-row-spacer">
-          <th colspan="7"></th>
+          <th colspan="9"></th>
         </tr>
         <tr class="rpt-font-bold">
-          <th></th>
           <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelCartPrev}</th>
           <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelCartAct}</th>
+          <th rpt-border-none></th>
           <th class="rpt-align-center rpt-text-white rpt-cd-header-align">
             <div class="rpt-cd-header-badge">Cartera Diferida</div>
           </th>
+          <th rpt-border-none></th>
           <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelFuturo1}</th>
           <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelFuturo2}</th>
+          <th></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         ${cd.lineas.map(l => `
         <tr class="rpt-detail-row rpt-cd-detail-row">
-          <td></td>
           <td class="rpt-number-cell rpt-pad-right-15" data-label="Cartera Inicio 1">${val(l.valorCartPrev || l.ValorCartPrev || 0)}</td>
           <td class="rpt-number-cell rpt-pad-right-15" data-label="Cartera Inicio 2">${val(l.valorCartAct || l.ValorCartAct || 0)}</td>
+          <td rpt-border-none></td>
           <td class="rpt-ps-3" data-label="Cartera Diferida">${(l.concepto || l.Concepto || '').trim()}</td>
+          <td rpt-border-none></td>
           <td class="rpt-number-cell rpt-pad-right-15" data-label="Proyección 1">${val(l.valorFuturo1 || l.ValorFuturo1 || 0)}</td>
           <td class="rpt-number-cell rpt-pad-right-15" data-label="Proyección 2">${val(l.valorFuturo2 || l.ValorFuturo2 || 0)}</td>
+          <td></td>
           <td></td>
         </tr>
         `).join('')}
       </tbody>
-      <tr class="rpt-spacer-row-totales"><td colspan="7" class="rpt-spacer-cell-totales"></td></tr>
+      <tr class="rpt-spacer-row-totales"><td colspan="9" class="rpt-spacer-cell-totales"></td></tr>
       <tfoot class="rpt-font-bold">
         <tr class="rpt-cd-total-row">
-          <td></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Cartera Inicio 1"><div class="rpt-cd-total-inner">${val(totales.valorCartPrev || totales.ValorCartPrev || 0)}</div></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Cartera Inicio 2"><div class="rpt-cd-total-inner">${val(totales.valorCartAct || totales.ValorCartAct || 0)}</div></td>
-          <td class="rpt-cd-total-cell"></td>
+          <td rpt-border-none></td>
+          <td class="rpt-cd-total-cell"><div class="rpt-cd-total-inner">&nbsp;</div></td>
+          <td rpt-border-none></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Proyección 1"><div class="rpt-cd-total-inner">${val(totales.valorFuturo1 || totales.ValorFuturo1 || 0)}</div></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Proyección 2"><div class="rpt-cd-total-inner">${val(totales.valorFuturo2 || totales.ValorFuturo2 || 0)}</div></td>
+          <td></td>
           <td></td>
         </tr>
       </tfoot>
