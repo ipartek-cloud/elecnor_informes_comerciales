@@ -49,79 +49,132 @@ export function limpiarCssInformes() {
 }
 
 /**
- * Inicializa los bocadillos de previsualización (Tooltips) para los botones de informe.
- * Utiliza Tippy.js para mostrar los filtros reales que se aplicarán.
+ * Inicializa los Popovers interactivos (Tippy.js) para los botones de informe.
+ * - Si el informe tiene límites (Monto/Países), muestra una ventana con inputs.
+ * - Si NO tiene límites, el botón mantiene su comportamiento directo (excepción UX).
  */
 function inicializarTooltipsFiltros() {
     if (typeof tippy === 'undefined') return;
 
-    // Destruir instancias previas para evitar duplicados
+    // Destruir instancias previas
     tippy.destroyAll?.();
 
-    tippy('.btn.rpt-btn-index', {
-        theme: 'elecnor',
+    // 1. Identificar botones que requieren Popover (Límites o Umbral)
+    const allBtns = document.querySelectorAll('.btn.rpt-btn-index');
+    const btnsConPop = [];
+    
+    allBtns.forEach(btn => {
+        // En HTML5, los data-* siempre se normalizan a minúsculas en el dataset
+        const ds = btn.dataset;
+        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined) {
+            btnsConPop.push(btn);
+            // Extraer nombre del informe del onclick original y guardarlo en el dataset
+            if (!ds.nombreInforme) {
+                const onclickAttr = btn.getAttribute('onclick');
+                const match = onclickAttr?.match(/cargarInforme\s*\(\s*this\s*,\s*['"]([^'"]+)['"]\s*\)/);
+                if (match) {
+                    btn.dataset.nombreInforme = match[1];
+                    btn.removeAttribute('onclick'); // Evitar ejecución directa
+                }
+            }
+        }
+    });
+
+    // 2. Configurar Popovers interactivos
+    tippy(btnsConPop, {
+        theme: 'elecnor-popover',
         placement: 'top',
+        trigger: 'click',
+        interactive: true,
         allowHTML: true,
-        animation: 'fade',
+        animation: 'shift-away',
         arrow: true,
+        appendTo: () => document.body,
         onShow(instance) {
             const btn = instance.reference;
             const ds = btn.dataset;
             
-            // 1. Obtener valores globales (Inputs)
-            const valorInputMonto = parseFloat(document.getElementById('inputLimiteMonto')?.value || 0);
-            const valorInputPaises = parseInt(document.getElementById('inputLimiteNumeroPaises')?.value || 0, 10);
+            // Valores por defecto
+            const defaultMonto = ds.limiteimporte || 13000;
+            const defaultPaises = ds.limitepaises || 20;
+            const defaultUmbral = ds.umbral || 0;
 
-            // 2. Obtener valores por defecto del botón
-            const limiteImporteDefault = ds.limiteimporte ? parseFloat(ds.limiteimporte) : null;
-            const limitePaisesDefault = ds.limitepaises ? parseInt(ds.limitepaises, 10) : null;
-
-            // 3. Resolver Jerarquía (REPLICA EXACTA DE CARGARINFORME)
-            // Lógica: Si el input es 0 o vacío, manda el botón. Si el input tiene valor, manda el input.
-            const montoReal = (!valorInputMonto || valorInputMonto === 0) && limiteImporteDefault
-                ? limiteImporteDefault
-                : (valorInputMonto || limiteImporteDefault || 13000);
-
-            const paisesReal = (!valorInputPaises || valorInputPaises === 0) && limitePaisesDefault
-                ? limitePaisesDefault
-                : (valorInputPaises || limitePaisesDefault || 20);
-
-            let umbral = ds.umbral;
-
-            // 4. Construir HTML del bocadillo
-            let content = `<div class="rpt-p-1">`;
-            content += `<div class="rpt-mb-1"><strong>Filtros Activos</strong></div>`;
+            let content = `
+                <div class="rpt-popover-filtros p-2" style="min-width: 180px; font-family: Verdana, Geneva, sans-serif;">
+                    <div class="fw-bold mb-2 pb-1 border-bottom" style="font-size: 0.85rem; color: #005596;">
+                        Parámetros del Informe
+                    </div>
+            `;
             
-            let tieneInfo = false;
-
-            // B. Filtro de Monto
-            if (ds.limiteimporte !== undefined || ds.informe?.includes('cartera') || ds.informe?.includes('detalle')) {
-                const valorM = montoReal / 1000;
-                // Formatear a 1 decimal y convertir de nuevo a número para eliminar .0 si existe
-                const displayMonto = Number(valorM.toFixed(1));
-                content += `<div>Monto: ${displayMonto}M</div>`;
-                tieneInfo = true;
+            if (ds.limiteimporte !== undefined) {
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto (Euros):</label>
+                        <input type="number" id="pop-monto" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultMonto}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                `;
             }
 
-            // C. Filtro de Países
-            if (ds.limitepaises !== undefined || ds.informe?.includes('cartera') || ds.informe?.includes('detalle')) {
-                content += `<div>Países: ${paisesReal}</div>`;
-                tieneInfo = true;
+            if (ds.limitepaises !== undefined) {
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Países:</label>
+                        <input type="number" id="pop-paises" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultPaises}" min="1" style="font-size: 0.8rem;">
+                    </div>
+                `;
             }
 
-            // D. Umbral de Filtrado
-            if (umbral !== undefined && umbral !== null && umbral !== "") {
-                const num = parseFloat(umbral);
-                const displayUmbral = num === 0 ? "0" : Math.round(num / 1000) + "k";
-                content += `<div>Umbral: ${displayUmbral}</div>`;
-                tieneInfo = true;
+            if (ds.umbral !== undefined) {
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Umbral de Filtrado:</label>
+                        <input type="number" id="pop-umbral" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultUmbral}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                `;
             }
 
-            content += `</div>`;
-
-            if (!tieneInfo) return false;
+            content += `
+                <button class="btn btn-primary btn-sm w-100 mt-2 rpt-btn-pop-aceptar" id="btn-pop-aceptar">
+                    <i class="fas fa-play me-1"></i> Generar Informe
+                </button>
+            </div>`;
 
             instance.setContent(content);
+        },
+        onMount(instance) {
+            // Usar onMount para asegurar que el contenido está en el DOM
+            const box = instance.popper;
+            const btnAceptar = box.querySelector('#btn-pop-aceptar');
+            
+            if (btnAceptar) {
+                btnAceptar.onclick = () => {
+                    const monto = box.querySelector('#pop-monto')?.value;
+                    const paises = box.querySelector('#pop-paises')?.value;
+                    const umbral = box.querySelector('#pop-umbral')?.value;
+                    
+                    const nombreInforme = instance.reference.dataset.nombreInforme;
+                    
+                    instance.hide(); // Cerrar popover
+                    
+                    // Ejecutar carga de informe con los valores del popover
+                    window.cargarInforme(instance.reference, nombreInforme, {
+                        limiteImporte: monto ? parseFloat(monto) : null,
+                        limitePaises: paises ? parseInt(paises, 10) : null,
+                        umbral: umbral ? parseFloat(umbral) : null
+                    });
+                };
+
+                // También permitir ejecutar al pulsar Enter en los inputs
+                const inputs = box.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.onkeydown = (e) => {
+                        if (e.key === 'Enter') btnAceptar.click();
+                    };
+                });
+            }
         }
     });
 }
@@ -133,7 +186,7 @@ if (document.readyState === 'loading') {
     inicializarTooltipsFiltros();
 }
 
-window.cargarInforme = async function (btn, nombreInforme) {
+window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = null) {
 
     // Mantener compatibilidad si se llama solo con nombreInforme
     if (typeof btn === 'string') {
@@ -143,6 +196,30 @@ window.cargarInforme = async function (btn, nombreInforme) {
 
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
+
+    // --- RESOLUCIÓN DE LÍMITES (Contextual) ---
+    // Si vienen filtros manuales (desde Popover), tienen prioridad absoluta.
+    // Si no, se usan los data-attributes del botón o valores por defecto.
+    let limiteImporteFinal;
+    if (filtrosManuales && filtrosManuales.limiteImporte !== undefined && filtrosManuales.limiteImporte !== null) {
+        limiteImporteFinal = filtrosManuales.limiteImporte;
+    } else {
+        limiteImporteFinal = btn?.dataset?.limiteimporte ? parseFloat(btn.dataset.limiteimporte) : 13000;
+    }
+
+    let limitePaisesFinal;
+    if (filtrosManuales && filtrosManuales.limitePaises !== undefined && filtrosManuales.limitePaises !== null) {
+        limitePaisesFinal = filtrosManuales.limitePaises;
+    } else {
+        limitePaisesFinal = btn?.dataset?.limitepaises ? parseInt(btn.dataset.limitepaises, 10) : 20;
+    }
+
+    let umbralFinal;
+    if (filtrosManuales && filtrosManuales.umbral !== undefined && filtrosManuales.umbral !== null) {
+        umbralFinal = filtrosManuales.umbral;
+    } else {
+        umbralFinal = btn?.dataset?.umbral || null;
+    }
     
     // 0. Verificar si está activado el modo HTML Portable
     const chkPortable = document.getElementById('chkGenerarHtmlPortable');
@@ -150,10 +227,15 @@ window.cargarInforme = async function (btn, nombreInforme) {
         const labelBoton = btn?.textContent?.trim() || nombreInforme;
         const mesesSeleccionados = await _mostrarSelectorMeses(labelBoton, mes);
         if (mesesSeleccionados) {
-            _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelBoton);
+            _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelBoton, {
+                limiteImporte: limiteImporteFinal,
+                limitePaises: limitePaisesFinal,
+                umbral: umbralFinal
+            });
         }
         return;
     }
+
     if (!_whitelistInformes[nombreInforme]) {
         console.error(`El informe '${nombreInforme}' no está registrado en el manager.`);
         GlobalUI.showAlert('Informe no autorizado o inexistente', 'error');
@@ -161,57 +243,31 @@ window.cargarInforme = async function (btn, nombreInforme) {
     }
 
     // Capturar nro de página si el botón indica un input de origen
-    // Normalizar: parsear a entero y tratar 0 como null (sin número de página)
     const idInputPag = btn?.dataset?.inputPag;
     const rawPag = idInputPag ? document.getElementById(idInputPag)?.value : null;
     const nroPagina = rawPag != null ? parseInt(rawPag, 10) : null;
     const nroPaginaFinal = nroPagina > 0 ? nroPagina : null;
 
-    // Capturar mercado si existe (para informes duales como Ranking Clientes)
     const mercado = btn?.dataset?.mercado;
-
-    // Capturar umbral si existe (para informes como Paises/Paises Relevantes)
-    const umbral = btn?.dataset?.umbral;
-
-    // Capturar si se debe mostrar el título
     const mostrarTitulo = btn?.dataset?.mostrarTitulo !== 'false';
-
-    // Resolver limiteImporte: inputLimiteMonto vs data-limiteimporte del botón
-    const limiteImporteInput = document.getElementById('inputLimiteMonto');
-    const valorInputMonto = limiteImporteInput ? parseFloat(limiteImporteInput.value) : 0;
-    const limiteImporteDefault = btn?.dataset?.limiteimporte ? parseFloat(btn.dataset.limiteimporte) : null;
-    const limiteImporteFinal = (!valorInputMonto || valorInputMonto === 0) && limiteImporteDefault
-        ? limiteImporteDefault
-        : (valorInputMonto || limiteImporteDefault || 13000);
-
-    // Solo mostrar toast de límite de monto si el informe declara usarlo explícitamente
     const aplicaLimiteMonto = btn?.dataset?.limiteimporte !== undefined;
-
-    // Resolver limitePaises: inputLimiteNumeroPaises vs data-limitepaises del botón
-    const limitePaisesInput = document.getElementById('inputLimiteNumeroPaises');
-    const valorInputPaises = limitePaisesInput ? parseInt(limitePaisesInput.value, 10) : 0;
-    const limitePaisesDefault = btn?.dataset?.limitepaises ? parseInt(btn.dataset.limitepaises, 10) : null;
-    const limitePaisesFinal = (!valorInputPaises || valorInputPaises === 0) && limitePaisesDefault
-        ? limitePaisesDefault
-        : (valorInputPaises || limitePaisesDefault || 20);
 
     let exito = false;
 
     try {
         GlobalUI.showLoading();
 
-        // 1. Cargar CSS específico del informe (si no se ha cargado ya)
+        // 1. Cargar CSS específico del informe
         const idCss = `css-informe-${nombreInforme}`;
         if (!document.getElementById(idCss)) {
             const link = document.createElement('link');
             link.id   = idCss;
             link.rel  = 'stylesheet';
             link.href = `/css/informes/${nombreInforme}.css?v=${Date.now()}`;
-            // No bloqueamos por el CSS, que cargue en paralelo
             document.head.appendChild(link);
         }
 
-        // 2. Cargar módulo (Forzar siempre carga fresca para asegurar que los cambios de escala se aplican)
+        // 2. Cargar módulo
         const path = `./${nombreInforme}.js?v=${Date.now()}`;
         _registroModulos[nombreInforme] = await import(path);
 
@@ -220,13 +276,12 @@ window.cargarInforme = async function (btn, nombreInforme) {
         if (modulo && modulo.ejecutar) {
             const _codSubDir = btn?.dataset?.subdireccion || null;
             
-            // Construir objeto de parámetros (Context Object) para evitar colisiones posicionales
             const parametros = {
                 anio: anio,
                 mes: mes,
                 nroPagina: nroPaginaFinal,
                 mercado: mercado,
-                umbral: btn?.dataset?.umbral || null,
+                umbral: umbralFinal,
                 codSubDir: _codSubDir,
                 mostrarTitulo: mostrarTitulo,
                 limiteImporte: limiteImporteFinal,
@@ -246,10 +301,6 @@ window.cargarInforme = async function (btn, nombreInforme) {
         GlobalUI.showAlert('No se pudo cargar el componente del informe', 'error');
     } finally {
         GlobalUI.hideLoading();
-        if (exito && aplicaLimiteMonto) {
-            const valorMiles = Math.round(limiteImporteFinal / 1000);
-            GlobalUI.showAlert(`Limite Monto (miles): ${valorMiles}`, 'info', 'Filtro aplicado');
-        }
     }
 };
 
@@ -293,7 +344,7 @@ async function _mostrarSelectorMeses(nombreInforme, mesHasta) {
  * Captura todos los filtros data-* del botón, construye la petición al endpoint API
  * y gestiona la descarga del archivo .html generado por el servidor.
  */
-async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelInforme) {
+async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelInforme, limitesExtras = null) {
     try {
         GlobalUI.showLoading('Generando informe portable...');
 
@@ -334,20 +385,17 @@ async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labe
             }
         }
 
-        // 3. También capturar los inputs globales si aplican (umbral, limiteImporte, limitePaises)
-        const umbralGlobal = document.getElementById('inputUmbral')?.value;
-        if (umbralGlobal) {
-            url += `&umbral=${encodeURIComponent(umbralGlobal)}`;
-        }
-
-        const limiteMontoGlobal = document.getElementById('inputLimiteMonto')?.value;
-        if (limiteMontoGlobal && parseFloat(limiteMontoGlobal) > 0) {
-            url += `&limiteImporte=${encodeURIComponent(limiteMontoGlobal)}`;
-        }
-
-        const limitePaisesGlobal = document.getElementById('inputLimiteNumeroPaises')?.value;
-        if (limitePaisesGlobal && parseInt(limitePaisesGlobal, 10) > 0) {
-            url += `&limitePaises=${encodeURIComponent(limitePaisesGlobal)}`;
+        // 3. Aplicar filtros de límites si vienen explícitamente (desde el Popover)
+        if (limitesExtras) {
+            if (limitesExtras.limiteImporte) {
+                url += `&limiteImporte=${encodeURIComponent(limitesExtras.limiteImporte)}`;
+            }
+            if (limitesExtras.limitePaises) {
+                url += `&limitePaises=${encodeURIComponent(limitesExtras.limitePaises)}`;
+            }
+            if (limitesExtras.umbral !== undefined && limitesExtras.umbral !== null) {
+                url += `&umbral=${encodeURIComponent(limitesExtras.umbral)}`;
+            }
         }
 
         // 4. Verificar autenticación antes de la petición

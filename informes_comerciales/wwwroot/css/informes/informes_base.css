@@ -60,6 +60,48 @@
   margin-left: 4px;
 }
 
+/* NUEVO: Tema interactivo para selección de parámetros (Popovers) */
+.tippy-box[data-theme~='elecnor-popover'] {
+  background-color: #ffffff !important;
+  color: #333 !important;
+  border: 1px solid #00468B !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+  padding: 0 !important;
+}
+
+.tippy-box[data-theme~='elecnor-popover'] .tippy-content {
+  padding: 0 !important;
+}
+
+.tippy-box[data-theme~='elecnor-popover'] .tippy-arrow {
+  color: #00468B !important;
+}
+
+.tippy-box[data-theme~='elecnor-popover'] .rpt-popover-filtros label {
+    color: #00468B;
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+}
+
+.tippy-box[data-theme~='elecnor-popover'] .rpt-popover-filtros input {
+    font-size: 1rem !important;
+    font-weight: bold;
+    color: #00468B;
+}
+
+.tippy-box[data-theme~='elecnor-popover'] .rpt-btn-pop-aceptar {
+    background-color: #00468B !important;
+    border: none !important;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+.tippy-box[data-theme~='elecnor-popover'] .rpt-btn-pop-aceptar:hover {
+    background-color: #005596 !important;
+}
+
 /* 2. Cabeceras y Banners */
 .rpt-header {
   display: flex;
