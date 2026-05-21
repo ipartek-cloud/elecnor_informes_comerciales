@@ -302,14 +302,16 @@ public class InformeRepository
         string colCartAct  = $"[01#01#{(anio - 1).ToString().Substring(2)}]";
         string colFuturo1  = $"[{anio}]";
         string colFuturo2  = $"[{anio + 1}]";
+        string colFuturo3  = $"[{anio + 2}]";
 
         string sql = $@"
             SELECT
                 [Cartera Diferida] AS CarteraDiferida,
-                {colCartPrev} AS ValorCartPrev,
-                {colCartAct}  AS ValorCartAct,
-                {colFuturo1}  AS ValorFuturo1,
-                {colFuturo2}  AS ValorFuturo2,
+                {colCartPrev}      AS ValorCartPrev,
+                {colCartAct}       AS ValorCartAct,
+                {colFuturo1}       AS ValorFuturo1,
+                {colFuturo2}       AS ValorFuturo2,
+                {colFuturo3}       AS ValorFuturo3,
                 Orden
             FROM CarteraDiferida_CJO WITH (NOLOCK)
             WHERE Mercado = 'Mercado'

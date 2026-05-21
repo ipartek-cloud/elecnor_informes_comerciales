@@ -2,9 +2,8 @@
  * Informe: Principales Contrataciones del Año
  */
 
-import { RPT_CLASSES, formatCurrency, escapeHtml, getNombreMes } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
-import { ApiClient, GlobalUI } from '../site.js';
+import { RPT_CLASSES, formatCurrency, escapeHtml, getNombreMes, inicializarEventListenersBase, ejecutarGeneracionPrevia } from './utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -13,53 +12,34 @@ const estado = crearEstadoInforme();
  */
 export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo }) {
     try {
-        // 1. Verificar si el checkbox está activado
-        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesObras');
-        const debeGenerar = chkGenerar?.checked ?? false;
+        // 1. Verificar y ejecutar generación previa si el checkbox está activado
+        const generacionOk = await ejecutarGeneracionPrevia(
+            'chkGenerarRPTPrincipalesObras',
+            '/api/Contrataciones/generarcontratacionobras',
+            { anio, mes },
+            'Generando datos de contrataciones...'
+        );
+        if (!generacionOk) return;
 
-        // 2. Si checkbox activado, llamar al endpoint de generación
-        if (debeGenerar) {
-            GlobalUI.showLoading('Generando datos de contrataciones...');
-
-            try {
-                const genResp = await ApiClient.post('/api/Contrataciones/generarcontratacionobras', {
-                    anio: anio,
-                    mes: mes
-                }, true);
-
-                if (!genResp.ok) {
-                    const errorText = await genResp.text();
-                    GlobalUI.showAlert('Error al generar datos: ' + errorText, 'danger');
-                    GlobalUI.hideLoading();
-                    return;
-                }
-            } catch (error) {
-                GlobalUI.showAlert('Error al conectar con el servidor', 'danger');
-                GlobalUI.hideLoading();
-                return;
-            }
-
-            GlobalUI.hideLoading();
-        }
-
-        // 3. Cargar el informe (con o sin generación previa)
+        // 2. Cargar el informe (con o sin generación previa)
         const url = `/api/Contrataciones?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
 
-await inicializarInforme({
-      url,
-      estado,
-      renderizarPagina: _renderizarPagina,
-      inicializarEventListeners: _registrarEventos,
-      prefijoPaginacion: '',
-      claveAgrupacion: 'NONE',
-      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
-    });
+        await inicializarInforme({
+            url,
+            estado,
+            renderizarPagina: _renderizarPagina,
+            inicializarEventListeners: _registrarEventos,
+            prefijoPaginacion: '',
+            claveAgrupacion: 'NONE',
+            margenes: MARGENES_ESTANDAR
+        });
 
     } catch (error) {
         console.error("Error al ejecutar informe Contrataciones:", error);
+        throw error;
     }
 }
 
@@ -209,12 +189,7 @@ function _renderTablaContrataciones(data) {
 
 
 function _registrarEventos() {
-    // Es vital que btnPdf obtenga su handler cada vez, ya que los botones son compartidos
-    const btnPdf = document.getElementById(RPT_CLASSES.BTN_EXPORTAR_PDF);
-    if (btnPdf) {
-        btnPdf.onclick = _imprimirInforme;
-    }
-    estado.eventosIniciados = true;
+    inicializarEventListenersBase(estado, _renderizarPagina, _imprimirInforme);
 }
 
 async function _imprimirInforme() {
@@ -230,7 +205,8 @@ async function _imprimirInforme() {
             getHtmlEncabezado: _getHtmlEncabezado,
             renderContenido: () => contenidoHtml,
             modoAgrupacion: 'NONE',
-            margenes: estado.margenes
+            margenes: estado.margenes,
+            nombreInforme: 'contrataciones'
         });
     } catch (error) {
         console.error("Error al intentar imprimir el informe:", error);

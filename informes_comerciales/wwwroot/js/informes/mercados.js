@@ -3,7 +3,7 @@
  * Renderiza el informe completo en una sola página tal y como requiere el diseño.
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, getIpClass, getVarClass, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -24,14 +24,14 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         throw error;
     }
 }
 
-function _renderizarPagina(index) {
+function _renderizarPagina() {
     const container = document.getElementById(RPT_CLASSES.MODAL_CONTENT);
     if (!container) return;
 
@@ -72,11 +72,12 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContructorCompleto(true),
         modoAgrupacion: 'NONE',
-        margenes: estado.margenes
+        margenes: estado.margenes,
+        nombreInforme: 'mercados'
     });
 }
 
-function _renderCabeceraCompartida(tituloCentral = 'Mercado') {
+function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = true) {
     const anioAnterior = (estado.informeGlobalData?.meta?.filtros?.anio - 1) || '2026';
 
   return `
@@ -92,6 +93,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado') {
   <col class="rpt-mercado-col-var">
   </colgroup>
   <thead>
+  ${mostrarMensual ? `
   <tr class="rpt-font-bold">
   <th colspan="2" class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Mensual</th>
   <th rpt-border-none></th>
@@ -101,49 +103,17 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado') {
   </tr>
   <tr class="rpt-mercado-row-spacer">
   <th colspan="9"></th>
-  </tr>
+  </tr>` : ''}
   <tr class="rpt-font-bold">
+  ${mostrarMensual ? `
   <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
   <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
 
-  <th rpt-border-none></th>
-
-  <th class="rpt-align-center rpt-text-white rpt-mercado-header-align">
-  <div class="rpt-mercado-header-badge">${tituloCentral}</div>
-  </th>
-
-  <th rpt-border-none></th>
-
-  <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
-  <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
-  <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate">Ip</th>
-  <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate">Var/${anioAnterior}</th>
-  </tr>
-  </thead>
-  `;
-}
-
-function _renderCabeceraSubinforme(tituloCentral = 'Mercado') {
-  const anioAnterior = (estado.informeGlobalData?.meta?.filtros?.anio - 1) || '2026';
-
-  return `
-  <colgroup>
-  <col class="rpt-mercado-col-obj-m">
-  <col class="rpt-mercado-col-contr-m">
-  <col class="rpt-col-10px">
-  <col class="rpt-mercado-col-desc">
-  <col class="rpt-col-10px">
-  <col class="rpt-mercado-col-obj-a">
-  <col class="rpt-mercado-col-contr-a">
-  <col class="rpt-mercado-col-ip">
-  <col class="rpt-mercado-col-var">
-  </colgroup>
-  <thead>
-  <tr class="rpt-font-bold">
+  <th rpt-border-none></th>` : `
   <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
   <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
 
-  <th rpt-border-none></th>
+  <th rpt-border-none></th>`}
 
   <th class="rpt-align-center rpt-text-white rpt-mercado-header-align">
   <div class="rpt-mercado-header-badge">${tituloCentral}</div>
@@ -204,13 +174,13 @@ ${_construirHtmlFila('', data.totalGlobal.mensual, data.totalGlobal.acumulado, t
         html += `
             <div class="rpt-mb-2">
                 <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
-                    ${_renderCabeceraSubinforme(dn.nombre)}
+                    ${_renderCabeceraCompartida(dn.nombre, false)}
                     <tbody>
         `;
-dn.mercados.forEach(m => {
-  html += _construirHtmlFila(m.nombre, m.mensual, m.acumulado);
-});
-html += `
+        dn.mercados.forEach(m => {
+            html += _construirHtmlFila(m.nombre, m.mensual, m.acumulado);
+        });
+        html += `
 </tbody>
 <tr class="rpt-spacer-row-totales"><td colspan="9" class="rpt-spacer-cell-totales"></td></tr>
 <tfoot>
@@ -222,12 +192,12 @@ ${_construirHtmlFila('', dn.total.mensual, dn.total.acumulado, true)}
     html += `
     <div class="rpt-mb-5">
     <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
-      ${_renderCabeceraSubinforme('Unidades de Negocio')}
+      ${_renderCabeceraCompartida('Unidades de Negocio', false)}
       <tbody>
       `;
-dn.unidades.forEach(u => {
-  html += _construirHtmlFila(u.nombre, u.mensual, u.acumulado);
-});
+        dn.unidades.forEach(u => {
+            html += _construirHtmlFila(u.nombre, u.mensual, u.acumulado);
+        });
 html += `
 </tbody>
 <tr class="rpt-spacer-row-totales"><td colspan="9" class="rpt-spacer-cell-totales"></td></tr>

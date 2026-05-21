@@ -4,7 +4,7 @@
  */
 
 import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, getNombreMes, getVarClass } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -28,10 +28,11 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
       inicializarEventListeners: _registrarEventos,
       prefijoPaginacion: '',
       claveAgrupacion: 'NONE',
-      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+      margenes: MARGENES_ESTANDAR
     });
   } catch (error) {
     console.error("Error al ejecutar informe Actividades_Objetivos:", error);
+    throw error;
   }
 }
 

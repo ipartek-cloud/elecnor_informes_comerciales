@@ -1,30 +1,52 @@
 /* =============================================================================
-   ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES ALL
-   Hereda estructura de paises.js pero con anchos de columna propios
-   ============================================================================= */
+ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES (TODOS - Nacional + Internacional)
+Reutiliza los estilos de paises.css con selectors para data-informe="paises_all"
+============================================================================= */
 
-/* Layout de Columnas - Unificados con paises.css */
-.rpt-paises-col-porc  { width: 16%; }
+.rpt-paper[data-informe="paises_all"] {
+  container-type: inline-size;
+  container-name: rpt-paper;
+  margin: 0 auto;
+  box-shadow: none;
+  border: none;
+}
+
+@container rpt-paper (max-width: 700px) {
+  .rpt-paises-num-cell {
+    padding-right: 8px !important;
+  }
+  .rpt-paises-new-flag {
+    font-size: 8pt;
+  }
+  .rpt-paises-col-porc { width: 16%; }
+  .rpt-paises-col-contr { width: 13%; }
+  .rpt-paises-col-pos { width: 7%; }
+  .rpt-paises-col-pais { width: 30%; }
+}
+
+/* Layout de Columnas (Simetría) */
+.rpt-paises-col-porc { width: 16%; }
 .rpt-paises-col-contr { width: 13%; }
-.rpt-paises-col-pos   { width: 7%; }
-.rpt-paises-col-pais  { width: 28%; }
+.rpt-paises-col-pos { width: 7%; }
+.rpt-paises-col-pais { width: 28%; }
 
 /* Cabecera: Azul corporativo Elecnor */
 thead .rpt-paises-pais-cell {
-    background-color: #00468B;
-    color: white;
-    font-weight: bold;
-    text-align: center;
+  background-color: #00468B;
+  color: white;
+  font-weight: bold;
+  text-align: center;
 }
 
-/* Detalle: Blanco con texto normal */
 tbody .rpt-paises-pais-cell {
-    color: #444;
-    font-weight: normal;
-    text-align: center;
+  color: #444;
+  font-weight: normal;
+  text-align: center;
 }
 
-/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
+.rpt-paises-pos-cell { text-align: center; }
+.rpt-paises-num-cell { text-align: right; padding-right: 15px !important; }
+
 .rpt-paises-table .rpt-detail-row td {
     line-height: 1.25 !important;
     padding-top: 3px !important;
@@ -39,117 +61,140 @@ tbody .rpt-paises-pais-cell {
     }
 }
 
-.rpt-paises-pos-cell {
-    text-align: center;
-}
-
-.rpt-paises-num-cell {
-    text-align: right;
-    padding-right: 15px !important;
+.report-body {
+  margin-top: 2.5rem !important;
 }
 
 .rpt-paises-header-year {
-    color: #00468B;
-    font-weight: bold;
-    text-align: center;
+  color: #00468B;
+  font-weight: bold;
+  text-align: center;
 }
 
 .rpt-th-blue-segmented {
-    color: #00468B !important;
-    font-weight: bold;
+  color: #00468B !important;
+  font-weight: bold;
 }
 
 .rpt-paises-th-border {
-    border-bottom: 0.3pt solid #00468B !important;
-    padding-bottom: 3px !important;
+  border-bottom: 0.3pt solid #00468B !important;
+  padding-bottom: 3px !important;
 }
 
 .rpt-paises-th-border-pais {
-    border-bottom: 0.3pt solid #00468B !important;
-    padding: 2px 0 2px 0 !important;
+  border-bottom: 0.3pt solid #00468B !important;
+  padding: 2px 0 2px 0 !important;
 }
 
 .rpt-paises-total-row {
-    font-weight: bold !important;
-    color: #00468B !important;
-}
-
-.rpt-paises-total-line {
-    border-top: 0.3pt solid #00468B !important;
-}
-
-.rpt-paises-total-global td {
-    border-top: none !important;
-    padding-top: 0.6rem !important;
-    padding-bottom: 0.2rem !important;
-}
-
-.rpt-paises-footer-nota {
-    color: #888;
-    font-size: 8pt;
-    margin-bottom: 0.25rem;
-}
-
-.rpt-paises-footer-block {
-    margin-top: 2rem;
-    font-size: 8pt;
-}
-
-.rpt-paises-new-flag {
-    color: #D67F00;
-    font-weight: bold;
-    font-size: 8pt;
-    margin-right: 4px;
-    display: inline-block;
-    vertical-align: middle;
-    line-height: 1;
-    position: relative;
-    top: 2px;
-}
-
-.rpt-paises-asterisk-container {
-    width: 25px;
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-.rpt-paises-pais-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 0.5rem;
+  font-weight: bold !important;
+  color: #00468B !important;
 }
 
 .rpt-spacer-row-totales,
 .rpt-spacer-cell-totales {
-    height: 6px !important;
-    border: none !important;
-    padding: 0 !important;
-    line-height: 0 !important;
-    font-size: 0 !important;
+  height: 6px !important;
+  border: none !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
+}
+
+.rpt-paises-total-line {
+  border-top: 0.3pt solid #00468B !important;
+}
+
+.rpt-paises-total-global td {
+  border-top: none !important;
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.2rem !important;
+}
+
+.rpt-paises-footer-nota {
+  color: #888;
+  font-size: 8pt;
+  margin-bottom: 0.25rem;
+}
+
+.rpt-paises-footer-block {
+  margin-top: 2rem;
+  font-size: 8pt;
+}
+
+.rpt-paises-new-flag {
+  color: #D67F00;
+  font-weight: bold;
+  font-size: 8pt;
+  margin-right: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  position: relative;
+  top: 2px;
+}
+
+.rpt-paises-asterisk-container {
+  width: 25px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.rpt-paises-pais-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
 }
 
 .rpt-align-center { text-align: center !important; }
 .rpt-align-end { text-align: end !important; text-align: right !important; }
 .rpt-pad-right-15 { padding-right: 15px !important; }
 
-/* Container Queries - Ajustes para contenedores estrechos (<700px) */
-@container rpt-paper (max-width: 700px) {
-    .rpt-paises-col-porc  { width: 12%; }
-    .rpt-paises-col-contr { width: 16%; }
-    .rpt-paises-col-pos   { width: 7%; }
-    .rpt-paises-col-pais  { width: 30%; }
-}
-
-/* Impresión - Paridad con Access (Margen 16mm) */
 @media print {
-    .rpt-paises-col-porc  { width: 16% !important; }
-    .rpt-paises-col-contr { width: 13% !important; }
-    .rpt-paises-col-pos   { width: 7% !important; }
-    .rpt-paises-col-pais  { width: 28% !important; }
+  .rpt-paper[data-informe="paises_all"],
+  .rpt-paper--print {
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
 
-    .rpt-paises-total-line {
-        border-bottom-width: 0.3pt !important;
-        border-top-width: 0.3pt !important;
-    }
+  .rpt-paises-col-porc { width: 16% !important; }
+  .rpt-paises-col-contr { width: 13% !important; }
+  .rpt-paises-col-pos { width: 7% !important; }
+  .rpt-paises-col-pais { width: 28% !important; }
+
+  .rpt-table { font-size: 8pt !important; }
+
+  .rpt-th-blue,
+  .rpt-paises-total-line {
+    border-bottom-width: 0.3pt !important;
+    border-top-width: 0.3pt !important;
+  }
+
+  .rpt-banner-top {
+    height: 25px !important;
+    font-size: 14pt !important;
+    font-weight: normal !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .rpt-header-logo { height: 10mm !important; }
+  .rpt-header { margin-bottom: 0.5rem !important; align-items: flex-end !important; }
+  .rpt-header-corporate-text { font-size: 14pt !important; font-weight: normal !important; }
+  .rpt-subtitle { font-size: 8pt !important; margin-bottom: 0.5rem !important; }
+  .report-body { margin-top: 2.5rem !important; }
+  .rpt-paises-num-cell { padding-right: 5px !important; text-align: right !important; }
+  .rpt-detail-row { page-break-inside: avoid; }
+  .rpt-header, .rpt-banner-top, .rpt-subtitle { page-break-after: avoid; }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .rpt-paises-footer-block { margin-top: 1rem !important; font-size: 8pt !important; }
+  .rpt-paises-total-line { margin: 0 5px !important; }
+  .rpt-paises-new-flag { font-size: 8pt !important; }
 }

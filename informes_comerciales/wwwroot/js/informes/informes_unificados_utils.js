@@ -20,6 +20,20 @@ import {
 import { ApiClient } from '../site.js';
 
 // =============================================================================
+// CONSTANTES COMPARTIDAS
+// =============================================================================
+
+/**
+ * Configuración estándar de márgenes para todos los informes.
+ * Usar en lugar de definir inline { web: '16mm', pdf: '16mm', maxWidth: '1050px' }.
+ */
+export const MARGENES_ESTANDAR = {
+    web: '16mm',
+    pdf: '16mm',
+    maxWidth: '1050px'
+};
+
+// =============================================================================
 // ESTADO BASE DE INFORME (Factory Function)
 // =============================================================================
 
@@ -32,10 +46,9 @@ export function crearEstadoInforme() {
         informeGlobalData: null,
         paginaActual: 0,
         paginasTotales: 0,
-        eventosIniciados: false,
-        mostrarNumeroPagina: true, // Flag de visibilidad
-        mostrarTitulo: true,       // Flag de visibilidad
-        margenes: null             // Configuración de márgenes custom
+        mostrarNumeroPagina: true,
+        mostrarTitulo: true,
+        margenes: null
     };
 }
 
@@ -206,7 +219,7 @@ export function getHtmlEncabezadoBase(opciones) {
  * @param {string} [margenes.maxWidth] - Ancho máximo del papel (ej: "1050px")
  * @returns {string} String HTML para inyectar como atributo style, o string vacío.
  */
-function getStyleVars(margenes) {
+export function getStyleVars(margenes) {
     if (!margenes || typeof margenes !== 'object') return '';
 
     const vars = [];
@@ -217,8 +230,6 @@ function getStyleVars(margenes) {
     return vars.length > 0 ? ` style="${vars.join(' ')}"` : '';
 }
 
-// Exportación explícita de utilidades
-export { getStyleVars };
 
 // =============================================================================
 // IMPRESIÓN PDF BASE

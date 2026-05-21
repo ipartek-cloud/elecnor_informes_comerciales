@@ -715,6 +715,7 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
         height: auto !important;
         margin: 0 !important;
         padding: var(--rpt-padding-pdf) !important;
+        padding-top: 8mm !important;
         max-width: 100% !important; /* En impresión, el papel ocupa el 100% del A4 */
         box-shadow: none !important;
         border: none !important;
@@ -827,9 +828,15 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
         padding-bottom: 2px !important;
     }
 
-    /* 10.9 HEADER COMPACTO: Reducir margen inferior */
+    /* 10.9 HEADER COMPACTO: Reducir margen inferior y alinear elementos abajo */
     .rpt-header {
         margin-bottom: 0.5rem !important;
+        align-items: flex-end !important;
+    }
+
+    /* Contenedor relativo para posicionar el número de página */
+    .rpt-header .rpt-flex-column {
+        position: relative !important;
     }
 
   /* 10.10 TEXTO CORPORATIVO COMPACTO: Estandarizado a 14pt */
@@ -886,11 +893,16 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
   Asegurar que las nuevas clases tipográficas se apliquen en impresión
   ========================================================================== */
 
-  /* Número de página: estandarizado 10pt */
+  /* Número de página: estandarizado 10pt y posicionado absoluto sobre el logo */
   .rpt-page-number {
     font-size: 10pt !important;
     font-weight: normal !important;
     color: #00468B !important;
+    position: absolute !important;
+    top: -15px !important;
+    right: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
   }
 
   /* Tamaños de fuente estándar */

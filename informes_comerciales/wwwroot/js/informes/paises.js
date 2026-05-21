@@ -6,7 +6,7 @@
  * - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes)
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -34,10 +34,11 @@ export async function ejecutar({ anio, mes, nroPagina, umbral = 0, mostrarTitulo
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE', // Informe de página única
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         console.error("Error al ejecutar informe Paises:", error);
+        throw error;
     }
 }
 
@@ -85,7 +86,8 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderTablaPaises() + _renderFooterInfo(),
         modoAgrupacion: 'NONE',
-        margenes: estado.margenes
+        margenes: estado.margenes,
+        nombreInforme: 'paises'
     });
 }
 

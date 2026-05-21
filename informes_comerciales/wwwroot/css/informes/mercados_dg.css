@@ -75,6 +75,18 @@ Basado en colgroup y table-layout: fixed.
 .rpt-mercado-col-ip { width: 10.0%; }
 .rpt-mercado-col-var { width: 11.0%; }
 
+/* Columnas específicas para el subinforme Cartera Diferida (10 columnas) */
+/* Cartera Diferida - Ajuste de anchos para alineación con subinformes superiores */
+.rpt-cd-col-data { width: 10%; }
+.rpt-cd-col-concept { width: 30%; }
+
+/* Columnas derecha (6,7,8,9): igualar anchos a subinformes superiores (12+12+10+11 = 45%) */
+.rpt-cd-separator colgroup col:nth-child(6) { width: 12% !important; }
+.rpt-cd-separator colgroup col:nth-child(7) { width: 12% !important; }
+.rpt-cd-separator colgroup col:nth-child(8) { width: 10% !important; }
+.rpt-cd-separator colgroup col:nth-child(9) { width: 11% !important; }
+.rpt-cd-col-sep { width: 10px; }
+
 /* Separadores sin borde (rompen continuidad del border-top en totales) */
 [rpt-border-none] { border: none !important; }
 
@@ -85,7 +97,7 @@ Clases para reemplazar estilos inline del JS
 
 /* Borde inferior de encabezados */
 .rpt-mercado-th-border {
-  border-bottom: 2px solid #00468B !important;
+  border-bottom: 0.3pt solid #00468B !important;
   padding-bottom: 5px !important;
 }
 
@@ -104,9 +116,16 @@ Clases para reemplazar estilos inline del JS
 }
 
 /* Alineación vertical para celdas de encabezado con badge */
-.rpt-mercado-header-align {
+.rpt-mercado-header-align,
+.rpt-cd-header-align {
   vertical-align: bottom;
-  padding: 0;
+  padding: 0 !important;
+}
+
+/* Forzar padding 0 en badge de Cartera Diferida (máxima especificidad) */
+table.rpt-table.rpt-table-stackable.rpt-mercado-layout thead tr th.rpt-cd-header-align {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 /* Badge de título central - Tamaño fijo 8pt (NO clamp) */
@@ -138,6 +157,11 @@ Clases para reemplazar estilos inline del JS
  Las columnas separadoras rpt-col-10px + [rpt-border-none] segmentan
  la línea de border-top en 3 bloques (Mensual | Concepto | Acumulado)
  ============================================================================= */
+
+/* Uniformar grosor de línea de totales a 0.3pt (igual que cabeceras) */
+.rpt-td-total {
+  border-top: 0.3pt solid #00468B !important;
+}
 
 /* Fila de detalle - Altura automática con line-height compacto */
 .rpt-mercado-detail-row {
@@ -178,7 +202,7 @@ Aquí solo definimos overrides específicos si fueran necesarios.
 
 /* Bordes de cabecera */
 .rpt-cd-th-border {
-  border-bottom: 2px solid #00468B !important;
+  border-bottom: 0.3pt solid #00468B !important;
   padding-bottom: 5px !important;
 }
 
@@ -206,13 +230,56 @@ Aquí solo definimos overrides específicos si fueran necesarios.
   line-height: 1.05;
 }
 
-/* Fila de totales con líneas entrecortadas */
+/* Fila de totales con líneas continuas por grupos */
 .rpt-cd-total-row {
   color: #00468B !important;
   font-weight: bold;
 }
 
 .rpt-cd-total-row td {
+  color: #00468B !important;
+}
+
+/* Línea continua grupo izquierdo (columnas 1-2) */
+.rpt-cd-total-row-groups td:nth-child(1),
+.rpt-cd-total-row-groups td:nth-child(2) {
+  border-top: 0.3pt solid #00468B !important;
+  padding-top: 5px !important;
+}
+
+.rpt-cd-total-row-groups td:nth-child(1) .rpt-cd-total-inner,
+.rpt-cd-total-row-groups td:nth-child(2) .rpt-cd-total-inner {
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+
+/* Línea continua grupo derecho (columnas 6-8) */
+.rpt-cd-total-row-groups td:nth-child(6),
+.rpt-cd-total-row-groups td:nth-child(7),
+.rpt-cd-total-row-groups td:nth-child(8) {
+  border-top: 0.3pt solid #00468B !important;
+  padding-top: 5px !important;
+}
+
+.rpt-cd-total-row-groups td:nth-child(6) .rpt-cd-total-inner,
+.rpt-cd-total-row-groups td:nth-child(7) .rpt-cd-total-inner,
+.rpt-cd-total-row-groups td:nth-child(8) .rpt-cd-total-inner {
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+
+/* Celda central de totales con línea individual */
+.rpt-cd-total-center {
+  padding-top: 0 !important;
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.rpt-cd-total-center .rpt-cd-total-inner {
+  border-top: 0.3pt solid #00468B !important;
+  margin: 0;
+  padding-top: 5px !important;
   color: #00468B !important;
 }
 
@@ -224,7 +291,7 @@ Aquí solo definimos overrides específicos si fueran necesarios.
 }
 
 .rpt-cd-total-inner {
-  border-top: 2px solid #00468B !important;
+  border-top: 0.3pt solid #00468B !important;
   margin: 0;
   padding-top: 5px !important;
   color: #00468B !important;
@@ -270,7 +337,7 @@ Las reglas generales de impresión están en informes_base.css
     border: none !important;
   }
 
-  /* Proporciones de columnas para A4 (9 columnas con separadores) */
+  /* Proporciones de columnas para A4 (9 columnas principales con separadores) */
   .rpt-mercado-col-obj-m { width: 11% !important; }
   .rpt-mercado-col-contr-m { width: 11% !important; }
   .rpt-mercado-col-desc { width: 30% !important; }
@@ -279,6 +346,11 @@ Las reglas generales de impresión están en informes_base.css
   .rpt-mercado-col-ip { width: 10% !important; }
   .rpt-mercado-col-var { width: 8% !important; }
   .rpt-col-10px { width: 5px !important; }
+
+  /* Proporciones de columnas para Cartera Diferida (10 columnas) en A4 */
+  .rpt-cd-col-data { width: 10% !important; }
+  .rpt-cd-col-concept { width: 28% !important; }
+  .rpt-cd-col-sep { width: 5px !important; }
 
   /* Reducir márgenes verticales entre bloques */
   .rpt-mercado-layout {
@@ -344,7 +416,13 @@ Las reglas generales de impresión están en informes_base.css
 
   .rpt-td-total,
   .rpt-total-row-blue td,
-  .rpt-cd-total-inner {
+  .rpt-cd-total-inner,
+  .rpt-cd-total-row-groups td:nth-child(1),
+  .rpt-cd-total-row-groups td:nth-child(2),
+  .rpt-cd-total-row-groups td:nth-child(6),
+  .rpt-cd-total-row-groups td:nth-child(7),
+  .rpt-cd-total-row-groups td:nth-child(8),
+  .rpt-cd-total-center .rpt-cd-total-inner {
     border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important;
   }

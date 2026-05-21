@@ -11,6 +11,7 @@
  */
 
 
+import { ApiClient, GlobalUI } from '../site.js';
 
 // =============================================================================
 // CONSTANTES DE CLASES CSS COMPARTIDAS
@@ -35,6 +36,7 @@ export const RPT_CLASSES = Object.freeze({
     BTN_PAG_ANTERIOR: 'btnPagAnterior',
     BTN_PAG_SIGUIENTE: 'btnPagSiguiente',
     BTN_EXPORTAR_PDF: 'btnExportarPdf',
+    BTN_DESCARGAR_PDF: 'btnDescargarPdfDirecto',
     LBL_ESTADO_PAGINACION: 'lblEstadoPaginacion'
 });
 
@@ -210,6 +212,87 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
         btnPdf.onclick = imprimirFn;
     }
 
+    // Botón Descarga PDF Directo
+    const btnDescargar = document.getElementById(RPT_CLASSES.BTN_DESCARGAR_PDF);
+    if (btnDescargar) {
+        btnDescargar.onclick = async () => {
+            const originalPrint = window.print;
+            const originalText = btnDescargar.innerHTML;
+
+            // Poner en estado de carga en el botón
+            btnDescargar.disabled = true;
+            btnDescargar.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Generando...';
+
+            let htmlContent = null;
+            let fileName = null;
+            let reportName = null;
+
+            // Interceptamos temporalmente window.print
+            window.print = function () {
+                const capaPrint = document.querySelector('.rpt-print-layer');
+                if (capaPrint) {
+                    htmlContent = capaPrint.innerHTML;
+
+                    const firstPaper = capaPrint.querySelector('.rpt-paper');
+                    let rName = firstPaper ? (firstPaper.dataset.informe || firstPaper.getAttribute('data-informe')) : '';
+                    if (!rName || rName === 'unificado') {
+                        const screenPaper = document.querySelector('#modalInformeContenido .rpt-paper');
+                        if (screenPaper) {
+                            rName = screenPaper.dataset.informe || screenPaper.getAttribute('data-informe') || '';
+                        }
+                    }
+                    reportName = rName;
+
+                    let pageNum = null;
+                    const pageNumElem = capaPrint.querySelector('.rpt-page-number');
+                    if (pageNumElem) {
+                        pageNum = pageNumElem.textContent.trim();
+                    }
+                    if (!pageNum && estado) {
+                        pageNum = estado.nroPagina;
+                    }
+                    if (!pageNum && estado) {
+                        pageNum = estado.paginaActual + 1;
+                    }
+                    fileName = `${pageNum || 1}.pdf`;
+                }
+            };
+
+            try {
+                // Ejecutamos imprimirFn, que construirá la capa y disparará window.print()
+                await imprimirFn();
+            } catch (err) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de impresión',
+                        text: 'Ocurrió un error al preparar la vista del informe.'
+                    });
+                }
+            } finally {
+                // Restauramos inmediatamente window.print
+                window.print = originalPrint;
+            }
+
+            // Validamos e iniciamos la descarga o informamos de fallos
+            if (htmlContent) {
+                await descargarPdfDesdeServidor(htmlContent, fileName, reportName);
+            } else {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Descarga no iniciada',
+                        text: 'No se pudo generar el contenido del informe para la descarga.'
+                    });
+                }
+            }
+
+            // Restauramos el botón
+            btnDescargar.disabled = false;
+            btnDescargar.innerHTML = originalText;
+        };
+    }
+
     // Botón Anterior
     const btnAnterior = document.getElementById(RPT_CLASSES.BTN_PAG_ANTERIOR);
     if (btnAnterior) {
@@ -230,6 +313,60 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
                 renderFn(estado.paginaActual);
             }
         };
+    }
+}
+
+/**
+ * Envía el HTML del informe al servidor y descarga el PDF generado.
+ */
+async function descargarPdfDesdeServidor(htmlContent, fileName, reportName) {
+    try {
+        const response = await ApiClient.post('/api/PdfExport/download', {
+            htmlContent: htmlContent,
+            fileName: fileName,
+            reportName: reportName
+        }, true);
+
+        if (!response.ok) {
+            let errorText = "Error desconocido del servidor.";
+            try {
+                errorText = await response.text();
+            } catch {}
+            throw new Error(`Error ${response.status}: ${errorText}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        // Informamos éxito mediante Toast
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'PDF generado y descargado',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+    } catch (err) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de descarga',
+                text: 'No se pudo generar o descargar el PDF en el servidor. Por favor, inténtelo de nuevo.'
+            });
+        } else {
+            alert('No se pudo generar o descargar el PDF.');
+        }
     }
 }
 
@@ -321,4 +458,40 @@ export function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+}
+
+/**
+ * Ejecuta la generación previa de datos de un informe mediante checkbox.
+ * Patrón compartido por contrataciones.js y contrataciones_ai.js.
+ *
+ * @param {string} checkboxId - ID del checkbox en el DOM
+ * @param {string} endpoint - Endpoint POST para la generación
+ * @param {object} payload - Payload con { anio, mes }
+ * @param {string} loadingMsg - Mensaje mostrado durante la generación
+ * @returns {Promise<boolean>} true si se generó (o no era necesario), false si hubo error
+ */
+export async function ejecutarGeneracionPrevia(checkboxId, endpoint, payload, loadingMsg = 'Generando datos...') {
+    const chkGenerar = document.getElementById(checkboxId);
+    const debeGenerar = chkGenerar?.checked ?? false;
+
+    if (!debeGenerar) return true;
+
+    GlobalUI.showLoading(loadingMsg);
+
+    try {
+        const genResp = await ApiClient.post(endpoint, payload, true);
+        if (!genResp.ok) {
+            const errorText = await genResp.text();
+            GlobalUI.showAlert('Error al generar datos: ' + errorText, 'danger');
+            GlobalUI.hideLoading();
+            return false;
+        }
+    } catch (error) {
+        GlobalUI.showAlert('Error al conectar con el servidor', 'danger');
+        GlobalUI.hideLoading();
+        return false;
+    }
+
+    GlobalUI.hideLoading();
+    return true;
 }

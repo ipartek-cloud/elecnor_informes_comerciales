@@ -33,7 +33,7 @@ public class AssetInliningService
     /// </summary>
     /// <param name="relativePath">Ruta relativa desde wwwroot (ej: "css/informes/mercados.css")</param>
     /// <returns>Contenido del archivo como string. String vacío si no existe.</returns>
-    public async Task<string> GetAssetContentAsync(string relativePath)
+    public async Task<string> GetAssetContentAsync(string relativePath, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(relativePath))
             return string.Empty;

@@ -3,9 +3,8 @@
  * Basado en la arquitectura del informe de Contrataciones.
  */
 
-import { RPT_CLASSES, formatCurrency, escapeHtml, getNombreMes } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
-import { ApiClient, GlobalUI } from '../site.js';
+import { RPT_CLASSES, formatCurrency, escapeHtml, getNombreMes, inicializarEventListenersBase, ejecutarGeneracionPrevia } from './utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -14,50 +13,33 @@ const estado = crearEstadoInforme();
  */
 export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo }) {
     try {
-        // 1. Verificar si el checkbox de generación está activado
-        const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesObrasAI');
-        const debeGenerar = chkGenerar?.checked ?? false;
+        // 1. Verificar y ejecutar generación previa si el checkbox está activado
+        const generacionOk = await ejecutarGeneracionPrevia(
+            'chkGenerarRPTPrincipalesObrasAI',
+            '/api/ContratacionesAI/generar',
+            { anio, mes },
+            'Generando datos AI...'
+        );
+        if (!generacionOk) return;
 
-        // 2. Si checkbox activado, llamar al endpoint de generación
-        if (debeGenerar) {
-            GlobalUI.showLoading('Generando datos AI...');
-            try {
-                const genResp = await ApiClient.post('/api/ContratacionesAI/generar', {
-                    anio: anio,
-                    mes: mes
-                }, true);
-
-                if (!genResp.ok) {
-                    const errorText = await genResp.text();
-                    GlobalUI.showAlert('Error al generar datos AI: ' + errorText, 'danger');
-                    GlobalUI.hideLoading();
-                    return;
-                }
-            } catch (error) {
-                GlobalUI.showAlert('Error al conectar con el servidor', 'danger');
-                GlobalUI.hideLoading();
-                return;
-            }
-            GlobalUI.hideLoading();
-        }
-
-        // 3. Cargar el informe
+        // 2. Cargar el informe
         const url = `/api/ContratacionesAI?anio=${anio}&mes=${mes}&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
 
-await inicializarInforme({
-      url,
-      estado,
-      renderizarPagina: _renderizarPagina,
-      inicializarEventListeners: _registrarEventos,
-      claveAgrupacion: 'NONE', // Es un informe de página única por ahora
-      margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
-    });
+        await inicializarInforme({
+            url,
+            estado,
+            renderizarPagina: _renderizarPagina,
+            inicializarEventListeners: _registrarEventos,
+            claveAgrupacion: 'NONE',
+            margenes: MARGENES_ESTANDAR
+        });
 
     } catch (error) {
         console.error("Error al ejecutar informe Contrataciones AI:", error);
+        throw error;
     }
 }
 
@@ -172,10 +154,7 @@ async function _renderCuerpoInforme() {
  * Registra eventos.
  */
 function _registrarEventos() {
-    const btnPdf = document.getElementById(RPT_CLASSES.BTN_EXPORTAR_PDF);
-    if (btnPdf) {
-        btnPdf.onclick = _imprimirInforme;
-    }
+    inicializarEventListenersBase(estado, _renderizarPagina, _imprimirInforme);
 }
 
 /**
@@ -189,7 +168,8 @@ async function _imprimirInforme() {
             getHtmlEncabezado: _getHtmlEncabezado,
             renderContenido: () => contenidoHtml,
             modoAgrupacion: 'NONE',
-            margenes: estado.margenes
+            margenes: estado.margenes,
+            nombreInforme: 'contrataciones_ai'
         });
     } catch (error) {
         console.error("Error al intentar imprimir el informe AI:", error);

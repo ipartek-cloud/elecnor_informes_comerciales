@@ -1,5 +1,5 @@
 import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -20,7 +20,7 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostr
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'subDireccionesGenerales',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
 
         // V-19: Para Sábana Continua (Tipo Internacional), forzamos 1 sola página en la navegación web
@@ -29,6 +29,7 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostr
 
     } catch (error) {
         console.error("Error al ejecutar informe Mercados SG Delegaciones:", error);
+        throw error;
     }
 }
 

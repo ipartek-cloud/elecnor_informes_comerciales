@@ -8,7 +8,7 @@ import {
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme,
-    getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado
+    getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado, MARGENES_ESTANDAR
 } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -28,10 +28,11 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Todo', limiteI
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: 'Página',
             claveAgrupacion: 'NONE',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         console.error('[CarteraContratacionDetallePaises] Error:', error);
+        throw error;
     }
 }
 

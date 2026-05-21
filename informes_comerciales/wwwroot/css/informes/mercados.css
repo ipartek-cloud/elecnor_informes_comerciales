@@ -81,7 +81,7 @@ Clases para reemplazar estilos inline del JS
 
 /* Borde inferior de encabezados */
 .rpt-mercado-th-border {
-  border-bottom: 2px solid #00468B !important;
+  border-bottom: 0.3pt solid #00468B !important;
   padding-bottom: 5px !important;
 }
 

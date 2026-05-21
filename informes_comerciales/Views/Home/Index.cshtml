@@ -35,7 +35,7 @@
                         <option value="12" selected="@(defaultMonth == 12 ? "selected" : null)">Diciembre</option>
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="col-auto d-none">
                     <div class="d-flex align-items-center" style="height: 38px; gap: 6px;">
                         <label class="fw-bold mb-0" for="chkGenerarHtmlPortable" style="cursor: pointer; font-size: 0.9rem;">
                             HTML Portable
@@ -915,9 +915,13 @@
             <div class="modal-header bg-primary text-white shadow-sm py-2 px-4 modal-header-report">
                 <div class="d-flex align-items-center gap-2 modal-header-left">
                     <h5 class="modal-title mb-0" id="modalInformeTitulo">Cargando Informe...</h5>
-                    <button type="button" class="btn btn-sm btn-outline-light" id="btnExportarPdf"
+                    <button type="button" class="btn btn-sm btn-outline-light" id="btnDescargarPdfDirecto"
+                            aria-label="Descargar informe en PDF directamente">
+                        <i class="fas fa-download me-1" aria-hidden="true"></i> Descarga PDF
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-light ms-2" id="btnExportarPdf"
                             aria-label="Imprimir informe en PDF">
-                        <i class="fas fa-file-pdf me-1" aria-hidden="true"></i> Imprimir PDF
+                        <i class="fas fa-file-pdf me-1" aria-hidden="true"></i> Visualizar PDF
                     </button>
                 </div>
 

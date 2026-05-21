@@ -9,7 +9,7 @@ import {
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme,
-    getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars
+    getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR
 } from './informes_unificados_utils.js';
 import { ApiClient, GlobalUI } from '../site.js';
 
@@ -44,12 +44,13 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umb
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: 'Página',
             claveAgrupacion: 'NONE',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
 
     } catch (error) {
         console.error('[ContratacionesSignificativas RI] Error:', error);
         GlobalUI.showAlert?.('Error al cargar el informe', 'danger');
+        throw error;
     }
 }
 
@@ -155,6 +156,7 @@ async function _imprimirInforme() {
             (estado.informeGlobalData?.datosMes || []).some(item => item.nombreDirNegocio === dir.nombreDirNegocio)
         )),
         modoAgrupacion: 'NONE',
-        margenes: estado.margenes
+        margenes: estado.margenes,
+        nombreInforme: 'contrataciones_significativas_ri'
     });
 }

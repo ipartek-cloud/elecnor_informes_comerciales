@@ -6,7 +6,7 @@
  * Umbral fijo: 100000 (relevantes).
  */
 import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -32,10 +32,11 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         console.error("Error al ejecutar informe PaisesAll:", error);
+        throw error;
     }
 }
 
@@ -47,7 +48,7 @@ function _renderizarPagina() {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="paises" role="main"${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="paises_all" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${_renderTablaPaises()}
@@ -83,7 +84,8 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderTablaPaises() + _renderFooterInfo(),
         modoAgrupacion: 'NONE',
-        margenes: estado.margenes
+        margenes: estado.margenes,
+        nombreInforme: 'paises_all'
     });
 }
 

@@ -8,7 +8,7 @@ import {
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme,
-    getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars
+    getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR
 } from './informes_unificados_utils.js';
 import { ApiClient, GlobalUI } from '../site.js';
 
@@ -46,11 +46,12 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umb
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: 'Página',
             claveAgrupacion: mercado === 'Internacional' ? 'NONE' : 'datos',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
 
     } catch (error) {
         console.error('[ContratacionesSignificativas] Error:', error);
+        throw error;
     }
 }
 

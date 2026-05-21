@@ -210,14 +210,16 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                     ValorCartPrev = d.ValorCartPrev,
                     ValorCartAct = d.ValorCartAct,
                     ValorFuturo1 = d.ValorFuturo1,
-                    ValorFuturo2 = d.ValorFuturo2
+                    ValorFuturo2 = d.ValorFuturo2,
+                    ValorFuturo3 = d.ValorFuturo3
                 }).ToList(),
                 Totales = new MercadosDGCarteraDiferidaTotalesDto
                 {
                     ValorCartPrev = datosOrdenados.Sum(d => d.ValorCartPrev),
                     ValorCartAct = datosOrdenados.Sum(d => d.ValorCartAct),
                     ValorFuturo1 = datosOrdenados.Sum(d => d.ValorFuturo1),
-                    ValorFuturo2 = datosOrdenados.Sum(d => d.ValorFuturo2)
+                    ValorFuturo2 = datosOrdenados.Sum(d => d.ValorFuturo2),
+                    ValorFuturo3 = datosOrdenados.Sum(d => d.ValorFuturo3)
                 }
             };
         }

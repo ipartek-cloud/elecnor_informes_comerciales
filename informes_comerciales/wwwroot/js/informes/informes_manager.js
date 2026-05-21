@@ -267,9 +267,11 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
             document.head.appendChild(link);
         }
 
-        // 2. Cargar módulo
-        const path = `./${nombreInforme}.js?v=${Date.now()}`;
-        _registroModulos[nombreInforme] = await import(path);
+        // 2. Cargar módulo (cacheado por ES modules nativo)
+        const path = `./${nombreInforme}.js`;
+        if (!_registroModulos[nombreInforme]) {
+            _registroModulos[nombreInforme] = await import(path);
+        }
 
         const modulo = _registroModulos[nombreInforme];
 

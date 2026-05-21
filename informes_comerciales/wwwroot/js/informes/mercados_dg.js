@@ -3,7 +3,7 @@
  * Estructura de página única sin paginación lógica.
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, getIpClass, getVarClass, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
@@ -27,7 +27,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     inicializarEventListeners: _registrarEventos,
     prefijoPaginacion: '',
     claveAgrupacion: 'NONE', // Visualización unificada
-    margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+    margenes: MARGENES_ESTANDAR
   });
     } catch (error) {
         throw error;
@@ -37,7 +37,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
 /**
  * Renderizado de la vista principal en el modal.
  */
-function _renderizarPagina(index) {
+function _renderizarPagina() {
     const container = document.getElementById(RPT_CLASSES.MODAL_CONTENT);
     if (!container) return;
 
@@ -83,14 +83,15 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContructorCompleto(true),
         modoAgrupacion: 'NONE',
-        margenes: estado.margenes
+        margenes: estado.margenes,
+        nombreInforme: 'mercados_dg'
     });
 }
 
 /**
  * Renderiza la cabecera de tabla con secciones Mensual y Acumulado.
  */
-function _renderCabeceraCompartida(tituloCentral = 'Mercado') {
+function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = true) {
   const anioAnterior = (estado.informeGlobalData?.meta?.filtros?.anio - 1) || '2026';
 
   return `
@@ -106,6 +107,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado') {
     <col class="rpt-mercado-col-var">
   </colgroup>
   <thead>
+    ${mostrarMensual ? `
     <tr class="rpt-font-bold">
       <th colspan="2" class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Mensual</th>
       <th rpt-border-none></th>
@@ -115,47 +117,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado') {
     </tr>
     <tr class="rpt-mercado-row-spacer">
       <th colspan="9"></th>
-    </tr>
-    <tr class="rpt-font-bold">
-      <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
-      <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
-
-      <th rpt-border-none></th>
-
-      <th class="rpt-align-center rpt-text-white rpt-mercado-header-align">
-        <div class="rpt-mercado-header-badge">${tituloCentral}</div>
-      </th>
-
-      <th rpt-border-none></th>
-
-      <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
-      <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
-      <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate">Ip</th>
-      <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate">Var/${anioAnterior}</th>
-    </tr>
-  </thead>
-  `;
-}
-
-/**
- * Renderiza cabecera simplificada para sub-bloques.
- */
-function _renderCabeceraSubinforme(tituloCentral = 'Mercado') {
-  const anioAnterior = (estado.informeGlobalData?.meta?.filtros?.anio - 1) || '2026';
-
-  return `
-  <colgroup>
-    <col class="rpt-mercado-col-obj-m">
-    <col class="rpt-mercado-col-contr-m">
-    <col class="rpt-col-10px">
-    <col class="rpt-mercado-col-desc">
-    <col class="rpt-col-10px">
-    <col class="rpt-mercado-col-obj-a">
-    <col class="rpt-mercado-col-contr-a">
-    <col class="rpt-mercado-col-ip">
-    <col class="rpt-mercado-col-var">
-  </colgroup>
-  <thead>
+    </tr>` : ''}
     <tr class="rpt-font-bold">
       <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
       <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
@@ -226,7 +188,7 @@ function _renderContructorCompleto(esImpresion = false) {
     html += `
     <div class="rpt-mb-2">
       <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
-        ${_renderCabeceraSubinforme(dn.nombre)}
+        ${_renderCabeceraCompartida(dn.nombre, false)}
         <tbody>
         `;
     dn.mercados.forEach(m => {
@@ -245,7 +207,7 @@ function _renderContructorCompleto(esImpresion = false) {
     html += `
     <div class="rpt-mb-5">
       <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
-        ${_renderCabeceraSubinforme('Unidades de Negocio')}
+        ${_renderCabeceraCompartida('Unidades de Negocio', false)}
         <tbody>
         `;
     dn.unidades.forEach(u => {
@@ -336,24 +298,25 @@ function _renderCarteraDiferida() {
     const anioBase = data.meta?.filtros?.anio || new Date().getFullYear();
 
     // Headers dinámicos visuales
-    const labelCartPrev = `1.1.${(anioBase - 2).toString().slice(-2)}`;
-    const labelCartAct  = `1.1.${(anioBase - 1).toString().slice(-2)}`;
-    const labelFuturo1  = `${anioBase}`;
-    const labelFuturo2  = `${anioBase + 1}`;
+    const labelCartPrev = `1.1.${(anioBase - 1).toString().slice(-2)}`;
+    const labelCartAct  = `1.1.${anioBase.toString().slice(-2)}`;
+    const labelAnio1    = `${anioBase}`;
+    const labelAnio2    = `${anioBase + 1}`;
+    const labelAnio3    = `${anioBase + 2}`;
 
   return `
   <div class="rpt-cd-separator rpt-mt-4 rpt-mb-3">
     <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-w-100">
       <colgroup>
-        <col class="rpt-mercado-col-obj-m">
-        <col class="rpt-mercado-col-contr-m">
-        <col class="rpt-col-10px">
-        <col class="rpt-mercado-col-desc">
-        <col class="rpt-col-10px">
-        <col class="rpt-mercado-col-obj-a">
-        <col class="rpt-mercado-col-contr-a">
-        <col class="rpt-mercado-col-ip">
-        <col class="rpt-mercado-col-var">
+        <col class="rpt-cd-col-data">
+        <col class="rpt-cd-col-data">
+        <col class="rpt-cd-col-sep">
+        <col class="rpt-cd-col-concept">
+        <col class="rpt-cd-col-sep">
+        <col class="rpt-cd-col-data">
+        <col class="rpt-cd-col-data">
+        <col class="rpt-cd-col-data">
+        <col class="rpt-cd-col-data">
       </colgroup>
       <thead>
         <tr class="rpt-cd-row-spacer">
@@ -364,9 +327,7 @@ function _renderCarteraDiferida() {
           <th rpt-border-none></th>
           <th></th>
           <th rpt-border-none></th>
-          <th colspan="2" class="rpt-align-center rpt-text-corporate rpt-fs-8pt"></th>
-          <th></th>
-          <th></th>
+          <th colspan="4" class="rpt-align-center rpt-text-corporate rpt-fs-8pt"></th>
         </tr>
         <tr class="rpt-cd-row-spacer">
           <th colspan="9"></th>
@@ -379,9 +340,9 @@ function _renderCarteraDiferida() {
             <div class="rpt-cd-header-badge">Cartera Diferida</div>
           </th>
           <th rpt-border-none></th>
-          <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelFuturo1}</th>
-          <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelFuturo2}</th>
-          <th></th>
+          <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelAnio1}</th>
+          <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelAnio2}</th>
+          <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelAnio3}</th>
           <th></th>
         </tr>
       </thead>
@@ -395,22 +356,22 @@ function _renderCarteraDiferida() {
           <td rpt-border-none></td>
           <td class="rpt-number-cell rpt-pad-right-15" data-label="Proyección 1">${val(l.valorFuturo1 || l.ValorFuturo1 || 0)}</td>
           <td class="rpt-number-cell rpt-pad-right-15" data-label="Proyección 2">${val(l.valorFuturo2 || l.ValorFuturo2 || 0)}</td>
-          <td></td>
+          <td class="rpt-number-cell rpt-pad-right-15" data-label="Proyección 3">${val(l.valorFuturo3 || l.ValorFuturo3 || 0)}</td>
           <td></td>
         </tr>
         `).join('')}
       </tbody>
       <tr class="rpt-spacer-row-totales"><td colspan="9" class="rpt-spacer-cell-totales"></td></tr>
       <tfoot class="rpt-font-bold">
-        <tr class="rpt-cd-total-row">
+        <tr class="rpt-cd-total-row rpt-cd-total-row-groups">
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Cartera Inicio 1"><div class="rpt-cd-total-inner">${val(totales.valorCartPrev || totales.ValorCartPrev || 0)}</div></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Cartera Inicio 2"><div class="rpt-cd-total-inner">${val(totales.valorCartAct || totales.ValorCartAct || 0)}</div></td>
           <td rpt-border-none></td>
-          <td class="rpt-cd-total-cell"><div class="rpt-cd-total-inner">&nbsp;</div></td>
+          <td class="rpt-cd-total-cell rpt-cd-total-center"><div class="rpt-cd-total-inner">&nbsp;</div></td>
           <td rpt-border-none></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Proyección 1"><div class="rpt-cd-total-inner">${val(totales.valorFuturo1 || totales.ValorFuturo1 || 0)}</div></td>
           <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Proyección 2"><div class="rpt-cd-total-inner">${val(totales.valorFuturo2 || totales.ValorFuturo2 || 0)}</div></td>
-          <td></td>
+          <td class="rpt-align-end rpt-number-cell rpt-cd-total-cell" data-label="Total Proyección 3"><div class="rpt-cd-total-inner">${val(totales.valorFuturo3 || totales.ValorFuturo3 || 0)}</div></td>
           <td></td>
         </tr>
       </tfoot>

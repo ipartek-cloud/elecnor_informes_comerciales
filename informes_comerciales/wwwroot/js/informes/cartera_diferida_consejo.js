@@ -5,7 +5,7 @@
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
  */
 import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 // ===============================================================================
@@ -38,7 +38,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: 'Año',
             claveAgrupacion: 'agrupaciones',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         throw error; // El manager lo capturará
@@ -136,6 +136,7 @@ async function _imprimirInforme() {
         informeGlobalData: estado.informeGlobalData,
         getHtmlEncabezado: _getHtmlEncabezado,
         modoAgrupacion: 'agrupaciones', // Evita que la detección automática coja el array equivocado
+        nombreInforme: 'cartera_diferida_consejo',
         renderContenido: (agrupacion) => {
             return _renderTripleBlock(agrupacion) +
                 ((agrupacion.subMercadosAI?.length > 0 || agrupacion.carteraProduccion?.lineas?.length > 0 || agrupacion.carteraDiferida?.lineas?.length > 0) ? `

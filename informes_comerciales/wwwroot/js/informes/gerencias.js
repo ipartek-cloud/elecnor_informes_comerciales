@@ -5,6 +5,7 @@
 import {
     RPT_CLASSES,
     formatCurrency,
+    escapeHtml,
     getIpClass,
     getVarClass,
     getNombreMes,
@@ -17,17 +18,11 @@ import {
     inicializarInforme,
     getHtmlEncabezadoBase,
     imprimirInformeUnificado,
-    getStyleVars
+    getStyleVars,
+    MARGENES_ESTANDAR
 } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
-
-// Configuración de márgenes
-const MARGENES_GERENCIA = {
-  web: '16mm',
-  pdf: '16mm',
-  maxWidth: '1050px'
-};
 
 /**
  * Punto de entrada principal.
@@ -49,7 +44,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: MARGENES_GERENCIA // Pasamos los márgenes al inicializador
+            margenes: MARGENES_ESTANDAR // Pasamos los márgenes al inicializador
         });
     } catch (error) {
         console.error('Error al ejecutar el informe de Gerencias:', error);
@@ -111,7 +106,8 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContenido(true),
         modoAgrupacion: 'NONE',
-        margenes: MARGENES_GERENCIA // Pasamos los márgenes a la utilidad de impresión
+        margenes: MARGENES_ESTANDAR, // Pasamos los márgenes a la utilidad de impresión
+        nombreInforme: 'gerencias'
     });
 }
 
@@ -232,7 +228,7 @@ function _construirHtmlFila(g) {
   <tr class="rpt-detail-row rpt-gerencias-detail-row">
     <td class="rpt-number-cell" data-label="Objet. Mensual">${formatCurrency(g.objetivoMensual, 0)}</td>
     <td class="rpt-number-cell" data-label="Contr. Mensual">${formatCurrency(g.contratacionMensual, 0)}</td>
-    <td class="rpt-ps-2" data-label="Gerencia">${_escapeHtml(g.actividad)}</td>
+    <td class="rpt-ps-2" data-label="Gerencia">${escapeHtml(g.actividad)}</td>
     <td class="rpt-number-cell" data-label="Objet. Acum.">${formatCurrency(g.objetivoAnual, 0)}</td>
     <td class="rpt-number-cell" data-label="Contr. Acum.">${formatCurrency(g.contratacionAcumulada, 0)}</td>
     <td class="rpt-align-center ${getIpClass(g.indiceProduccion)}" data-label="IP">
@@ -287,14 +283,4 @@ function _construirHtmlFilaTotal(t) {
   `;
 }
 
-// ===================================================================
-// HELPERS
-// ===================================================================
 
-/**
- * Escapa caracteres HTML para prevenir XSS.
- */
-function _escapeHtml(text) {
-    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
-}

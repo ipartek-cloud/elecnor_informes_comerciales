@@ -3,11 +3,11 @@
  * Patrón: Sábana continua (claveAgrupacion: 'NONE').
  */
 import {
-    RPT_CLASSES, formatCurrency, escapeHtml, getNombreMes
+    RPT_CLASSES, formatCurrency, escapeHtml, getNombreMes, inicializarEventListenersBase
 } from './utils.js';
 import {
     crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase,
-    getStyleVars, imprimirInformeUnificado
+    getStyleVars, imprimirInformeUnificado, MARGENES_ESTANDAR
 } from './informes_unificados_utils.js';
 import { ApiClient, GlobalUI } from '../site.js';
 
@@ -28,11 +28,12 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo = false }) 
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         console.error('[ActividadesInternacionalDetalle] Error:', error);
         GlobalUI.showAlert('Error al cargar el informe', 'danger');
+        throw error;
     }
 }
 
@@ -48,7 +49,7 @@ function _formatActividad(valor, decimales = 0, esPorcentaje = false) {
     return esPorcentaje ? `${formatted}%` : formatted;
 }
 
-function _renderizarPagina(index = 0) {
+function _renderizarPagina() {
     const container = document.getElementById(RPT_CLASSES.MODAL_CONTENT);
     if (!container) return;
 
@@ -179,8 +180,7 @@ function _getHtmlEncabezado(filtros) {
 }
 
 function _registrarEventos() {
-    const btnPdf = document.getElementById('btnExportarPdf');
-    if (btnPdf) btnPdf.onclick = _imprimirInforme;
+    inicializarEventListenersBase(estado, _renderizarPagina, _imprimirInforme);
 }
 
 async function _imprimirInforme() {

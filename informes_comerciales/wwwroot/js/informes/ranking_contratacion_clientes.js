@@ -3,8 +3,8 @@
  * GUÍA: Print-Perfect Parity v4.2
  */
 
-import { RPT_CLASSES, formatCurrency, formatPercentage, escapeHtml, getNombreMes } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars } from './informes_unificados_utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, escapeHtml, getNombreMes, inicializarEventListenersBase } from './utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
 const estado = crearEstadoInforme();
@@ -34,12 +34,13 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo })
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
             claveAgrupacion: 'NONE',
-            margenes: { web: '16mm', pdf: '16mm', maxWidth: '1050px' }
+            margenes: MARGENES_ESTANDAR
         });
 
     } catch (error) {
         console.error("Error al ejecutar informe Ranking de Clientes:", error);
         GlobalUI.showAlert?.("Error al cargar los datos del informe", "danger");
+        throw error;
     }
 }
 
@@ -209,10 +210,7 @@ function _renderCuerpoInforme() {
  * Registra eventos.
  */
 function _registrarEventos() {
-    const btnPdf = document.getElementById(RPT_CLASSES.BTN_EXPORTAR_PDF);
-    if (btnPdf) {
-        btnPdf.onclick = _imprimirInforme;
-    }
+    inicializarEventListenersBase(estado, _renderizarPagina, _imprimirInforme);
 }
 
 /**
@@ -226,7 +224,8 @@ async function _imprimirInforme() {
             getHtmlEncabezado: _getHtmlEncabezado,
             renderContenido: () => contenidoHtml,
             modoAgrupacion: 'NONE',
-            margenes: estado.margenes
+            margenes: estado.margenes,
+            nombreInforme: 'ranking_clientes'
         });
     } catch (error) {
         console.error("Error al intentar imprimir el informe Ranking Clientes:", error);
