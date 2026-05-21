@@ -21,6 +21,7 @@
     <Content Update="dotnet-tools.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
+
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>

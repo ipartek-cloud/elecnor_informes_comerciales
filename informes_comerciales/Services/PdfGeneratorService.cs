@@ -15,11 +15,29 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
     private readonly SemaphoreSlim _initSemaphore = new(1, 1);
     private IBrowser? _browser;
 
-    private static readonly LaunchOptions _launchOptions = new()
+    private static readonly string ChromiumDownloadPath =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "puppeteer_chromium");
+
+    private static readonly string ChromiumRevision = "Win64-119.0.6045.105";
+
+    private static string? ResolveChromeExecutable()
     {
-        Headless = true,
-        Args = new[] { "--no-sandbox", "--disable-setuid-sandbox" }
-    };
+        var exePath = Path.Combine(ChromiumDownloadPath, ChromiumRevision, "chrome-win64", "chrome.exe");
+        return File.Exists(exePath) ? exePath : null;
+    }
+
+    private static LaunchOptions BuildLaunchOptions()
+    {
+        var options = new LaunchOptions
+        {
+            Headless = true,
+            Args = new[] { "--no-sandbox", "--disable-setuid-sandbox" }
+        };
+        var chromeExe = ResolveChromeExecutable();
+        if (chromeExe is not null)
+            options.ExecutablePath = chromeExe;
+        return options;
+    }
 
     public PdfGeneratorService(ILogger<PdfGeneratorService> logger)
     {
@@ -50,13 +68,17 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
                 _browser = null;
             }
 
-            // Descargar binarios si es necesario (no-op si ya están descargados)
-            _logger.LogInformation("Verificando binarios de Chromium...");
-            var browserFetcher = new BrowserFetcher();
-            await browserFetcher.DownloadAsync();
+            // Verificar si chrome.exe ya está descargado localmente
+            var launchOptions = BuildLaunchOptions();
+            if (launchOptions.ExecutablePath is null)
+            {
+                _logger.LogInformation("Descargando Chromium...");
+                var browserFetcher = new BrowserFetcher(new BrowserFetcherOptions { Path = ChromiumDownloadPath });
+                await browserFetcher.DownloadAsync();
+            }
 
             _logger.LogInformation("Lanzando instancia singleton de Chromium...");
-            _browser = await Puppeteer.LaunchAsync(_launchOptions);
+            _browser = await Puppeteer.LaunchAsync(launchOptions);
             _logger.LogInformation("Browser Chromium listo y conectado.");
 
             return _browser;
