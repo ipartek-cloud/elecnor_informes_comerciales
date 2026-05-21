@@ -62,7 +62,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 
 /* Corrección para asegurar la visualización del borde inferior en tablas de cabecera aisladas */
 .rpt-header-table-border {
-    border-bottom: 2px solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 @media print {
@@ -222,7 +222,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 }
 
 .rpt-table-triple thead tr.rpt-border-header th {
-    border-bottom: 2px solid #00468B;
+    border-bottom: 0.3pt solid #00468B;
     padding-bottom: 1px;
 }
 
@@ -382,7 +382,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 .rpt-ventas-table thead th {
     font-weight: bold;
     color: #555;
-    border-bottom: 1.5px solid #888; /* Línea horizontal debajo de cabecera */
+    border-bottom: 0.3pt solid #888; /* Línea horizontal debajo de cabecera */
 }
 
 /* Celda del título "Ventas" */
@@ -422,7 +422,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 
 /* Fila Total */
 .rpt-ventas-total-row td {
-    border-top: 1.5px solid #888; /* Línea horizontal encima del total */
+    border-top: 0.3pt solid #888; /* Línea horizontal encima del total */
     padding-top: 4px;
     padding-bottom: 4px;
     font-weight: bold;

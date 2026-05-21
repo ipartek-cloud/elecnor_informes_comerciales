@@ -57,9 +57,9 @@
 /* ══════════════════════════════════════════════════════════════════════ */
 /* DETALLE Y LITERALES                                                    */
 
-/* Línea inferior bajo "Acumulado" (solo columnas 2025 y 2026) */
+/* Línea inferior bajo "Acumulado" */
 .rpt-ccdop-table thead .rpt-ccdop-acumulado-border {
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 .rpt-ccdop-table thead th {
@@ -68,7 +68,7 @@
 
 /* Borde inferior solo en la última fila del thead (columnas) */
 .rpt-ccdop-table thead tr:last-child th {
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 /* Alineación derecha y padding consistente para headers numéricos */
@@ -92,7 +92,7 @@
 }
 
 .rpt-ccdop-totals-border {
-    border-top: 0.5pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
 }
 
 .rpt-ccdop-total-general {
@@ -123,7 +123,7 @@
 /* IMPRESIÓN (@media print)                                               */
 /* ════════════════════════════════════════════════════════════════════════ */
 @media print {
-    /* Línea inferior: 0.3pt en impresión (vs 0.5pt en web) */
+    /* Línea inferior: 0.3pt */
     .rpt-ccdop-table thead tr:last-child th {
         border-bottom: 0.3pt solid #00468B !important;
     }

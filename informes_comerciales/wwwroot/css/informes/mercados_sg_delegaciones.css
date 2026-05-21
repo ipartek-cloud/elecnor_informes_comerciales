@@ -79,9 +79,9 @@
     border: 0.3pt solid #00468B;
 }
 
-/* Línea separadora bajo cabeceras - Web: 2px, Print: 0.3pt */
+/* Línea separadora bajo cabeceras */
 .rpt-dg-header-line {
-    border-bottom: 2px solid #00468B;
+    border-bottom: 0.3pt solid #00468B;
     margin: 0;
 }
 
@@ -109,7 +109,7 @@
 }
 
 .rpt-dg-total-row td.rpt-td-total {
-    border-top: 2px solid #00468B;
+    border-top: 0.3pt solid #00468B;
 }
 
 /* Filas de resumen Nacional/Internacional */

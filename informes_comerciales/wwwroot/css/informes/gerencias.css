@@ -21,17 +21,17 @@
     border: none !important;
 }
 
-/* Línea segmentada de cabeceras - Pantalla (Visibilidad clara) */
+/* Línea segmentada de cabeceras */
 .rpt-ger-header-line {
-  border-bottom: 1.5pt solid #00468B !important;
+  border-bottom: 0.3pt solid #00468B !important;
   color: #00468B !important;
   margin: 0 3.75pt;
   padding-bottom: 2.25pt;
 }
 
-/* Líneas de totales - Pantalla (Broken Lines Pattern) */
+/* Líneas de totales */
 .rpt-ger-total-cell {
-  border-top: 1.5pt solid #00468B !important;
+  border-top: 0.3pt solid #00468B !important;
   margin: 0 3pt !important;
   margin-top: 0 !important;
   padding-top: 3.75pt;

@@ -24,7 +24,7 @@
 }
 
 .rpt-ccd-table thead th {
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 @media screen {
@@ -51,7 +51,7 @@
 
 .rpt-ccd-subtotal-row td:nth-child(2),
 .rpt-ccd-subtotal-row td:nth-child(3) {
-    border-top: 0.5pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important;
 }
 

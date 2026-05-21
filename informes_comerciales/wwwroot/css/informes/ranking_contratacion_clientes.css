@@ -127,12 +127,12 @@ GUÍA: Estándar Print-Perfect
 
 /* Bordes de cabecera segmentados */
 .rpt-th-border-blue {
-    border-bottom: 1pt solid #00468B;
+    border-bottom: 0.3pt solid #00468B;
     display: block;
 }
 
 .rpt-th-border-gray {
-    border-bottom: 1pt solid #888;
+    border-bottom: 0.3pt solid #888;
     display: block;
 }
 
@@ -306,18 +306,18 @@ GUÍA: Estándar Print-Perfect
 }
 
 .rpt-total-border-blue {
-    border-top: 1pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
 }
 
 /* Bordes segmentados para el pie de tabla - líneas en la parte SUPERIOR (como separadores superiores) */
 .rpt-td-border-blue {
-    border-top: 1pt solid #00468B;
+    border-top: 0.3pt solid #00468B;
     display: block;
     padding-top: 4pt;
 }
 
 .rpt-td-border-gray {
-    border-top: 1pt solid #888;
+    border-top: 0.3pt solid #888;
     display: block;
     padding-top: 4pt;
 }

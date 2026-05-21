@@ -7,7 +7,7 @@
 
 /* Agrupación: Dirección de Negocio */
 .rpt-cont-sig-group-header {
-    border-bottom: 2px solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
     padding-top: 15px !important;
     vertical-align: bottom;
 }
@@ -91,5 +91,20 @@
   .rpt-table-cont-sig .rpt-cont-sig-mes-item td {
     line-height: 1.2 !important;
     padding: 1.5px 5px !important;
+  }
+}
+
+/* =============================================================================
+   ESTILOS DE IMPRESIÓN / PDF
+   ============================================================================= */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .rpt-cont-sig-group-header {
+    border-bottom: 0.3pt solid #00468B !important;
+    page-break-after: avoid;
   }
 }

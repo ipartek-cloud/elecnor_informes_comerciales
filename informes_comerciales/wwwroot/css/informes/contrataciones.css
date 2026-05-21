@@ -6,7 +6,7 @@
   font-size: 9pt !important; /* PT obligatorio - reemplaza 1rem */
   font-weight: bold;
   margin: 1rem 0 0.5rem 0;
-  border-bottom: 1px solid #00468B; /* Línea horizontal azul igual que Contrataciones_AI */
+  border-bottom: 0.3pt solid #00468B; /* Línea horizontal azul igual que Contrataciones_AI */
   padding-bottom: 5px;
 }
 

@@ -44,9 +44,9 @@
 /* DETALLE Y LITERALES                                                    */
 /* ════════════════════════════════════════════════════════════════════════ */
 
-/* Línea inferior bajo "Acumulado" (solo columnas año anterior y actual) */
+/* Línea inferior bajo "Acumulado" */
 .rpt-ccdp-table thead .rpt-ccdp-acumulado-border {
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 .rpt-ccdp-table thead th {
@@ -55,7 +55,7 @@
 
 /* Borde inferior solo en la última fila del thead (columnas) */
 .rpt-ccdp-table thead tr:last-child th {
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 /* Alineación derecha y padding consistente para headers numéricos */
@@ -79,7 +79,7 @@
 }
 
 .rpt-ccdp-totals-border {
-    border-top: 0.5pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
 }
 
 .rpt-ccdp-total-general {

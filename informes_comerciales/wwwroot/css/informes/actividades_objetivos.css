@@ -82,11 +82,11 @@
 
 /* Grosor de bordes para WEB (1.5pt) en Azul */
 .rpt-table-actividades thead th.rpt-act-th-border-bottom {
-  border-bottom: 1.5pt solid #00468B !important;
+  border-bottom: 0.3pt solid #00468B !important;
 }
 
 table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
-  border-top: 1.5pt solid #00468B !important;
+  border-top: 0.3pt solid #00468B !important;
 }
 
 /* Totales en Azul Elecnor (#00468B) */

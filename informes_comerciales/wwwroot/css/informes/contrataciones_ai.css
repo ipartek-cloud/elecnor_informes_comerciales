@@ -46,7 +46,7 @@
   font-weight: bold;
   font-size: 10pt !important;
   padding: 2px 0;
-  border-bottom: 1px solid #00468B;
+  border-bottom: 0.3pt solid #00468B;
 }
 
 /* Cabecera de mes (Mantener paridad con Contrataciones) */
@@ -72,7 +72,7 @@
 /* Cabecera del subinforme en gris según diseño de Access */
 .rpt-subreport-ai-anterior .rpt-section-ai-header {
   color: #8C8C8C !important;
-  border-bottom: 1px solid #8C8C8C !important;
+  border-bottom: 0.3pt solid #8C8C8C !important;
 }
 
 /* Detalle del subinforme en gris suave (#8C8C8C) */

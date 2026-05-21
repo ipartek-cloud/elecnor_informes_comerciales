@@ -67,7 +67,7 @@
 }
 
 .rpt-act-header-line {
-    border-bottom: 2px solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
     margin: 0 4px;
     padding-bottom: 4px;
 }
@@ -102,7 +102,7 @@
 
 /* Línea discontinua por columna (misma técnica que cabeceras) */
 .rpt-total-line {
-    border-top: 2px solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     margin: 0 4px !important;
     padding-top: 2px !important;
     display: block;

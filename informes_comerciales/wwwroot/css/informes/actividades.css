@@ -75,7 +75,7 @@
 
 /* Div de línea de cabecera: aplicado dentro de cada th para efecto segmentado */
 .rpt-act-header-line {
-  border-bottom: 2px solid #00468B !important;
+  border-bottom: 0.3pt solid #00468B !important;
   margin: 0 4px;
   padding-bottom: 4px;
 }
@@ -98,7 +98,7 @@
 
 /* Div de línea de total: aplicado dentro de cada td para efecto segmentado */
 .rpt-act-total-line {
-  border-top: 2px solid #00468B !important;
+  border-top: 0.3pt solid #00468B !important;
   margin: 0 4px;
   padding-top: 4px;
 }
