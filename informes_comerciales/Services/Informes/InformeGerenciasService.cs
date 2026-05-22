@@ -49,8 +49,8 @@ public class InformeGerenciasService
             return response;
         }
 
-        // ORDENACIÓN: Por campo 'Orden' ascendente (CentrosGerentesSQL)
-        var datosOrdenados = datosPlanos.OrderBy(d => d.Orden).ToList();
+        // ORDENACIÓN: Por campo 'Orden' lexicográfico (paridad con nchar en DB y Access)
+        var datosOrdenados = datosPlanos.OrderBy(d => d.Orden.ToString()).ToList();
 
         // Transformar cada POCO → GerenciaItemDto
         var gerencias = datosOrdenados

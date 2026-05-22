@@ -10,6 +10,9 @@
  */
 import { GlobalUI } from '../site.js';
 
+// Timestamp único por ciclo de vida de la página para evitar caché del navegador en scripts JS
+const _cacheBuster = Date.now();
+
 // Registro interno: { [nombreInforme]: moduloImportado }
 /**
  * Registro oficial de informes habilitados en el sistema (V-22).
@@ -268,7 +271,7 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
         }
 
         // 2. Cargar módulo (cacheado por ES modules nativo)
-        const path = `./${nombreInforme}.js`;
+        const path = `./${nombreInforme}.js?v=${_cacheBuster}`;
         if (!_registroModulos[nombreInforme]) {
             _registroModulos[nombreInforme] = await import(path);
         }

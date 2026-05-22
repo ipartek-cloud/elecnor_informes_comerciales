@@ -8,9 +8,9 @@
   container-name: rpt-paper;
 }
 
-/* Separación estándar cabecera-contenido - Aumentada por feedback visual */
-.report-body {
-  margin-top: 45pt !important;
+/* Separación estándar cabecera-contenido - Ajustada a 80px (el doble de la anterior) */
+.rpt-paper[data-informe="gerencias"] .report-body.rpt-cmai-mt-standard {
+  margin-top: 80px !important;
 }
 
 /* ELIMINACIÓN DE LÍNEAS CONTINUAS (Sobrescribe informes_base.css) */
@@ -39,6 +39,11 @@
   display: block;
   line-height: 1.4 !important;
 }
+
+/* Clases para unificar líneas (deben ir después de los componentes para tener precedencia) */
+.rpt-ger-line-union-start { margin-right: 0 !important; }
+.rpt-ger-line-union-mid   { margin-left: 0 !important; margin-right: 0 !important; }
+.rpt-ger-line-union-end   { margin-left: 0 !important; }
 
 @media print {
   /* Padding delegado a getStyleVars. */
@@ -97,19 +102,19 @@
   }
 
   .rpt-gerencias-title-center {
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     color: #00468B !important;
     font-family: Verdana, Geneva, sans-serif !important;
   }
 
-  .report-body {
-    margin-top: 45pt !important;
+  body .rpt-paper--gerencias .report-body {
+    margin-top: 80px !important;
   }
 
   .rpt-gerencias-detail-row td {
     line-height: 1.05 !important;
-    padding-top: 0.5px !important;
-    padding-bottom: 0.5px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
     font-size: 8pt !important;
     font-family: Verdana, Geneva, sans-serif !important;
   }
@@ -140,18 +145,18 @@
     .rpt-gerencias-detail-row td,
     .rpt-detail-row td {
         line-height: 1.2 !important;
-        padding-top: 1.5px !important;
-        padding-bottom: 1.5px !important;
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
     }
 }
 
 /* PROPORCIONES DE COLUMNAS (Total 100%) */
 .rpt-ger-col-m       { width: 11%; }
-.rpt-ger-col-desc    { width: 23%; }
-.rpt-ger-col-a       { width: 12%; }
-.rpt-ger-col-ip      { width: 8%; }
-.rpt-ger-col-v-contr { width: 11%; }
-.rpt-ger-col-v-cart  { width: 13%; }
+.rpt-ger-col-desc    { width: 30%; }
+.rpt-ger-col-a       { width: 10.5%; }
+.rpt-ger-col-ip      { width: 7%; }
+.rpt-ger-col-v-contr { width: 9.5%; }
+.rpt-ger-col-v-cart  { width: 11.5%; }
 
 /* ENCABEZADOS ESPECÍFICOS */
 .rpt-gerencias-group-header {
@@ -165,7 +170,7 @@
   color: white !important;
   font-size: 8pt;
   font-weight: bold;
-  padding: 3pt 0;
+  padding: 1pt 0;
   text-align: center;
   width: 100%;
   display: block;
@@ -174,7 +179,7 @@
 .rpt-gerencias-title-center {
   color: #00468B;
   font-weight: bold;
-  font-size: 10pt;
+  font-size: 11pt;
   margin-bottom: 3pt;
 }
 

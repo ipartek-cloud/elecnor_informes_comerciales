@@ -170,8 +170,8 @@ function _renderContenido(esImpresion = false) {
  * Cabecera con Gerencia central y líneas segmentadas.
  */
 function _getCabeceraTabla(anioAnterior) {
-  const wrapH = (val, align = 'rpt-align-end') => {
-    return `<div class="${align} rpt-ger-header-line">${val}</div>`;
+  const wrapH = (val, align = 'rpt-align-end', extraClass = '') => {
+    return `<div class="${align} rpt-ger-header-line ${extraClass}">${val}</div>`;
   };
 
     const mesActual = estado.informeGlobalData?.meta?.filtros?.mes || 1;
@@ -195,7 +195,7 @@ function _getCabeceraTabla(anioAnterior) {
         <div class="rpt-text-corporate rpt-gerencias-group-header rpt-mb-1">Mensual</div>
       </th>
       <th class="rpt-align-center">
-        <div class="rpt-gerencias-title-center">S.G. Instalac. y Redes</div>
+        <div class="rpt-gerencias-title-center">DG. Elecnor Servicios</div>
       </th>
       <th colspan="3" class="rpt-align-center">
         <div class="rpt-text-corporate rpt-gerencias-group-header rpt-mb-1">Acumulado</div>
@@ -205,16 +205,16 @@ function _getCabeceraTabla(anioAnterior) {
       </th>
     </tr>
     <tr class="rpt-ger-header-row-sub">
-    <th class="rpt-p-0">${wrapH('Objet.')}</th>
-    <th class="rpt-p-0">${wrapH('Contr.')}</th>
+    <th class="rpt-p-0">${wrapH('Objet.', 'rpt-align-end', 'rpt-ger-line-union-start')}</th>
+    <th class="rpt-p-0">${wrapH('Contr.', 'rpt-align-end', 'rpt-ger-line-union-end')}</th>
     <th class="rpt-p-0">
       <div class="rpt-gerencias-badge">Gerencia</div>
     </th>
-    <th class="rpt-p-0">${wrapH('Objet.')}</th>
-    <th class="rpt-p-0">${wrapH('Contr.')}</th>
-    <th class="rpt-p-0">${wrapH('Ip', 'rpt-align-center')}</th>
-    <th class="rpt-p-0">${wrapH('Contr.', 'rpt-align-center')}</th>
-    <th class="rpt-p-0">${wrapH(cartLabel, 'rpt-align-center')}</th>
+    <th class="rpt-p-0">${wrapH('Objet.', 'rpt-align-end', 'rpt-ger-line-union-start')}</th>
+    <th class="rpt-p-0">${wrapH('Contr.', 'rpt-align-end', 'rpt-ger-line-union-mid')}</th>
+    <th class="rpt-p-0">${wrapH('Ip', 'rpt-align-center', 'rpt-ger-line-union-end')}</th>
+    <th class="rpt-p-0">${wrapH('Contr.', 'rpt-align-center', 'rpt-ger-line-union-start')}</th>
+    <th class="rpt-p-0">${wrapH(cartLabel, 'rpt-align-center', 'rpt-ger-line-union-end')}</th>
     </tr>
   </thead>
   `;
@@ -249,35 +249,35 @@ function _construirHtmlFila(g) {
  * rpt-va-top y p-0 para asegurar alineación perfecta.
  */
 function _construirHtmlFilaTotal(t) {
-  const wrapT = (val, align = 'rpt-align-end') => {
-    return `<div class="${align} rpt-ger-total-cell">${val}</div>`;
+  const wrapT = (val, align = 'rpt-align-end', extraClass = '') => {
+    return `<div class="${align} rpt-ger-total-cell ${extraClass}">${val}</div>`;
   };
 
   return `
   <tr class="rpt-total-row-gerencia">
     <td class="rpt-p-0 rpt-va-top" data-label="Objet. Mensual">
-      ${wrapT(formatCurrency(t.objetivoMensual, 0))}
+      ${wrapT(formatCurrency(t.objetivoMensual, 0), 'rpt-align-end', 'rpt-ger-line-union-start')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="Contr. Mensual">
-      ${wrapT(formatCurrency(t.contratacionMensual, 0))}
+      ${wrapT(formatCurrency(t.contratacionMensual, 0), 'rpt-align-end', 'rpt-ger-line-union-end')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="Gerencia">
-      ${wrapT('Total', 'rpt-align-center')}
+      ${wrapT('&nbsp;', 'rpt-align-center')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="Objet. Acum.">
-      ${wrapT(formatCurrency(t.objetivoAnual, 0))}
+      ${wrapT(formatCurrency(t.objetivoAnual, 0), 'rpt-align-end', 'rpt-ger-line-union-start')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="Contr. Acum.">
-      ${wrapT(formatCurrency(t.contratacionAcumulada, 0))}
+      ${wrapT(formatCurrency(t.contratacionAcumulada, 0), 'rpt-align-end', 'rpt-ger-line-union-mid')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="IP">
-      ${wrapT(formatCurrency(t.indiceProduccion, 2), 'rpt-align-center')}
+      ${wrapT(formatCurrency(t.indiceProduccion, 2), 'rpt-align-center', 'rpt-ger-line-union-end')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="Var. Contr.">
-      ${wrapT(t.variacionContratacion || '0%', 'rpt-align-center')}
+      ${wrapT(t.variacionContratacion || '0%', 'rpt-align-center', 'rpt-ger-line-union-start')}
     </td>
     <td class="rpt-p-0 rpt-va-top" data-label="Var. Cartera">
-      ${wrapT(t.variacionCartera || '0%', 'rpt-align-center')}
+      ${wrapT(t.variacionCartera || '0%', 'rpt-align-center', 'rpt-ger-line-union-end')}
     </td>
   </tr>
   `;
