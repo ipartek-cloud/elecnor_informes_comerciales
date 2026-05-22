@@ -268,11 +268,12 @@ Estándar: 10pt, sin negrita, azul corporativo
     margin-top: 1rem;
 }
 
-/* Detalle compacto estandarizado (Elecnor 2026) */
+/* Detalle compacto estandarizado (Elecnor 2026)
+   Valores unificados Web/PDF: line-height 1.25 + padding 3px */
 .rpt-detail-row td, .rpt-number-cell {
-    padding-top: 0.5px !important;
-    padding-bottom: 0.5px !important;
-    line-height: 1.4;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    line-height: 1.25;
     font-size: 8pt !important; /* 8pt */
     color: #000 !important;
 }
@@ -771,11 +772,11 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
         font-family: Verdana, Arial, sans-serif !important;
     }
 
-    /* 10.2 COMPACTACIÓN DE INTERLINEADO (Crítico #3): De 1.4 a 1.15 */
+    /* 10.2 Interlineado unificado Web/PDF: 1.25 + padding 3px */
     .rpt-detail-row td {
-        line-height: 1.15 !important;
-        padding-top: 1.5px !important;
-        padding-bottom: 1.5px !important;
+        line-height: 1.25 !important;
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
     }
 
     /* 10.3 BORDES FINOS ESTILO ACCESS (Alto #5): Cabeceras y Totales Hairline (0.3pt) */
@@ -1003,3 +1004,21 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
     padding: 6px 0 !important;
     border-radius: 0 !important;       /* Rectangulares por petición del usuario */
 }
+
+/* =============================================================================
+   CLASES CMAI / CONSEJO GENERALES (Unificación Web y PDF)
+   ============================================================================= */
+.rpt-cmai-subtitulo {
+    font-size: 9pt;
+    font-weight: normal;
+    color: #00468B;
+}
+
+.rpt-cmai-titulo-container {
+    margin-top: 8px;
+}
+
+.rpt-cmai-margin-left {
+    margin-left: 1rem !important;
+}
+

@@ -42,21 +42,8 @@
 .rpt-col-importe   { width: 13%; }
 .rpt-col-dirnegocio { width: 19%; }
 
-/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
 .rpt-table-contrataciones td {
-    line-height: 1.25 !important;
-    padding-top: 3px !important;
-    padding-bottom: 3px !important;
-    font-size: 8pt !important;
     vertical-align: middle;
-}
-
-@media print {
-    .rpt-table-contrataciones td {
-        line-height: 1.2 !important;
-        padding-top: 1.5px !important;
-        padding-bottom: 1.5px !important;
-    }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
@@ -204,12 +191,7 @@
     page-break-after: avoid;
   }
 
-  /* Informe principal: fuente 8pt estándar */
-  .rpt-table-contrataciones td {
-    font-size: 8pt !important;
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
-  }
+
 
   /* Badge AI en impresión */
   .rpt-badge-ai {

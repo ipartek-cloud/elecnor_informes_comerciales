@@ -31,9 +31,9 @@
 
 /* Paridad de detalle con informe de Contrataciones (8pt estándar) */
 .rpt-table-contrataciones-ai td {
-  padding: 2px 4px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
   font-size: 8pt !important;
-  line-height: 1.2;
   vertical-align: middle;
 }
 
@@ -193,16 +193,6 @@
   .rpt-section-ai-header,
   .rpt-subreport-ai-anterior .rpt-section-ai-header {
     border-bottom-width: 0.3pt !important;
-  }
-
-  /* Cabecera de mes en PDF */
-  .rpt-month-header {
-    background-color: #D6EAF8 !important;
-  }
-}
-e en PDF */
-  .rpt-section-ai-header {
-    border-bottom: 0.3pt solid #00468B !important;
   }
 
   /* Cabecera de mes en PDF */

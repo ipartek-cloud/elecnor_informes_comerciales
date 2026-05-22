@@ -25,22 +25,7 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
   white-space: nowrap;
 }
 
-/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
-.rpt-mercado-detail-row td,
-.rpt-detail-row td {
-    line-height: 1.25 !important;
-    padding-top: 3px !important;
-    padding-bottom: 3px !important;
-}
-
-@media print {
-    .rpt-mercado-detail-row td,
-    .rpt-detail-row td {
-        line-height: 1.2 !important;
-        padding-top: 1.5px !important;
-        padding-bottom: 1.5px !important;
-    }
-}
+/* Espaciado de filas: heredado de informes_base.css */
 
 /* Márgenes de bloques */
 .report-body {
@@ -125,10 +110,9 @@ Las columnas separadoras rpt-col-10px + [rpt-border-none] segmentan
 la línea de border-top en 3 bloques (Mensual | Concepto | Acumulado)
 ============================================================================= */
 
-/* Fila de detalle - Altura automática con line-height compacto */
+/* Fila de detalle - Altura automática */
 .rpt-mercado-detail-row {
   height: auto;
-  line-height: 1.05;
 }
 
 /* =============================================================================UTILIDADES CSS - Reemplazo de Bootstrap
@@ -234,12 +218,7 @@ Las reglas generales de impresión están en informes_base.css
     font-size: 8pt !important;
   }
 
-/* Compactación de interlineado y tipografía 8pt para filas de detalle - 
-   Valores alineados con guía: line-height: 1.2, padding: 1.5px (líneas 37-42) */
-  .rpt-detail-row td,
-  .rpt-mercado-detail-row td {
-    font-size: 8pt !important;
-  }
+  /* Tipografía unificada de detalle heredada de informes_base.css */
 
 /* Bordes Hairline 0.3pt estilo Access */
 .rpt-th-blue,

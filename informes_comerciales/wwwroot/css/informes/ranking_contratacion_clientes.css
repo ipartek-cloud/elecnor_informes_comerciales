@@ -150,20 +150,7 @@ GUÍA: Estándar Print-Perfect
   vertical-align: middle;
 }
 
-/* Compactación de filas de detalle */
-.rpt-detail-row td {
-  line-height: 1.05 !important;
-  padding-top: 0.5pt !important;
-  padding-bottom: 0.5pt !important;
-}
-
-@media print {
-  .rpt-detail-row td {
-    line-height: 1.05 !important;
-    padding-top: 0.5pt !important;
-    padding-bottom: 0.5pt !important;
-  }
-}
+/* Espaciado de filas: heredado de informes_base.css */
 
 /* Anchos de columna específicos - Para celdas y elementos col */
 .rpt-col-ai {

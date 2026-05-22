@@ -75,8 +75,6 @@
 
 /* Filas de detalle */
 .rpt-detail-row td {
-    font-size: 8pt !important;
-    line-height: 1.25 !important;
     padding: 3px 5px !important;
     background-color: #ffffff !important;
     border: none !important;

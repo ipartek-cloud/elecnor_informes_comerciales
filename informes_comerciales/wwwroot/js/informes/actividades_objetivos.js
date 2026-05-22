@@ -82,11 +82,13 @@ function _renderBloquePais(pais) {
   <thead>
     <tr class="rpt-th-year">
       <th colspan="2" class="rpt-align-center rpt-pt-0">Cierre ${anioAnterior}</th>
+      <th rpt-border-none></th>
       <th class="rpt-col-act-nombre"></th>
+      <th rpt-border-none></th>
       <th colspan="5" class="rpt-align-center rpt-pt-0">${anioActual}</th>
     </tr>
     <tr class="rpt-act-row-spacer">
-      <th colspan="8"></th>
+      <th colspan="10"></th>
     </tr>
     <tr class="rpt-th-blue">
       <th class="rpt-col-act-porc-ant rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
@@ -95,9 +97,11 @@ function _renderBloquePais(pais) {
       <th class="rpt-col-act-imp-ant rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Contr.
       </th>
+      <th rpt-border-none></th>
       <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-ps-3 rpt-fs-8pt">
         <div class="rpt-act-badge rpt-text-uppercase">${pais.nombrePais}</div>
       </th>
+      <th rpt-border-none></th>
       <th class="rpt-col-act-obj rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Obj.
       </th>
@@ -121,7 +125,9 @@ function _renderBloquePais(pais) {
     <tr class="rpt-detail-row">
       <td class="rpt-col-act-porc-ant rpt-align-center">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
       <td class="rpt-col-act-imp-ant rpt-align-end rpt-number-cell">${formatCurrency(d.importeAnterior, 0)}</td>
+      <td rpt-border-none></td>
       <td class="rpt-col-act-nombre rpt-ps-3">${d.actividad}</td>
+      <td rpt-border-none></td>
       <td class="rpt-col-act-obj rpt-align-end rpt-number-cell">${formatCurrency(d.importeObjetivos, 0)}</td>
       <td class="rpt-col-act-imp-act rpt-align-end rpt-number-cell">${formatCurrency(d.importeActual / 1000, 0)}</td>
       <td class="rpt-col-act-ip rpt-align-center">${formatCurrency(d.ip, 2)}</td>
@@ -132,7 +138,7 @@ function _renderBloquePais(pais) {
 
   const totalesHtml = `
     <tr class="rpt-act-row-spacer">
-      <td colspan="8"></td>
+      <td colspan="10"></td>
     </tr>
     <tr class="rpt-total-row">
       <td class="rpt-col-act-porc-ant rpt-align-center rpt-act-total-border-top rpt-font-bold">
@@ -141,9 +147,11 @@ function _renderBloquePais(pais) {
       <td class="rpt-col-act-imp-ant rpt-align-end rpt-number-cell rpt-act-total-border-top rpt-font-bold">
         ${formatCurrency(pais.totales.importeAnterior, 0)}
       </td>
-      <td class="rpt-col-act-nombre">
+      <td rpt-border-none></td>
+      <td class="rpt-col-act-nombre rpt-act-total-border-top">
         &nbsp;
       </td>
+      <td rpt-border-none></td>
       <td class="rpt-col-act-obj rpt-align-end rpt-number-cell rpt-act-total-border-top rpt-font-bold">
         ${formatCurrency(pais.totales.importeObjetivos, 0)}
       </td>
@@ -165,6 +173,18 @@ function _renderBloquePais(pais) {
   return `
   <div class="rpt-bloque-actividad">
     <table class="rpt-table rpt-table-actividades">
+      <colgroup>
+        <col class="rpt-col-act-porc-ant">
+        <col class="rpt-col-act-imp-ant">
+        <col class="rpt-col-10px">
+        <col class="rpt-col-act-nombre">
+        <col class="rpt-col-10px">
+        <col class="rpt-col-act-obj">
+        <col class="rpt-col-act-imp-act">
+        <col class="rpt-col-act-ip">
+        <col class="rpt-col-act-var">
+        <col class="rpt-col-act-porc-act">
+      </colgroup>
       ${tableHeader}
       <tbody>
         ${filasHtml}

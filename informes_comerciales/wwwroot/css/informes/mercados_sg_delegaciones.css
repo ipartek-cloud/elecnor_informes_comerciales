@@ -87,8 +87,8 @@
 
 /* Filas de detalle */
 .rpt-dg-detail-row td {
-    padding: 1pt 2pt;
-    line-height: 1.4;
+    padding: 3px 2pt !important;
+    line-height: 1.25 !important;
     font-size: 8pt;
     color: #000;
 }
@@ -114,11 +114,11 @@
 
 /* Filas de resumen Nacional/Internacional */
 .rpt-dg-resumen-row td {
-    padding: 1pt 2pt;
+    padding: 3px 2pt !important;
     font-size: 8pt;
     color: #00468B !important;
     font-weight: bold;
-    line-height: 1.4;
+    line-height: 1.25 !important;
     vertical-align: middle;
 }
 
@@ -205,12 +205,7 @@
         border-top: 0.3pt solid #00468B !important;
     }
 
-    .rpt-dg-detail-row td {
-        line-height: 1.2 !important;
-        padding-top: 1.5px !important;
-        padding-bottom: 1.5px !important;
-        font-size: 8pt !important;
-    }
+    /* Detalle unificado heredado de los estilos generales */
 
     /* Evitar cortes dentro de filas */
     .rpt-dg-detail-row {

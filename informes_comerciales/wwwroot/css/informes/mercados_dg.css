@@ -25,25 +25,6 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
   white-space: nowrap;
 }
 
-/* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
-.rpt-mercado-detail-row td,
-.rpt-cd-detail-row td,
-.rpt-detail-row td {
-    line-height: 1.25 !important;
-    padding-top: 3px !important;
-    padding-bottom: 3px !important;
-}
-
-@media print {
-    .rpt-mercado-detail-row td,
-    .rpt-cd-detail-row td,
-    .rpt-detail-row td {
-        line-height: 1.2 !important;
-        padding-top: 1.5px !important;
-        padding-bottom: 1.5px !important;
-    }
-}
-
 /* Márgenes de bloques */
 .report-body {
   /* Separación controlada por clase rpt-cmai-mt-standard */
@@ -163,10 +144,9 @@ table.rpt-table.rpt-table-stackable.rpt-mercado-layout thead tr th.rpt-cd-header
   border-top: 0.3pt solid #00468B !important;
 }
 
-/* Fila de detalle - Altura automática con line-height compacto */
+/* Fila de detalle - Altura automática */
 .rpt-mercado-detail-row {
   height: auto;
-  line-height: 1.05;
 }
 
 /* =============================================================================
@@ -227,7 +207,6 @@ Aquí solo definimos overrides específicos si fueran necesarios.
 /* Filas de detalle */
 .rpt-cd-detail-row {
   height: auto;
-  line-height: 1.05;
 }
 
 /* Fila de totales con líneas continuas por grupos */

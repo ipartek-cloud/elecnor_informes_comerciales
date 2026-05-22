@@ -78,7 +78,6 @@
 }
 
 .rpt-ccdop-table .rpt-detail-row td {
-    line-height: 1.25 !important;
     padding: 3px 5px !important;
     vertical-align: top;
 }
@@ -136,10 +135,7 @@
         border-top: 0.3pt solid #00468B !important;
     }
 
-    .rpt-ccdop-table .rpt-detail-row td {
-        line-height: 1.2 !important;
-        padding: 1.5px 5px !important;
-    }
+
 
     .rpt-banner-top {
         height: 25px !important;

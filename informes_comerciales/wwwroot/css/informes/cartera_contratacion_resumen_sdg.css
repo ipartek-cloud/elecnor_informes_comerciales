@@ -17,7 +17,6 @@
 .rpt-ccrsdg-sdg-row td {
     color: #00468B !important;
     font-weight: bold !important;
-    line-height: 1.25 !important;
     padding: 3px 5px !important;
     border-bottom: none !important;
 }
@@ -26,7 +25,6 @@
 .rpt-ccrsdg-dn-row td {
     color: #000000 !important;
     font-weight: normal !important;
-    line-height: 1.25 !important;
     padding: 3px 5px !important;
 }
 
@@ -129,15 +127,7 @@
         text-align: right !important;
     }
 
-    .rpt-ccrsdg-sdg-row td {
-        line-height: 1.2 !important;
-        padding: 1.5px 5px !important;
-    }
 
-    .rpt-ccrsdg-dn-row td {
-        line-height: 1.2 !important;
-        padding: 1.5px 5px !important;
-    }
 
     .rpt-ccrsdg-grand-total-row td:nth-child(2),
     .rpt-ccrsdg-grand-total-row td:nth-child(3) {

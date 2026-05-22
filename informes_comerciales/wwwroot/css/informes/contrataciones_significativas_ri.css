@@ -69,8 +69,6 @@
 /* Selector aumentado para mayor especificidad que informes_base.css */
 .rpt-cont-sig-mes-item.rpt-cont-sig-mes-item td,
 .rpt-table-cont-sig .rpt-cont-sig-mes-item td {
-  font-size: 8pt;
-  line-height: 1.25 !important;
   padding: 3px 5px !important;
   vertical-align: middle;
   border-bottom: none !important;
@@ -87,11 +85,7 @@
   }
 
   /* Filas de Detalle - Valores ajuste fino para PDF */
-  .rpt-cont-sig-mes-item.rpt-cont-sig-mes-item td,
-  .rpt-table-cont-sig .rpt-cont-sig-mes-item td {
-    line-height: 1.2 !important;
-    padding: 1.5px 5px !important;
-  }
+
 }
 
 /* =============================================================================
