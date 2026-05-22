@@ -101,11 +101,6 @@
     font-family: Verdana, Geneva, sans-serif !important;
   }
 
-  .rpt-gerencias-title-center {
-    font-size: 11pt !important;
-    color: #00468B !important;
-    font-family: Verdana, Geneva, sans-serif !important;
-  }
 
   body .rpt-paper--gerencias .report-body {
     margin-top: 80px !important;
@@ -123,6 +118,13 @@
     height: 25px !important;
     font-size: 14pt !important;
     font-weight: normal !important;
+  }
+ 
+  .rpt-gerencias-layout .rpt-gerencias-title-center,
+  .rpt-table .rpt-gerencias-title-center {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+    color: #00468B !important;
   }
 }
 
@@ -179,7 +181,7 @@
 .rpt-gerencias-title-center {
   color: #00468B;
   font-weight: bold;
-  font-size: 11pt;
+  font-size: 11pt !important;
   margin-bottom: 3pt;
 }
 

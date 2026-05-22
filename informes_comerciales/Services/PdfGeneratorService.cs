@@ -14,19 +14,21 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
     private readonly ILogger<PdfGeneratorService> _logger;
     private readonly SemaphoreSlim _initSemaphore = new(1, 1);
     private IBrowser? _browser;
+    private readonly string _chromiumDownloadPath;
+    private readonly string _chromiumRevision;
 
-    private static readonly string ChromiumDownloadPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "puppeteer_chromium");
-
-    private static readonly string ChromiumRevision = "Win64-119.0.6045.105";
-
-    private static string? ResolveChromeExecutable()
+    private string? ResolveChromeExecutable()
     {
-        var exePath = Path.Combine(ChromiumDownloadPath, ChromiumRevision, "chrome-win64", "chrome.exe");
+        // BrowserFetcher descarga dentro de un subdirectorio "Chrome"
+        var exePath = Path.Combine(_chromiumDownloadPath, "Chrome", _chromiumRevision, "chrome-win64", "chrome.exe");
+        if (File.Exists(exePath)) return exePath;
+
+        // Fallback: instalación manual sin subdirectorio "Chrome"
+        exePath = Path.Combine(_chromiumDownloadPath, _chromiumRevision, "chrome-win64", "chrome.exe");
         return File.Exists(exePath) ? exePath : null;
     }
 
-    private static LaunchOptions BuildLaunchOptions()
+    private LaunchOptions BuildLaunchOptions()
     {
         var options = new LaunchOptions
         {
@@ -39,9 +41,13 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
         return options;
     }
 
-    public PdfGeneratorService(ILogger<PdfGeneratorService> logger)
+    public PdfGeneratorService(ILogger<PdfGeneratorService> logger, IConfiguration configuration)
     {
         _logger = logger;
+        var chromiumSection = configuration.GetSection("Chromium");
+        _chromiumDownloadPath = chromiumSection["DownloadPath"]
+            ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "puppeteer_chromium");
+        _chromiumRevision = chromiumSection["Revision"] ?? "Win64-119.0.6045.105";
     }
 
     /// <summary>
@@ -73,13 +79,13 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
             if (launchOptions.ExecutablePath is null)
             {
                 _logger.LogInformation("Descargando Chromium...");
-                var browserFetcher = new BrowserFetcher(new BrowserFetcherOptions { Path = ChromiumDownloadPath });
+                var browserFetcher = new BrowserFetcher(new BrowserFetcherOptions { Path = _chromiumDownloadPath });
                 await browserFetcher.DownloadAsync();
             }
 
-            _logger.LogInformation("Lanzando instancia singleton de Chromium...");
+            _logger.LogDebug("Lanzando instancia singleton de Chromium...");
             _browser = await Puppeteer.LaunchAsync(launchOptions);
-            _logger.LogInformation("Browser Chromium listo y conectado.");
+            _logger.LogDebug("Browser Chromium listo y conectado.");
 
             return _browser;
         }
@@ -100,13 +106,15 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
 
         var browser = await GetBrowserAsync();
 
-        _logger.LogInformation("Abriendo nueva pestaña de Puppeteer para renderizar PDF...");
+        _logger.LogDebug("Abriendo nueva pestaña de Puppeteer para renderizar PDF...");
         await using var page = await browser.NewPageAsync();
 
         await page.SetContentAsync(htmlContent, new NavigationOptions
         {
             WaitUntil = new[] { WaitUntilNavigation.Networkidle0 }
         });
+
+        await page.EmulateMediaTypeAsync(PuppeteerSharp.Media.MediaType.Print);
 
         var pdfOptions = new PdfOptions
         {
@@ -121,7 +129,7 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
             }
         };
 
-        _logger.LogInformation("Generando bytes del PDF...");
+        _logger.LogDebug("Generando bytes del PDF...");
         return await page.PdfDataAsync(pdfOptions);
     }
 

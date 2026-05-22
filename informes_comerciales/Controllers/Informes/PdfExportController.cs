@@ -60,7 +60,9 @@ public class PdfExportController : ControllerBase
 
             if (!string.IsNullOrWhiteSpace(request.ReportName))
             {
+                _logger.LogDebug("[PdfExportController] Cargando CSS para informe: {ReportName}", request.ReportName);
                 reportCss = await _assetInliningService.GetAssetContentAsync($"css/informes/{request.ReportName}.css", cts.Token);
+                _logger.LogDebug("[PdfExportController] CSS cargado: {Length} caracteres", reportCss?.Length ?? 0);
             }
 
             // 2. Cargar el logotipo local en Base64 para evitar problemas de resolución de recursos en Puppeteer
@@ -107,6 +109,7 @@ public class PdfExportController : ControllerBase
             htmlBuilder.AppendLine("html, body { background-color: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }");
             htmlBuilder.AppendLine(".rpt-paper { border: none !important; box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; background-color: #ffffff !important; }");
             htmlBuilder.AppendLine(".no-print, header, footer { display: none !important; }");
+            htmlBuilder.AppendLine(".rpt-gerencias-title-center { color: #00468B !important; font-weight: bold !important; }");
             htmlBuilder.AppendLine("</style>");
 
             htmlBuilder.AppendLine("</head>");
