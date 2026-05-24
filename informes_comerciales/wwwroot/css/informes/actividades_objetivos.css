@@ -18,7 +18,7 @@
 }
 
 /* Badge de encabezado de bloque (Azul Elecnor) */
-.rpt-act-badge, .rpt-act-header-badge {
+.rpt-act-badge {
   background-color: #00468B !important;
   color: white !important;
   font-weight: bold;
@@ -51,11 +51,6 @@
   table-layout: fixed !important;
 }
 
-/* Asegurar que las filas de línea segmentada sean invisibles */
-.rpt-act-line-segment {
-    border: none !important;
-    background: transparent !important;
-}
 
 /* Cabeceras de tabla en Azul Elecnor (#00468B) según estándar CMAI */
 .rpt-th-year th {
@@ -179,9 +174,6 @@ table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
     width: 5px !important;
   }
 
-  [rpt-border-none] {
-    border: none !important;
-  }
 }
 
 /* Unificar separación logo/encabezado en Web y PDF */
