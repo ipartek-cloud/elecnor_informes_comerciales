@@ -91,7 +91,7 @@ function _renderBloquePais(pais) {
       <th colspan="10"></th>
     </tr>
     <tr class="rpt-th-blue">
-      <th class="rpt-col-act-porc-ant rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-porc-ant rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         % s/Merc
       </th>
       <th class="rpt-col-act-imp-ant rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
@@ -108,13 +108,13 @@ function _renderBloquePais(pais) {
       <th class="rpt-col-act-imp-act rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Contr.
       </th>
-      <th class="rpt-col-act-ip rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-ip rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Ip
       </th>
-      <th class="rpt-col-act-var rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-var rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         % ${mesAnterior || anioAnterior}
       </th>
-      <th class="rpt-col-act-porc-act rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-porc-act rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         % s/Merc
       </th>
     </tr>
@@ -123,16 +123,16 @@ function _renderBloquePais(pais) {
 
   const filasHtml = pais.detalle.map(d => `
     <tr class="rpt-detail-row">
-      <td class="rpt-col-act-porc-ant rpt-align-center">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
+      <td class="rpt-col-act-porc-ant rpt-align-end">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
       <td class="rpt-col-act-imp-ant rpt-align-end rpt-number-cell">${formatCurrency(d.importeAnterior, 0)}</td>
       <td rpt-border-none></td>
       <td class="rpt-col-act-nombre rpt-ps-3">${d.actividad}</td>
       <td rpt-border-none></td>
       <td class="rpt-col-act-obj rpt-align-end rpt-number-cell">${formatCurrency(d.importeObjetivos, 0)}</td>
       <td class="rpt-col-act-imp-act rpt-align-end rpt-number-cell">${formatCurrency(d.importeActual / 1000, 0)}</td>
-      <td class="rpt-col-act-ip rpt-align-center">${formatCurrency(d.ip, 2)}</td>
-      <td class="rpt-col-act-var rpt-align-center ${getVarClass(d.variacionPorcentaje)}">${d.variacionPorcentaje}</td>
-      <td class="rpt-col-act-porc-act rpt-align-center">${formatPercentage(d.porcentajeActualMercado, 0)}</td>
+      <td class="rpt-col-act-ip rpt-align-end">${formatCurrency(d.ip, 2)}</td>
+      <td class="rpt-col-act-var rpt-align-end ${getVarClass(d.variacionPorcentaje)}">${d.variacionPorcentaje}</td>
+      <td class="rpt-col-act-porc-act rpt-align-end">${formatPercentage(d.porcentajeActualMercado, 0)}</td>
     </tr>
   `).join('');
 
@@ -141,7 +141,7 @@ function _renderBloquePais(pais) {
       <td colspan="10"></td>
     </tr>
     <tr class="rpt-total-row">
-      <td class="rpt-col-act-porc-ant rpt-align-center rpt-act-total-border-top rpt-font-bold">
+      <td class="rpt-col-act-porc-ant rpt-align-end rpt-act-total-border-top rpt-font-bold">
         100%
       </td>
       <td class="rpt-col-act-imp-ant rpt-align-end rpt-number-cell rpt-act-total-border-top rpt-font-bold">
@@ -158,13 +158,13 @@ function _renderBloquePais(pais) {
       <td class="rpt-col-act-imp-act rpt-align-end rpt-number-cell rpt-act-total-border-top rpt-font-bold">
         ${formatCurrency(pais.totales.importeActual / 1000, 0)}
       </td>
-      <td class="rpt-col-act-ip rpt-align-center rpt-number-cell rpt-act-total-border-top rpt-font-bold">
+      <td class="rpt-col-act-ip rpt-align-end rpt-number-cell rpt-act-total-border-top rpt-font-bold">
         ${formatCurrency(pais.totales.ip, 2)}
       </td>
-      <td class="rpt-col-act-var rpt-align-center rpt-act-total-border-top rpt-font-bold">
+      <td class="rpt-col-act-var rpt-align-end rpt-act-total-border-top rpt-font-bold">
         &nbsp;
       </td>
-      <td class="rpt-col-act-porc-act rpt-align-center rpt-act-total-border-top rpt-font-bold">
+      <td class="rpt-col-act-porc-act rpt-align-end rpt-act-total-border-top rpt-font-bold">
         100%
       </td>
     </tr>
