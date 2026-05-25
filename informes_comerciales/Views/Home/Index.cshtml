@@ -374,9 +374,10 @@
                             <div class="d-flex align-items-center gap-2 w-100">
                                 <!-- Mercados -->
                                 <div class="input-group rpt-input-group-index flex-fill">
-                                    <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
-                                            onclick="cargarInforme(this, 'mercados_dg')"
-                                            data-input-pag="inputPaginaComiteMercados"
+                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                             onclick="cargarInforme(this, 'mercados_dg')"
+                                             data-mostrar-titulo="true"
+                                             data-input-pag="inputPaginaComiteMercados"
                                             aria-label="Ver informe Mercado-Direcciones Generales-Unidades Negocio">
                                         Mercado-Direcciones Generales-Unidades Negocio
                                     </button>
@@ -446,7 +447,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'paises')"
                                             data-umbral="0"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaComitePaises"
                                             aria-label="Ver informe Mercado Internacional por Países">
                                         Mercado Internacional por Países
@@ -464,7 +465,7 @@
                                 <div class="input-group rpt-input-group-index flex-fill">
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'mercados_sg_delegaciones')"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaMercadosSGDelegaciones"
                                             aria-label="Ver informe DG - Unidades Negocio - Delegaciones">
                                         DG - Unidades Negocio - Delegaciones
@@ -478,7 +479,7 @@
                                 <div class="input-group rpt-input-group-index flex-fill">
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'actividades_internacional_detalle')"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaComiteActividadesInt"
                                             aria-label="Ver informe Detalle Actividades Internacional">
                                         Detalle Actividades Internacional
@@ -497,7 +498,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
                                             data-mercado="Nacional"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaContratacionesSignificativasNacionalComite"
                                             aria-label="Ver informe Contrataciones Significativas Nacionales">
                                         Contrataciones Significativas Nacionales
@@ -513,7 +514,7 @@
                                             onclick="cargarInforme(this, 'contrataciones_significativas')"
                                             data-mercado="Internacional"
                                             data-subdireccion="221"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaContratacionesSignificativasInternacionalServiciosComite"
                                             aria-label="Ver informe Contratación Significativa Internacional DG Servicios">
                                         Contratación Significativa Internacional DG Servicios
@@ -532,7 +533,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'contrataciones_significativas_ri')"
                                             data-mercado="Internacional"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaContratacionesSignificativasInternacionalComite"
                                             aria-label="Ver informe Contrataciones Significativas Internacionales">
                                         Contrataciones Significativas Internacionales
@@ -548,7 +549,7 @@
                                             onclick="cargarInforme(this, 'contrataciones_significativas')"
                                             data-mercado="Internacional"
                                             data-subdireccion="286"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaContratacionesSignificativasInternacionalProyectosComite"
                                             aria-label="Ver informe Contratación Significativa Internacional DG Proyectos">
                                         Contratación Significativa Internacional DG Proyectos
@@ -567,7 +568,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                             data-mercado="Nacional"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaRankingNacionalComite"
                                             aria-label="Ver informe Ranking Clientes Nacionales">
                                         Ranking Clientes Nacionales
@@ -585,7 +586,7 @@
                                             data-limiteimporte="13000"
                                             data-limitepaises="1000"
                                             data-informe="9.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaCarteraContratacionDetalleInt"
                                             aria-label="Ver informe Cartera Contratación (Detalle) Internacional">
                                         Cartera Contratación (Detalle) – Internacional
@@ -604,7 +605,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'ranking_contratacion_clientes')"
                                             data-mercado="Internacional"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaRankingInternacionalComite"
                                             aria-label="Ver informe Ranking Clientes Internacionales">
                                         Ranking Clientes Internacionales
@@ -619,7 +620,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'cartera_contratacion_resumen_sdg')"
                                             data-mercado="Internacional"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaCarteraContratacionResumenDGInt"
                                             aria-label="Ver informe Cartera Contratación DG (Resumen) Internacional">
                                         Cartera Contratación x DG (Resumen) – Internacional
@@ -637,7 +638,7 @@
                                 <div class="input-group rpt-input-group-index flex-fill">
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'paises_all')"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaPaisesRelevantesComite"
                                             aria-label="Ver informe Ranking Países (Incluye España)">
                                         Ranking Países (Incluye España)
@@ -655,7 +656,7 @@
                                             data-limiteimporte="13000"
                                             data-limitepaises="20"
                                             data-informe="8.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-subdireccion="221"
                                             data-input-pag="inputPaginaCarteraDetalleServiciosInt"
                                             aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Internacional">
@@ -678,7 +679,7 @@
                                             data-limiteimporte="13000"
                                             data-limitepaises="1000"
                                             data-informe="9.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaCarteraContratacionDetalle"
                                             aria-label="Ver informe Cartera Contratación (Detalle) Nacional - Internacional">
                                         Cartera Contratación (Detalle) Nacional - Internacional
@@ -696,7 +697,7 @@
                                             data-limiteimporte="13000"
                                             data-limitepaises="20"
                                             data-informe="8.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-subdireccion="286"
                                             data-input-pag="inputPaginaCarteraDetalleProyectosInt"
                                             aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Internacional">
@@ -716,7 +717,7 @@
                                     <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
                                             onclick="cargarInforme(this, 'cartera_contratacion_resumen_sdg')"
                                             data-mercado="Todo"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaCarteraContratacionResumenDG"
                                             aria-label="Ver informe Cartera Contratación DG (Resumen) Nacional - Internacional">
                                         Cartera Contratación DG (Resumen) Nacional - Internacional
@@ -734,7 +735,7 @@
                                             data-limiteimporte="17000"
                                             data-limitepaises="20"
                                             data-informe="9.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaCarteraDetallePaisesInt"
                                             aria-label="Ver informe Cartera Contratación Paises (Detalle) Internacional">
                                         Cartera Contratación Paises (Detalle) Internacional
@@ -756,7 +757,7 @@
                                             data-limiteimporte="13000"
                                             data-limitepaises="20"
                                             data-informe="8.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-subdireccion="221"
                                             data-input-pag="inputPaginaCarteraDetalleServicios"
                                             aria-label="Ver informe Cartera Contratación DG Servicios (Detalle) Nacional - Internacional">
@@ -781,7 +782,7 @@
                                             data-limiteimporte="13000"
                                             data-limitepaises="20"
                                             data-informe="8.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-subdireccion="286"
                                             data-input-pag="inputPaginaCarteraDetalleProyectos"
                                             aria-label="Ver informe Cartera Contratación DG Proyectos (Detalle) Nacional - Internacional">
@@ -806,7 +807,7 @@
                                             data-limiteimporte="17000"
                                             data-limitepaises="20"
                                             data-informe="9.1"
-                                            data-mostrar-titulo="false"
+                                            data-mostrar-titulo="true"
                                             data-input-pag="inputPaginaCarteraDetallePaises"
                                             aria-label="Ver informe Cartera Contratación Paises (Detalle) Nacional - Internacional">
                                         Cartera Contratación Paises (Detalle) Nacional - Internacional

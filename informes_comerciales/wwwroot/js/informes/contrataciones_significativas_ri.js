@@ -115,9 +115,9 @@ function _renderCuerpoInforme(direcciones) {
             </colgroup>
   <thead>
       <tr class="rpt-font-bold">
-        <th class="rpt-text-corporate rpt-text-start rpt-ps-3 rpt-fs-10pt">${_escapeHtml(umbralTexto)}</th>
+        <th class="rpt-text-corporate rpt-text-start rpt-ps-2 rpt-fs-11pt">${_escapeHtml(umbralTexto)}</th>
         <th></th>
-        <th class="rpt-text-corporate rpt-text-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+        <th class="rpt-text-corporate rpt-text-end rpt-pe-3 rpt-fs-9pt">Mensual</th>
       </tr>
     </thead>
             <tbody>${filaMesHtml}${bloquesHtml}</tbody>
@@ -127,7 +127,7 @@ function _renderCuerpoInforme(direcciones) {
 function _getHtmlEncabezado() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     return getHtmlEncabezadoBase({
-        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="rpt-info-complementary rpt-ms-2">Información complementaria</span>',
+        tituloCorporativo: '<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>',
         textoBanner1: 'Elecnor',
         textoBanner2: `Contrataciones Significativas Mercado ${filtros.mercado || 'Nacional'}`,
         mes: filtros.mes, anio: filtros.anio,

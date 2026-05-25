@@ -1491,10 +1491,14 @@ public class InformeRepository
                                         AND rpc.Mes            = @Mes
                                         AND rpc.Ocultar        = 0
                                         AND rpc.Pais           = @Mercado
-                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
                                     GROUP BY
+                                        s.OrdenSubDirGeneral,
                                         ocdn.Orden_CodDDirNegocio,
-                                        s.NombreDirNegocio";
+                                        s.NombreDirNegocio
+                                    ORDER BY
+                                        s.OrdenSubDirGeneral ASC,
+                                        CASE WHEN @Mercado = 'Internacional' THEN s.NombreDirNegocio ELSE NULL END ASC,
+                                        CASE WHEN @Mercado <> 'Internacional' THEN ocdn.Orden_CodDDirNegocio END ASC";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -1503,8 +1507,7 @@ public class InformeRepository
                                                                             new {
                                                                                 Anio             = anio,
                                                                                 Mes              = mes,
-                                                                                Mercado          = mercado,
-                                                                                CodSubDirGeneral = codSubDirGeneral
+                                                                                Mercado          = mercado
                                                                             },
                                                                             commandTimeout: 300
                                                                         )).ToList();
@@ -1528,7 +1531,6 @@ public class InformeRepository
                                         AND rpc.Mes            = @Mes
                                         AND rpc.Ocultar        = 0
                                         AND rpc.Pais           = @Mercado
-                                        AND s.CodSubDirGeneral = @CodSubDirGeneral
                                         AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
                                     GROUP BY
                                         ocdn.Orden_CodDDirNegocio,
@@ -1548,7 +1550,6 @@ public class InformeRepository
                 Anio             = anio,
                 Mes              = mes,
                 Mercado          = mercado,
-                CodSubDirGeneral = codSubDirGeneral,
                 Importe          = importe
             },
             commandTimeout: 300
