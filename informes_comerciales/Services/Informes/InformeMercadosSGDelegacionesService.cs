@@ -100,7 +100,36 @@ public class InformeMercadosSGDelegacionesService
                     }
 
                     if (areaDto.Delegaciones.Count > 0)
+                    {
+                        var objAcumArea = areaDto.Delegaciones.Sum(d => d.Acumulado.Objetivos);
+                        var contrAcumArea = areaDto.Delegaciones.Sum(d => d.Acumulado.Contratacion);
+                        var ipArea = CalcularIpDesdeTotales(contrAcumArea, objAcumArea, mes);
+
+                        areaDto.Mensual = new MetricasMensualesDto
+                        {
+                            Objetivos = Math.Round(areaDto.Delegaciones.Sum(d => d.Mensual.Objetivos), 0, MidpointRounding.AwayFromZero),
+                            Contratacion = Math.Round(areaDto.Delegaciones.Sum(d => d.Mensual.Contratacion), 0, MidpointRounding.AwayFromZero)
+                        };
+
+                        areaDto.Acumulado = new MetricasAcumuladasDto
+                        {
+                            Objetivos = Math.Round(objAcumArea, 0, MidpointRounding.AwayFromZero),
+                            Contratacion = Math.Round(contrAcumArea, 0, MidpointRounding.AwayFromZero),
+                            IP = Math.Round(ipArea, 2, MidpointRounding.AwayFromZero)
+                        };
+
+                        areaDto.Variaciones = new VariacionesDto
+                        {
+                            Contratacion = InformeCalculosUtils.CalcularVariacionContratacion(
+                                area.Delegaciones.Sum(p => p.ImporteContratadoAcumuladoAñoAnterior),
+                                area.Delegaciones.Sum(p => p.ImporteContratadoAcumulado)),
+                            Cartera = InformeCalculosUtils.CalcularVariacionCartera(
+                                area.Delegaciones.Sum(p => p.CarteraPdteAñoAnterior),
+                                area.Delegaciones.Sum(p => p.CarteraPdteAñoActual))
+                        };
+
                         dnDto.Areas.Add(areaDto);
+                    }
                 }
 
                 dnDto.Totales = CalcularTotalesDN(dnDto, pocosDelDN, mes);

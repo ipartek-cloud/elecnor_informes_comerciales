@@ -134,9 +134,27 @@ function _renderDN(dn, sdg, isFirstDN) {
         </thead>
         <tbody>`;
 
-    const filasHtml = dn.areas
-        .flatMap(area => area.delegaciones.map(del => ({ ...del, area: area.area })))
-        .map(del => `
+    let filasHtml = '';
+    dn.areas.forEach(area => {
+        if (area.area && area.area.trim() !== '') {
+            filasHtml += `
+            <tr class="rpt-dg-area-row">
+                <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(area.mensual.objetivos, 0)}</td>
+                <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(area.mensual.contratacion, 0)}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
+                <td class="rpt-dg-col-centro">${area.area}</td>
+                <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
+                <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(area.acumulado.objetivos, 0)}</td>
+                <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(area.acumulado.contratacion / 1000, 0)}</td>
+                <td class="rpt-dg-col-ip rpt-align-end">${formatCurrency(area.acumulado.ip, 2)}</td>
+                <td class="rpt-dg-col-spacer"></td>
+                <td class="rpt-dg-col-var-contr rpt-align-end">${area.variaciones.contratacion}</td>
+                <td class="rpt-dg-col-var-cart rpt-align-end">${area.variaciones.cartera}</td>
+            </tr>`;
+        }
+
+        area.delegaciones.forEach(del => {
+            filasHtml += `
             <tr class="rpt-dg-detail-row">
                 <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(del.mensual.objetivos, 0)}</td>
                 <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(del.mensual.contratacion, 0)}</td>
@@ -149,7 +167,9 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <td class="rpt-dg-col-spacer"></td>
                 <td class="rpt-dg-col-var-contr rpt-align-end">${del.variaciones.contratacion}</td>
                 <td class="rpt-dg-col-var-cart rpt-align-end">${del.variaciones.cartera}</td>
-            </tr>`).join('');
+            </tr>`;
+        });
+    });
 
     const totalesHtml = `
             <tr class="rpt-spacer-row-totales"><td colspan="11" class="rpt-spacer-cell-totales"></td></tr>

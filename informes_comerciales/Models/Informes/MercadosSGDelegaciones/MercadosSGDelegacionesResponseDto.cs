@@ -30,6 +30,9 @@ public class AreaDto
 {
     public string Area { get; set; } = string.Empty;
     public List<DelegacionDto> Delegaciones { get; set; } = new();
+    public MetricasMensualesDto Mensual { get; set; } = new();
+    public MetricasAcumuladasDto Acumulado { get; set; } = new();
+    public VariacionesDto Variaciones { get; set; } = new();
 }
 
 public class DelegacionDto

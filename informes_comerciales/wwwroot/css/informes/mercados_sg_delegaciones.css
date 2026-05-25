@@ -102,13 +102,18 @@
     color: #00468B;
     font-weight: bold !important;
     vertical-align: middle !important;
-    padding-top: 4pt !important;
-    padding-bottom: 3pt !important;
+    padding-top: 2pt !important;
+    padding-bottom: 2pt !important;
     line-height: 1 !important;
 }
 
-.rpt-dg-total-row td.rpt-td-total {
-    border-top: 0.3pt solid #00468B;
+/* Filas de subtotal de Área intermedia */
+.rpt-dg-area-row td {
+    padding: 3px 2pt !important;
+    font-size: 8pt;
+    color: #00468B !important;
+    font-weight: bold !important;
+    line-height: 1.25 !important;
 }
 
 /* Filas de resumen Nacional/Internacional */
@@ -127,8 +132,8 @@
 
 /* Fila espaciadora física entre total (azul) y resumen Nacional/Internacional */
 .rpt-spacer-row-resumen td {
-    height: 12pt !important;
-    line-height: 12pt !important;
+    height: 8pt !important;
+    line-height: 8pt !important;
     border: none !important;
     background-color: transparent !important;
 }
@@ -141,8 +146,8 @@
 
 /* Bloque de Dirección de Negocio - Calibrado Final */
 .rpt-bloque-dn {
-    margin-top: 9pt !important;
-    margin-bottom: 6pt !important;
+    margin-top: 6pt !important;
+    margin-bottom: 4pt !important;
     page-break-inside: avoid;
 }
 
