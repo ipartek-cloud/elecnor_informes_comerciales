@@ -167,6 +167,18 @@
     border-top: 0.3pt solid #00468B !important;
 }
 
+/* Unificar el padding-right en todas las celdas numéricas y de variación para alineación perfecta a la derecha */
+.rpt-table-delegaciones th:not(.rpt-dg-header-center-name):not([colspan]),
+.rpt-table-delegaciones td:not(.rpt-dg-col-centro) {
+    padding-right: 5px !important;
+}
+
+/* Evitar saltos de línea (wrap) en las cabeceras para que no ensanchen el alto de la fila */
+.rpt-table-delegaciones th {
+    white-space: nowrap !important;
+}
+
+
 
 /* Estilos para impresión/PDF */
 @media print {

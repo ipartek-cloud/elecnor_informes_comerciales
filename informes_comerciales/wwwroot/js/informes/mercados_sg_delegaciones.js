@@ -119,8 +119,8 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
                 <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Ip</th>
                 <th rpt-border-none></th> <!-- Spacer -->
-                <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Contr.</th>
-                <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Cart.(${mesAnteriorLabel})</th>
+                <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
+                <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Cart.(${mesAnteriorLabel})</th>
             </tr>
             <tr class="rpt-dg-header-line-row">
                 <th class="rpt-dg-header-line" colspan="2"></th>
@@ -145,10 +145,10 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(del.acumulado.objetivos, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(del.acumulado.contratacion / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip rpt-align-center">${formatCurrency(del.acumulado.ip, 2)}</td>
+                <td class="rpt-dg-col-ip rpt-align-end">${formatCurrency(del.acumulado.ip, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-dg-col-var-contr rpt-align-center">${del.variaciones.contratacion}</td>
-                <td class="rpt-dg-col-var-cart rpt-align-center">${del.variaciones.cartera}</td>
+                <td class="rpt-dg-col-var-contr rpt-align-end">${del.variaciones.contratacion}</td>
+                <td class="rpt-dg-col-var-cart rpt-align-end">${del.variaciones.cartera}</td>
             </tr>`).join('');
 
     const totalesHtml = `
@@ -161,10 +161,10 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.objetivosAcumulado, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.contratacionAcumulado / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip rpt-align-center rpt-td-total">${formatCurrency(dn.totales.ip, 2)}</td>
+                <td class="rpt-dg-col-ip rpt-align-end rpt-td-total">${formatCurrency(dn.totales.ip, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-dg-col-var-contr rpt-align-center rpt-td-total">${dn.totales.variacionContratacion}</td>
-                <td class="rpt-dg-col-var-cart rpt-align-center rpt-td-total">${dn.totales.variacionCartera}</td>
+                <td class="rpt-dg-col-var-contr rpt-align-end rpt-td-total">${dn.totales.variacionContratacion}</td>
+                <td class="rpt-dg-col-var-cart rpt-align-end rpt-td-total">${dn.totales.variacionCartera}</td>
             </tr>
             <tr class="rpt-spacer-row-resumen"><td colspan="11"></td></tr>`;
 
@@ -180,10 +180,10 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(dn.totales.resumen.objetivosAcumuladoNacional, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(dn.totales.resumen.contratacionAcumuladoNacional / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip rpt-align-center">${formatCurrency(dn.totales.resumen.ipNacional, 2)}</td>
+                <td class="rpt-dg-col-ip rpt-align-end">${formatCurrency(dn.totales.resumen.ipNacional, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-align-center">&nbsp;</td>
-                <td class="rpt-align-center">&nbsp;</td>
+                <td class="rpt-align-end">&nbsp;</td>
+                <td class="rpt-align-end">&nbsp;</td>
             </tr>` : '';
 
     const hasInternacional = dn.totales.resumen.objetivosMensualInternacional !== 0 ||
@@ -198,10 +198,10 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(dn.totales.resumen.objetivosAcumuladoInternacional, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(dn.totales.resumen.contratacionAcumuladoInternacional / 1000, 0)}</td>
-                <td class="rpt-dg-col-ip rpt-align-center">${formatCurrency(dn.totales.resumen.ipInternacional, 2)}</td>
+                <td class="rpt-dg-col-ip rpt-align-end">${formatCurrency(dn.totales.resumen.ipInternacional, 2)}</td>
                 <td class="rpt-dg-col-spacer"></td>
-                <td class="rpt-align-center">&nbsp;</td>
-                <td class="rpt-align-center">&nbsp;</td>
+                <td class="rpt-align-end">&nbsp;</td>
+                <td class="rpt-align-end">&nbsp;</td>
             </tr>` : '';
 
     const resumenHtml = htmlNacional + htmlInternacional;
