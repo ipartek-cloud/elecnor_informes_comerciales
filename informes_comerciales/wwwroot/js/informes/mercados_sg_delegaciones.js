@@ -1,9 +1,9 @@
 import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
-import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars, imprimirInformeUnificado, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
+import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
         let url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
@@ -74,11 +74,17 @@ function _renderSDG(sdg) {
     if (!sdg || !sdg.direccionesNegocio) return '';
     
     return sdg.direccionesNegocio.map((dn, idx) => {
-        return _renderDN(dn, sdg, idx === 0);
+        // isFirstDN: Primera DN de la SDG (se muestra cabecera tanto en web como en impresión)
+        const isFirstDN = (idx === 0);
+        // isPrintOnlyHeader: Solo se aplica para la tercera DN de DG. Elecnor Servicios (Código 221),
+        // que es "Sur" (índice 2). En Proyectos (286), entra todo en una única página y no debe saltar.
+        const isPrintOnlyHeader = (sdg.codSubDirGeneral === '221' && idx === 2);
+        
+        return _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader);
     }).join('');
 }
 
-function _renderDN(dn, sdg, isFirstDN) {
+function _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader) {
     const data = estado.informeGlobalData;
     const anioAnterior = data.meta.filtros.anio - 1;
     const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
@@ -86,7 +92,27 @@ function _renderDN(dn, sdg, isFirstDN) {
     const mesAnteriorLabel = mesAnterior > 0 ? meses[mesAnterior - 1] : anioAnterior;
     const nombreSDG = sdg.nombreSubDirGeneral;
 
-    const titleHtml = isFirstDN ? `<div class="rpt-dg-sdg-titulo">${nombreSDG}</div>` : '';
+    let titleHtml = '';
+    if (isFirstDN) {
+        titleHtml = `<div class="rpt-dg-sdg-titulo">${nombreSDG}</div>`;
+    } else if (isPrintOnlyHeader) {
+        titleHtml = `<div class="rpt-dg-sdg-titulo rpt-print-only">${nombreSDG}</div>`;
+    }
+
+    let subheadersHtml = '';
+    if (isFirstDN || isPrintOnlyHeader) {
+        const printOnlyClass = (!isFirstDN && isPrintOnlyHeader) ? ' rpt-print-only-row' : '';
+        subheadersHtml = `
+            <tr class="rpt-dg-subheaders-row${printOnlyClass}">
+                <th colspan="2" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Mensual</span></th>
+                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 1 -->
+                <th rpt-border-none></th> <!-- Centro -->
+                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 2 -->
+                <th colspan="3" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Acumulado</span></th>
+                <th rpt-border-none></th> <!-- Spacer -->
+                <th colspan="2" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Var/${anioAnterior}</span></th>
+            </tr>`;
+    }
 
     const tableHeader = `
     ${titleHtml}
@@ -100,15 +126,7 @@ function _renderDN(dn, sdg, isFirstDN) {
             <col class="rpt-dg-col-spacer"><col class="rpt-dg-col-var-contr"><col class="rpt-dg-col-var-cart">
         </colgroup>
         <thead>
-            <tr class="rpt-dg-subheaders-row">
-                <th colspan="2" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Mensual</span></th>
-                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 1 -->
-                <th rpt-border-none></th> <!-- Centro -->
-                <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 2 -->
-                <th colspan="3" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Acumulado</span></th>
-                <th rpt-border-none></th> <!-- Spacer -->
-                <th colspan="2" class="rpt-align-center rpt-fs-8pt"><span class="rpt-dg-subheader-label">Var/${anioAnterior}</span></th>
-            </tr>
+            ${subheadersHtml}
             <tr class="rpt-dg-th-columns">
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Objet.</th>
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
@@ -226,7 +244,8 @@ function _renderDN(dn, sdg, isFirstDN) {
 
     const resumenHtml = htmlNacional + htmlInternacional;
 
-    return `<div class="rpt-bloque-dn" data-dn="${dn.nombreDirNegocio}">${tableHeader}${filasHtml}${totalesHtml}${resumenHtml}</tbody></table></div>`;
+    const pageBreakClass = isPrintOnlyHeader ? ' rpt-print-page-break-before' : '';
+    return `<div class="rpt-bloque-dn${pageBreakClass}" data-dn="${dn.nombreDirNegocio}">${tableHeader}${filasHtml}${totalesHtml}${resumenHtml}</tbody></table></div>`;
 }
 
 function _registrarEventos() {

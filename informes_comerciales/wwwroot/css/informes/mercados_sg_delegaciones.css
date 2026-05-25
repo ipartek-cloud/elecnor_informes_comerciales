@@ -158,15 +158,6 @@
     page-break-after: always;
 }
 
-/* Utilidades de alineación */
-.rpt-align-center {
-    text-align: center !important;
-}
-
-.rpt-align-end {
-    text-align: right !important;
-}
-
 /* Línea superior para celda del Centro en la fila de totales */
 .rpt-dg-total-border-top {
     border-top: 0.3pt solid #00468B !important;
@@ -183,10 +174,22 @@
     white-space: nowrap !important;
 }
 
+/* Fila de subcabeceras solo visible en impresión (oculta en pantalla) */
+.rpt-dg-subheaders-row.rpt-print-only-row {
+    display: none !important;
+}
 
+/* Bloques visibles únicamente en impresión (ocultos en pantalla) */
+.rpt-print-only {
+    display: none !important;
+}
 
 /* Estilos para impresión/PDF */
 @media print {
+    /* Mostrar bloques y filas solo de impresión */
+    .rpt-print-only {
+        display: block !important;
+    }
     /* Reset de márgenes del papel para Outer Table */
     .rpt-paper[data-informe="mercados_sg_delegaciones"].rpt-paper--print {
         padding: 0 !important;
@@ -243,5 +246,16 @@
     .rpt-dg-th-columns,
     .rpt-dg-subheaders-row {
         page-break-after: avoid !important;
+    }
+
+    /* Forzar la fila de subcabeceras de impresión */
+    .rpt-dg-subheaders-row.rpt-print-only-row {
+        display: table-row !important;
+    }
+
+    /* Salto de página antes de las secciones indicadas */
+    .rpt-print-page-break-before {
+        page-break-before: always !important;
+        break-before: page !important;
     }
 }
