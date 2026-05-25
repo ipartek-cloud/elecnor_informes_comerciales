@@ -1664,15 +1664,14 @@ public class InformeRepository
                                     CTE_Contratacion_Del AS (
                                         SELECT S.CodDelegacion,
                                             SUM(C.ImporteContratado) AS ImporteContratado,
-                                            SUM(CASE WHEN ISNULL(CG.Mercado, 'N') = 'N' THEN C.ImporteContratado ELSE 0 END) AS ImporteContratadoNacional,
-                                            SUM(CASE WHEN CG.Mercado = 'I' THEN C.ImporteContratado ELSE 0 END) AS ImporteContratadoInternacional,
+                                            SUM(CASE WHEN ISNULL(C.Pais, 'Nacional') = 'Nacional' THEN C.ImporteContratado ELSE 0 END) AS ImporteContratadoNacional,
+                                            SUM(CASE WHEN C.Pais = 'Internacional' THEN C.ImporteContratado ELSE 0 END) AS ImporteContratadoInternacional,
                                             SUM(C.ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
-                                            SUM(CASE WHEN ISNULL(CG.Mercado, 'N') = 'N' THEN C.ImporteContratadoAcumulado ELSE 0 END) AS ImporteContratadoAcumuladoNacional,
-                                            SUM(CASE WHEN CG.Mercado = 'I' THEN C.ImporteContratadoAcumulado ELSE 0 END) AS ImporteContratadoAcumuladoInternacional,
+                                            SUM(CASE WHEN ISNULL(C.Pais, 'Nacional') = 'Nacional' THEN C.ImporteContratadoAcumulado ELSE 0 END) AS ImporteContratadoAcumuladoNacional,
+                                            SUM(CASE WHEN C.Pais = 'Internacional' THEN C.ImporteContratadoAcumulado ELSE 0 END) AS ImporteContratadoAcumuladoInternacional,
                                             SUM(C.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior
                                         FROM dbo.rptContratacion_SG_Mercado C WITH (NOLOCK)
                                         INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON C.CodCentro = S.CodCentro AND C.Año = S.Año
-                                        LEFT JOIN dbo.CentrosGerentesSQL CG WITH (NOLOCK) ON C.CodCentro = CG.CodCentro AND C.Año = CG.Año
                                         WHERE C.Año = @Anio
                                         GROUP BY S.CodDelegacion
                                     ),
