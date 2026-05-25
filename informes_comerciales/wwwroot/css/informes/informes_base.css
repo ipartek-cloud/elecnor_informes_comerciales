@@ -167,7 +167,7 @@ Estándar: 10pt, sin negrita, azul corporativo
 
 /* Banner de Dirección de Negocio (DG) – fuente reducida respecto al banner principal */
 .rpt-banner-dg {
-    font-size: 12pt !important;
+    font-size: 11pt !important;
 }
 
 /* 3. Títulos de Secciones */
@@ -804,7 +804,7 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
 
     /* Banner de Dirección de Negocio (DG) en impresión */
     .rpt-banner-dg {
-        font-size: 12pt !important;
+        font-size: 11pt !important;
     }
 
     /* 10.5 LOGOTIPO (Mantenemos tamaño web 50px, eliminamos reducción a 35px) */

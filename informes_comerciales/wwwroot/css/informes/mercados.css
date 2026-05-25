@@ -250,9 +250,9 @@ border: none !important;
     font-weight: normal !important;
   }
 
-  /* Banner de DG: override a 12pt para jerarquía visual (más pequeño que banner principal) */
+  /* Banner de DG: override a 11pt para jerarquía visual (más pequeño que banner principal) */
   .rpt-banner-dg {
-    font-size: 12pt !important;
+    font-size: 11pt !important;
   }
 
   /* Padding numérico reducido unificado (incluye totales para alinear Ip/Var) */

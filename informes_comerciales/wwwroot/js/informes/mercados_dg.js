@@ -124,7 +124,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = t
 
       <th rpt-border-none></th>
 
-      <th class="rpt-align-center rpt-text-white rpt-mercado-header-align">
+      <th class="rpt-align-start rpt-text-white rpt-mercado-header-align">
         <div class="rpt-mercado-header-badge">${tituloCentral}</div>
       </th>
 
@@ -142,9 +142,9 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = t
 /**
  * Banner de separador de sección.
  */
-function _renderRptBanner(txtIzquierda, txtDerecha = "") {
+function _renderRptBanner(txtIzquierda, txtDerecha = "", esPrimero = false) {
   return `
-  <div class="${RPT_CLASSES.BANNER} rpt-banner-dg rpt-px-3 rpt-mt-4 rpt-mb-3">
+  <div class="${RPT_CLASSES.BANNER} rpt-banner-dg${esPrimero ? ' rpt-first-banner' : ''} rpt-px-3 rpt-mt-4 rpt-mb-3">
     <span>${txtIzquierda}</span>
     <span>${txtDerecha}</span>
   </div>
@@ -180,9 +180,9 @@ function _renderContructorCompleto(esImpresion = false) {
   </div>`;
 
   // BLOQUE 2: Desglose por Direcciones de Negocio
-  data.dirNegocios.forEach(dn => {
+  data.dirNegocios.forEach((dn, index) => {
 
-    html += _renderRptBanner("", dn.nombre);
+    html += _renderRptBanner("", dn.nombre, index === 0);
 
     // Nacional / Internacional
     html += `
@@ -234,9 +234,8 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
   if (!mens) mens = {};
   if (!acu) acu = {};
 
-  const wrapTotal = (val, align = 'rpt-align-end') => {
-    if (!esTotal) return val;
-    return `<div class="${align} rpt-font-bold rpt-text-corporate">${val}</div>`;
+  const wrapTotal = (val) => {
+    return val;
   };
 
   let midCellContent = tituloFila;
@@ -256,6 +255,9 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
   const mensualClass = esTotal ? 'rpt-td-total' : 'rpt-number-cell';
   const acumuladoClass = esTotal ? 'rpt-td-total' : 'rpt-number-cell';
 
+  const ipColorClass = esTotal ? '' : getIpClass(acu.indiceProduccion);
+  const varColorClass = esTotal ? '' : getVarClass(acu.variacion);
+
   return `
   <tr class="${rowClass}">
     <td class="${mensualClass} rpt-pad-right-15" data-label="Obj. Mensual">${wrapTotal(formatCurrency(mens.importeObjetivo, 0))}</td>
@@ -269,17 +271,17 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
 
     <td class="${acumuladoClass} rpt-pad-right-15" data-label="Obj. Acum.">${wrapTotal(formatCurrency(acu.importeObjetivo, 0))}</td>
     <td class="${acumuladoClass} rpt-pad-right-15" data-label="Real Acum.">${wrapTotal(formatCurrency(acu.importeContratado, 0))}</td>
-    <td class="${acumuladoClass} rpt-align-center ${getIpClass(acu.indiceProduccion)}"
+    <td class="${acumuladoClass} rpt-align-end rpt-pad-right-15 ${ipColorClass}"
       data-label="IP Acum."
       role="img"
       aria-label="Índice de producción: ${acu.indiceProduccion ?? 0}">
-      ${wrapTotal(formatCurrency(acu.indiceProduccion, 2), 'rpt-align-center')}
+      ${wrapTotal(formatCurrency(acu.indiceProduccion, 2))}
     </td>
-    <td class="${acumuladoClass} rpt-align-center ${getVarClass(acu.variacion)}"
+    <td class="${acumuladoClass} rpt-align-end rpt-pad-right-15 ${varColorClass}"
       data-label="Var. %"
       role="img"
       aria-label="Variación porcentual: ${acu.variacion || '0%'}">
-      ${wrapTotal(acu.variacion || '0%', 'rpt-align-center')}
+      ${wrapTotal(acu.variacion || '0%')}
     </td>
   </tr>
   `;
@@ -336,7 +338,7 @@ function _renderCarteraDiferida() {
           <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelCartPrev}</th>
           <th class="rpt-align-end rpt-pad-right-15 rpt-cd-th-border rpt-text-corporate">${labelCartAct}</th>
           <th rpt-border-none></th>
-          <th class="rpt-align-center rpt-text-white rpt-cd-header-align">
+          <th class="rpt-align-start rpt-text-white rpt-cd-header-align">
             <div class="rpt-cd-header-badge">Cartera Diferida</div>
           </th>
           <th rpt-border-none></th>

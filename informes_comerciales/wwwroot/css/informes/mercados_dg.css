@@ -46,6 +46,13 @@ Basado en colgroup y table-layout: fixed.
   table-layout: fixed;
 }
 
+/* Unificar padding-right de celdas de datos y totales para alineación vertical perfecta en web */
+.rpt-mercado-layout .rpt-number-cell,
+.rpt-mercado-layout .rpt-pad-right-15,
+.rpt-mercado-layout .rpt-td-total {
+  padding-right: 15px !important;
+}
+
 /* Proporciones de las columnas (suman 100% - 9 columnas con separadores) */
 .rpt-mercado-col-obj-m { width: 10%; }
 .rpt-mercado-col-contr-m { width: 10%; }
@@ -89,11 +96,11 @@ Clases para reemplazar estilos inline del JS
 
 /* Separación entre cabecera y primera fila de datos (Web)
    Especificidad elevada para ganar a .rpt-detail-row td de informes_base.css */
-.rpt-mercado-layout tbody tr:first-child td,
+/*.rpt-mercado-layout tbody tr:first-child td,*/
 .rpt-mercado-layout tbody tr.rpt-detail-row:first-child td,
 .rpt-mercado-layout tbody tr.rpt-mercado-detail-row:first-child td,
 .rpt-mercado-layout tbody tr.rpt-cd-detail-row:first-child td {
-  padding-top: 10px !important;
+  padding-top: 4px !important;
 }
 
 /* Alineación vertical para celdas de encabezado con badge */
@@ -114,10 +121,10 @@ table.rpt-table.rpt-table-stackable.rpt-mercado-layout thead tr th.rpt-cd-header
   background-color: #00468B !important;
   color: white !important;
   font-size: 8pt !important;
-  padding: 1px 0;
+  padding: 1px 0 1px 1rem;
   margin: 0;
   border-radius: 0;
-  text-align: center;
+  text-align: left !important;
   display: block;
   width: 100%;
 }
@@ -162,6 +169,9 @@ están definidas en informes_base.css y mercados.css
 .rpt-mb-5 { margin-bottom: 24pt !important; }
 .rpt-mt-4 { margin-top: 12pt !important; }
 .rpt-px-3 { padding-left: 12pt !important; padding-right: 12pt !important; }
+.rpt-first-banner { margin-top: 24pt !important; }
+.rpt-banner-dg { font-weight: bold !important; }
+.rpt-spacer-row-totales { display: none !important; }
 
 /* Margen superior del primer bloque: heredado de report-body (rpt-cmai-mt-standard) */
 .rpt-mt-6 { margin-top: 0 !important; }
@@ -196,10 +206,10 @@ Aquí solo definimos overrides específicos si fueran necesarios.
   background-color: #00468B !important;
   color: white !important;
   font-size: 8pt !important;
-  padding: 2px 0;
+  padding: 2px 0 2px 1rem;
   margin: 0;
   border-radius: 0;
-  text-align: center;
+  text-align: left !important;
   display: block;
   width: 100%;
 }
@@ -264,7 +274,7 @@ Aquí solo definimos overrides específicos si fueran necesarios.
 
 .rpt-cd-total-cell {
   padding-top: 0 !important;
-  padding-right: 5px !important;
+  padding-right: 15px !important;
   padding-left: 5px !important;
   color: #00468B !important;
 }
@@ -279,7 +289,7 @@ Aquí solo definimos overrides específicos si fueran necesarios.
 /* Alineación específica para celdas de totales - eliminar padding-right extra */
 .rpt-cd-total-cell.rpt-align-end {
   text-align: right !important;
-  padding-right: 5px !important;
+  padding-right: 15px !important;
 }
 
 /* El div interno debe ocupar el ancho completo sin margen */
@@ -327,9 +337,15 @@ Las reglas generales de impresión están en informes_base.css
   .rpt-col-10px { width: 5px !important; }
 
   /* Proporciones de columnas para Cartera Diferida (10 columnas) en A4 */
-  .rpt-cd-col-data { width: 10% !important; }
-  .rpt-cd-col-concept { width: 28% !important; }
+  .rpt-cd-col-data { width: 11% !important; }
+  .rpt-cd-col-concept { width: 30% !important; }
   .rpt-cd-col-sep { width: 5px !important; }
+
+  /* Columnas derecha (6,7,8,9) en A4: igualar anchos a subinformes superiores (13+13+10+8 = 44%) */
+  .rpt-cd-separator colgroup col:nth-child(6) { width: 13% !important; }
+  .rpt-cd-separator colgroup col:nth-child(7) { width: 13% !important; }
+  .rpt-cd-separator colgroup col:nth-child(8) { width: 10% !important; }
+  .rpt-cd-separator colgroup col:nth-child(9) { width: 8% !important; }
 
   /* Reducir márgenes verticales entre bloques */
   .rpt-mercado-layout {
@@ -376,11 +392,11 @@ Las reglas generales de impresión están en informes_base.css
 
   /* Separación entre cabecera y primera fila de datos (PDF)
      Especificidad elevada para ganar a .rpt-detail-row td de informes_base.css */
-  .rpt-mercado-layout tbody tr:first-child td,
+  /*.rpt-mercado-layout tbody tr:first-child td,*/
   .rpt-mercado-layout tbody tr.rpt-detail-row:first-child td,
   .rpt-mercado-layout tbody tr.rpt-mercado-detail-row:first-child td,
   .rpt-mercado-layout tbody tr.rpt-cd-detail-row:first-child td {
-    padding-top: 10px !important;
+    padding-top: 4px !important;
   }
 
   /* Bordes Hairline 0.3pt estilo Access */
@@ -408,17 +424,18 @@ Las reglas generales de impresión están en informes_base.css
 
   .rpt-cd-total-cell {
     padding-top: 0 !important;
+    padding-right: 5px !important;
   }
 
   [rpt-border-none] {
     border: none !important;
   }
 
-  /* Seguridad: eliminar border-radius en print + padding compacto 1px */
+  /* Seguridad: eliminar border-radius en print + padding compacto 1px con relleno izquierdo */
   .rpt-mercado-header-badge,
   .rpt-cd-header-badge {
     border-radius: 0 !important;
-    padding: 1px 0 !important;
+    padding: 1px 0 1px 1rem !important;
   }
 
   /* Banner compacto - 14pt */
@@ -428,9 +445,10 @@ Las reglas generales de impresión están en informes_base.css
     font-weight: normal !important;
   }
 
-  /* Banner de DG: override a 12pt para jerarquía visual (más pequeño que banner principal) */
+  /* Banner de DG: override a 11pt para jerarquía visual (más pequeño que banner principal) y en negrita */
   .rpt-banner-dg {
-    font-size: 12pt !important;
+    font-size: 11pt !important;
+    font-weight: bold !important;
   }
 
   /* Padding numérico reducido unificado (incluye totales para alinear Ip/Var) */
@@ -472,3 +490,5 @@ Las reglas generales de impresión están en informes_base.css
     page-break-inside: avoid;
   }
 }
+
+
