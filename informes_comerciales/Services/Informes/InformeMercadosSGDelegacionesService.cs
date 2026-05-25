@@ -15,9 +15,9 @@ public class InformeMercadosSGDelegacionesService
         _repository = repository;
     }
 
-    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, string codSubDirGeneral = "221", int? nroPagina = null)
+    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina = null)
     {
-        var datosPlanos = await _repository.ObtenerMercadosSGDelegacionesAsync(anio, mes, codSubDirGeneral, CodSdgOrdenDel);
+        var datosPlanos = await _repository.ObtenerMercadosSGDelegacionesAsync(anio, mes, CodSdgOrdenDel);
 
         var response = new MercadosSGDelegacionesResponseDto
         {
@@ -38,15 +38,18 @@ public class InformeMercadosSGDelegacionesService
         var datosOrdenados = datosPlanos
             .OrderBy(x => x.OrdenSubDirGeneral)
             .ThenBy(x => x.Orden_CodDDirNegocio.GetValueOrDefault(999))
+            .ThenBy(x => x.Area)
+            .ThenBy(x => x.OrdenNombreDelegacion)
             .ThenByDescending(x => x.Objetivos)
             .ThenBy(x => x.NombreDelegacion)
             .ToList();
 
         var sdgs = datosOrdenados
-            .GroupBy(x => new { x.NombreSubDirGeneral, x.OrdenSubDirGeneral })
+            .GroupBy(x => new { x.NombreSubDirGeneral, x.CodSubDirGeneral, x.OrdenSubDirGeneral })
             .Select(g => new
             {
                 g.Key.NombreSubDirGeneral,
+                g.Key.CodSubDirGeneral,
                 g.Key.OrdenSubDirGeneral,
                 DireccionesNegocio = g
                     .GroupBy(x => new { x.NomDirNegocio, x.Orden_CodDDirNegocio })
@@ -68,6 +71,7 @@ public class InformeMercadosSGDelegacionesService
             var sdgDto = new SubDirGeneralDto
             {
                 NombreSubDirGeneral = sdg.NombreSubDirGeneral,
+                CodSubDirGeneral = sdg.CodSubDirGeneral,
                 OrdenSubDirGeneral = sdg.OrdenSubDirGeneral
             };
 

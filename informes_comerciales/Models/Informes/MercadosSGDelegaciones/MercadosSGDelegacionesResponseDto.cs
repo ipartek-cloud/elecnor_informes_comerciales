@@ -12,6 +12,7 @@ public class MercadosSGDelegacionesResponseDto
 public class SubDirGeneralDto
 {
     public string NombreSubDirGeneral { get; set; } = string.Empty;
+    public string CodSubDirGeneral { get; set; } = string.Empty;
     public int OrdenSubDirGeneral { get; set; }
     public List<DirNegocioDto> DireccionesNegocio { get; set; } = new();
     public TotalesSDGDto Totales { get; set; } = new();

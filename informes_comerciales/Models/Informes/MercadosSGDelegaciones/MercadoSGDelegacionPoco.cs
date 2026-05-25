@@ -10,6 +10,7 @@ public class MercadoSGDelegacionPoco
     public string NomDirNegocio { get; set; } = string.Empty;
     public string Area { get; set; } = string.Empty;
     public string CodDelegacion { get; set; } = string.Empty;
+    public string OrdenNombreDelegacion { get; set; } = string.Empty;
     public string NombreDelegacion { get; set; } = string.Empty;
     public decimal ImporteContratado { get; set; }
     public decimal ImporteContratadoNacional { get; set; }

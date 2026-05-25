@@ -3,10 +3,9 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyle
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar({ anio, mes, nroPagina, mercado, codSubDir, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo }) {
     try {
-        const subDir = codSubDir || '221';
-        let url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}&codSubDirGeneral=${encodeURIComponent(subDir)}`;
+        let url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`;
 
@@ -158,7 +157,7 @@ function _renderDN(dn, sdg, isFirstDN) {
                 <td class="rpt-dg-col-obj-m rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.objetivosMensual, 0)}</td>
                 <td class="rpt-dg-col-contr-m rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.contratacionMensual, 0)}</td>
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
-                <td class="rpt-dg-col-centro">&nbsp;</td>
+                <td class="rpt-dg-col-centro rpt-dg-total-border-top">&nbsp;</td>
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.objetivosAcumulado, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell rpt-td-total">${formatCurrency(dn.totales.contratacionAcumulado / 1000, 0)}</td>

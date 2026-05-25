@@ -14,7 +14,6 @@
     text-align: left;
     padding: 0;
     margin-top: 12pt;
-    margin-bottom: 15pt;
     margin-left: calc(17.5% + 4px + 4pt); /* Sumamos el padding de la columna Centro */
     line-height: 1.2;
 }
@@ -72,7 +71,7 @@
 .rpt-dg-th-columns th.rpt-dg-header-center-name,
 .rpt-dg-header-center-name {
     text-align: left;
-    padding: 2pt 1pt 2pt 10pt !important;
+    padding: 1pt 1pt 1pt 2pt !important;
     vertical-align: bottom;
     background-color: #00468B;
     color: white !important;
@@ -142,8 +141,8 @@
 
 /* Bloque de Dirección de Negocio - Calibrado Final */
 .rpt-bloque-dn {
-    margin-top: 18pt !important;
-    margin-bottom: 12pt !important;
+    margin-top: 9pt !important;
+    margin-bottom: 6pt !important;
     page-break-inside: avoid;
 }
 
@@ -163,6 +162,12 @@
     text-align: right !important;
 }
 
+/* Línea superior para celda del Centro en la fila de totales */
+.rpt-dg-total-border-top {
+    border-top: 0.3pt solid #00468B !important;
+}
+
+
 /* Estilos para impresión/PDF */
 @media print {
     /* Reset de márgenes del papel para Outer Table */
@@ -177,7 +182,7 @@
     }
 
     .rpt-print-td-header {
-        padding: 16mm 16mm 1.2rem 16mm !important; /* Separación reducida para ganar espacio en PDF */
+        padding: 16mm 16mm 8pt 16mm !important; /* Separación óptima garantizada para evitar que se pegue la tabla en la pág 2 */
         border: none;
     }
 
@@ -201,8 +206,14 @@
         border-bottom: 0.3pt solid #00468B !important;
     }
 
-    .rpt-dg-total-row td.rpt-td-total {
+    .rpt-dg-total-row td.rpt-td-total,
+    .rpt-dg-total-row td.rpt-dg-total-border-top {
         border-top: 0.3pt solid #00468B !important;
+    }
+
+    /* Anular el margen inferior del subtítulo en impresión para este informe */
+    .rpt-paper[data-informe="mercados_sg_delegaciones"] .rpt-subtitle {
+        margin-bottom: 0 !important;
     }
 
     /* Detalle unificado heredado de los estilos generales */
