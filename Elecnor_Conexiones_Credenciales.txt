@@ -27,5 +27,150 @@
 	+ GIT
 		- ipartek-cloud/elecnor_informes_comerciales
 		
+	-- --------------------------------------------------------------------------------------------------------------------------
+	-- ------------------------------------------------- SUMARIGRAMA ------------------------------------------------------------
+	-- --------------------------------------------------------------------------------------------------------------------------
+	
+	218
+	├── CodSubDirGeneral (221)
+	│   ├── CodDDirNegocio (500)
+	│   │   ├── CodSubDirNegocioArea (307)
+	│   │   │   └── CodDelegacion (061, 131, 300, 335, 519)
+	│   │   ├── CodSubDirNegocioArea (560)
+	│   │   │   └── CodDelegacion (155, 345, 515, 517)
+	│   │   └── CodSubDirNegocioArea (578)
+	│   │       └── CodDelegacion (376, 400, 490, 505, 946)
+	│   ├── CodDDirNegocio (934)
+	│   │   ├── CodSubDirNegocioArea (135)
+	│   │   │   └── CodDelegacion (188, 316, 369, 383)
+	│   │   ├── CodSubDirNegocioArea (185)
+	│   │   │   └── CodDelegacion (033, 063, 220, 681)
+	│   │   ├── CodSubDirNegocioArea (600)
+	│   │   │   └── CodDelegacion (039, 048, 611, 631)
+	│   │   └── CodSubDirNegocioArea (S35)
+	│   │       └── CodDelegacion (142, 640, 953, S38)
+	│   ├── CodDDirNegocio (700)
+	│   │   ├── CodSubDirNegocioArea (700)
+	│   │   │   └── CodDelegacion (158, 535, 548)
+	│   │   └── CodSubDirNegocioArea (713)
+	│   │       └── CodDelegacion (152, 528, 559, 710, 719)
+	│   └── CodDDirNegocio (290)
+	│       ├── CodSubDirNegocioArea (290)
+	│       │   └── CodDelegacion (126, 654)
+	│       ├── CodSubDirNegocioArea (620)
+	│       │   └── CodDelegacion (294, 295, 297)
+	│       └── CodSubDirNegocioArea (628)
+	│           └── CodDelegacion (292)
+	└── CodSubDirGeneral (286)
+		├── CodDDirNegocio (090)
+		│   └── CodSubDirNegocioArea (090)
+		│       └── CodDelegacion (014, 015, 017, 019, 080, 444)
+		├── CodDDirNegocio (780)
+		│   ├── CodSubDirNegocioArea (026)
+		│   │   └── CodDelegacion (036, 623, 671, 739)
+		│   └── CodSubDirNegocioArea (780)
+		│       └── CodDelegacion (775)
+		└── CodDDirNegocio (800)
+			├── CodSubDirNegocioArea (800)
+			│   └── CodDelegacion (764, 800)
+			├── CodSubDirNegocioArea (801)
+			│   └── CodDelegacion (650, 801, 814)
+			└── CodSubDirNegocioArea (820)
+				└── CodDelegacion (200, 802, 803, 812)
+	
+	218 - Elecnor
+    ├── DG. Elecnor Servicios (221)
+    │   ├── Centro (500)
+    │   │   ├── Area 3 (307)
+    │   │   │   ├── 061 - Adhorna
+    │   │   │   ├── 131 - Hidroambiente
+    │   │   │   ├── 300 - Castilla y León
+    │   │   │   ├── 335 - Asturias/Cantabria
+    │   │   │   ├── 519 - Distribución Madrid
+    │   │   ├── Area 2 (560)
+    │   │   │   ├── 155 - Instalaciones Centro
+    │   │   │   ├── 345 - Galicia
+    │   │   │   ├── 515 - Mantenimiento Centro I
+    │   │   │   ├── 517 - Mantenimiento Centro II
+    │   │   ├── Area 1 (578)
+    │   │       ├── 376 - Ingenieria Telecomunicaciones
+    │   │       ├── 400 - Norte
+    │   │       ├── 490 - Telecomunic. Norte
+    │   │       ├── 505 - Telecomunic. Centro
+    │   │       ├── 946 - Renovables
+    │   ├── Este (934)
+    │   │   ├── SD Italia (135)
+    │   │   │   ├── 188 - Distrib. Emilia
+    │   │   │   ├── 316 - Telecomunic. Italia
+    │   │   │   ├── 369 - Distrib. Piamonte
+    │   │   │   ├── 383 - Distrib. Sardegna
+    │   │   ├── SD Instalac, Construcción y Sistemas (185)
+    │   │   │   ├── 033 - Instalaciones&Constr. Nordeste
+    │   │   │   ├── 063 - Aragón
+    │   │   │   ├── 220 - Sistemas
+    │   │   │   ├── 681 - Instalaciones Sudeste
+    │   │   ├── SD Infraestructuras y Redes (600)
+    │   │   │   ├── 039 - Telecomunic. Nordeste
+    │   │   │   ├── 048 - Distribución Nordeste
+    │   │   │   ├── 611 - Telecomunic. Sudeste
+    │   │   │   ├── 631 - Distribución Sudeste
+    │   │   ├── SD Mantenimiento (S35)
+    │   │       ├── 142 - Mantenimiento Nordeste Norte
+    │   │       ├── 640 - Mantenimiento Sudeste Norte
+    │   │       ├── 953 - Mantenimiento Sudeste Sur
+    │   │       ├── S38 - Mantenimiento Nordeste Sur
+    │   ├── Sur (700)
+    │   │   ├── Resto Deleg. (700)
+    │   │   │   ├── 158 - IQA
+    │   │   │   ├── 535 - Audeca
+    │   │   │   ├── 548 - Canarias
+    │   │   ├── Area 1 (713)
+    │   │       ├── 152 - Instalaciones Andalucía
+    │   │       ├── 528 - Andalucía Occid.-Extremadura
+    │   │       ├── 559 - Distr. Andalucía Orien.
+    │   │       ├── 710 - Subestaciones Sur
+    │   │       ├── 719 - Mantenimiento Sur
+    │   ├── Norteamérica (290)
+    │       ├── Resto Norteamérica (290)
+    │       │   ├── 126 - Belco
+    │       │   ├── 654 - Elecnor Energy Services
+    │       ├── Bussines Center I (620)
+    │       │   ├── 294 - NY Gas
+    │       │   ├── 295 - HV UGT
+    │       │   ├── 297 - NY Electr. Distribution
+    │       ├── Resto Hawkeye (628)
+    │           ├── 292 - Northeast T&D
+    │
+    └── DG. Elecnor Proyectos (286)
+        ├── Grandes Redes (090)
+        │   └── Deleg. GGRR (090)
+        │       ├── 014 - Área 1
+        │       ├── 015 - Área 2
+        │       ├── 017 - Área 3
+        │       ├── 019 - Europa
+        │       ├── 080 - Varios GGRR
+        │       ├── 444 - Australia
+        ├── Renovables, Gas y Agua (780)
+        │   ├── Area Renovables (026)
+        │   │   ├── 036 - Renovables Centro/Norteamerica
+        │   │   ├── 623 - Renovables Europa
+        │   │   ├── 671 - Renovables Sudamerica
+        │   │   ├── 739 - Renovables Oceania
+        │   └── Delegaciones (780)
+        │       └── 775 - Oil, Gas y Agua
+        └── Energía (800)
+            ├── Resto (800)
+            │   ├── 764 - Deleg. Australia y Europa
+            │   ├── 800 - Resto
+            ├── SubDirección 2 (Latam) (801)
+            │   ├── 650 - Deleg. Cono Sur
+            │   ├── 801 - Resto Area - Brasil
+            │   ├── 814 - Deleg. México C.A. y Andina
+            └── SubDirección I (820)
+                ├── 200 - Deleg. FF.CC.
+                ├── 802 - Deleg SS.EE. Nacional
+                ├── 803 - Proyectos Especiales
+                ├── 812 - Deleg Africa
+		
 		
 	
