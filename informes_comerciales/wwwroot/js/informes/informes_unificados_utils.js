@@ -278,7 +278,7 @@ export async function imprimirInformeUnificado(opciones) {
                         padding-bottom: 0 !important;
                     }
                     .rpt-paper--${nombreInforme} .report-body {
-                        margin-top: 10px !important;
+                        padding-top: 20px !important;
                     }
                 }
             </style>
@@ -323,7 +323,7 @@ export async function imprimirInformeUnificado(opciones) {
                     padding-bottom: 0 !important;
                 }
                 .rpt-paper--${nombreInforme} .report-body {
-                    margin-top: 10px !important;
+                    padding-top: 20px !important;
                 }
             }
         </style>

@@ -671,6 +671,8 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
 
 /* --- WIDTH --- */
 .rpt-w-50                      { width: 50% !important; }
+.rpt-w-80                      { width: 80% !important; }
+.rpt-w-85                      { width: 85% !important; }
 .rpt-w-100                     { width: 100% !important; }
 
 /* --- PRINT --- */

@@ -2,7 +2,7 @@
  * Módulo para el informe de Países (Nacional + Internacional) - Todos los países relevantes.
  * Basado en el diseño simétrico de dos columnas comparativas.
  * Usa spContratacion_NacIntTODO con parámetro '' para obtener Nacional + Internacional.
- * Título: "Países Relevantes" (sin "Mercado Internacional").
+ * Título: "Mercado por Países" (sin "Mercado Internacional").
  * Umbral fijo: 100000 (relevantes).
  */
 import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
@@ -50,7 +50,7 @@ function _renderizarPagina() {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="paises_all" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body">
+            <div class="report-body rpt-cmai-mt-standard">
                 ${_renderTablaPaises()}
                 ${_renderFooterInfo()}
             </div>
@@ -65,7 +65,7 @@ function _getHtmlEncabezado() {
     return getHtmlEncabezadoBase({
         tituloCorporativo: `<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span><span class="rpt-cmai-subtitulo rpt-cmai-titulo-container rpt-cmai-margin-left">Informe de Contratación</span>`,
         textoBanner1: 'Elecnor',
-        textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Países Relevantes',
+        textoBanner2: estado.informeGlobalData?.meta?.titulo || 'Mercado por Países',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
         nroPagina: estado.nroPagina || 3,
@@ -101,7 +101,7 @@ function _renderTablaPaises() {
     const anioAnterior = anioActual - 1;
 
     let html = `
-        <table class="rpt-table rpt-paises-table rpt-w-100">
+        <table class="rpt-table rpt-paises-table rpt-w-85">
             <colgroup>
                 <col class="rpt-paises-col-porc">
                 <col class="rpt-paises-col-contr">
@@ -140,13 +140,8 @@ function _renderTablaPaises() {
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
                 <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
 
-                <td class="rpt-paises-pais-cell">
-                    <div class="rpt-paises-pais-wrapper">
-                        <span class="rpt-paises-asterisk-container">
-                            ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}
-                        </span>
-                        <span>${p.pais}</span>
-                    </div>
+                <td class="rpt-paises-pais-cell ${p.esNuevo ? 'rpt-hanging-indent' : ''}">
+                    ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}${p.pais}
                 </td>
 
                 <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>

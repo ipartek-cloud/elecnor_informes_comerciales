@@ -19,38 +19,43 @@ Reutiliza los estilos de paises.css con selectors para data-informe="paises_all"
     font-size: 8pt;
   }
   .rpt-paises-col-porc { width: 16%; }
-  .rpt-paises-col-contr { width: 13%; }
+  .rpt-paises-col-contr { width: 12%; }
   .rpt-paises-col-pos { width: 7%; }
   .rpt-paises-col-pais { width: 30%; }
 }
 
 /* Layout de Columnas (Simetría) */
 .rpt-paises-col-porc { width: 16%; }
-.rpt-paises-col-contr { width: 13%; }
+.rpt-paises-col-contr { width: 12%; }
 .rpt-paises-col-pos { width: 7%; }
-.rpt-paises-col-pais { width: 28%; }
+.rpt-paises-col-pais { width: 30%; }
+
+.rpt-paises-table {
+  margin: 0 auto !important;
+}
 
 /* Cabecera: Azul corporativo Elecnor */
 thead .rpt-paises-pais-cell {
-  background-color: #00468B;
-  color: white;
-  font-weight: bold;
-  text-align: center;
+    background-color: #00468B;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 1.5em !important;
 }
 
 tbody .rpt-paises-pais-cell {
   color: #444;
   font-weight: normal;
-  text-align: center;
+  text-align: left !important;
+  padding-left: 1.5em !important;
 }
 
 .rpt-paises-pos-cell { text-align: center; }
 .rpt-paises-num-cell { text-align: right; padding-right: 15px !important; }
 
 /* Espaciado de filas: heredado de informes_base.css */
-
 .report-body {
-  margin-top: 2.5rem !important;
+  padding-top: 20px !important;
 }
 
 .rpt-paises-header-year {
@@ -71,7 +76,7 @@ tbody .rpt-paises-pais-cell {
 
 .rpt-paises-th-border-pais {
   border-bottom: 0.3pt solid #00468B !important;
-  padding: 2px 0 2px 0 !important;
+  padding: 1px 0 1px 0 !important;
 }
 
 .rpt-paises-total-row {
@@ -113,25 +118,8 @@ tbody .rpt-paises-pais-cell {
   color: #D67F00;
   font-weight: bold;
   font-size: 8pt;
-  margin-right: 4px;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1;
-  position: relative;
-  top: 2px;
-}
-
-.rpt-paises-asterisk-container {
-  width: 25px;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-.rpt-paises-pais-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
+  margin-right: 2px;
+  display: inline;
 }
 
 .rpt-align-center { text-align: center !important; }
@@ -139,50 +127,61 @@ tbody .rpt-paises-pais-cell {
 .rpt-pad-right-15 { padding-right: 15px !important; }
 
 @media print {
-  .rpt-paper[data-informe="paises_all"],
-  .rpt-paper--print {
-    max-width: 100% !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  .rpt-paises-col-porc { width: 16% !important; }
-  .rpt-paises-col-contr { width: 13% !important; }
-  .rpt-paises-col-pos { width: 7% !important; }
-  .rpt-paises-col-pais { width: 28% !important; }
-
-  .rpt-table { font-size: 8pt !important; }
-
-  .rpt-th-blue,
-  .rpt-paises-total-line {
-    border-bottom-width: 0.3pt !important;
-    border-top-width: 0.3pt !important;
-  }
-
   .rpt-banner-top {
     height: 25px !important;
     font-size: 14pt !important;
     font-weight: normal !important;
     margin-top: 0.5rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .rpt-header-logo {
+    height: 10mm !important;
+  }
+
+  .rpt-header {
+    margin-bottom: 0.5rem !important;
+    align-items: flex-end !important;
+  }
+
+  .rpt-header-corporate-text {
+    font-size: 14pt !important;
+    font-weight: normal !important;
+  }
+
+  .rpt-subtitle {
+    font-size: 8pt !important;
     margin-bottom: 0.5rem !important;
   }
 
-  .rpt-header-logo { height: 10mm !important; }
-  .rpt-header { margin-bottom: 0.5rem !important; align-items: flex-end !important; }
-  .rpt-header-corporate-text { font-size: 14pt !important; font-weight: normal !important; }
-  .rpt-subtitle { font-size: 8pt !important; margin-bottom: 0.5rem !important; }
-  .report-body { margin-top: 2.5rem !important; }
-  .rpt-paises-num-cell { padding-right: 5px !important; text-align: right !important; }
-  .rpt-detail-row { page-break-inside: avoid; }
-  .rpt-header, .rpt-banner-top, .rpt-subtitle { page-break-after: avoid; }
+  /* Paridad Web/PDF: reafirmar anchos de columnas en impresión */
+  .rpt-paises-col-porc { width: 16% !important; }
+  .rpt-paises-col-contr { width: 12% !important; }
+  .rpt-paises-col-pos { width: 7% !important; }
+  .rpt-paises-col-pais { width: 30% !important; }
 
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+  .rpt-paises-num-cell {
+    padding-right: 5px !important;
+    text-align: right !important;
   }
 
-  .rpt-paises-footer-block { margin-top: 1rem !important; font-size: 8pt !important; }
-  .rpt-paises-total-line { margin: 0 5px !important; }
-  .rpt-paises-new-flag { font-size: 8pt !important; }
+  .rpt-paises-footer-block {
+    margin-top: 1rem !important;
+    font-size: 8pt !important;
+  }
+
+  .rpt-detail-row {
+    page-break-inside: avoid;
+  }
+
+  .report-body {
+    padding-top: 20px !important;
+  }
+
+  .rpt-header,
+  .rpt-banner-top,
+  .rpt-subtitle {
+    page-break-after: avoid;
+  }
 }
+

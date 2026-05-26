@@ -64,7 +64,7 @@ public class InformePaisesService
         {
             Meta = new MetaInformeDto
             {
-                Titulo = "Países Relevantes",
+                Titulo = "Mercado por Países",
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = 100000 },
                 FechaGeneracion = DateTime.Now,

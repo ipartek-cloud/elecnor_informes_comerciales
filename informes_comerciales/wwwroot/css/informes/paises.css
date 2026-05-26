@@ -34,19 +34,25 @@ ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES
 .rpt-paises-col-pos { width: 7%; }     /* Reducido ligeramente */
 .rpt-paises-col-pais { width: 28%; }
 
+.rpt-paises-table {
+  margin: 0 auto !important;
+}
+
 /* Cabecera: Azul corporativo Elecnor */
 thead .rpt-paises-pais-cell {
   background-color: #00468B;
   color: white;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
+  padding-left: 1.5em;
 }
 
 /* Detalle: Blanco con texto normal */
 tbody .rpt-paises-pais-cell {
   color: #444;
   font-weight: normal;
-  text-align: center;
+  text-align: left;
+  padding-left: 1.5em;
 }
 
 .rpt-paises-pos-cell {
@@ -62,7 +68,7 @@ tbody .rpt-paises-pais-cell {
 
 /* Separación entre cabecera del informe y datos de la tabla */
 .report-body {
-  margin-top: 2.5rem !important; /* Estándar CMAI - separación cabecera/datos */
+  padding-top: 20px !important;
 }
 
 /* Banner de títulos sobre columnas */
@@ -84,7 +90,7 @@ tbody .rpt-paises-pais-cell {
 
 .rpt-paises-th-border-pais {
   border-bottom: 0.3pt solid #00468B !important;
-  padding: 2px 0 2px 0 !important;
+  padding: 1px 0 1px 0 !important;
 }
 
 /* Líneas de totales segmentadas */
@@ -192,7 +198,7 @@ tbody .rpt-paises-pais-cell {
     font-size: 14pt !important;
     font-weight: normal !important;
     margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 2px !important;
   }
 
   .rpt-header-logo {
@@ -216,7 +222,7 @@ tbody .rpt-paises-pais-cell {
 
   /* Separación cabecera/datos en PDF */
   .report-body {
-    margin-top: 2.5rem !important;
+    padding-top: 20px !important;
   }
 
   .rpt-paises-num-cell {
@@ -252,3 +258,4 @@ tbody .rpt-paises-pais-cell {
     font-size: 8pt !important;
   }
 }
+

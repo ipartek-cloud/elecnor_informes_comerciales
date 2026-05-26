@@ -102,7 +102,7 @@ function _renderTablaPaises() {
     const anioAnterior = anioActual - 1;
 
     let html = `
-        <table class="rpt-table rpt-paises-table rpt-w-100">
+        <table class="rpt-table rpt-paises-table rpt-w-85">
             <colgroup>
                 <col class="rpt-paises-col-porc">
                 <col class="rpt-paises-col-contr">
