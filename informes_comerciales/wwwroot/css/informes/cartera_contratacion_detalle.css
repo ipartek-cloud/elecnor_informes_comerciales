@@ -8,19 +8,42 @@
     border-collapse: collapse;
 }
 
-.rpt-ccd-col-proyecto { width: 43%; }
-.rpt-ccd-col-cliente  { width: 35%; }
+.rpt-ccd-col-proyecto { width: 44%; }
+.rpt-ccd-col-cliente  { width: 36%; }
 .rpt-ccd-col-cartera  { width: 10%; }
 .rpt-ccd-col-total    { width: 10%; }
 
+.rpt-fs-11pt { font-size: 11pt !important; }
+
+/* Truncar texto de Proyecto y Cliente a una sola línea */
+.rpt-ccd-table td.rpt-ccd-col-proyecto,
+.rpt-ccd-table td.rpt-ccd-col-cliente {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Alineación y padding unificado para Cartera y TOTAL (detalle + totales) */
+.rpt-ccd-table td.rpt-ccd-col-cartera,
+.rpt-ccd-table td.rpt-ccd-col-total {
+    text-align: right !important;
+    padding-right: 5px !important;
+}
+
 .rpt-ccd-subtitulo-bar {
-    margin-top: 0.5rem;
-    margin-bottom: 0.3rem;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
 }
 
 .rpt-ccd-subtitulo-bar .rpt-subtitle-indicator {
     color: #00468B;
     font-weight: bold;
+}
+
+/* Reducir espacio entre subtítulo y barra de umbral (Web) */
+.rpt-paper[data-informe="cartera_contratacion_detalle"] .rpt-subtitle {
+    margin-bottom: 0 !important;
 }
 
 .rpt-ccd-table thead th {
@@ -101,10 +124,33 @@
 
 
 
+    /* Paridad Web/PDF: reafirmar anchos de columnas en impresión */
+    .rpt-ccd-col-proyecto { width: 44% !important; }
+    .rpt-ccd-col-cliente  { width: 36% !important; }
+    .rpt-ccd-col-cartera  { width: 10% !important; }
+    .rpt-ccd-col-total    { width: 10% !important; }
+
+    /* Reafirmar truncación en impresión */
+    .rpt-ccd-table td.rpt-ccd-col-proyecto,
+    .rpt-ccd-table td.rpt-ccd-col-cliente {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    /* Reafirmar alineación/padding Cartera y TOTAL en impresión */
+    .rpt-ccd-table td.rpt-ccd-col-cartera,
+    .rpt-ccd-table td.rpt-ccd-col-total {
+        text-align: right !important;
+        padding-right: 5px !important;
+    }
+
+    /* Cancelar margin-top: 20pt de informes_base.css para mantener paridad con web */
     .rpt-banner-top {
         height: 25px !important;
         font-size: 14pt !important;
         line-height: 25px !important;
+        margin-top: 0 !important;
     }
 }
 
@@ -156,8 +202,22 @@
     height: 8mm;
 }
 
-/* Compactación de márgenes internos del encabezado dentro de la celda maestra */
+/* Reafirmar flex layout del encabezado dentro de la celda maestra */
 .rpt-print-thead-cell .rpt-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Paridad Web/PDF: márgenes explícitos del banner y subtítulo dentro de la tabla maestra */
+.rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle {
+    margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
 
@@ -173,6 +233,10 @@
 
     .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
         font-size: 14pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-11pt {
+        font-size: 11pt !important;
     }
 
     .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
@@ -195,11 +259,20 @@
     /* Hairline para literales de columna en thead maestro */
     .rpt-table-print-master thead tr.rpt-table-header-columns th {
         border-bottom: 0.3pt solid #00468B !important;
+        padding-top: 1px !important;
     }
 
-    /* Eliminar márgenes del indicador de umbral en impresión */
+    /* Paridad Web/PDF: eliminar padding/margin de la barra de umbral */
     .rpt-ccd-subtitulo-bar {
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
     }
+
+    /* Proteger bold del indicador de umbral dentro de la tabla maestra PDF */
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle-indicator {
+        color: #00468B !important;
+        font-weight: bold !important;
+    }
+
 }

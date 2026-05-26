@@ -112,7 +112,7 @@ function _getHtmlEncabezado() {
     // Barra de filtro: solo el indicador de umbral (Cierre y Miles ya están en el banner)
     const subtituloBarra = `
         <div class="rpt-ccd-subtitulo-bar">
-            <span class="rpt-subtitle-indicator rpt-fs-10pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
+            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
         </div>
     `;
 
@@ -141,8 +141,8 @@ function _renderGrupo(grupo, mostrarHeader) {
             <tr class="${RPT_CLASSES.TH_BLUE}">
                 <th class="rpt-align-center rpt-fs-9pt rpt-font-bold">Proyecto</th>
                 <th class="rpt-align-center rpt-fs-9pt rpt-font-bold">Cliente</th>
-                <th class="rpt-align-center rpt-fs-9pt rpt-font-bold">Cartera</th>
-                <th class="rpt-align-center rpt-fs-9pt rpt-font-bold">TOTAL</th>
+                <th class="rpt-align-end rpt-fs-9pt rpt-font-bold">Cartera</th>
+                <th class="rpt-align-end rpt-fs-9pt rpt-font-bold">TOTAL</th>
             </tr>
         </thead>
     ` : '';
@@ -151,8 +151,8 @@ function _renderGrupo(grupo, mostrarHeader) {
         <tbody>
             <tr class="rpt-ccd-subtotal-row rpt-font-bold">
                 <td colspan="2"></td>
-                <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalCarteraGrupo, 0)}</td>
-                <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalSumaGrupo, 0)}</td>
+                <td class="rpt-ccd-col-cartera ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalCarteraGrupo, 0)}</td>
+                <td class="rpt-ccd-col-total ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalSumaGrupo, 0)}</td>
             </tr>
         </tbody>
     `;
@@ -192,8 +192,8 @@ function _renderFilasGrupo(grupo) {
     const subtotalHtml = `
         <tr class="rpt-ccd-subtotal-row rpt-font-bold">
             <td colspan="2"></td>
-            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalCarteraGrupo, 0)}</td>
-            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalSumaGrupo, 0)}</td>
+            <td class="rpt-ccd-col-cartera ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalCarteraGrupo, 0)}</td>
+            <td class="rpt-ccd-col-total ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(grupo.totalSumaGrupo, 0)}</td>
         </tr>
     `;
 
@@ -218,8 +218,8 @@ function _renderPieInforme(data) {
             <tbody>
                 <tr class="rpt-ccd-grand-total-row rpt-font-bold">
                     <td colspan="2" class="rpt-align-center rpt-fs-9pt">Total Cartera Contratación (miles de euros)</td>
-                    <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.totalCarteraGeneral ?? 0, 0)}</td>
-                    <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt"></td>
+                    <td class="rpt-ccd-col-cartera ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.totalCarteraGeneral ?? 0, 0)}</td>
+                    <td class="rpt-ccd-col-total ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt"></td>
                 </tr>
             </tbody>
         </table>
@@ -236,8 +236,8 @@ function _renderFilasPieInforme(data) {
     return `
         <tr class="rpt-ccd-grand-total-row rpt-font-bold">
             <td colspan="2" class="rpt-align-center rpt-fs-9pt">Total Cartera Contratación (miles de euros)</td>
-            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.totalCarteraGeneral ?? 0, 0)}</td>
-            <td class="${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt"></td>
+            <td class="rpt-ccd-col-cartera ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency(totales.totalCarteraGeneral ?? 0, 0)}</td>
+            <td class="rpt-ccd-col-total ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt"></td>
         </tr>
     `;
 }
@@ -283,8 +283,8 @@ function _renderTablaMaestraPDF() {
                 <tr class="rpt-font-bold rpt-table-header-columns">
                     <th class="rpt-text-corporate rpt-align-center rpt-fs-9pt">Proyecto</th>
                     <th class="rpt-text-corporate rpt-align-center rpt-fs-9pt">Cliente</th>
-                    <th class="rpt-text-corporate rpt-align-center rpt-fs-9pt">Cartera</th>
-                    <th class="rpt-text-corporate rpt-align-center rpt-fs-9pt">TOTAL</th>
+                    <th class="rpt-text-corporate rpt-align-end rpt-fs-9pt">Cartera</th>
+                    <th class="rpt-text-corporate rpt-align-end rpt-fs-9pt">TOTAL</th>
                 </tr>
             </thead>
             <tfoot class="rpt-print-tfoot-master">
