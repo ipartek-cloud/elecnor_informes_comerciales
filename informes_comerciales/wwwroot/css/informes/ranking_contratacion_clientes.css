@@ -7,7 +7,7 @@ GUÍA: Estándar Print-Perfect
 1. CONTENEDOR Y LAYOUT PRINCIPAL
  ========================================================================== */
 
-.rpt-paper[data-informe="ranking_clientes"] {
+.rpt-paper[data-informe="ranking_contratacion_clientes"] {
     /* Los márgenes se controlan vía JS con getStyleVars() - no aplicar padding aquí */
     margin: 0 auto;
 }
@@ -53,7 +53,7 @@ GUÍA: Estándar Print-Perfect
     color: #00468B;
     font-weight: bold;
     font-size: 9pt;
-    margin: 0 0 8pt 0;
+    margin: 0 0 3pt 0;
     padding-left: 15pt;
     display: block;
     border: none;
@@ -80,12 +80,16 @@ GUÍA: Estándar Print-Perfect
  ========================================================================== */
 
 .rpt-ranking-table {
-    width: 95%;
+    width: 88.8%;
     margin: 0 auto !important;
     border-collapse: collapse;
     table-layout: fixed !important;
     font-size: 8pt !important;
     font-family: Verdana, Arial, sans-serif !important;
+}
+
+.rpt-ranking-table.rpt-ranking-table-international {
+    width: 78.1%;
 }
 
 /* Asegurar que toda la tabla use 8pt */
@@ -120,9 +124,34 @@ GUÍA: Estándar Print-Perfect
 .rpt-header-blue {
     background-color: #00468B;
     color: #ffffff !important;
-    padding: 3pt 8pt !important;
+    padding: 1pt 8pt !important;
     font-weight: bold;
     text-align: left;
+}
+
+.rpt-ranking-table thead th.rpt-header-blue {
+    padding-top: 1pt !important;
+    padding-bottom: 1pt !important;
+}
+
+.rpt-th-border-blue-cell {
+    border-bottom: 0.3pt solid #00468B !important;
+}
+
+.rpt-td-border-blue-cell {
+    border-top: 0.3pt solid #00468B !important;
+    padding-top: 8pt !important; /* Ajustado de 4pt a 8pt para compensar padding-top: 0 de la fila */
+}
+
+/* Contenedores para alinear alturas de líneas segmentadas */
+.rpt-ranking-table thead th.rpt-th-border-gray-container {
+    padding-bottom: 0 !important;
+    vertical-align: bottom !important;
+}
+
+.rpt-ranking-total-row td.rpt-td-border-blue-container {
+    padding-top: 0 !important;
+    vertical-align: top !important;
 }
 
 /* Bordes de cabecera segmentados */
@@ -134,6 +163,8 @@ GUÍA: Estándar Print-Perfect
 .rpt-th-border-gray {
     border-bottom: 0.3pt solid #888;
     display: block;
+    margin-bottom: 0 !important;
+    padding-bottom: 3pt !important; /* Compensa padding de th en web */
 }
 
 .rpt-w-90 {
@@ -148,6 +179,11 @@ GUÍA: Estándar Print-Perfect
   padding: 2pt 4pt !important;
   border-bottom: none;
   vertical-align: middle;
+}
+
+.rpt-ranking-table tbody tr.rpt-detail-row td {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
 }
 
 /* Espaciado de filas: heredado de informes_base.css */
@@ -175,47 +211,47 @@ GUÍA: Estándar Print-Perfect
 }
 
 .rpt-col-cliente {
-    width: 100pt !important;
-    min-width: 100pt !important;
-    max-width: 100pt !important;
+    width: 110pt !important;
+    min-width: 110pt !important;
+    max-width: 110pt !important;
     font-weight: normal;
     padding-left: 4pt !important;
 }
 
 .rpt-ranking-table col.rpt-col-cliente {
-    width: 100pt !important;
-    min-width: 100pt !important;
-    max-width: 100pt !important;
+    width: 110pt !important;
+    min-width: 110pt !important;
+    max-width: 110pt !important;
 }
 
 /* Estilo específico para la cabecera de cliente */
 .rpt-header-blue.rpt-col-cliente {
-    width: 100pt !important;
+    width: 110pt !important;
 }
 
 .rpt-col-num {
-    width: 34pt;
+    width: 24pt;
     text-align: right;
     font-weight: normal;
 }
 
 .rpt-ranking-table col.rpt-col-num {
-    width: 34pt !important;
+    width: 24pt !important;
 }
 
 .rpt-col-pct {
-    width: 44pt !important;
-    min-width: 44pt !important;
-    max-width: 44pt !important;
+    width: 30pt !important;
+    min-width: 30pt !important;
+    max-width: 30pt !important;
     text-align: right;
     font-weight: normal;
     white-space: nowrap !important;
 }
 
 .rpt-ranking-table col.rpt-col-pct {
-    width: 44pt !important;
-    min-width: 44pt !important;
-    max-width: 44pt !important;
+    width: 30pt !important;
+    min-width: 30pt !important;
+    max-width: 30pt !important;
 }
 
 /* Columna Año Anterior (Ant): Reducida a 24pt */
@@ -279,10 +315,12 @@ GUÍA: Estándar Print-Perfect
  ========================================================================== */
 
 .rpt-ranking-total-row td {
-    padding-top: 8pt !important;
+    padding-top: 0 !important; /* Anulado a nivel de fila para alinear los bordes superiores de div y celda */
     padding-bottom: 4pt !important;
     border-bottom: none !important;
 }
+
+
 
 .rpt-ranking-grand-total-row td {
     padding-top: 8pt !important;
@@ -300,7 +338,9 @@ GUÍA: Estándar Print-Perfect
 .rpt-td-border-blue {
     border-top: 0.3pt solid #00468B;
     display: block;
-    padding-top: 4pt;
+    padding-top: 8pt !important; /* Compensa el padding superior de 8pt en totales */
+    margin-right: 6px !important;
+    margin-top: -0.3pt !important; /* Eleva la línea para alinearla con el border-top del td de las columnas contiguas */
 }
 
 .rpt-td-border-gray {
@@ -448,9 +488,19 @@ GUÍA: Estándar Print-Perfect
         padding: 2pt 4pt !important;
     }
 
+    .rpt-ranking-table thead th.rpt-header-blue {
+        padding-top: 1pt !important;
+        padding-bottom: 1pt !important;
+    }
+
     .rpt-ranking-table tbody td {
         padding: 2pt 4pt !important;
         border-bottom: none !important;
+    }
+
+    .rpt-ranking-table tbody tr.rpt-detail-row td {
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
     }
 
     /* Filas de desglose */
@@ -471,11 +521,46 @@ GUÍA: Estándar Print-Perfect
     /* Anchos de columna para PDF - sincronizados con web */
     .rpt-col-ai { width: 20pt !important; }
     .rpt-col-row { width: 12pt !important; }
-    .rpt-col-cliente { width: 100pt !important; }
-    .rpt-header-blue.rpt-col-cliente { width: 100pt !important; }
-    .rpt-col-num { width: 34pt !important; }
-    .rpt-col-pct { width: 44pt !important; }
+    .rpt-col-cliente { width: 110pt !important; }
+    .rpt-header-blue.rpt-col-cliente { width: 110pt !important; }
+    .rpt-col-num { width: 24pt !important; }
+    .rpt-col-pct { width: 30pt !important; }
     .rpt-col-ant { width: 24pt !important; }
+
+    .rpt-th-border-blue-cell {
+        border-bottom: 0.3pt solid #00468B !important;
+    }
+
+    .rpt-td-border-blue-cell {
+        border-top: 0.3pt solid #00468B !important;
+        padding-top: 8pt !important; /* Ajustado en print */
+    }
+
+    .rpt-ranking-total-row td {
+        padding-top: 0 !important; /* Asegura anulación en print */
+    }
+
+    .rpt-ranking-table thead th.rpt-th-border-gray-container {
+        padding-bottom: 0 !important;
+        vertical-align: bottom !important;
+    }
+
+    .rpt-th-border-gray {
+        border-bottom: 0.3pt solid #888 !important;
+        padding-bottom: 2pt !important; /* Compensa padding de th en print */
+    }
+
+    .rpt-ranking-table tfoot tr.rpt-ranking-total-row td.rpt-td-border-blue-container {
+        padding-top: 0 !important;
+        vertical-align: top !important;
+    }
+
+    .rpt-td-border-blue {
+        border-top: 0.3pt solid #00468B !important;
+        padding-top: 8pt !important; /* Compensa padding de totals en print */
+        margin-right: 6px !important;
+        margin-top: -0.3pt !important;
+    }
 
     /* Banner compacto - 25px */
     .rpt-banner-top {

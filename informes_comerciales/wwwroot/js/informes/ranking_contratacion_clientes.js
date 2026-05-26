@@ -54,7 +54,7 @@ async function _renderizarPagina() {
     const cuerpoHtml = _renderCuerpoInforme();
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="ranking_clientes" role="main"${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="ranking_contratacion_clientes" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${cuerpoHtml}
@@ -101,16 +101,15 @@ function _renderCuerpoInforme() {
     const anioAnterior = (filtros.anio || 0) - 1;
     const esInternacional = filtros.mercado === 'Internacional';
 
-    // Definir colgroup basado en el mercado
+    // Definir colgroup basado en el mercado (columna AI removida siempre)
     const colgroupHtml = esInternacional 
         ? '<col class="rpt-col-row"><col class="rpt-col-cliente"><col class="rpt-col-num"><col class="rpt-col-pct">'
-        : '<col class="rpt-col-ai"><col class="rpt-col-row"><col class="rpt-col-cliente"><col class="rpt-col-num"><col class="rpt-col-pct"><col class="rpt-col-ant">';
+        : '<col class="rpt-col-row"><col class="rpt-col-cliente"><col class="rpt-col-num"><col class="rpt-col-pct"><col class="rpt-col-ant">';
 
     const filasHtml = data.datos.map(item => {
         // Fila principal del cliente
         let html = `
             <tr class="${RPT_CLASSES.DETAIL_ROW}">
-                ${!esInternacional ? `<td class="rpt-col-ai">${item.ai || ''}</td>` : ''}
                 <td class="rpt-col-row">${item.row}</td>
                 <td class="rpt-col-cliente">${escapeHtml(item.cliente)}</td>
                 <td class="rpt-col-num rpt-font-monospace">${formatCurrency((item.importe || 0) / 1000, 0)}</td>
@@ -128,7 +127,6 @@ function _renderCuerpoInforme() {
             item.desglose.forEach(sub => {
                 html += `
                     <tr class="rpt-desglose-row">
-                        ${!esInternacional ? `<td class="rpt-col-ai rpt-desglose-ai">${sub.ai || ''}</td>` : ''}
                         <td class="rpt-col-row"></td>
                         <td class="rpt-col-cliente rpt-ps-4">${escapeHtml(sub.clienteDesglose)}</td>
                         <td class="rpt-col-num rpt-font-monospace">${formatCurrency(sub.importeContratadoAcumulado / 1000, 0)}</td>
@@ -148,30 +146,22 @@ function _renderCuerpoInforme() {
         <div class="rpt-content-block">
             <div class="rpt-ranking-subtitle">Mercado ${filtros.mercado || 'Nacional'} - 30 primeros</div>
 
-            <table class="rpt-ranking-table">
+            <table class="rpt-ranking-table ${esInternacional ? 'rpt-ranking-table-international' : ''}">
                 <colgroup>
                     ${colgroupHtml}
                 </colgroup>
                 <thead>
                     <tr class="rpt-header-grouping">
-                        ${!esInternacional ? '<th class="rpt-col-ai"></th>' : ''}
                         <th class="rpt-col-row"></th>
                         <th class="rpt-header-acumulado" colspan="${esInternacional ? 2 : 3}">Acumulado</th>
                         ${!esInternacional ? '<th class="rpt-col-ant"></th>' : ''}
                     </tr>
                     <tr>
-                        ${!esInternacional ? '<th class="rpt-col-ai"></th>' : ''}
                         <th class="rpt-col-row"></th>
                         <th class="rpt-header-blue rpt-col-cliente">Cliente</th>
-                        <th class="rpt-col-num">
-                            <div class="rpt-th-border-blue rpt-w-100">Contr</div>
-                        </th>
-                        <th class="rpt-col-pct rpt-text-center">
-                            <div class="rpt-th-border-blue rpt-w-100">% s/${filtros.mercado || 'Nacional'}</div>
-                        </th>
-                        ${!esInternacional ? `<th class="rpt-col-ant">
-                            <div class="rpt-th-border-gray rpt-w-100">${anioAnterior || '----'} *</div>
-                        </th>` : ''}
+                        <th class="rpt-col-num rpt-th-border-blue-cell">Contr</th>
+                        <th class="rpt-col-pct rpt-text-center rpt-th-border-blue-cell">% s/${filtros.mercado === 'Internacional' ? 'Intern.' : (filtros.mercado || 'Nacional')}</th>
+                        ${!esInternacional ? `<th class="rpt-col-ant rpt-th-border-gray-container"><div class="rpt-th-border-gray rpt-w-100">${anioAnterior || '----'} *</div></th>` : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -179,19 +169,22 @@ function _renderCuerpoInforme() {
   </tbody>
   <tfoot>
   <!-- Fila separadora antes de totales -->
-  <tr class="rpt-spacer-row-totales"><td colspan="${esInternacional ? 4 : 6}" class="rpt-spacer-cell-totales"></td></tr>
+  <tr class="rpt-spacer-row-totales"><td colspan="${esInternacional ? 4 : 5}" class="rpt-spacer-cell-totales"></td></tr>
   <tr class="rpt-ranking-total-row">
-                        <td colspan="${esInternacional ? 2 : 3}"></td>
-                        <td class="rpt-col-num rpt-text-corporate rpt-font-bold">
-                            <div class="rpt-td-border-blue rpt-w-100 rpt-text-end rpt-font-monospace">${formatCurrency((data.sumaTop30 || 0) / 1000, 0)}</div>
+                        <td class="rpt-col-row"></td>
+                        <td class="rpt-col-cliente rpt-td-border-blue-container">
+                            <div class="rpt-td-border-blue"></div>
                         </td>
-                        <td class="rpt-col-pct rpt-text-corporate rpt-font-bold">
-                            <div class="rpt-td-border-blue rpt-w-100 rpt-text-end rpt-font-monospace">${data.porcentajeTop30 ? data.porcentajeTop30.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '0%'}</div>
+                        <td class="rpt-col-num rpt-text-corporate rpt-font-bold rpt-td-border-blue-cell">
+                            <span class="rpt-w-100 rpt-text-end rpt-font-monospace">${formatCurrency((data.sumaTop30 || 0) / 1000, 0)}</span>
+                        </td>
+                        <td class="rpt-col-pct rpt-text-corporate rpt-font-bold rpt-td-border-blue-cell">
+                            <span class="rpt-w-100 rpt-text-end rpt-font-monospace">${data.porcentajeTop30 ? data.porcentajeTop30.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '0%'}</span>
                         </td>
                         ${!esInternacional ? '<td class="rpt-col-ant"></td>' : ''}
                     </tr>
                     <tr class="rpt-ranking-grand-total-row">
-                        <td colspan="${esInternacional ? 2 : 3}" class="rpt-pb-2 rpt-px-0 rpt-va-bottom">
+                        <td colspan="2" class="rpt-pb-2 rpt-px-0 rpt-va-bottom">
                             <div class="rpt-d-flex ${esInternacional ? 'rpt-justify-end' : 'rpt-justify-between'} rpt-align-baseline rpt-w-100">
                                 ${!esInternacional ? '<span class="rpt-asterisk-legend">* Acumulado mismo mes año anterior</span>' : ''}
                                 <span class="rpt-text-corporate rpt-font-bold rpt-pe-3">Total ${filtros.mercado || 'Nacional'}</span>
@@ -225,7 +218,7 @@ async function _imprimirInforme() {
             renderContenido: () => contenidoHtml,
             modoAgrupacion: 'NONE',
             margenes: estado.margenes,
-            nombreInforme: 'ranking_clientes'
+            nombreInforme: 'ranking_contratacion_clientes'
         });
     } catch (error) {
         console.error("Error al intentar imprimir el informe Ranking Clientes:", error);
