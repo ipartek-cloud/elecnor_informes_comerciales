@@ -22,8 +22,9 @@
 /* SUBTÍTULO DE FILTRO (Cartera > X M)                                    */
 /* ════════════════════════════════════════════════════════════════════════ */
 .rpt-ccdop-subtitulo-bar {
-    margin-top: 0.5rem;
-    margin-bottom: 0.3rem;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
 }
 
 .rpt-ccdop-subtitulo-bar .rpt-subtitle-indicator {
@@ -80,6 +81,23 @@
 .rpt-ccdop-table .rpt-detail-row td {
     padding: 3px 5px !important;
     vertical-align: top;
+}
+
+/* Truncar texto de Proyecto y Cliente a una sola línea */
+.rpt-ccdop-table td.rpt-ccdop-col-proyecto,
+.rpt-ccdop-table td.rpt-ccdop-col-cliente {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Alineación y padding unificado para Anterior, Actual y Total (detalle + totales) */
+.rpt-ccdop-table td.rpt-ccdop-col-anterior,
+.rpt-ccdop-table td.rpt-ccdop-col-actual,
+.rpt-ccdop-table td.rpt-ccdop-col-total,
+.rpt-ccdop-table .rpt-number-cell {
+    text-align: right !important;
+    padding-right: 5px !important;
 }
 
 /* ════════════════════════════════════════════════════════════════════════ */
@@ -153,10 +171,34 @@
         page-break-inside: avoid !important;
     }
 
-    /* Eliminar márgenes del indicador de umbral en impresión */
+    /* Paridad Web/PDF: eliminar padding/margin de la barra de umbral */
     .rpt-ccdop-subtitulo-bar {
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+    }
+
+    /* Proteger bold del indicador de umbral dentro de la tabla maestra PDF */
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle-indicator {
+        color: #00468B !important;
+        font-weight: bold !important;
+    }
+
+    /* Reafirmar truncación en impresión */
+    .rpt-ccdop-table td.rpt-ccdop-col-proyecto,
+    .rpt-ccdop-table td.rpt-ccdop-col-cliente {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    /* Reafirmar alineación/padding en impresión */
+    .rpt-ccdop-table td.rpt-ccdop-col-anterior,
+    .rpt-ccdop-table td.rpt-ccdop-col-actual,
+    .rpt-ccdop-table td.rpt-ccdop-col-total,
+    .rpt-ccdop-table .rpt-number-cell {
+        text-align: right !important;
+        padding-right: 5px !important;
     }
 }
 
@@ -188,14 +230,23 @@
     background: transparent !important;
 }
 
-/* Margen superior gestionado dentro del thead */
-.rpt-table-print-master thead::before {
-    content: "";
-    display: block;
-    height: 8mm;
+/* Anulación de padding superior en contenedor maestro para evitar duplicidad */
+.rpt-paper--print[data-informe="cartera_contratacion_detalle_org_paises"] {
+    padding-top: 0 !important;
 }
 
+/* El margen superior se gestiona mediante padding-top en la celda del thead maestro */
+.rpt-table-print-master thead .rpt-print-thead-row .rpt-print-thead-cell {
+    padding-top: 8mm !important;
+}
 
+/* Reafirmar flex layout del encabezado dentro de la celda maestra */
+.rpt-print-thead-cell .rpt-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin-bottom: 0.5rem !important;
+}
 
 .rpt-print-thead-cell .rpt-subtitle {
     margin-bottom: 0.5rem !important;
@@ -209,6 +260,10 @@
 
     .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
         font-size: 14pt !important;
+    }
+
+    .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-11pt {
+        font-size: 11pt !important;
     }
 
     .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
