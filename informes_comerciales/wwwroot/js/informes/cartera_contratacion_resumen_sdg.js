@@ -117,18 +117,23 @@ function _renderTabla(data) {
         <table class="${RPT_CLASSES.TABLE} rpt-ccrsdg-table">
             <colgroup>
                 <col class="rpt-ccrsdg-col-dn">
+                <col class="rpt-ccrsdg-col-sep1">
                 <col class="rpt-ccrsdg-col-anterior">
+                <col class="rpt-ccrsdg-col-sep2">
                 <col class="rpt-ccrsdg-col-actual">
             </colgroup>
             <thead>
                 <tr>
                     <th class="rpt-align-center rpt-fs-9pt rpt-font-bold"></th>
-                    <th class="rpt-ccrsdg-header-acumulado rpt-align-center rpt-fs-9pt rpt-font-bold" colspan="2">Acumulado</th>
+                    <th class="rpt-ccrsdg-col-sep1"></th>
+                    <th class="rpt-ccrsdg-header-acumulado rpt-align-center rpt-fs-9pt rpt-font-bold" colspan="3">Acumulado</th>
                 </tr>
                 <tr class="rpt-ccrsdg-header-years-row">
                     <th class="rpt-ccrsdg-header-elecnor rpt-fs-9pt rpt-font-bold">Elecnor</th>
-                    <th class="rpt-align-right rpt-fs-9pt rpt-font-bold">${data.meta?.filtros?.anio - 1 || ''}</th>
-                    <th class="rpt-align-right rpt-fs-9pt rpt-font-bold">${data.meta?.filtros?.anio || ''}</th>
+                    <th class="rpt-ccrsdg-col-sep1"></th>
+                    <th class="rpt-ccrsdg-col-anterior rpt-align-right rpt-fs-9pt rpt-font-bold">${data.meta?.filtros?.anio - 1 || ''}</th>
+                    <th class="rpt-ccrsdg-col-sep2"></th>
+                    <th class="rpt-ccrsdg-col-actual rpt-align-right rpt-fs-9pt rpt-font-bold">${data.meta?.filtros?.anio || ''}</th>
                 </tr>
             </thead>
             <tbody>
@@ -145,7 +150,9 @@ function _renderFilasSDG(sdg) {
     const dnHtml = sdg.detalleDN.map(dn => `
         <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-ccrsdg-dn-row">
             <td class="rpt-ccrsdg-col-dn rpt-fs-8pt rpt-ccrsdg-dn-cell">${escapeHtml(dn.dn ?? '')}</td>
+            <td class="rpt-ccrsdg-col-sep1"></td>
             <td class="rpt-ccrsdg-col-anterior ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((dn.totAñoAnterior ?? 0), 0)}</td>
+            <td class="rpt-ccrsdg-col-sep2"></td>
             <td class="rpt-ccrsdg-col-actual ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((dn.totAño ?? 0), 0)}</td>
         </tr>
     `).join('');
@@ -153,7 +160,9 @@ function _renderFilasSDG(sdg) {
     const sdgHtml = `
         <tr class="rpt-ccrsdg-sdg-row rpt-font-bold">
             <td class="rpt-ccrsdg-col-dn rpt-fs-8pt rpt-ccrsdg-sdg-cell">${escapeHtml(sdg.nombreSubDirGeneral ?? sdg.codSubDirGeneral)}</td>
+            <td class="rpt-ccrsdg-col-sep1"></td>
             <td class="rpt-ccrsdg-col-anterior ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((sdg.totalAñoAnterior ?? 0), 0)}</td>
+            <td class="rpt-ccrsdg-col-sep2"></td>
             <td class="rpt-ccrsdg-col-actual ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((sdg.totalAño ?? 0), 0)}</td>
         </tr>
     `;
@@ -172,13 +181,17 @@ function _renderPieInforme(data) {
         <table class="${RPT_CLASSES.TABLE} rpt-ccrsdg-table rpt-ccrsdg-total-general">
             <colgroup>
                 <col class="rpt-ccrsdg-col-dn">
+                <col class="rpt-ccrsdg-col-sep1">
                 <col class="rpt-ccrsdg-col-anterior">
+                <col class="rpt-ccrsdg-col-sep2">
                 <col class="rpt-ccrsdg-col-actual">
             </colgroup>
             <tbody>
                 <tr class="rpt-ccrsdg-grand-total-row rpt-font-bold">
                     <td class="rpt-ccrsdg-col-dn rpt-fs-8pt rpt-align-center"></td>
+                    <td class="rpt-ccrsdg-col-sep1"></td>
                     <td class="rpt-ccrsdg-col-anterior ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((totales.totalGeneralAñoAnterior ?? 0), 0)}</td>
+                    <td class="rpt-ccrsdg-col-sep2"></td>
                     <td class="rpt-ccrsdg-col-actual ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((totales.totalGeneralAño ?? 0), 0)}</td>
                 </tr>
             </tbody>
@@ -194,14 +207,18 @@ function _renderFilasTablaMaestra(data) {
         const sdgRow = `
             <tr class="rpt-ccrsdg-sdg-row rpt-font-bold">
                 <td class="rpt-ccrsdg-col-dn rpt-fs-8pt rpt-ccrsdg-sdg-cell">${escapeHtml(sdg.nombreSubDirGeneral ?? sdg.codSubDirGeneral)}</td>
+                <td class="rpt-ccrsdg-col-sep1"></td>
                 <td class="rpt-ccrsdg-col-anterior ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((sdg.totalAñoAnterior ?? 0), 0)}</td>
+                <td class="rpt-ccrsdg-col-sep2"></td>
                 <td class="rpt-ccrsdg-col-actual ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((sdg.totalAño ?? 0), 0)}</td>
             </tr>
         `;
         const dnRows = sdg.detalleDN.map(dn => `
             <tr class="${RPT_CLASSES.DETAIL_ROW} rpt-ccrsdg-dn-row">
                 <td class="rpt-ccrsdg-col-dn rpt-fs-8pt rpt-ccrsdg-dn-cell">${escapeHtml(dn.dn ?? '')}</td>
+                <td class="rpt-ccrsdg-col-sep1"></td>
                 <td class="rpt-ccrsdg-col-anterior ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((dn.totAñoAnterior ?? 0), 0)}</td>
+                <td class="rpt-ccrsdg-col-sep2"></td>
                 <td class="rpt-ccrsdg-col-actual ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((dn.totAño ?? 0), 0)}</td>
             </tr>
         `).join('');
@@ -216,7 +233,9 @@ function _renderFilasPieInforme(data) {
     return `
         <tr class="rpt-ccrsdg-grand-total-row rpt-font-bold">
             <td class="rpt-ccrsdg-col-dn rpt-fs-8pt rpt-align-center"></td>
+            <td class="rpt-ccrsdg-col-sep1"></td>
             <td class="rpt-ccrsdg-col-anterior ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((totales.totalGeneralAñoAnterior ?? 0), 0)}</td>
+            <td class="rpt-ccrsdg-col-sep2"></td>
             <td class="rpt-ccrsdg-col-actual ${RPT_CLASSES.NUMBER_CELL} rpt-fs-8pt">${formatCurrency((totales.totalGeneralAño ?? 0), 0)}</td>
         </tr>
     `;
@@ -238,25 +257,31 @@ function _renderTablaMaestraPDF() {
             <table class="${RPT_CLASSES.TABLE} rpt-ccrsdg-table rpt-table-print-master">
                 <colgroup>
                     <col class="rpt-ccrsdg-col-dn">
+                    <col class="rpt-ccrsdg-col-sep1">
                     <col class="rpt-ccrsdg-col-anterior">
+                    <col class="rpt-ccrsdg-col-sep2">
                     <col class="rpt-ccrsdg-col-actual">
                 </colgroup>
                 <thead class="rpt-print-thead-corporate">
                     <tr>
                         <th class="rpt-print-thead-cell-empty"></th>
-                        <th class="rpt-ccrsdg-header-acumulado rpt-text-corporate rpt-align-center rpt-fs-9pt" colspan="2">Acumulado</th>
+                        <th class="rpt-ccrsdg-col-sep1"></th>
+                        <th class="rpt-ccrsdg-header-acumulado rpt-text-corporate rpt-align-center rpt-fs-9pt" colspan="3">Acumulado</th>
                     </tr>
-                    <tr class="rpt-ccrsdg-header-years-row">
+                    <tr class="rpt-ccrsdg-header-years-row rpt-table-header-columns">
                         <th class="rpt-ccrsdg-header-elecnor rpt-text-corporate rpt-fs-9pt">Elecnor</th>
-                        <th class="rpt-text-corporate rpt-align-right rpt-fs-9pt">${anioAnterior}</th>
-                        <th class="rpt-text-corporate rpt-align-right rpt-fs-9pt">${anio}</th>
+                        <th class="rpt-ccrsdg-col-sep1"></th>
+                        <th class="rpt-text-corporate rpt-ccrsdg-col-anterior rpt-align-right rpt-fs-9pt">${anioAnterior}</th>
+                        <th class="rpt-ccrsdg-col-sep2"></th>
+                        <th class="rpt-text-corporate rpt-ccrsdg-col-actual rpt-align-right rpt-fs-9pt">${anio}</th>
                     </tr>
                 </thead>
                 <tfoot class="rpt-print-tfoot-master">
-                    <tr><td colspan="3" class="rpt-print-tfoot-cell"></td></tr>
+                    <tr><td colspan="5" class="rpt-print-tfoot-cell"></td></tr>
                 </tfoot>
                 <tbody>
                     ${filasHtml}
+                    <tr class="rpt-ccrsdg-spacer-row"><td colspan="5" class="rpt-ccrsdg-spacer-cell"></td></tr>
                     ${pieHtml}
                 </tbody>
             </table>

@@ -44,8 +44,8 @@ public class InformeCarteraContratacionResumenSDGService
 
         // ═══════════════════════════════════════════════════════════════════════
         // AGRUPACIÓN Y ORDENAMIENTO: EXCLUSIVAMENTE EN SERVICE (NUNCA EN SQL).
-        // SDGs por NombreSubDirGeneral ASC (mandato del usuario).
-        // DN internas por CodDDirNegocio ASC.
+        // SDGs por NombreSubDirGeneral ASC.
+        // DN internas por DN ASC (como en Access).
         // ═══════════════════════════════════════════════════════════════════════
         var agrupados = datosPlanos
             .GroupBy(d => new { d.CodSubDirGeneral, d.NombreSubDirGeneral })
@@ -56,7 +56,7 @@ public class InformeCarteraContratacionResumenSDGService
                 TotalAño = Math.Round(g.Sum(x => x.TotAño ?? 0), 2, MidpointRounding.AwayFromZero),
                 TotalAñoAnterior = Math.Round(g.Sum(x => x.TotAñoAnterior ?? 0), 2, MidpointRounding.AwayFromZero),
                 DetalleDN = g
-                    .OrderBy(x => x.CodDDirNegocio)
+                    .OrderBy(x => x.DN)
                     .Select(x => new CarteraContratacionResumenSDGDetalleDto
                     {
                         Año = x.Año,

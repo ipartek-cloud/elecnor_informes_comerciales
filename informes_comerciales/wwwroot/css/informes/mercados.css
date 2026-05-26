@@ -192,11 +192,7 @@ Las reglas generales de impresión están en informes_base.css
     margin-bottom: 1px !important;
   }
 
-  /* Compactar banners de DG - Separación aumentada entre agrupaciones */
-  .rpt-banner-top {
-    margin-top: 2.5rem !important;
-    margin-bottom: 0.8rem !important;
-  }
+
 
   /* Evitar cortes dentro de filas de detalle */
   .rpt-detail-row {
@@ -263,10 +259,7 @@ border: none !important;
     padding-left: 5px !important;
   }
 
-  /* Header compacto */
-  .rpt-header {
-    margin-bottom: 0.5rem !important;
-  }
+
 
   /* Subtítulo compacto — idéntico a Cartera Diferida */
   .rpt-subtitle {

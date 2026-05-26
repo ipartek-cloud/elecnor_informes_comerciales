@@ -273,10 +273,6 @@ export async function imprimirInformeUnificado(opciones) {
         const html = `
             <style>
                 @media print {
-                    .rpt-paper--${nombreInforme} .rpt-header {
-                        margin-bottom: 0 !important;
-                        padding-bottom: 0 !important;
-                    }
                     .rpt-paper--${nombreInforme} .report-body {
                         padding-top: 20px !important;
                     }
@@ -318,10 +314,6 @@ export async function imprimirInformeUnificado(opciones) {
     const html = `
         <style>
             @media print {
-                .rpt-paper--${nombreInforme} .rpt-header {
-                    margin-bottom: 0 !important;
-                    padding-bottom: 0 !important;
-                }
                 .rpt-paper--${nombreInforme} .report-body {
                     padding-top: 20px !important;
                 }

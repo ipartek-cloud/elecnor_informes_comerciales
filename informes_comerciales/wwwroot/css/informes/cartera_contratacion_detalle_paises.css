@@ -179,10 +179,7 @@
     height: 8mm;
 }
 
-/* Compactación de márgenes internos del encabezado */
-.rpt-print-thead-cell .rpt-header {
-    margin-bottom: 0 !important;
-}
+
 
 .rpt-print-thead-cell .rpt-subtitle {
     margin-bottom: 0.5rem !important;

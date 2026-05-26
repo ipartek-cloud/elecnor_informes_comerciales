@@ -10,8 +10,10 @@
 }
 
 .rpt-ccrsdg-col-dn       { width: 55%; }
-.rpt-ccrsdg-col-anterior { width: 22.5%; }
-.rpt-ccrsdg-col-actual   { width: 22.5%; }
+.rpt-ccrsdg-col-sep1     { width: 2.5%; }
+.rpt-ccrsdg-col-anterior { width: 20%; }
+.rpt-ccrsdg-col-sep2     { width: 2.5%; }
+.rpt-ccrsdg-col-actual   { width: 20%; }
 
 /* ── Filas SDG (maestras) ── */
 .rpt-ccrsdg-sdg-row td {
@@ -34,7 +36,7 @@
 
 /* ── Cabecera de tabla ── */
 .rpt-ccrsdg-table thead th {
-    padding: 3px 5px !important;
+    padding: 1px 5px !important;
     border-bottom: none !important;
 }
 
@@ -44,8 +46,8 @@
     color: #00468B !important;
 }
 
-.rpt-ccrsdg-header-years-row th:nth-child(2),
-.rpt-ccrsdg-header-years-row th:nth-child(3) {
+.rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-anterior,
+.rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-actual {
     border-top: 0.3pt solid #00468B !important;
     border-bottom: 0.3pt solid #00468B !important;
     color: #00468B !important;
@@ -58,26 +60,55 @@
     padding: 2px 5px !important;
 }
 
+.rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-sep2 {
+    border-top: 0.3pt solid #00468B !important;
+}
+
+.rpt-ccrsdg-header-elecnor,
+.rpt-ccrsdg-col-sep1 {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.rpt-ccrsdg-col-sep2 {
+    border-bottom: none !important;
+}
+
 /* Alineación derecha de encabezados de año */
-.rpt-ccrsdg-header-years-row th:nth-child(2),
-.rpt-ccrsdg-header-years-row th:nth-child(3) {
+.rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-anterior,
+.rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-actual {
     text-align: right !important;
 }
 
 /* ── Pie de informe (totales globales) ── */
-.rpt-ccrsdg-grand-total-row td:nth-child(2),
-.rpt-ccrsdg-grand-total-row td:nth-child(3) {
+.rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-anterior,
+.rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-actual {
     border-top: 0.3pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
     padding-top: 4px !important;
     color: #00468B !important;
 }
 
-.rpt-ccrsdg-grand-total-row td:nth-child(1) {
+.rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-dn {
     color: #00468B !important;
 }
 
 .rpt-ccrsdg-total-general {
     margin-top: 0.8rem;
+}
+
+/* ── Fila espaciadora para totales en PDF ── */
+.rpt-ccrsdg-spacer-row {
+    height: 10px !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+}
+
+.rpt-ccrsdg-spacer-cell {
+    height: 10px !important;
+    border: none !important;
+    padding: 0 !important;
+    background-color: transparent !important;
 }
 
 /* ── Wrapper del subinforme (80% ancho centrado) ── */
@@ -87,6 +118,8 @@
     margin-right: auto;
     display: block;
 }
+
+
 
 /* ── Page Breaks ── */
 .rpt-ccrsdg-sdg-row {
@@ -99,9 +132,16 @@
 
 /* ── Media Print ── */
 @media print {
+    /* Forzar modelo de bordes separados en impresión para respetar celdas de separación vacías */
+    .rpt-ccrsdg-table,
+    .rpt-table-print-master {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
     .rpt-ccrsdg-table thead th,
     .rpt-table-print-master thead th {
-        padding: 1.5px 5px !important;
+        padding: 1px 5px !important;
         border-bottom: none !important;
     }
 
@@ -111,33 +151,48 @@
         color: #00468B !important;
     }
 
-    .rpt-ccrsdg-header-years-row th:nth-child(2),
-    .rpt-ccrsdg-header-years-row th:nth-child(3),
-    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row th:nth-child(2),
-    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row th:nth-child(3) {
-        border-top: 0.3pt solid #00468B !important;
+    .rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-anterior,
+    .rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-actual,
+    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-anterior,
+    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-actual {
+        border-top: none !important; /* Eliminar border-top en impresión para evitar duplicación con el border-bottom de Acumulado */
         border-bottom: 0.3pt solid #00468B !important;
         color: #00468B !important;
-    }
-
-    .rpt-ccrsdg-header-years-row th:nth-child(2),
-    .rpt-ccrsdg-header-years-row th:nth-child(3),
-    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row th:nth-child(2),
-    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row th:nth-child(3) {
         text-align: right !important;
     }
 
+    .rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-sep2,
+    .rpt-table-print-master thead .rpt-ccrsdg-header-years-row .rpt-ccrsdg-col-sep2 {
+        border-top: none !important; /* Eliminar border-top para evitar duplicación */
+    }
 
+    .rpt-ccrsdg-header-elecnor,
+    .rpt-table-print-master thead .rpt-ccrsdg-header-elecnor,
+    .rpt-ccrsdg-col-sep1,
+    .rpt-table-print-master thead .rpt-ccrsdg-col-sep1 {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
 
-    .rpt-ccrsdg-grand-total-row td:nth-child(2),
-    .rpt-ccrsdg-grand-total-row td:nth-child(3) {
+    .rpt-ccrsdg-col-sep2,
+    .rpt-table-print-master thead .rpt-ccrsdg-col-sep2 {
+        border-bottom: none !important;
+    }
+
+    .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-anterior,
+    .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-actual {
         border-top: 0.3pt solid #00468B !important;
+        border-bottom: 0.3pt solid #00468B !important; /* Añadido border-bottom en impresión para paridad de totales */
     }
 
     .rpt-banner-top {
         height: 25px !important;
         font-size: 14pt !important;
         line-height: 25px !important;
+    }
+
+    .rpt-subtitle {
+        margin-top: 0 !important;
     }
 
     * {
@@ -152,9 +207,7 @@
     border: none !important;
 }
 
-.rpt-table-print-master thead th {
-    padding: 3px 5px !important;
-}
+
 
 .rpt-print-thead-corporate {
     display: table-header-group !important;
@@ -177,18 +230,19 @@
 }
 
 .rpt-paper--print[data-informe="cartera_contratacion_resumen_sdg"] {
-    padding-top: 0 !important;
+    /* padding-top heredado de informes_base.css (8mm) para separación con inicio de página */
 }
 
-.rpt-table-print-master thead::before {
-    content: "";
-    display: block;
-    height: 8mm;
+/* Quitar el margen superior de la tabla maestra ya que la cabecera está fuera en este informe */
+.rpt-paper--print[data-informe="cartera_contratacion_resumen_sdg"] .rpt-table-print-master thead::before {
+    display: none !important;
 }
 
-.rpt-print-thead-cell .rpt-header {
-    margin-bottom: 0 !important;
+/* Añadir margen de 10px entre la cabecera (subtítulo) y el subinforme, igual a la web */
+.rpt-paper--print[data-informe="cartera_contratacion_resumen_sdg"] .rpt-ccrsdg-subinforme-wrapper {
+    margin-top: 10px !important;
 }
+
 
 .rpt-print-thead-cell .rpt-subtitle {
     margin-bottom: 0.5rem !important;
@@ -219,9 +273,8 @@
         border-bottom: none !important;
     }
 
-    .rpt-table-print-master thead tr.rpt-table-header-columns th {
-        border-bottom: 0.3pt solid #00468B !important;
-    }
 }
+
+
 
 

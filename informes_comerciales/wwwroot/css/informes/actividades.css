@@ -189,8 +189,6 @@
 
 
   .rpt-banner-top {
-    margin-top: 1.5rem !important;
-    margin-bottom: 0.8rem !important;
     height: 25px !important;
     font-size: 14pt !important;
   }
@@ -199,9 +197,7 @@
     font-size: 8pt !important;
   }
 
-  .rpt-header {
-    margin-bottom: 0.8rem !important;
-  }
+
 
   .rpt-subtitle {
     font-size: 8pt !important;

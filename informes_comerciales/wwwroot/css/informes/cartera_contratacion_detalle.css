@@ -41,10 +41,7 @@
     font-weight: bold;
 }
 
-/* Reducir espacio entre subtítulo y barra de umbral (Web) */
-.rpt-paper[data-informe="cartera_contratacion_detalle"] .rpt-subtitle {
-    margin-bottom: 0 !important;
-}
+
 
 .rpt-ccd-table thead th {
     border-bottom: 0.3pt solid #00468B !important;
@@ -195,11 +192,9 @@
     padding-top: 0 !important;
 }
 
-/* El margen superior se gestiona dentro del thead mediante pseudo-elemento */
-.rpt-table-print-master thead::before {
-    content: "";
-    display: block;
-    height: 8mm;
+/* El margen superior se gestiona mediante padding-top en la celda del thead maestro */
+.rpt-table-print-master thead .rpt-print-thead-row .rpt-print-thead-cell {
+    padding-top: 8mm !important;
 }
 
 /* Reafirmar flex layout del encabezado dentro de la celda maestra */
@@ -210,16 +205,7 @@
     margin-bottom: 0.5rem !important;
 }
 
-/* Paridad Web/PDF: márgenes explícitos del banner y subtítulo dentro de la tabla maestra */
-.rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-}
 
-.rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-}
 
 .rpt-print-thead-cell .rpt-subtitle {
     margin-bottom: 0.5rem !important;

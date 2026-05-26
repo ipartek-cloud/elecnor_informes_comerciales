@@ -176,16 +176,7 @@ table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
 
 }
 
-/* Unificar separación logo/encabezado en Web y PDF */
-div.rpt-paper[data-informe="actividades_objetivos"] .rpt-header,
-div.rpt-paper--actividades_objetivos .rpt-header {
-  margin-bottom: 12pt !important;
-}
 
-div.rpt-paper[data-informe="actividades_objetivos"] .rpt-banner-top,
-div.rpt-paper--actividades_objetivos .rpt-banner-top {
-  margin-top: 0 !important;
-}
 
 .rpt-cmai-titulo-container {
   display: inline-block;

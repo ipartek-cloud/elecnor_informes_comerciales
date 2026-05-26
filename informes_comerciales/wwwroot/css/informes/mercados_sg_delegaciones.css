@@ -231,10 +231,7 @@
         border-top: 0.3pt solid #00468B !important;
     }
 
-    /* Anular el margen inferior del subtítulo en impresión para este informe */
-    .rpt-paper[data-informe="mercados_sg_delegaciones"] .rpt-subtitle {
-        margin-bottom: 0 !important;
-    }
+
 
     /* Detalle unificado heredado de los estilos generales */
 

@@ -107,7 +107,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end !important; /* Baseline Header - forzado para evitar sobreescrituras */
-  margin-bottom: 2rem;
+  margin-bottom: 6pt !important;
 }
 
 .rpt-header-corporate-text {
@@ -801,7 +801,6 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
         height: 25px !important;
         font-size: 14pt !important;
         font-weight: normal !important;
-        margin-top: 20pt !important;
     }
 
     /* Banner de Dirección de Negocio (DG) en impresión */
@@ -833,7 +832,7 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
 
     /* 10.9 HEADER COMPACTO: Reducir margen inferior y alinear elementos abajo */
     .rpt-header {
-        margin-bottom: 0.5rem !important;
+        margin-bottom: 6pt !important;
         align-items: flex-end !important;
     }
 

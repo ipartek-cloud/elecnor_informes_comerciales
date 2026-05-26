@@ -188,11 +188,6 @@
     background: transparent !important;
 }
 
-/* Anulación de padding superior en contenedor maestro */
-.rpt-paper--print[data-informe="cartera_contratacion_detalle_org_paises"] {
-    padding-top: 0 !important;
-}
-
 /* Margen superior gestionado dentro del thead */
 .rpt-table-print-master thead::before {
     content: "";
@@ -200,10 +195,7 @@
     height: 8mm;
 }
 
-/* Compactación de márgenes internos del encabezado */
-.rpt-print-thead-cell .rpt-header {
-    margin-bottom: 0 !important;
-}
+
 
 .rpt-print-thead-cell .rpt-subtitle {
     margin-bottom: 0.5rem !important;

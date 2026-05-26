@@ -149,10 +149,7 @@
     border: none !important;
   }
 
-  /* Header - Espacio ajustado */
-  .rpt-header {
-    margin-bottom: 0.6rem !important;
-  }
+
 
   /* Subtítulo - Espacio ajustado */
   .rpt-subtitle {
@@ -162,8 +159,6 @@
 
   /* Banner - Espacio ajustado */
   .rpt-banner-top {
-    margin-top: 0.8rem !important;
-    margin-bottom: 0.8rem !important;
     height: 25px !important;
     font-size: 14pt !important;
     font-weight: normal !important;

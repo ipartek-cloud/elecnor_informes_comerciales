@@ -30,10 +30,6 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
   /* Separación controlada por clase rpt-cmai-mt-standard */
 }
 
-/* Unificar margen header para paridad Web/PDF */
-.rpt-header {
-  margin-bottom: 6pt !important;
-}
 
 /* =============================================================================
 LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
@@ -352,15 +348,6 @@ Las reglas generales de impresión están en informes_base.css
     margin-bottom: 1px !important;
   }
 
-  /* Compactar banners de DG - Separación entre agrupaciones */
-  .rpt-banner-top {
-    margin-bottom: 10pt !important;
-  }
-
-  /* Espacio entre encabezado y primer subinforme controlado por report-body */
-  .rpt-mt-6 {
-    margin-top: 0 !important;
-  }
 
   /* Evitar cortes dentro de filas de detalle */
   .rpt-detail-row {
@@ -459,10 +446,6 @@ Las reglas generales de impresión están en informes_base.css
     padding-left: 5px !important;
   }
 
-  /* Header compacto */
-  .rpt-header {
-    margin-bottom: 6pt !important;
-  }
 
   /* Subtítulo compacto — idéntico a Cartera Diferida */
   .rpt-subtitle {

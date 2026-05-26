@@ -197,18 +197,13 @@ tbody .rpt-paises-pais-cell {
     height: 25px !important;
     font-size: 14pt !important;
     font-weight: normal !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 2px !important;
   }
 
   .rpt-header-logo {
     height: 10mm !important;
   }
 
-  .rpt-header {
-    margin-bottom: 0.5rem !important;
-    align-items: flex-end !important;
-  }
+
 
   .rpt-header-corporate-text {
     font-size: 14pt !important;

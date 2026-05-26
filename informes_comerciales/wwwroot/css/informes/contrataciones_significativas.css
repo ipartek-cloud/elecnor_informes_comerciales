@@ -147,9 +147,7 @@
     margin-bottom: 0.5rem;
 }
 
-.rpt-print-thead-cell .rpt-header {
-    margin-bottom: 0 !important;
-}
+
 
 .rpt-print-thead-cell .rpt-subtitle {
     margin-bottom: 1rem !important;
@@ -176,10 +174,6 @@
     }
 
     /* Compactación extrema de cabecera Nacional en PDF */
-    .rpt-subtitle {
-        margin-bottom: 0 !important;
-    }
-
     .rpt-cmai-mt-medium {
         margin-top: 0 !important;
     }
