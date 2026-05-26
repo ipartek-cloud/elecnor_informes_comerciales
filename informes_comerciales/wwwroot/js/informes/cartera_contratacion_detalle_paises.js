@@ -92,7 +92,7 @@ function _getHtmlEncabezado() {
 
     const subtituloBarra = `
         <div class="rpt-ccdp-subtitulo-bar">
-            <span class="rpt-subtitle-indicator rpt-fs-10pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
+            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
         </div>
     `;
 
