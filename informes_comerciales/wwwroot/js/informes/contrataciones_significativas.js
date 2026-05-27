@@ -161,7 +161,7 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
     const headerHtml = mostrarHeader ? `
         <thead>
             <tr class="rpt-font-bold">
-                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-10pt">Contratación &gt;1M</th>
+                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
                 <th></th>
                 <th rpt-border-none></th>
                 <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
@@ -322,8 +322,8 @@ function _renderTablaMaestraNacional() {
                         <div class="${RPT_CLASSES.HEADER}">
                             ${estado.mostrarTitulo !== false
                                 ? `<div class="rpt-text-corporate rpt-header-corporate-text">
-                                       <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span>
-                                       <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
+                                       <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo de Administración</span>
+                                       <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>
                                    </div>`
                                 : '<div></div>'
                             }
@@ -342,7 +342,7 @@ function _renderTablaMaestraNacional() {
                     </th>
                 </tr>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-10pt">Contratación &gt;1M</th>
+                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
                     <th></th>
                     <th rpt-border-none></th>
                     <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
@@ -424,8 +424,8 @@ function _renderTablaMaestraInternacional() {
                         <div class="${RPT_CLASSES.HEADER}">
                             ${estado.mostrarTitulo !== false
                                 ? `<div class="rpt-text-corporate rpt-header-corporate-text">
-                                       <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Consejo de Administración</span>
-                                       <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Información complementaria</span>
+                                       <span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo de Administración</span>
+                                       <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>
                                    </div>`
                                 : '<div></div>'
                             }
@@ -449,7 +449,7 @@ function _renderTablaMaestraInternacional() {
             </tfoot>
             <tbody>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-10pt">Contratación &gt;1M</th>
+                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
                     <th></th>
                     <th rpt-border-none></th>
                     <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>

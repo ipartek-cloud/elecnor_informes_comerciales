@@ -459,6 +459,7 @@ Estándar: 10pt, sin negrita, azul corporativo
 /* Tamaños de fuente específicos (reemplazan fs-* de Bootstrap) */
 .rpt-fs-14pt { font-size: 14pt !important; }
 .rpt-fs-12pt { font-size: 12pt !important; }
+.rpt-fs-11pt { font-size: 11pt !important; }
 .rpt-fs-10pt { font-size: 10pt !important; }
 .rpt-fs-9pt { font-size: 9pt !important; }
 .rpt-fs-8pt { font-size: 8pt !important; }

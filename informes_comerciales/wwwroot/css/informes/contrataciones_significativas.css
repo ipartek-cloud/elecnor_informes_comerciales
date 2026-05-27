@@ -39,7 +39,7 @@
 .rpt-cont-sig-group-title {
     background-color: #00468B;
     color: #ffffff;
-    font-weight: bold;
+    font-weight: bold !important;
     padding: 2pt 8pt;
     display: inline-block;
     font-size: 9pt;
@@ -232,5 +232,19 @@
 
     .rpt-cont-sig-anterior-label td {
         border-bottom: 0.3pt solid #666 !important;
+    }
+
+    /* Sobreescritura de alta especificidad para asegurar paridad de fuentes en PDF */
+    .rpt-table-print-master th.rpt-fs-11pt {
+        font-size: 11pt !important;
+    }
+
+    .rpt-table-print-master th.rpt-fs-10pt {
+        font-size: 10pt !important;
+    }
+
+    .rpt-table-print-master .rpt-cont-sig-group-title {
+        font-size: 9pt !important;
+        font-weight: bold !important;
     }
 }
