@@ -53,17 +53,18 @@
     vertical-align: bottom !important;
 }
 
-.rpt-col-internacional-header {
-    background-color: #00468B !important;
-    padding: 2px 10px !important;
-}
-
 .rpt-th-blue th.rpt-col-internacional-header {
+    background-color: #00468B !important;
     color: white !important;
+    padding: 1px 10px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
 }
 
 .rpt-col-internacional-header .rpt-act-header-line {
     border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin: 0 !important;
 }
 
 .rpt-act-header-line {
@@ -102,10 +103,14 @@
 
 /* Línea discontinua por columna (misma técnica que cabeceras) */
 .rpt-total-line {
-    border-top: 0.3pt solid #00468B !important;
-    margin: 0 4px !important;
-    padding-top: 2px !important;
     display: block;
+}
+
+.rpt-total-line::before {
+    content: "";
+    display: block;
+    border-top: 0.3pt solid #00468B !important;
+    margin: 0 0 2px 0 !important;
 }
 
 /* ─── Espaciado de filas ─── */
@@ -163,6 +168,12 @@
         print-color-adjust: exact !important;
     }
 
+    .rpt-th-blue,
+    .rpt-th-blue th,
+    .rpt-th-blue td {
+        border-bottom: none !important;
+    }
+
     /* Detalle de filas unificado: heredado de informes_base.css */
 
     .rpt-act-sub td {
@@ -173,7 +184,7 @@
         border-top: none !important;
     }
 
-    .rpt-total-line {
+    .rpt-total-line::before {
         border-top: 0.3pt solid #00468B !important;
     }
 
