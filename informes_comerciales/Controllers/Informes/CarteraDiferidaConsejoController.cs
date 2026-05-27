@@ -33,10 +33,10 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
             if (mes < 1 || mes > 12) return BadRequest("Mes inválido.");
 
             // La tabla CarteraDiferida_CJO tiene columnas de proyección hasta [2028].
-            // El subinforme Cartera Diferida necesita [anio-1], [anio] y [anio+1].
-            // Para anio=2027: necesita [2026], [2027], [2028] → todas existen.
-            // Para anio=2028: necesitaría [2029] → no existe.
-            const int maxAnioCarteraDiferida = 2027;
+            // El subinforme Cartera Diferida necesita [anio], [anio+1] y [anio+2].
+            // Para anio=2026: necesita [2026], [2027], [2028] → todas existen.
+            // Para anio=2027: necesitaría [2029] → no existe.
+            const int maxAnioCarteraDiferida = 2026;
             if (anio > maxAnioCarteraDiferida)
             {
                 return BadRequest($"El año de consulta ({anio}) excede el límite del subinforme Cartera Diferida (máx. {maxAnioCarteraDiferida}).");

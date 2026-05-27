@@ -189,9 +189,33 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     padding: 0;
 }
 
+/* =============================================================================
+   ALINEACIÓN PERFECTA DETALLE/TOTALES EN BLOQUE TRIPLE
+   Las tablas de detalle y de totales son <table> independientes. Con
+   table-layout: auto el navegador recalcula los anchos de columna basándose
+   únicamente en el contenido de cada tabla. Al ser el texto de totales bold,
+   los anchos resultan ligeramente diferentes y los números pierden verticalidad.
+   table-layout: fixed fuerza a usar el mismo ancho (colgroup / primera fila).
+   tabular-nums asegura que cada dígito (normal o bold) ocupe exactamente la
+   misma anchura de glyph, eliminando desplazamientos de subpíxel.
+   ============================================================================= */
+.rpt-block-table {
+    table-layout: fixed !important;
+    font-variant-numeric: tabular-nums !important;
+}
 
-
-
+/* =============================================================================
+   CORRECCIÓN ALINEACIÓN DETALLE/TOTALES - BLOQUE TRIPLE
+   gerencias.css fuerza padding-right: 6pt !important en .rpt-number-cell con
+   selector genérico, afectando a todos los informes. Ese padding empuja el
+   contenido numérico hacia la izquierda y rompe la verticalidad entre la fila
+   de detalle y la fila de totales (que son tablas HTML independientes).
+   Se sobreescribe SOLO dentro del bloque triple de este informe usando un
+   selector de mayor especificidad (0,2,0 vs 0,1,0), evitando tocar gerencias.css.
+   ============================================================================= */
+.rpt-triple-container .rpt-number-cell {
+    padding-right: 3pt !important;
+}
 
 /* =============================================================================
    TABLA TRIPLE - ESTRUCTURA PROPIA DE CMAI
@@ -425,6 +449,18 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
     }
     .rpt-block-acumulado {
         width: 53.8% !important;
+    }
+
+    /* Reafirmar table-layout: fixed en print para evitar recálculo de anchos
+       por contenido bold en la fila de totales */
+    .rpt-block-table {
+        table-layout: fixed !important;
+        font-variant-numeric: tabular-nums !important;
+    }
+
+    /* Reafirmar padding corregido en print para mantener alineación detalle/totales */
+    .rpt-triple-container .rpt-number-cell {
+        padding-right: 3pt !important;
     }
 
     /* Redefinición de las columnas de Asociado Inversión (SI) en print (proporcionales dentro de su tabla del 90%) */

@@ -183,11 +183,11 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
 
             var dto = new CarteraDiferidaDto
             {
-                // Títulos dinámicos calculados desde el año de consulta - 1
-                TituloColInicial = $"1.1.{(anio - 1).ToString().Substring(2, 2)}",  // ej: "1.1.25" para 2026
-                TituloColAnio1 = (anio - 1).ToString(),                             // ej: "2025" para 2026
-                TituloColAnio2 = anio.ToString(),                                   // ej: "2026" para 2026
-                TituloColAnio3 = (anio + 1).ToString(),                             // ej: "2027" para 2026
+                // Títulos dinámicos calculados desde el año de consulta
+                TituloColInicial = $"1.1.{anio.ToString().Substring(2, 2)}",        // ej: "1.1.26" para 2026
+                TituloColAnio1 = anio.ToString(),                                   // ej: "2026" para 2026
+                TituloColAnio2 = (anio + 1).ToString(),                             // ej: "2027" para 2026
+                TituloColAnio3 = (anio + 2).ToString(),                             // ej: "2028" para 2026
                 Lineas = datos.OrderBy(d => d.Orden).Select(d => new CarteraDiferidaLineaDto
                 {
                     Concepto = d.CarteraDiferida,

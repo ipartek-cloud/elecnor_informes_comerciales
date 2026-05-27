@@ -99,12 +99,12 @@ public class InformeRepository
                                             FROM CarteraActual_CJO
                                             WHERE Año = @Anio AND Mes = @Mes";
 
-        // SECCIÓN D: CARTERA DIFERIDA (columnas calculadas dinámicamente según @Anio - 1)
-        // Para anio=N: ValorCart1_1=[01#01#(N-1)], ValorAnio1=[N-1], ValorAnio2=[N], ValorAnio3=[N+1]
-        string colCart1_1 = $"[01#01#{(anio - 1).ToString().Substring(2, 2)}]";
-        string colAnio1   = $"[{anio - 1}]";
-        string colAnio2   = $"[{anio}]";
-        string colAnio3   = $"[{anio + 1}]";
+        // SECCIÓN D: CARTERA DIFERIDA (columnas calculadas dinámicamente según @Anio)
+        // Para anio=N: ValorCart1_1=[01#01#N], ValorAnio1=[N], ValorAnio2=[N+1], ValorAnio3=[N+2]
+        string colCart1_1 = $"[01#01#{anio.ToString().Substring(2, 2)}]";
+        string colAnio1   = $"[{anio}]";
+        string colAnio2   = $"[{anio + 1}]";
+        string colAnio3   = $"[{anio + 2}]";
 
         string sqlSelectDiferida = $@"
             SELECT
