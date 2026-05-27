@@ -294,6 +294,16 @@ public class InformePortableService
                 continue;
             }
 
+            // Parámetro de número de países (nuevo filtro del informe Paises)
+            if (paramName == "numeropaises" || paramName == "numeroPaises")
+            {
+                if (filtros != null && filtros.TryGetValue("numeroPaises", out var numeroPaisesStr) && int.TryParse(numeroPaisesStr, out var numeroPaises))
+                    args.Add(numeroPaises);
+                else
+                    args.Add(0); // Por defecto: 0 (todos)
+                continue;
+            }
+
             // Parámetro informe (variante del informe, ej: "cartera_contratacion_detalle")
             if (paramName == "informe")
             {

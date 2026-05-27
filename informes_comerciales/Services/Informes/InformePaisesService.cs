@@ -20,7 +20,7 @@ public class InformePaisesService
     /// <summary>
     /// Obtiene el informe de Países (Mercado Internacional).
     /// </summary>
-    public async Task<PaisesResponseDto> ObtenerInformePaisesAsync(int anio, int mes, int? nroPagina, int umbral = 0)
+    public async Task<PaisesResponseDto> ObtenerInformePaisesAsync(int anio, int mes, int? nroPagina, int umbral = 0, int numeroPaises = 0)
     {
         // 1. Obtener datos del repositorio (Patrón Estándar)
         var datosPlanos = await _repository.ObtenerPaisesAsync(anio, mes);
@@ -35,7 +35,7 @@ public class InformePaisesService
                 //Titulo = $"{tituloBase} (Mercado Internacional)",
                 Titulo = tituloBase,
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
-                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral },
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral, NumeroPaises = numeroPaises },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema",
                 NroPagina = nroPagina
@@ -46,7 +46,7 @@ public class InformePaisesService
             return response;
 
         // 3. Procesar y Filtrar Detalle
-        _ProcesarDetalleYTotales(response, datosPlanos, umbral);
+        _ProcesarDetalleYTotales(response, datosPlanos, umbral, numeroPaises);
 
         return response;
     }
@@ -77,7 +77,7 @@ public class InformePaisesService
             return response;
 
         // 3. Procesar y Filtrar Detalle (Umbral fijo 100.000 para ALL)
-        _ProcesarDetalleYTotales(response, datosPlanos, 100000);
+        _ProcesarDetalleYTotales(response, datosPlanos, 100000, 0);
 
         return response;
     }
@@ -89,7 +89,7 @@ public class InformePaisesService
     /// <summary>
     /// Procesa la lista plana de países, aplica el umbral y calcula los subtotales/totales.
     /// </summary>
-    private void _ProcesarDetalleYTotales(PaisesResponseDto response, List<PaisesPoco> datosPlanos, int umbral)
+    private void _ProcesarDetalleYTotales(PaisesResponseDto response, List<PaisesPoco> datosPlanos, int umbral, int numeroPaises)
     {
         // Cálculos Globales (El 100% real del mercado)
         decimal totalGlobalActual = datosPlanos.Sum(x => x.ImporteContratadoAcumulado);
@@ -111,6 +111,9 @@ public class InformePaisesService
 
             if (cumpleUmbral)
             {
+                if (numeroPaises > 0 && response.Paises.Count >= numeroPaises)
+                    break;
+
                 response.Paises.Add(new PaisDetalleDto
                 {
                     Pais = p.Pais,

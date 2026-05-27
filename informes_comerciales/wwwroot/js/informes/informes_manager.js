@@ -69,7 +69,7 @@ function inicializarTooltipsFiltros() {
     allBtns.forEach(btn => {
         // En HTML5, los data-* siempre se normalizan a minúsculas en el dataset
         const ds = btn.dataset;
-        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined) {
+        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined) {
             btnsConPop.push(btn);
             // Extraer nombre del informe del onclick original y guardarlo en el dataset
             if (!ds.nombreInforme) {
@@ -101,6 +101,7 @@ function inicializarTooltipsFiltros() {
             const defaultMonto = ds.limiteimporte || 13000;
             const defaultPaises = ds.limitepaises || 20;
             const defaultUmbral = ds.umbral || 0;
+            const defaultNumeroPaises = ds.numeropaises || 0;
 
             let content = `
                 <div class="rpt-popover-filtros p-2" style="min-width: 180px; font-family: Verdana, Geneva, sans-serif;">
@@ -132,9 +133,19 @@ function inicializarTooltipsFiltros() {
             if (ds.umbral !== undefined) {
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Umbral de Filtrado:</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Umbral de Filtrado (0 = Todos):</label>
                         <input type="number" id="pop-umbral" class="form-control form-control-sm text-center fw-bold" 
                                value="${defaultUmbral}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                `;
+            }
+
+            if (ds.numeropaises !== undefined) {
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Número de Países (0 = Todos):</label>
+                        <input type="number" id="pop-numeropaises" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultNumeroPaises}" min="0" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -157,6 +168,7 @@ function inicializarTooltipsFiltros() {
                     const monto = box.querySelector('#pop-monto')?.value;
                     const paises = box.querySelector('#pop-paises')?.value;
                     const umbral = box.querySelector('#pop-umbral')?.value;
+                    const numeroPaises = box.querySelector('#pop-numeropaises')?.value;
                     
                     const nombreInforme = instance.reference.dataset.nombreInforme;
                     
@@ -166,7 +178,8 @@ function inicializarTooltipsFiltros() {
                     window.cargarInforme(instance.reference, nombreInforme, {
                         limiteImporte: monto ? parseFloat(monto) : null,
                         limitePaises: paises ? parseInt(paises, 10) : null,
-                        umbral: umbral ? parseFloat(umbral) : null
+                        umbral: umbral ? parseFloat(umbral) : null,
+                        numeroPaises: numeroPaises ? parseInt(numeroPaises, 10) : null
                     });
                 };
 
@@ -224,6 +237,13 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
         umbralFinal = btn?.dataset?.umbral || null;
     }
     
+    let numeroPaisesFinal;
+    if (filtrosManuales && filtrosManuales.numeroPaises !== undefined && filtrosManuales.numeroPaises !== null) {
+        numeroPaisesFinal = filtrosManuales.numeroPaises;
+    } else {
+        numeroPaisesFinal = btn?.dataset?.numeropaises !== undefined ? parseInt(btn.dataset.numeropaises, 10) : null;
+    }
+    
     // 0. Verificar si está activado el modo HTML Portable
     const chkPortable = document.getElementById('chkGenerarHtmlPortable');
     if (chkPortable && chkPortable.checked) {
@@ -233,7 +253,8 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
             _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labelBoton, {
                 limiteImporte: limiteImporteFinal,
                 limitePaises: limitePaisesFinal,
-                umbral: umbralFinal
+                umbral: umbralFinal,
+                numeroPaises: numeroPaisesFinal
             });
         }
         return;
@@ -287,6 +308,7 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
                 nroPagina: nroPaginaFinal,
                 mercado: mercado,
                 umbral: umbralFinal,
+                numeroPaises: numeroPaisesFinal,
                 codSubDir: _codSubDir,
                 mostrarTitulo: mostrarTitulo,
                 limiteImporte: limiteImporteFinal,
@@ -400,6 +422,9 @@ async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labe
             }
             if (limitesExtras.umbral !== undefined && limitesExtras.umbral !== null) {
                 url += `&umbral=${encodeURIComponent(limitesExtras.umbral)}`;
+            }
+            if (limitesExtras.numeroPaises !== undefined && limitesExtras.numeroPaises !== null) {
+                url += `&numeroPaises=${encodeURIComponent(limitesExtras.numeroPaises)}`;
             }
         }
 

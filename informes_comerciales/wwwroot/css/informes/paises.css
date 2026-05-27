@@ -44,7 +44,7 @@ thead .rpt-paises-pais-cell {
   color: white;
   font-weight: bold;
   text-align: left;
-  padding-left: 1.5em;
+  padding-left: 1.5em !important;
 }
 
 /* Detalle: Blanco con texto normal */

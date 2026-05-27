@@ -14,12 +14,13 @@ const estado = crearEstadoInforme();
  * Punto de entrada llamado por el gestor de informes.
  * @param {object} params - Objeto de parámetros
  */
-export async function ejecutar({ anio, mes, nroPagina, umbral = 0, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, umbral = 0, numeroPaises = 0, mostrarTitulo }) {
     try {
         // Convertir umbral a número (viene como string desde data-umbral en HTML)
         const umbralNum = umbral !== undefined && umbral !== null ? Number(umbral) : 0;
+        const numeroPaisesNum = numeroPaises !== undefined && numeroPaises !== null ? Number(numeroPaises) : 0;
         
-        let url = `/api/Paises?anio=${anio}&mes=${mes}&umbral=${umbralNum}`;
+        let url = `/api/Paises?anio=${anio}&mes=${mes}&umbral=${umbralNum}&numeroPaises=${numeroPaisesNum}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`;
 
@@ -186,7 +187,7 @@ function _renderTablaPaises() {
     <td></td>
     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
     <td></td>
-    <td>Total Internacional</td>
+    <td></td>
     <td></td>
     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
     <td></td>

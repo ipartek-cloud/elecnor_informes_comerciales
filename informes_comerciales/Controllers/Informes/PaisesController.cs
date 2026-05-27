@@ -25,7 +25,7 @@ public class PaisesController : ControllerBase
     /// </summary>
     [HttpGet]
     [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
-    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina, [FromQuery] int umbral = 0)
+    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina, [FromQuery] int umbral = 0, [FromQuery] int numeroPaises = 0)
     {
         // Validaciones básicas
         if (anio > DateTime.Now.Year + 1)
@@ -34,7 +34,7 @@ public class PaisesController : ControllerBase
             return BadRequest("El mes debe estar entre 1 y 12.");
 
         // Ejecución de servicio (Método estandarizado)
-        var resultado = await _service.ObtenerInformePaisesAsync(anio, mes, nroPagina, umbral);
+        var resultado = await _service.ObtenerInformePaisesAsync(anio, mes, nroPagina, umbral, numeroPaises);
 
         return Ok(resultado);
     }
