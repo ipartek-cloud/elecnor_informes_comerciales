@@ -24,6 +24,15 @@
     border-collapse: collapse;
 }
 
+.rpt-table-cont-sig thead,
+.rpt-table-cont-sig thead tr,
+.rpt-table-cont-sig thead th,
+.rpt-table-cont-sig .rpt-table-header-columns,
+.rpt-table-cont-sig .rpt-table-header-columns th {
+    border-style: hidden !important;
+    border-width: 0 !important;
+}
+
 .rpt-table-cont-sig thead th,
 .rpt-table-cont-sig .rpt-table-header-columns th {
     padding-bottom: 5px !important;
@@ -115,7 +124,7 @@
    ESTILOS PARA TABLA MAESTRA DE IMPRESIÓN (Modo Internacional)
    ============================================================================= */
 
-.rpt-table-print-master {
+.rpt-table-cont-sig.rpt-table-print-master {
     width: 100% !important;
     border: none !important;
 }
@@ -132,7 +141,7 @@
 }
 
 /* TÉCNICA MAESTRA: Inyecta margen superior en saltos de página (Pág 2+) */
-.rpt-table-print-master thead::before {
+.rpt-table-cont-sig.rpt-table-print-master thead::before {
     content: "";
     display: block;
     height: 8mm;
@@ -179,31 +188,31 @@
     }
 
     /* Proteger cabecera corporativa de la reducción a 8pt y bold de las tablas maestras */
-    .rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-print-thead-cell .rpt-fs-14pt {
         font-size: 14pt !important;
         font-weight: normal !important;
     }
 
-    .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-subtitulo {
         font-size: 9pt !important;
         font-weight: normal !important;
     }
 
-    .rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-titulo-container {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-print-thead-cell .rpt-cmai-titulo-container {
         margin-top: 8px !important;
     }
 
-    .rpt-table-print-master .rpt-print-thead-cell .rpt-page-number {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-print-thead-cell .rpt-page-number {
         font-size: 10pt !important;
         font-weight: normal !important;
     }
 
-    .rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top span {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-print-thead-cell .rpt-banner-top span {
         font-size: 14pt !important;
         font-weight: normal !important;
     }
     
-    .rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-print-thead-cell .rpt-subtitle {
         font-size: 8pt !important;
         font-weight: normal !important;
     }
@@ -215,11 +224,10 @@
 
     .rpt-table-cont-sig {
         page-break-inside: auto !important;
-        /* Flujo continuo en Internacional */
     }
 
-    /* Nacional: Evita saltos dentro de bloques pequeños */
-    .rpt-paper[data-informe="contrataciones_significativas"]:not([data-mercado="Internacional"]) .rpt-table-cont-sig {
+    /* Evitar que una agrupación (dirección de negocio) se divida entre dos páginas */
+    .rpt-group-tbody {
         page-break-inside: avoid !important;
     }
 
@@ -235,16 +243,46 @@
     }
 
     /* Sobreescritura de alta especificidad para asegurar paridad de fuentes en PDF */
-    .rpt-table-print-master th.rpt-fs-11pt {
+    .rpt-table-cont-sig.rpt-table-print-master th.rpt-fs-11pt {
         font-size: 11pt !important;
     }
 
-    .rpt-table-print-master th.rpt-fs-10pt {
+    .rpt-table-cont-sig.rpt-table-print-master th.rpt-fs-10pt {
         font-size: 10pt !important;
     }
 
-    .rpt-table-print-master .rpt-cont-sig-group-title {
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-cont-sig-group-title {
         font-size: 9pt !important;
         font-weight: bold !important;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       CORRECCIÓN DEFINITIVA: Línea horizontal fantasma en cabecera PDF.
+       ─────────────────────────────────────────────────────────────────────
+       CAUSA RAÍZ: cartera_contratacion_detalle.css (y otros) definen en
+       @media print la regla genérica:
+         .rpt-table-print-master thead tr.rpt-table-header-columns th {
+             border-bottom: 0.3pt solid #00468B !important;
+         }
+       Como TODOS los CSS se cargan en la misma página, esa regla afecta
+       a TODAS las tablas con clase .rpt-table-print-master, incluyendo
+       la de contrataciones significativas.
+
+       SOLUCIÓN: Usar border-style: hidden (la prioridad MÁS ALTA en el
+       algoritmo de collapsed borders según CSS 2.1 §17.6.2.1). "hidden"
+       SIEMPRE gana sobre "solid", "none", etc., independientemente de
+       la especificidad del selector. Además, igualamos la especificidad
+       del selector invasor para máxima robustez.
+       ═══════════════════════════════════════════════════════════════════════ */
+    .rpt-table-cont-sig thead,
+    .rpt-table-cont-sig thead tr,
+    .rpt-table-cont-sig thead th,
+    .rpt-table-cont-sig.rpt-table-print-master thead,
+    .rpt-table-cont-sig.rpt-table-print-master thead tr,
+    .rpt-table-cont-sig.rpt-table-print-master thead th,
+    .rpt-table-cont-sig.rpt-table-print-master thead tr.rpt-table-header-columns th,
+    .rpt-table-cont-sig.rpt-table-print-master thead tr.rpt-font-bold th {
+        border-style: hidden !important;
+        border-width: 0 !important;
     }
 }

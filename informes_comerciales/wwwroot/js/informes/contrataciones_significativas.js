@@ -368,13 +368,13 @@ function _renderTablaMaestraInternacional() {
     const mercado = filtros.mercado || 'Internacional';
     const nroPagina = estado.nroPagina || 10;
 
-    let rowsHtml = '';
+    let tbodiesHtml = '';
 
     dataArr.forEach((direccion) => {
         const contratosMes = dataMes.filter(item => item.nombreDirNegocio === direccion.nombreDirNegocio);
         const contratosAnt = dataAnterior.filter(item => item.nombreDirNegocio === direccion.nombreDirNegocio);
 
-        rowsHtml += `
+        let rowsHtml = `
             <tr class="rpt-cont-sig-group-start">
                 <td colspan="4" class="rpt-cont-sig-group-header">
                     <span class="rpt-cont-sig-group-title">${escapeHtml(direccion.nombreDirNegocio)}</span>
@@ -408,6 +408,8 @@ function _renderTablaMaestraInternacional() {
                     <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
                 </tr>`).join('');
         }
+
+        tbodiesHtml += `<tbody class="rpt-group-tbody">${rowsHtml}</tbody>`;
     });
 
     return `
@@ -443,18 +445,16 @@ function _renderTablaMaestraInternacional() {
                         </div>
                     </th>
                 </tr>
-            </thead>
-            <tfoot class="rpt-print-tfoot-master">
-                <tr><td colspan="4" class="rpt-print-tfoot-cell"></td></tr>
-            </tfoot>
-            <tbody>
                 <tr class="rpt-font-bold rpt-table-header-columns">
                     <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
                     <th></th>
                     <th rpt-border-none></th>
                     <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
                 </tr>
-                ${rowsHtml}
-            </tbody>
+            </thead>
+            <tfoot class="rpt-print-tfoot-master">
+                <tr><td colspan="4" class="rpt-print-tfoot-cell"></td></tr>
+            </tfoot>
+            ${tbodiesHtml}
         </table>`;
 }
