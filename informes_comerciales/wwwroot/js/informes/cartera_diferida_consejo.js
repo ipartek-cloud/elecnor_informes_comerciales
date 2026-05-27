@@ -253,7 +253,7 @@ function _renderTripleBlock(agrup) {
     `;
 
     return `
-        <div class="rpt-triple-container rpt-mt-6 rpt-mb-0 rpt-align-flex-end">
+        <div class="rpt-triple-container rpt-mt-6 rpt-mb-2 rpt-align-flex-end">
             <div class="rpt-block-mensual">
                 <div class="rpt-font-bold rpt-text-small rpt-text-corporate rpt-text-center rpt-mb-1">Mensual</div>
                 <table class="rpt-block-table rpt-header-table-border">
@@ -265,8 +265,8 @@ function _renderTripleBlock(agrup) {
                     </thead>
                 </table>
             </div>
-            <div class="rpt-block-labels rpt-text-center rpt-mb-2">
-                <div class="rpt-label-blue-header">Mercado</div>
+            <div class="rpt-block-labels">
+                <div class="rpt-label-blue-header rpt-text-start rpt-ps-2">Mercado</div>
             </div>
             <div class="rpt-block-acumulado">
                 <div class="rpt-font-bold rpt-text-small rpt-text-corporate rpt-text-center rpt-mb-1">Acumulado</div>
@@ -310,14 +310,13 @@ function _renderSubsetTripleBlock(agrup) {
     return `
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
-                <col class="rpt-col-100px">
-                <col class="rpt-col-10px">
-                <col class="rpt-col-concepto-unificado">
-                <col class="rpt-col-10px">
-                <col class="rpt-col-80px">
-                <col class="rpt-col-80px">
-                <col class="rpt-col-85px">
-                <col class="rpt-col-155px">
+                <col class="rpt-col-si-mensual">
+                <col class="rpt-col-si-spacer">
+                <col class="rpt-col-si-concepto">
+                <col class="rpt-col-si-spacer">
+                <col class="rpt-col-si-acum-contr">
+                <col class="rpt-col-si-acum-perc">
+                <col class="rpt-col-si-acum-var">
             </colgroup>
             <thead>
                 <tr rpt-row-height-20>
@@ -330,7 +329,7 @@ function _renderSubsetTripleBlock(agrup) {
                 <tr class="rpt-border-header" rpt-row-height-18>
                     <th class="rpt-text-end">Contr.</th>
                     <th rpt-border-none></th>
-                    <th class="rpt-inline-center">Asociado Inversión</th>
+                    <th class="rpt-text-start rpt-ps-2">Asociado Inversión</th>
                     <th rpt-border-none></th>
                     <th class="rpt-text-end">Contr</th>
                     <th class="rpt-text-end">% s/Merc</th>
@@ -380,15 +379,14 @@ function _renderCarteraProduccion(agrup) {
     return `
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
-                <col class="rpt-col-100px">
-                <col class="rpt-col-10px">
-                <col class="rpt-col-concepto-unificado">
-                <col class="rpt-col-10px">
-                <col class="rpt-col-120px">
-                <col class="rpt-col-125px">
-                <col class="rpt-col-155px">
+                <col class="rpt-col-cp-inicial">
+                <col class="rpt-col-cp-spacer">
+                <col class="rpt-col-cp-concepto">
+                <col class="rpt-col-cp-spacer">
+                <col class="rpt-col-cp-actual">
+                <col class="rpt-col-cp-delta">
             </colgroup>
-
+ 
                     <thead>
                         <tr rpt-row-height-20>
                             <th class="rpt-text-center" rpt-border-none>Cart.</th>
@@ -400,7 +398,7 @@ function _renderCarteraProduccion(agrup) {
                         <tr class="rpt-border-header" rpt-row-height-18>
                             <th class="rpt-text-end" rpt-border-top-none>${data.tituloColInicial}</th>
                             <th rpt-border-none></th>
-                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-rpt-w-100">Cartera Producción</div></th>
+                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-rpt-w-100 rpt-text-start rpt-ps-2">Cartera Producción</div></th>
                             <th rpt-border-none></th>
                             <th class="rpt-text-end" rpt-border-top-none>${data.tituloColActual}</th>
                             <th class="rpt-text-end" rpt-border-top-none>${data.tituloColDelta}</th>
@@ -482,18 +480,17 @@ function _renderCarteraDiferida(agrup) {
         <table class="rpt-table-triple rpt-table-stackable rpt-table-cd">
 
             <colgroup>
-                <col class="rpt-col-80px">
-                <col class="rpt-col-80px">
-                <col class="rpt-col-80px">
+                <col class="rpt-col-cd-inicial">
+                <col class="rpt-col-cd-nuevos">
+                <col class="rpt-col-cd-total">
                 <col class="rpt-col-10px">
-                <col class="rpt-col-concepto-unificado">
+                <col class="rpt-col-cd-concepto">
                 <col class="rpt-col-10px">
-                <col class="rpt-col-80px">
-                <col class="rpt-col-45px">
-                <col class="rpt-col-65px">
-                <col class="rpt-col-65px">
-                <col class="rpt-col-65px">
-                <col class="rpt-col-150px">
+                <col class="rpt-col-cd-contr">
+                <col class="rpt-col-cd-ip">
+                <col class="rpt-col-cd-anio1">
+                <col class="rpt-col-cd-anio2">
+                <col class="rpt-col-cd-anio3">
             </colgroup>
 
                     <thead>
@@ -511,7 +508,7 @@ function _renderCarteraDiferida(agrup) {
                             <th class="rpt-text-end">Nuevos *</th>
                             <th class="rpt-text-end">Total</th>
                             <th rpt-border-none></th>
-                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-rpt-w-100">Cartera Diferida</div></th>
+                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-rpt-w-100 rpt-text-start rpt-ps-2">Cartera Diferida</div></th>
                             <th rpt-border-none></th>
                             <th class="rpt-text-end">Contr.</th>
                             <th class="rpt-text-end">Ip</th>

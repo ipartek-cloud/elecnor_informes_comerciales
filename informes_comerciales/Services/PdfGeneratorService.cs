@@ -109,6 +109,15 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
         _logger.LogDebug("Abriendo nueva pestaña de Puppeteer para renderizar PDF...");
         await using var page = await browser.NewPageAsync();
 
+        // Viewport ancho para emular pantalla de escritorio y evitar
+        // compresión visual en tablas de ancho fijo (1050px del informe).
+        await page.SetViewportAsync(new ViewPortOptions
+        {
+            Width = 1200,
+            Height = 800,
+            DeviceScaleFactor = 1
+        });
+
         await page.SetContentAsync(htmlContent, new NavigationOptions
         {
             WaitUntil = new[] { WaitUntilNavigation.Networkidle0 }

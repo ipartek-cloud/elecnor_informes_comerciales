@@ -10,6 +10,14 @@
     align-items: flex-start; /* CMAI usa flex-start en lugar de flex-end (base) */
 }
 
+.rpt-block-mensual {
+    width: 180px !important;
+}
+
+.rpt-block-acumulado {
+    width: 500px !important;
+}
+
 .rpt-block-labels {
     flex: 0 0 230px !important; /* 230px + 20px margins = 250px allocated visual width */
     width: 230px !important;
@@ -143,6 +151,17 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     width: 250px !important;
 }
 
+/* Definición de anchos de columna fijos en pantalla (Web) para Cartera Diferida */
+.rpt-col-cd-inicial { width: 95px !important; }
+.rpt-col-cd-nuevos { width: 95px !important; }
+.rpt-col-cd-total { width: 95px !important; }
+.rpt-col-cd-concepto { width: 125px !important; }
+.rpt-col-cd-contr { width: 95px !important; }
+.rpt-col-cd-ip { width: 60px !important; }
+.rpt-col-cd-anio1 { width: 82px !important; }
+.rpt-col-cd-anio2 { width: 82px !important; }
+.rpt-col-cd-anio3 { width: 81px !important; }
+
 /* Tabla con ancho completo */
 .rpt-table-full {
     width: 100%;
@@ -179,16 +198,16 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
    Esta estructura NO está en informes_base.css, es única de este informe
    ============================================================================= */
 .rpt-table-triple {
-    width: 770px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 693px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     border-collapse: collapse;
     table-layout: fixed;
 }
 
-/* Variante para Cartera Diferida (más ancha: 980px) */
+/* Variante para Cartera Diferida (fluida al 100% para alinearse con Mercado) */
 .rpt-table-triple.rpt-table-cd {
-    width: 980px !important;
+    width: 100% !important;
 }
 
 /* Espaciado de filas para optimizar legibilidad (Web) y densidad (PDF) */
@@ -230,6 +249,11 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     padding: 1px 7px; /* CMAI usa 1px en lugar de 2px (base) */
 }
 
+.rpt-label-blue-header {
+    padding: 1px 0 !important;
+    margin-bottom: 0 !important;
+}
+
 
 
 /* =============================================================================
@@ -237,10 +261,25 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
    La tabla triple mide 770px, el contenedor debe ser al menos igual
    ============================================================================= */
 .rpt-sub-report-container {
-    width: 770px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 693px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
+
+/* Columnas de Asociado Inversión (SI) - Suma: 110 + 10 + 240 + 10 + 100 + 110 + 113 = 693px */
+.rpt-col-si-mensual { width: 110px !important; }
+.rpt-col-si-spacer { width: 10px !important; }
+.rpt-col-si-concepto { width: 240px !important; }
+.rpt-col-si-acum-contr { width: 100px !important; }
+.rpt-col-si-acum-perc { width: 110px !important; }
+.rpt-col-si-acum-var { width: 113px !important; }
+
+/* Columnas de Cartera Producción (CP) - Suma: 110 + 10 + 240 + 10 + 160 + 163 = 693px */
+.rpt-col-cp-inicial { width: 110px !important; }
+.rpt-col-cp-spacer { width: 10px !important; }
+.rpt-col-cp-concepto { width: 240px !important; }
+.rpt-col-cp-actual { width: 160px !important; }
+.rpt-col-cp-delta { width: 163px !important; }
 
 /* =============================================================================
  SUBINFORMES CMAI - BORDES EN TOTALES
@@ -253,15 +292,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
   border-bottom: none !important;
 }
 
-/* Eliminar línea horizontal del total en columna de concepto (columna central de subinformes) */
-.rpt-table-triple tfoot td.rpt-td-total:empty {
-  border-top: none !important;
-}
-
-/* Eliminar línea horizontal del total en columna central del informe principal (Mercado) */
-.rpt-block-labels .rpt-total-row-blue td {
-  border-top: none !important;
-}
+/* Los bordes en celdas vacías del total en Mercado e Inversión se muestran por defecto */
 
 
 
@@ -273,7 +304,7 @@ FOOTER ESPECÍFICO CARTERA DIFERIDA
   justify-content: space-between;
   align-items: center;
   margin-top: 1.5rem;
-  width: 980px;
+  width: 100% !important;
   margin-left: auto;
   margin-right: auto;
 }
@@ -281,7 +312,6 @@ FOOTER ESPECÍFICO CARTERA DIFERIDA
 .rpt-cma-footer-note {
   font-size: 8pt;
   color: #000;
-  padding-left: 110px;
   white-space: nowrap;
   line-height: 1;
   vertical-align: middle;
@@ -289,7 +319,6 @@ FOOTER ESPECÍFICO CARTERA DIFERIDA
 
 .rpt-cma-footer-total {
   text-align: right;
-  padding-right: 145px;
   white-space: nowrap;
   font-size: 8pt;
   color: #00468B;
@@ -319,20 +348,20 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
    ============================================================================= */
 @media print {
     /* -------------------------------------------------------------------------
-     * SUBINFORMES CMAI: preservar espaciado
+     * SUBINFORMES CMAI: espaciado reducido para encajar en una sola hoja A4
      * ------------------------------------------------------------------------- */
     .rpt-sub-report-wrapper {
-        margin-top: 2.5rem !important;
+        margin-top: 1.0rem !important;
         margin-bottom: 0 !important;
     }
 
     /* -------------------------------------------------------------------------
-     * ESPACIADO VERTICAL: quirúrgico para A4 (Aisla de Bootstrap)
+     * ESPACIADO VERTICAL: compacto para A4 (reducido para evitar salto de página)
      * ------------------------------------------------------------------------- */
-    .rpt-cmai-mt-medium { margin-top: 2.0rem !important; } /* Equivalente a 2-3 filas vacías */
+    .rpt-cmai-mt-medium { margin-top: 0.8rem !important; }
     
     .rpt-cmai-mt-huge {
-      margin-top: 3.0rem !important; /* Mayor que medium, consistente web/PDF */
+      margin-top: 1.0rem !important;
     }
 
     /* -------------------------------------------------------------------------
@@ -343,6 +372,105 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
     }
     .rpt-cmai-titulo-container {
       margin-top: 8px !important;
+    }
+
+    /* -------------------------------------------------------------------------
+    * FLUID OVER FIXED: Eliminar anchos fijos para evitar shrink-to-fit de Chromium
+    * El papel A4 (~794px) es menor que el canvas web (1050px). Si dejamos tablas
+    * de 770px/980px fijas, Chromium escala TODO el contenido proporcionalmente
+    * al ~76%, haciendo que las fuentes se vean más pequeñas en PDF.
+    * ------------------------------------------------------------------------- */
+
+    /* Tablas triples: 90% del ancho útil del A4 (10% más estrechas) y centradas */
+    .rpt-table-triple:not(.rpt-table-cd) {
+        width: 90% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Tabla de Cartera Diferida: sigue ocupando el 100% para fluidez */
+    .rpt-table-triple.rpt-table-cd {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* Contenedores de subinforme: 90% de ancho para Inversión y Producción, centrados */
+    .rpt-sub-report-container {
+        width: 90% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Reset de colgroup: eliminar anchos fijos en px para permitir fluidez en tablas tradicionales */
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-width-"],
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-100px"],
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-10px"],
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-80px"],
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-85px"],
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-120px"],
+    .rpt-table-triple:not(.rpt-table-cd) col[class*="rpt-col-125px"] {
+        width: auto !important;
+    }
+
+    /* Redefinición de los bloques de Mercado en print para volver al ancho completo original (100% de la página) */
+    .rpt-block-mensual {
+        width: 19.3% !important;
+    }
+    .rpt-block-labels {
+        flex: 0 0 24.7% !important;
+        width: 24.7% !important;
+        max-width: 24.7% !important;
+        margin: 0 1.1% !important;
+    }
+    .rpt-block-acumulado {
+        width: 53.8% !important;
+    }
+
+    /* Redefinición de las columnas de Asociado Inversión (SI) en print (proporcionales dentro de su tabla del 90%) */
+    .rpt-col-si-mensual { width: 15.9% !important; }
+    .rpt-col-si-spacer { width: 1.4% !important; }
+    .rpt-col-si-concepto { width: 34.6% !important; }
+    .rpt-col-si-acum-contr { width: 14.5% !important; }
+    .rpt-col-si-acum-perc { width: 16.0% !important; }
+    .rpt-col-si-acum-var { width: 16.2% !important; }
+
+    /* Redefinición de las columnas de Cartera Producción (CP) en print (proporcionales dentro de su tabla del 90%) */
+    .rpt-col-cp-inicial { width: 15.9% !important; }
+    .rpt-col-cp-spacer { width: 1.4% !important; }
+    .rpt-col-cp-concepto { width: 34.6% !important; }
+    .rpt-col-cp-actual { width: 23.0% !important; }
+    .rpt-col-cp-delta { width: 23.7% !important; }
+
+    /* Definir los porcentajes correspondientes en print para la tabla de Cartera Diferida (.rpt-table-cd) */
+    .rpt-table-cd .rpt-col-cd-inicial { width: 11.4% !important; }
+    .rpt-table-cd .rpt-col-cd-nuevos { width: 11.4% !important; }
+    .rpt-table-cd .rpt-col-cd-total { width: 11.4% !important; }
+    .rpt-table-cd .rpt-col-cd-concepto { width: 15.0% !important; }
+    .rpt-table-cd .rpt-col-cd-contr { width: 11.4% !important; }
+    .rpt-table-cd .rpt-col-cd-ip { width: 7.2% !important; }
+    .rpt-table-cd .rpt-col-cd-anio1 { width: 10.0% !important; }
+    .rpt-table-cd .rpt-col-cd-anio2 { width: 10.0% !important; }
+    .rpt-table-cd .rpt-col-cd-anio3 { width: 10.2% !important; }
+
+    /* Densidad extra en celdas para maximizar espacio útil en A4 */
+    .rpt-table-triple th,
+    .rpt-table-triple td {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+    /* Footer Cartera Diferida: fluido, eliminar paddings fijos de alineación */
+    .rpt-cma-footer-line {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .rpt-cma-footer-note {
+        padding-left: 0 !important;
+    }
+    .rpt-cma-footer-total {
+        padding-right: 0 !important;
     }
 }
 
@@ -368,7 +496,14 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 }
 
 /* Celdas Base */
-.rpt-ventas-table th,
+.rpt-ventas-table th {
+    padding: 1px 4px;
+    font-size: 8pt;
+    vertical-align: middle;
+    height: 18px;
+    border: none; /* Eliminamos bordes por defecto */
+}
+
 .rpt-ventas-table td {
     padding: 2px 4px;
     font-size: 8pt;
@@ -491,7 +626,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 /* Ajuste para PDF */
 @media print {
   .rpt-ventas-legend-container {
-    margin-top: 50px !important;
+    margin-top: 16px !important;
   }
 }
 
@@ -502,22 +637,74 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
     .rpt-ventas-container {
         page-break-inside: avoid;
     }
+
+    /* Paridad tipográfica explícita: fuerza 8pt y negro puro en PDF/Print */
+    .rpt-ventas-table,
+    .rpt-ventas-table thead,
+    .rpt-ventas-table tbody,
+    .rpt-ventas-table tfoot,
+    .rpt-ventas-table th,
+    .rpt-ventas-table td,
+    .rpt-ventas-table tr,
+    .rpt-ventas-table div,
+    .rpt-ventas-table span,
+    .rpt-ventas-table strong {
+        font-size: 8pt !important;
+        color: #000 !important;
+        font-family: Verdana, Arial, sans-serif !important;
+    }
+
+    /* Badge "Ventas": fondo y texto explícitos para garantizar renderizado */
+    .rpt-ventas-badge {
+        background-color: #7F7F7F !important;
+        color: #000 !important;
+        font-size: 8pt !important;
+    }
+
+    /* Fondos de Plan Estratégico: reafirmación explícita en @media print
+       Chromium headless y el diálogo de impresión del navegador requieren
+       que los background-color se declaren dentro del contexto print para
+       respetarlos cuando PrintBackground = true. */
+    .rpt-ventas-bg-pe1 { background-color: #BFBFBF !important; }
+    .rpt-ventas-bg-pe2 { background-color: #6FA8DC !important; }
+    .rpt-ventas-bg-pe3 { background-color: #F2F2F2 !important; }
+    .rpt-ventas-bg-pe4 { background-color: #F4B084 !important; }
+
+    /* Separadores blancos entre bloques de años (visibles sobre fondos de color) */
+    .rpt-ventas-table th:nth-child(5),
+    .rpt-ventas-table td:nth-child(5),
+    .rpt-ventas-table th:nth-child(8),
+    .rpt-ventas-table td:nth-child(8),
+    .rpt-ventas-table th:nth-child(10),
+    .rpt-ventas-table td:nth-child(10) {
+        border-left: 8px solid white !important;
+    }
+
+    /* Bordes horizontales sutiles */
     .rpt-ventas-table thead th {
-        border-bottom-width: 0.3pt !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        border-bottom: 0.3pt solid #888 !important;
     }
     .rpt-ventas-total-row td {
-        border-top-width: 0.3pt !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        border-top: 0.3pt solid #888 !important;
     }
+
+    /* Forzar impresión exacta de colores de fondo en todos los agentes */
     .rpt-ventas-sq,
     .rpt-ventas-bg-pe1,
     .rpt-ventas-bg-pe2,
     .rpt-ventas-bg-pe3,
-    .rpt-ventas-bg-pe4 {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+    .rpt-ventas-bg-pe4,
+    .rpt-ventas-badge {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Leyenda: texto y alineación */
+    .rpt-ventas-legend-container,
+    .rpt-ventas-legend-group,
+    .rpt-ventas-legend-group span {
+        font-size: 8pt !important;
+        color: #000 !important;
+        font-family: Verdana, Arial, sans-serif !important;
     }
 }
