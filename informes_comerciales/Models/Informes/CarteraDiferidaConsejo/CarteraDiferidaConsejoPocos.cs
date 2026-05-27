@@ -39,5 +39,7 @@ namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
         public decimal? Anio2023 { get; set; }
         public decimal? Anio2024 { get; set; }
         public decimal? Anio2025 { get; set; }
+        public decimal? Anio2026 { get; set; }
+        public decimal? Anio2027 { get; set; }
     }
 }

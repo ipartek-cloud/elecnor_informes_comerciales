@@ -581,7 +581,10 @@ function _renderCarteraDiferida(agrup) {
 function _renderVentas(agrupacion) {
     if (!agrupacion.ventas || !agrupacion.ventas.lineas || agrupacion.ventas.lineas.length === 0) return '';
     
-    const v = (n) => formatCurrency(n || 0, 1);
+    const v = (n) => {
+        if (n === null || n === undefined || n === 0) return '';
+        return formatCurrency(n, 1);
+    };
     const lineas = agrupacion.ventas.lineas;
     const totales = agrupacion.ventas.totales;
 
@@ -593,11 +596,12 @@ function _renderVentas(agrupacion) {
         const a = parseInt(anio);
         if (a >= 2017 && a <= 2019) return 'rpt-ventas-bg-pe1';
         if (a >= 2020 && a <= 2022) return 'rpt-ventas-bg-pe2';
-        if (a >= 2023 && a <= 2025) return 'rpt-ventas-bg-pe3';
+        if (a >= 2023 && a <= 2024) return 'rpt-ventas-bg-pe3';
+        if (a >= 2025 && a <= 2027) return 'rpt-ventas-bg-pe4';
         return '';
     };
 
-    const anios = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    const anios = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027];
 
     return `
         <div class="rpt-ventas-container rpt-cmai-mt-medium">
@@ -629,14 +633,23 @@ function _renderVentas(agrupacion) {
                 </tfoot>
             </table>
             
-            <div class="rpt-ventas-legend rpt-cmai-mt-medium rpt-d-flex rpt-gap-4">
-                <div class="rpt-d-flex rpt-align-items-center rpt-gap-1">
+            <div class="rpt-ventas-legend-container">
+                <div class="rpt-ventas-legend-spacer"></div>
+                <div class="rpt-ventas-legend-group pe1">
                     <div class="rpt-ventas-sq rpt-ventas-bg-pe1"></div>
                     <span>Plan Estratégico 2017-2019</span>
                 </div>
-                <div class="rpt-d-flex rpt-align-items-center rpt-gap-1">
+                <div class="rpt-ventas-legend-group pe2">
                     <div class="rpt-ventas-sq rpt-ventas-bg-pe2"></div>
                     <span>Plan Estratégico 2020-2022</span>
+                </div>
+                <div class="rpt-ventas-legend-group pe3">
+                    <div class="rpt-ventas-sq rpt-ventas-bg-pe3"></div>
+                    <span>Plan Estratégico 2023-2024</span>
+                </div>
+                <div class="rpt-ventas-legend-group pe4">
+                    <div class="rpt-ventas-sq rpt-ventas-bg-pe4"></div>
+                    <span>Plan Estratégico 2025-2027</span>
                 </div>
             </div>
         </div>`;

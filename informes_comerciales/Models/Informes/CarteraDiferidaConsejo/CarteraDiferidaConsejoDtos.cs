@@ -65,6 +65,8 @@ namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
         public decimal? Anio2023 { get; set; }
         public decimal? Anio2024 { get; set; }
         public decimal? Anio2025 { get; set; }
+        public decimal? Anio2026 { get; set; }
+        public decimal? Anio2027 { get; set; }
     }
 
     /// <summary>
@@ -81,6 +83,8 @@ namespace Elecnor_Informes_Comerciales.Models.Informes.CarteraDiferidaConsejo
         public decimal Total2023 { get; set; }
         public decimal Total2024 { get; set; }
         public decimal Total2025 { get; set; }
+        public decimal Total2026 { get; set; }
+        public decimal Total2027 { get; set; }
     }
 
     /// <summary>

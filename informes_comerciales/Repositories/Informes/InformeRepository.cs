@@ -136,7 +136,9 @@ public class InformeRepository
                                             [2022] AS Anio2022,
                                             [2023] AS Anio2023,
                                             [2024] AS Anio2024,
-                                            [2025] AS Anio2025
+                                            [2025] AS Anio2025,
+                                            [2026] AS Anio2026,
+                                            [2027] AS Anio2027
                                          FROM VentasRPT
                                          ORDER BY Mercado";
 

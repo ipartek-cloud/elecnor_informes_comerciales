@@ -278,7 +278,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 Anio2022 = d.Anio2022,
                 Anio2023 = d.Anio2023,
                 Anio2024 = d.Anio2024,
-                Anio2025 = d.Anio2025
+                Anio2025 = d.Anio2025,
+                Anio2026 = d.Anio2026,
+                Anio2027 = d.Anio2027
             }).ToList();
 
             var totales = new VentasTotalesDto
@@ -291,7 +293,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 Total2022 = datos.Sum(d => d.Anio2022 ?? 0),
                 Total2023 = datos.Sum(d => d.Anio2023 ?? 0),
                 Total2024 = datos.Sum(d => d.Anio2024 ?? 0),
-                Total2025 = datos.Sum(d => d.Anio2025 ?? 0)
+                Total2025 = datos.Sum(d => d.Anio2025 ?? 0),
+                Total2026 = datos.Sum(d => d.Anio2026 ?? 0),
+                Total2027 = datos.Sum(d => d.Anio2027 ?? 0)
             };
 
             return new VentasDto { Lineas = lineas, Totales = totales };
