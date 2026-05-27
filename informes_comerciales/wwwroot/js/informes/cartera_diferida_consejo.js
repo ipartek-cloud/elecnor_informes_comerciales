@@ -398,7 +398,7 @@ function _renderCarteraProduccion(agrup) {
                         <tr class="rpt-border-header" rpt-row-height-18>
                             <th class="rpt-text-end" rpt-border-top-none>${data.tituloColInicial}</th>
                             <th rpt-border-none></th>
-                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-rpt-w-100 rpt-text-start rpt-ps-2">Cartera Producción</div></th>
+                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-w-100 rpt-text-start rpt-ps-2">Cartera Producción</div></th>
                             <th rpt-border-none></th>
                             <th class="rpt-text-end" rpt-border-top-none>${data.tituloColActual}</th>
                             <th class="rpt-text-end" rpt-border-top-none>${data.tituloColDelta}</th>
@@ -413,7 +413,7 @@ function _renderCarteraProduccion(agrup) {
                             const showActual = (l.importeActual === 0) ? '' : val(l.importeActual);
                             const showVar = (l.porcentajeIncremento === null || l.porcentajeIncremento === 0) ? '' : formatPercentage(l.porcentajeIncremento);
 
-                            const labelClass = isIndented ? 'rpt-ps-4 rpt-text-grey' : '';
+                            const labelClass = isIndented ? 'rpt-cp-indent rpt-text-grey' : '';
 
                             return `
                                 <tr rpt-row-height-18>
@@ -508,7 +508,7 @@ function _renderCarteraDiferida(agrup) {
                             <th class="rpt-text-end">Nuevos *</th>
                             <th class="rpt-text-end">Total</th>
                             <th rpt-border-none></th>
-                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-rpt-w-100 rpt-text-start rpt-ps-2">Cartera Diferida</div></th>
+                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-w-100 rpt-text-start rpt-ps-2">Cartera Diferida</div></th>
                             <th rpt-border-none></th>
                             <th class="rpt-text-end">Contr.</th>
                             <th class="rpt-text-end">Ip</th>
@@ -609,7 +609,7 @@ function _renderVentas(agrupacion) {
                         <th class="rpt-ventas-title-cell">
                             <div class="rpt-ventas-badge">Ventas</div>
                         </th>
-                        ${anios.map(a => `<th class="${getBgClass(a)} rpt-text-center">${a}</th>`).join('')}
+                        ${anios.map(a => `<th class="${getBgClass(a)}">${a}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
