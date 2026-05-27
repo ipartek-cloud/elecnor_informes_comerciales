@@ -167,6 +167,11 @@
         page-break-after: avoid !important;
     }
 
+    /* Forzar los 10pt solo para el Nombre de la Dirección de Negocio en la impresión y PDF */
+    .rpt-table .rpt-ccdop-dn-header td.rpt-fs-10pt {
+        font-size: 10pt !important;
+    }
+
     .rpt-ccdop-table .rpt-detail-row {
         page-break-inside: avoid !important;
     }
