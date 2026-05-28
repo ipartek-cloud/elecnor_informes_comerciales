@@ -77,7 +77,7 @@ public class InformeActividadesService
     private PaisActividadesDto ProcesarBloque(List<ActividadPoco> filas, string nombrePais)
     {
         decimal totalActual = filas.Sum(x => x.ImporteContratadoAcumulados);
-        decimal totalAnterior = filas.Sum(x => x.ImporteContratadoAcumuladosAñoAnterior);
+        decimal totalAnterior = filas.Sum(x => x.ImporteContratadoAcumuladosAñoAnterior) * 1000;
         decimal totalLastYear = filas.Sum(x => x.ImporteContratadoAcumuladosLY);
 
         var bloque = new PaisActividadesDto
@@ -101,7 +101,7 @@ public class InformeActividadesService
             {
                 Actividad = fila.Actividad,
                 ImporteActual = Math.Round(fila.ImporteContratadoAcumulados, 0, MidpointRounding.AwayFromZero),
-                ImporteAnterior = Math.Round(fila.ImporteContratadoAcumuladosAñoAnterior, 0, MidpointRounding.AwayFromZero),
+                ImporteAnterior = Math.Round(fila.ImporteContratadoAcumuladosAñoAnterior * 1000, 0, MidpointRounding.AwayFromZero),
                 
                 // % s/Mercado: Peso de la actividad sobre el total del bloque
                 PorcentajeActualMercado = totalActual > 0
@@ -109,7 +109,7 @@ public class InformeActividadesService
                     : 0,
 
                 PorcentajeAnteriorMercado = totalAnterior > 0
-                    ? Math.Round((fila.ImporteContratadoAcumuladosAñoAnterior / totalAnterior) * 100, 0, MidpointRounding.AwayFromZero)
+                    ? Math.Round(((fila.ImporteContratadoAcumuladosAñoAnterior * 1000) / totalAnterior) * 100, 0, MidpointRounding.AwayFromZero)
                     : 0,
 
                 // Variación %: (Actual - LY) / LY
