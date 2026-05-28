@@ -87,7 +87,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                         Acumulado = SumarValores(gSDG.GroupBy(p => p.Pais).Select(gP => CrearFilaDato(gP.Key!, gP, false, true, mesActual).Acumulado))
                     }
                 })
-                .OrderBy(d => d.Nombre)
+                .OrderByDescending(d => d.Nombre)
                 .ToList();
 
             // Calculamos porcentajes finales para los totales de cada DG

@@ -38,7 +38,7 @@ function _renderizarPagina() {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="mercados" data-pagina-index="0" role="main"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body rpt-cmai-mt-standard">
+            <div class="report-body rpt-cmai-mt-standard rpt-mercado-body">
                 ${_renderContructorCompleto()}
             </div>
         </div>
@@ -115,7 +115,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = t
 
   <th rpt-border-none></th>`}
 
-  <th class="rpt-align-center rpt-text-white rpt-mercado-header-align">
+  <th class="rpt-align-start rpt-text-start rpt-text-white rpt-mercado-header-align">
   <div class="rpt-mercado-header-badge">${tituloCentral}</div>
   </th>
 
@@ -148,7 +148,7 @@ function _renderContructorCompleto(esImpresion = false) {
     // 1) BLOQUE GLOBAL: Mercado
     // El banner principal ya se incluye en el encabezado (_getHtmlEncabezado).
     html += `
-        <div class="rpt-mt-6 rpt-mb-4">
+        <div class="rpt-mercado-table-container">
             <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
                 ${_renderCabeceraCompartida('Mercado')}
                 <tbody>
@@ -172,7 +172,7 @@ ${_construirHtmlFila('', data.totalGlobal.mensual, data.totalGlobal.acumulado, t
 
         // Bloque A: DirNegocio (Nacional / Internacional)
         html += `
-            <div class="rpt-mb-2">
+            <div class="rpt-mercado-table-container">
                 <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
                     ${_renderCabeceraCompartida(dn.nombre, false)}
                     <tbody>
@@ -190,7 +190,7 @@ ${_construirHtmlFila('', dn.total.mensual, dn.total.acumulado, true)}
 
     // Bloque B: Unidades de Negocio
     html += `
-    <div class="rpt-mb-5">
+    <div class="rpt-mercado-table-container-last">
     <table class="rpt-table rpt-table-stackable rpt-mercado-layout rpt-mb-0 rpt-w-100">
       ${_renderCabeceraCompartida('Unidades de Negocio', false)}
       <tbody>

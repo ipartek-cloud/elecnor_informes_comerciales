@@ -27,13 +27,25 @@ Solo contiene reglas ÚNICAS de este informe. Lo compartido está en informes_ba
 
 /* Espaciado de filas: heredado de informes_base.css */
 
-/* Márgenes de bloques */
-.report-body {
-  /* Separación controlada por clase rpt-cmai-mt-standard */
+/* Separación superior uniforme de 40px entre el subtítulo del informe y el primer subinforme */
+.rpt-paper[data-informe="mercados"] .report-body.rpt-cmai-mt-standard.rpt-mercado-body {
+    margin-top: 40px !important;
 }
 
-/* Utilidades de Margen Personalizadas (Paridad con Cartera Diferida) */
-.rpt-mt-6 { margin-top: 0 !important; }
+/* Contenedores de tabla específicos para separar los subinformes */
+.rpt-mercado-table-container {
+    margin-bottom: 25px !important;
+}
+.rpt-mercado-table-container-last {
+    margin-bottom: 35px !important;
+}
+
+/* Banners de Dirección de Negocio (DG) */
+.rpt-banner-dg {
+    margin-top: 25px !important;
+    margin-bottom: 15px !important;
+    font-weight: bold !important; /* Forzar negrita en pantalla */
+}
 
 /* =============================================================================
 LAYOUT DE COLUMNAS (SISTEMA DE PROPORCIONES)
@@ -86,12 +98,13 @@ Clases para reemplazar estilos inline del JS
   background-color: #00468B !important;
   color: white !important;
   font-size: 8pt !important;
-  padding: 2px 0;
+  padding: 1px 0 1px 16px !important; /* padding izquierdo de 16px (1rem) para alinear con el detalle */
   margin: 0;
   border-radius: 0;
-  text-align: center;
+  text-align: left !important; /* alinear a la izquierda */
   display: block;
   width: 100%;
+  white-space: nowrap !important; /* evitar saltos de línea */
 }
 
 /* Ajustes de compactación para contenedores estrechos (< 700px) */
@@ -178,11 +191,11 @@ Las reglas generales de impresión están en informes_base.css
   }
 
 /* Proporciones de columnas para A4 (9 columnas con separadores) */
-.rpt-mercado-col-obj-m { width: 13% !important; }
-.rpt-mercado-col-contr-m { width: 13% !important; }
-.rpt-mercado-col-desc { width: 20% !important; }
-.rpt-mercado-col-obj-a { width: 15% !important; }
-.rpt-mercado-col-contr-a { width: 15% !important; }
+.rpt-mercado-col-obj-m { width: 12% !important; }
+.rpt-mercado-col-contr-m { width: 12% !important; }
+.rpt-mercado-col-desc { width: 24% !important; }
+.rpt-mercado-col-obj-a { width: 14% !important; }
+.rpt-mercado-col-contr-a { width: 14% !important; }
 .rpt-mercado-col-ip { width: 10% !important; }
 .rpt-mercado-col-var { width: 10% !important; }
 .rpt-col-10px { width: 5px !important; }
@@ -234,9 +247,27 @@ border-bottom: none !important;
 border: none !important;
 }
 
-  /* Seguridad: eliminar border-radius en print */
+  /* Seguridad: eliminar border-radius en print, forzar no-wrap y padding izquierdo */
   .rpt-mercado-header-badge {
     border-radius: 0 !important;
+    text-align: left !important;
+    padding-left: 16px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Contenedor papel para impresión - Unificar separación con margin-top y anular padding-top */
+  .rpt-paper--print.rpt-paper--mercados .report-body,
+  .rpt-paper[data-informe="mercados"] .report-body {
+    margin-top: 40px !important;
+    padding-top: 0 !important;
+  }
+
+  /* Contenedores de tabla en print */
+  .rpt-mercado-table-container {
+    margin-bottom: 18px !important;
+  }
+  .rpt-mercado-table-container-last {
+    margin-bottom: 24px !important;
   }
 
   /* Banner compacto - 14pt */
@@ -246,9 +277,12 @@ border: none !important;
     font-weight: normal !important;
   }
 
-  /* Banner de DG: override a 11pt para jerarquía visual (más pequeño que banner principal) */
+  /* Banner de DG: override a 11pt para jerarquía visual, forzar negrita y márgenes específicos */
   .rpt-banner-dg {
     font-size: 11pt !important;
+    font-weight: bold !important; /* Forzar negrita en print/PDF */
+    margin-top: 18px !important;
+    margin-bottom: 12px !important;
   }
 
   /* Padding numérico reducido unificado (incluye totales para alinear Ip/Var) */
@@ -277,3 +311,5 @@ border: none !important;
     margin-top: 8px !important;
   }
 }
+
+
