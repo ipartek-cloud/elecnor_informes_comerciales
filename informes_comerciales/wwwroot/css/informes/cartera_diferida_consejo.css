@@ -205,6 +205,11 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     padding-bottom: 1px;
 }
 
+/* Forzar que el th que envuelve el badge azul tenga fondo azul para eliminar el hueco inferior de alineación */
+.rpt-table-triple thead tr.rpt-border-header th.rpt-border-none.rpt-pad-0 {
+    background-color: #00468B !important;
+}
+
 /* Override específico: .rpt-label-blue-header dentro de .rpt-table-triple */
 .rpt-table-triple .rpt-label-blue-header {
     padding: 1px 7px; /* CMAI usa 1px en lugar de 2px (base) */
@@ -312,17 +317,27 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
      * SUBINFORMES CMAI: espaciado reducido para encajar en una sola hoja A4
      * ------------------------------------------------------------------------- */
     .rpt-sub-report-wrapper {
-        margin-top: 1.0rem !important;
+        margin-top: 28px !important;
         margin-bottom: 0 !important;
     }
 
     /* -------------------------------------------------------------------------
      * ESPACIADO VERTICAL: compacto para A4 (reducido para evitar salto de página)
      * ------------------------------------------------------------------------- */
-    .rpt-cmai-mt-medium { margin-top: 0.8rem !important; }
+    .rpt-cmai-mt-medium { margin-top: 32px !important; }
 
     .rpt-cmai-mt-huge {
-      margin-top: 1.0rem !important;
+      margin-top: 38px !important;
+    }
+
+    /* Ajuste de separación superior en PDF */
+    .rpt-paper--cartera_diferida_consejo .report-body {
+        padding-top: 0px !important;
+        margin-top: -20px !important;
+    }
+
+    .rpt-paper--cartera_diferida_consejo .rpt-subtitle {
+        margin-bottom: 0px !important;
     }
 
     /* -------------------------------------------------------------------------
@@ -445,6 +460,21 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
     .rpt-cma-footer-total {
         padding-right: 0 !important;
     }
+
+    /* Evitar que en print se dibuje borde inferior continuo en cabeceras de tablas triples */
+    .rpt-table-triple thead tr.rpt-border-header th.rpt-border-none,
+    .rpt-table-triple thead tr.rpt-border-header th[rpt-border-none] {
+        border-bottom: none !important;
+        border-top: none !important;
+        border: none !important;
+    }
+
+    /* Forzar que el th que envuelve el badge azul tenga fondo azul en print */
+    .rpt-table-triple thead tr.rpt-border-header th.rpt-border-none.rpt-pad-0 {
+        background-color: #00468B !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }
 
 
@@ -518,7 +548,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 
 .rpt-ventas-badge {
     background-color: #7F7F7F;
-    color: #000;
+    color: #fff;
     font-weight: bold;
     padding: 2px 8px;
     display: inline-block;
@@ -554,7 +584,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 }
 
 .rpt-ventas-total-row .rpt-ventas-row-label {
-    color: #000;
+    color: #00468B !important;
 }
 
 /* Espaciado entre bloques (2019-2020, 2022-2023, 2024-2025) */
@@ -631,9 +661,9 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
     }
 
     /* Badge "Ventas": fondo y texto explícitos para garantizar renderizado */
-    .rpt-ventas-badge {
+    .rpt-ventas-table .rpt-ventas-badge {
         background-color: #7F7F7F !important;
-        color: #000 !important;
+        color: #fff !important;
         font-size: 8pt !important;
     }
 
@@ -668,6 +698,9 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
     }
     .rpt-ventas-total-row td {
         border-top: 0.3pt solid #888 !important;
+    }
+    .rpt-ventas-total-row .rpt-ventas-row-label {
+        color: #00468B !important;
     }
 
     /* Forzar impresión exacta de colores de fondo en todos los agentes */
