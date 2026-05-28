@@ -327,6 +327,16 @@ public class InformePortableService
                 continue;
             }
 
+            // Parámetros de umbrales dinámicos (umbral1-4) para informe Contrataciones
+            if (paramName == "umbral1" || paramName == "umbral2" || paramName == "umbral3" || paramName == "umbral4")
+            {
+                if (filtros != null && filtros.TryGetValue(paramName, out var umbralStr) && decimal.TryParse(umbralStr, out var umbralVal))
+                    args.Add(umbralVal);
+                else
+                    args.Add(ResolveDefaultValue(param));
+                continue;
+            }
+
             // Para cualquier otro parámetro, usar el valor por defecto del método si existe
             args.Add(ResolveDefaultValue(param));
         }

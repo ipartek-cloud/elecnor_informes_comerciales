@@ -5,27 +5,36 @@
   color: #00468B;
   font-size: 9pt !important; /* PT obligatorio - reemplaza 1rem */
   font-weight: bold;
-  margin: 1rem 0 0.5rem 0;
+  margin: 1rem 0 0 0; /* Sin margen izquierdo para que la línea empiece en el 0% */
   border-bottom: 0.3pt solid #00468B; /* Línea horizontal azul igual que Contrataciones_AI */
-  padding-bottom: 5px;
+  padding-bottom: 3px;
+  padding-left: 3%; /* Desplazar solo el texto para alinear con el detalle */
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
 }
 
-/* Cabecera de mes (barra azul claro) - Mismo ancho que la tabla */
+/* Cabecera de mes (barra azul claro) - Alineada con títulos de sección */
 .rpt-month-header {
   background-color: #D6EAF8;
   color: #00468B;
   font-weight: bold;
-  font-size: 8pt !important; /* PT obligatorio - reemplaza 0.85rem */
-  padding: 4px 10px;
-  margin: 0 auto 0.5rem auto; /* Centrado, margen inferior separa de la tabla */
-  width: 98%; /* Mismo ancho que la tabla */
+  font-size: 9pt !important; /* Modificado de 8pt a 9pt */
+  padding: 4px 10px 4px 3%; /* El fondo empieza en 0%, el texto se desplaza al 3% para alinear */
+  margin: 0 0 0.5rem 0; /* Sin margen izquierdo para que el fondo empiece en el 0% */
+  width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* Tabla del bloque principal y subinformes genéricos - Rigidez columnar */
+/* Aumento de separación vertical del subtítulo en Contrataciones */
+.rpt-subtitle {
+  margin-bottom: 1.2rem !important;
+}
+
+/* Tabla del bloque principal y subinformes genéricos */
 .rpt-table-contrataciones {
-  width: 98% !important;
-  margin: 0 auto !important; /* Mismo centrado que la cabecera */
+  width: 100% !important;
   border-collapse: collapse;
   table-layout: fixed !important; /* Rigidez columnar */
 }
@@ -57,19 +66,24 @@
 
 .rpt-contrataciones-anno-nacional-anterior-section .rpt-section-title {
   color: #8a8a8a !important;
+  border-bottom-color: #8a8a8a !important;
 }
 
-/* Último subinforme (sin borde inferior) */
+/* Último subinforme: mismo estilo gris que el primer subinforme anterior */
 .rpt-contrataciones-last .rpt-section-title {
-  border-bottom: none !important;
+  color: #8a8a8a !important;
+  border-bottom-color: #8a8a8a !important;
 }
 
-/* Línea separadora genérica: Negra y bien contrastada - Mismo ancho que la tabla */
+.rpt-contrataciones-last td {
+  color: #8a8a8a !important;
+}
+
+/* Línea separadora genérica para subinformes (gris, coherente con el estilo de títulos) */
 .rpt-subreport-separator {
   border: 0;
-  border-top: 1px solid #333;
-  margin: 0.5rem auto; /* Centrado como la tabla */
-  width: 98%; /* Mismo ancho que la tabla */
+  border-top: 0.3pt solid #8a8a8a;
+  margin: 0 0 0.3rem 0; /* Pegada al título, pequeño margen inferior */
 }
 
 /* Reducción de fuente para subinformes históricos (grises) */
@@ -150,19 +164,23 @@
   }
 
   /* Grosor hairline 0.3pt para bordes y separadores */
-  .rpt-section-title,
-  .rpt-subreport-separator,
+  .rpt-section-title {
+    border-bottom-width: 0.3pt !important;
+  }
+
+  .rpt-subreport-separator {
+    border-top-width: 0.3pt !important;
+  }
+
   .rpt-badge-ai {
     border-width: 0.3pt !important;
-    border-bottom-width: 0.3pt !important;
-    border-top-width: 0.3pt !important;
   }
 
 
   /* Subtítulo - Espacio equilibrado */
   .rpt-subtitle {
     font-size: 8pt !important;
-    margin-bottom: 0.4rem !important;
+    margin-bottom: 1.2rem !important; /* Separación vertical incrementada para paridad con la versión Web */
   }
 
   /* Banner - Espacio equilibrado para separar del contenido */

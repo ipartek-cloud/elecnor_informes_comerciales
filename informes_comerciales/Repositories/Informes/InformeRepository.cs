@@ -703,6 +703,9 @@ public class InformeRepository
                                       AND rpt.Mes = @Mes
                                       AND rpt.Ocultar = 0
                                       AND rpt.Pais = @Pais
+                                      AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                      AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                      AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
                                     GROUP BY
                                         rpt.NombreCliente_OK,
                                         rpt.DescripcionOferta_OK
@@ -779,6 +782,9 @@ public class InformeRepository
                                         AND rpt.Mes < @Mes
                                         AND rpt.Ocultar = 0
                                         AND rpt.Pais = @Pais
+                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
                                     GROUP BY
                                         m.Nombre_Mes,
                                         rpt.NombreCliente_OK,
@@ -831,6 +837,9 @@ public class InformeRepository
                                         AND rpt.Mes = @Mes
                                         AND rpt.Ocultar = 0
                                         AND rpt.Pais = @Pais
+                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
                                     GROUP BY
                                         m.Nombre_Mes,
                                         rpt.NombreCliente_OK,
@@ -885,6 +894,9 @@ public class InformeRepository
                 AND rpt.Mes < @Mes
                 AND rpt.Ocultar = 0
                 AND rpt.Pais = @Pais
+                AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
             GROUP BY
                 m.Nombre_Mes,
                 rpt.NombreCliente_OK,

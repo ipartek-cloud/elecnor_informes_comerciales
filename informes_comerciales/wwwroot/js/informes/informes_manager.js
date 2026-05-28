@@ -69,7 +69,7 @@ function inicializarTooltipsFiltros() {
     allBtns.forEach(btn => {
         // En HTML5, los data-* siempre se normalizan a minúsculas en el dataset
         const ds = btn.dataset;
-        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined) {
+        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined || ds.umbral1 !== undefined) {
             btnsConPop.push(btn);
             // Extraer nombre del informe del onclick original y guardarlo en el dataset
             if (!ds.nombreInforme) {
@@ -102,6 +102,10 @@ function inicializarTooltipsFiltros() {
             const defaultPaises = ds.limitepaises || 20;
             const defaultUmbral = ds.umbral || 0;
             const defaultNumeroPaises = ds.numeropaises || 0;
+            const defaultUmbral1 = ds.umbral1 || 5000;
+            const defaultUmbral2 = ds.umbral2 || 15000;
+            const defaultUmbral3 = ds.umbral3 || 10000;
+            const defaultUmbral4 = ds.umbral4 || 25000;
 
             let content = `
                 <div class="rpt-popover-filtros p-2" style="min-width: 180px; font-family: Verdana, Geneva, sans-serif;">
@@ -150,6 +154,31 @@ function inicializarTooltipsFiltros() {
                 `;
             }
 
+            if (ds.umbral1 !== undefined) {
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 1º (Euros):</label>
+                        <input type="number" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultUmbral1}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 2º (Euros):</label>
+                        <input type="number" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultUmbral2}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 3º (Euros):</label>
+                        <input type="number" id="pop-umbral3" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultUmbral3}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 4º (Euros):</label>
+                        <input type="number" id="pop-umbral4" class="form-control form-control-sm text-center fw-bold" 
+                               value="${defaultUmbral4}" step="1000" style="font-size: 0.8rem;">
+                    </div>
+                `;
+            }
+
             content += `
                 <button class="btn btn-primary btn-sm w-100 mt-2 rpt-btn-pop-aceptar" id="btn-pop-aceptar">
                     <i class="fas fa-play me-1"></i> Generar Informe
@@ -169,6 +198,10 @@ function inicializarTooltipsFiltros() {
                     const paises = box.querySelector('#pop-paises')?.value;
                     const umbral = box.querySelector('#pop-umbral')?.value;
                     const numeroPaises = box.querySelector('#pop-numeropaises')?.value;
+                    const umbral1 = box.querySelector('#pop-umbral1')?.value;
+                    const umbral2 = box.querySelector('#pop-umbral2')?.value;
+                    const umbral3 = box.querySelector('#pop-umbral3')?.value;
+                    const umbral4 = box.querySelector('#pop-umbral4')?.value;
                     
                     const nombreInforme = instance.reference.dataset.nombreInforme;
                     
@@ -179,7 +212,11 @@ function inicializarTooltipsFiltros() {
                         limiteImporte: monto ? parseFloat(monto) : null,
                         limitePaises: paises ? parseInt(paises, 10) : null,
                         umbral: umbral ? parseFloat(umbral) : null,
-                        numeroPaises: numeroPaises ? parseInt(numeroPaises, 10) : null
+                        numeroPaises: numeroPaises ? parseInt(numeroPaises, 10) : null,
+                        umbral1: umbral1 ? parseFloat(umbral1) : null,
+                        umbral2: umbral2 ? parseFloat(umbral2) : null,
+                        umbral3: umbral3 ? parseFloat(umbral3) : null,
+                        umbral4: umbral4 ? parseFloat(umbral4) : null
                     });
                 };
 
@@ -242,6 +279,34 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
         numeroPaisesFinal = filtrosManuales.numeroPaises;
     } else {
         numeroPaisesFinal = btn?.dataset?.numeropaises !== undefined ? parseInt(btn.dataset.numeropaises, 10) : null;
+    }
+
+    let umbral1Final;
+    if (filtrosManuales && filtrosManuales.umbral1 !== undefined && filtrosManuales.umbral1 !== null) {
+        umbral1Final = filtrosManuales.umbral1;
+    } else {
+        umbral1Final = btn?.dataset?.umbral1 ? parseFloat(btn.dataset.umbral1) : null;
+    }
+
+    let umbral2Final;
+    if (filtrosManuales && filtrosManuales.umbral2 !== undefined && filtrosManuales.umbral2 !== null) {
+        umbral2Final = filtrosManuales.umbral2;
+    } else {
+        umbral2Final = btn?.dataset?.umbral2 ? parseFloat(btn.dataset.umbral2) : null;
+    }
+
+    let umbral3Final;
+    if (filtrosManuales && filtrosManuales.umbral3 !== undefined && filtrosManuales.umbral3 !== null) {
+        umbral3Final = filtrosManuales.umbral3;
+    } else {
+        umbral3Final = btn?.dataset?.umbral3 ? parseFloat(btn.dataset.umbral3) : null;
+    }
+
+    let umbral4Final;
+    if (filtrosManuales && filtrosManuales.umbral4 !== undefined && filtrosManuales.umbral4 !== null) {
+        umbral4Final = filtrosManuales.umbral4;
+    } else {
+        umbral4Final = btn?.dataset?.umbral4 ? parseFloat(btn.dataset.umbral4) : null;
     }
     
     // 0. Verificar si está activado el modo HTML Portable
@@ -313,7 +378,11 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
                 mostrarTitulo: mostrarTitulo,
                 limiteImporte: limiteImporteFinal,
                 limitePaises: limitePaisesFinal,
-                informe: btn?.dataset?.informe || null
+                informe: btn?.dataset?.informe || null,
+                umbral1: umbral1Final,
+                umbral2: umbral2Final,
+                umbral3: umbral3Final,
+                umbral4: umbral4Final
             };
 
             await modulo.ejecutar(parametros);
@@ -425,6 +494,18 @@ async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labe
             }
             if (limitesExtras.numeroPaises !== undefined && limitesExtras.numeroPaises !== null) {
                 url += `&numeroPaises=${encodeURIComponent(limitesExtras.numeroPaises)}`;
+            }
+            if (limitesExtras.umbral1 !== undefined && limitesExtras.umbral1 !== null) {
+                url += `&umbral1=${encodeURIComponent(limitesExtras.umbral1)}`;
+            }
+            if (limitesExtras.umbral2 !== undefined && limitesExtras.umbral2 !== null) {
+                url += `&umbral2=${encodeURIComponent(limitesExtras.umbral2)}`;
+            }
+            if (limitesExtras.umbral3 !== undefined && limitesExtras.umbral3 !== null) {
+                url += `&umbral3=${encodeURIComponent(limitesExtras.umbral3)}`;
+            }
+            if (limitesExtras.umbral4 !== undefined && limitesExtras.umbral4 !== null) {
+                url += `&umbral4=${encodeURIComponent(limitesExtras.umbral4)}`;
             }
         }
 

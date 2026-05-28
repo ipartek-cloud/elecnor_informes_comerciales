@@ -10,7 +10,7 @@ const estado = crearEstadoInforme();
 /**
  * Punto de entrada principal para la ejecución del informe.
  */
-export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo, umbral1, umbral2, umbral3, umbral4 }) {
     try {
         // 1. Verificar y ejecutar generación previa si el checkbox está activado
         const generacionOk = await ejecutarGeneracionPrevia(
@@ -22,7 +22,13 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarT
         if (!generacionOk) return;
 
         // 2. Cargar el informe (con o sin generación previa)
-        const url = `/api/Contrataciones?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+        // Construir URL con umbrales dinámicos (solo si se proporcionan)
+        let url = `/api/Contrataciones?anio=${anio}&mes=${mes}`;
+        if (umbral1 != null) url += `&umbral1=${umbral1}`;
+        if (umbral2 != null) url += `&umbral2=${umbral2}`;
+        if (umbral3 != null) url += `&umbral3=${umbral3}`;
+        if (umbral4 != null) url += `&umbral4=${umbral4}`;
+        url += `&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
@@ -79,20 +85,23 @@ async function _renderCuerpoInforme() {
     const data = estado.informeGlobalData;
     let html = '';
 
-    // Renderizar informe principal (Solo si hay datos, sin alertas de "No hay datos")
-    if (data?.informePrincipal?.datos && data.informePrincipal.datos.length > 0) {
+    // Renderizar encabezado del informe principal SIEMPRE (título sección + mes),
+    // incluso si no hay filas de datos (p.ej. todas filtradas por "SIN").
+    if (data?.informePrincipal) {
+        const tieneFilas = data.informePrincipal.datos && data.informePrincipal.datos.length > 0;
         html = `
             <div class="rpt-content-block">
                 ${_renderTituloSeccion()}
                 ${_renderCabeceraMes(data.informePrincipal)}
-                ${_renderTablaContrataciones(data.informePrincipal)}
+                ${tieneFilas ? _renderTablaContrataciones(data.informePrincipal) : ''}
             </div>
         `;
     }
     // Renderizar SubInforme 1: Año Nacional Anterior
     if (data?.subInformes?.annoNacionalAnterior?.length > 0) {
+        const u2 = data.meta?.filtros?.umbral2 ?? 15000;
         html += _renderSubInformeGenerico(data.subInformes.annoNacionalAnterior, {
-            titulo: 'Anterior > 15 M',
+            titulo: `Anterior > ${_formatearUmbral(u2)} M`,
             mostrarMes: false,
             claseSeccion: 'rpt-contrataciones-anno-nacional-anterior-section'
         });
@@ -100,8 +109,9 @@ async function _renderCuerpoInforme() {
 
     // Renderizar SubInforme 2: Internacional Mes (Al final como solicitado)
     if (data?.subInformes?.annoInternacionalMes?.length > 0) {
+        const u3 = data.meta?.filtros?.umbral3 ?? 10000;
         html += _renderSubInformeGenerico(data.subInformes.annoInternacionalMes, {
-            titulo: 'Mercado Internacional > 10 M',
+            titulo: `Mercado Internacional > ${_formatearUmbral(u3)} M`,
             mostrarMes: true,
             claseSeccion: '' // Sin clase extra, usa la base rpt-content-block
         });
@@ -109,8 +119,9 @@ async function _renderCuerpoInforme() {
 
   // Renderizar SubInforme 3: Internacional Anterior (Último bloque - sin borde inferior)
   if (data?.subInformes?.annoInternacionalAnterior?.length > 0) {
+    const u4 = data.meta?.filtros?.umbral4 ?? 25000;
     html += _renderSubInformeGenerico(data.subInformes.annoInternacionalAnterior, {
-      titulo: 'Anterior > 25 M',
+      titulo: `Anterior > ${_formatearUmbral(u4)} M`,
       mostrarMes: false,
       claseSeccion: 'rpt-contrataciones-last' // Clase especial para el último subinforme (sin borde)
     });
@@ -141,7 +152,7 @@ function _renderSubInformeGenerico(datos, config) {
     `;
   }).join('');
 
-    const htmlMes = config.mostrarMes ? `<div class="rpt-month-header">${datos[0].meses}</div>` : '<hr class="rpt-subreport-separator">';
+    const htmlMes = config.mostrarMes ? `<div class="rpt-month-header">${datos[0].meses}</div>` : '';
 
     return `
         <div class="rpt-content-block ${config.claseSeccion}">
@@ -157,7 +168,19 @@ function _renderSubInformeGenerico(datos, config) {
 }
 
 function _renderTituloSeccion() {
-    return '<h3 class="rpt-section-title">Mercado Nacional > 5 M</h3>';
+    const data = estado.informeGlobalData;
+    const u1 = data?.meta?.filtros?.umbral1 ?? 5000;
+    return `<h3 class="rpt-section-title">Mercado Nacional > ${_formatearUmbral(u1)} M</h3>`;
+}
+
+/**
+ * Formatea un umbral numérico (en miles de euros) dividiéndolo entre 1000
+ * para mostrar en el título con el sufijo "M".
+ * Ej: 5000 → "5", 15000 → "15", 10000 → "10"
+ */
+function _formatearUmbral(valor) {
+    const miles = valor / 1000;
+    return Number.isInteger(miles) ? miles.toString() : miles.toFixed(1);
 }
 
 function _renderCabeceraMes(data) {

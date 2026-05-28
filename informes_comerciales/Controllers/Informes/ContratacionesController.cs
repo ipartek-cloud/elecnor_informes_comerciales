@@ -7,7 +7,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes" })]
+[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes", "umbral1", "umbral2", "umbral3", "umbral4" })]
 public class ContratacionesController : ControllerBase
 {
     private readonly InformeContratacionesService _service;
@@ -18,12 +18,12 @@ public class ContratacionesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetInformeCompleto(int anio, int mes)
+    public async Task<IActionResult> GetInformeCompleto(int anio, int mes, [FromQuery] decimal? umbral1 = null, [FromQuery] decimal? umbral2 = null, [FromQuery] decimal? umbral3 = null, [FromQuery] decimal? umbral4 = null)
     {
         if (anio > DateTime.Now.Year)
             return BadRequest("El año de consulta no puede ser superior al año actual.");
 
-        var result = await _service.ObtenerInformeCompletoAsync(anio, mes);
+        var result = await _service.ObtenerInformeCompletoAsync(anio, mes, umbral1, umbral2, umbral3, umbral4);
         return Ok(result);
     }
 

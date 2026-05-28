@@ -20,19 +20,19 @@ public class InformeContratacionesService
     /// <summary>
     /// Obtiene el informe completo de Contrataciones (informe principal + todos los subinformes).
     /// </summary>
-    public async Task<ContratacionesResponseDto> ObtenerInformeCompletoAsync(int anio, int mes)
+    public async Task<ContratacionesResponseDto> ObtenerInformeCompletoAsync(int anio, int mes, decimal? umbral1 = null, decimal? umbral2 = null, decimal? umbral3 = null, decimal? umbral4 = null)
     {
-        // 1. Definir umbrales y parámetros (Lógica de Negocio centralizada en el Servicio)
-        const decimal umbralNacionalPrincipal = 5000;
-        const decimal umbralNacionalAnterior = 15000;
-        const decimal umbralInternacionalMes = 10000;
-        const decimal umbralInternacionalAnterior = 25000;
+        // 1. Definir umbrales y parámetros (Lógica de Negocio centralizada en el Servicio, usando valores por defecto si son nulos)
+        decimal u1 = umbral1 ?? 5000;
+        decimal u2 = umbral2 ?? 15000;
+        decimal u3 = umbral3 ?? 10000;
+        decimal u4 = umbral4 ?? 25000;
 
         // 2. Lanzar las 4 consultas en paralelo
-        var tareaPrincipal = ObtenerInformeAsync(anio, mes, umbralNacionalPrincipal, "nacional");
-        var tareaNacionalAnterior = _repository.ObtenerContratacionesAnnoNacionalAnteriorAsync(anio, mes, umbralNacionalAnterior, "nacional");
-        var tareaInternacionalMes = _repository.ObtenerContratacionesAnnoInternacionalMesAsync(anio, mes, umbralInternacionalMes, "internacional");
-        var tareaInternacionalAnterior = _repository.ObtenerContratacionesAnnoInternacionalAnteriorAsync(anio, mes, umbralInternacionalAnterior, "internacional");
+        var tareaPrincipal = ObtenerInformeAsync(anio, mes, u1, "nacional");
+        var tareaNacionalAnterior = _repository.ObtenerContratacionesAnnoNacionalAnteriorAsync(anio, mes, u2, "nacional");
+        var tareaInternacionalMes = _repository.ObtenerContratacionesAnnoInternacionalMesAsync(anio, mes, u3, "internacional");
+        var tareaInternacionalAnterior = _repository.ObtenerContratacionesAnnoInternacionalAnteriorAsync(anio, mes, u4, "internacional");
         
         // 3. Esperar a que todas terminen
         await Task.WhenAll(tareaPrincipal, tareaNacionalAnterior, tareaInternacionalMes, tareaInternacionalAnterior);
@@ -60,12 +60,31 @@ public class InformeContratacionesService
         };
 
         // 5. Construir respuesta unificada
-        return new ContratacionesResponseDto
+        var response = new ContratacionesResponseDto
         {
             Meta = informePrincipal.Meta,
             InformePrincipal = informePrincipal,
             SubInformes = subInformes
         };
+
+        // Rellenar filtros detallados para que el frontend los conozca
+        response.Meta.Filtros = new
+        {
+            Anio = anio,
+            Mes = mes,
+            Umbral1 = u1,
+            Umbral2 = u2,
+            Umbral3 = u3,
+            Umbral4 = u4
+        };
+
+        // También propagamos en la meta del informe principal para consistencia
+        if (response.InformePrincipal != null)
+        {
+            response.InformePrincipal.Meta.Filtros = response.Meta.Filtros;
+        }
+
+        return response;
     }
 
     public async Task<ContratacionesDto> ObtenerInformeAsync(int anio, int mes, decimal importe, string pais)
