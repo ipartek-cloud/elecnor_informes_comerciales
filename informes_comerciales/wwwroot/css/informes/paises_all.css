@@ -31,6 +31,7 @@ Reutiliza los estilos de paises.css con selectors para data-informe="paises_all"
 .rpt-paises-col-pais { width: 30%; }
 
 .rpt-paises-table {
+  width: 88% !important;
   margin: 0 auto !important;
 }
 
