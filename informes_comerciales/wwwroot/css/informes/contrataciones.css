@@ -77,6 +77,7 @@
 
 .rpt-contrataciones-last td {
   color: #8a8a8a !important;
+  font-size: 7pt !important;
 }
 
 /* Línea separadora genérica para subinformes (gris, coherente con el estilo de títulos) */
@@ -89,6 +90,7 @@
 /* Reducción de fuente para subinformes históricos (grises) */
 .rpt-contrataciones-anno-nacional-anterior-section td {
   color: #8a8a8a !important;
+  font-size: 7pt !important;
 }
 
 /* =============================================================================

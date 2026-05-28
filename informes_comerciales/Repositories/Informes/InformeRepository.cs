@@ -946,6 +946,9 @@ public class InformeRepository
                                         rpt.Año = @Anio
                                         AND rpt.Mes = @Mes
                                         AND rpt.Ocultar = 0
+                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
                                     GROUP BY
                                         rpt.Año,
                                         rpt.Pais,
@@ -1013,6 +1016,9 @@ public class InformeRepository
                                         rpt.Año = @Anio
                                         AND rpt.Mes < @Mes
                                         AND rpt.Ocultar = 0
+                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
                                     GROUP BY
                                         rpt.Año,
                                         rpt.Pais,

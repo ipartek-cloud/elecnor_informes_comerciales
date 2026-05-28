@@ -11,7 +11,7 @@ const estado = crearEstadoInforme();
 /**
  * Función principal de ejecución del informe.
  */
-export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarTitulo, umbral1, umbral2 }) {
     try {
         // 1. Verificar y ejecutar generación previa si el checkbox está activado
         const generacionOk = await ejecutarGeneracionPrevia(
@@ -23,7 +23,10 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarT
         if (!generacionOk) return;
 
         // 2. Cargar el informe
-        const url = `/api/ContratacionesAI?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+        let url = `/api/ContratacionesAI?anio=${anio}&mes=${mes}`;
+        if (umbral1 != null) url += `&umbral1=${umbral1}`;
+        if (umbral2 != null) url += `&umbral2=${umbral2}`;
+        url += `&_=${Date.now()}`;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
@@ -93,54 +96,60 @@ async function _renderCuerpoInforme() {
     let html = '';
 
     // 1. BLOQUE PRINCIPAL (MES ACTUAL)
-    if (data.datos && data.datos.length > 0) {
+    if (data.datos) {
+        const tieneFilas = data.datos.length > 0;
+        const u1 = data.meta?.filtros?.umbral1 ?? 300;
         const mesNombre = getNombreMes(data.meta.filtros.mes);
-    const filas = data.datos.map(item => `
-    <tr class="${RPT_CLASSES.DETAIL_ROW}">
-      <td class="rpt-col-ai rpt-align-center rpt-text-small rpt-text-muted">${item.mercado}</td>
-      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
-      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
-      <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
-    </tr>
-  `).join('');
+        const filas = data.datos.map(item => `
+        <tr class="${RPT_CLASSES.DETAIL_ROW}">
+          <td class="rpt-col-ai rpt-align-center rpt-text-small rpt-text-muted">${item.mercado}</td>
+          <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
+          <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
+          <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
+        </tr>
+      `).join('');
 
-    html += `
-    <div class="rpt-content-block">
-      <div class="rpt-section-ai-header rpt-mt-4 rpt-mb-2">
-        Asociado a Inversión > 0,3M
-      </div>
-                <div class="rpt-month-header">${mesNombre}</div>
-                <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
-                    <tbody>
-                        ${filas}
-                    </tbody>
-                </table>
-            </div>
+        html += `
+        <div class="rpt-content-block">
+          <div class="rpt-section-ai-header">
+            Asociado a Inversión > ${_formatearUmbral(u1)}M
+          </div>
+          <div class="rpt-month-header">${mesNombre}</div>
+          ${tieneFilas ? `
+          <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
+              <tbody>
+                  ${filas}
+              </tbody>
+          </table>` : ''}
+        </div>
         `;
     }
 
     // 2. SUBINFORME (MESES ANTERIORES ACUMULADOS) - Estilo Gris Histórico
-    if (data.datosAnterior && data.datosAnterior.length > 0) {
-    const filasAnt = data.datosAnterior.map(item => `
-    <tr class="${RPT_CLASSES.DETAIL_ROW}">
-      <td class="rpt-col-ai rpt-align-center rpt-text-small">${item.mercado}</td>
-      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
-      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
-      <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
-    </tr>
-  `).join('');
+    if (data.datosAnterior) {
+        const tieneFilas = data.datosAnterior.length > 0;
+        const u2 = data.meta?.filtros?.umbral2 ?? 700;
+        const filasAnt = data.datosAnterior.map(item => `
+        <tr class="${RPT_CLASSES.DETAIL_ROW}">
+          <td class="rpt-col-ai rpt-align-center rpt-text-small">${item.mercado}</td>
+          <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
+          <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
+          <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
+        </tr>
+      `).join('');
 
-    html += `
-    <div class="rpt-content-block rpt-subreport-ai-anterior">
-      <div class="rpt-section-ai-header rpt-mt-4 rpt-mb-2">
-        Anterior > 0,7M
-      </div>
-                <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
-                    <tbody>
-                        ${filasAnt}
-                    </tbody>
-                </table>
-            </div>
+        html += `
+        <div class="rpt-content-block rpt-subreport-ai-anterior">
+          <div class="rpt-section-ai-header">
+            Anterior > ${_formatearUmbral(u2)}M
+          </div>
+          ${tieneFilas ? `
+          <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
+              <tbody>
+                  ${filasAnt}
+              </tbody>
+          </table>` : ''}
+        </div>
         `;
     }
 
@@ -148,6 +157,16 @@ async function _renderCuerpoInforme() {
     if (!html) return `<div class="rpt-align-center rpt-p-5 rpt-text-muted">No se han encontrado registros para el periodo seleccionado.</div>`;
 
     return html;
+}
+
+/**
+ * Formatea un umbral numérico (en miles de euros) dividiéndolo entre 1000
+ * para mostrar en el título con el sufijo "M".
+ * Ej: 300 → "0,3", 700 → "0,7", 1000 → "1"
+ */
+function _formatearUmbral(valor) {
+    const millones = valor / 1000;
+    return millones.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(',0', '');
 }
 
 /**

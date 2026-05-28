@@ -45,8 +45,12 @@
   color: #00468B;
   font-weight: bold;
   font-size: 10pt !important;
-  padding: 2px 0;
+  padding: 2px 0 2px 5%; /* Desplazar texto al 5% para alinear con el detalle */
   border-bottom: 0.3pt solid #00468B;
+  margin: 1rem 0 0 0; /* Sin margen izquierdo para que la línea empiece en 0% */
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
 }
 
 /* Cabecera de mes (Mantener paridad con Contrataciones) */
@@ -54,11 +58,17 @@
   background-color: #D6EAF8;
   color: #00468B;
   font-weight: bold;
-  font-size: 8pt !important;
-  padding: 4px 10px;
-  margin: 0 auto 0.5rem auto;
-  width: 98%;
+  font-size: 9pt !important; /* Incrementado de 8pt a 9pt */
+  padding: 4px 10px 4px 5%; /* El fondo empieza en 0%, el texto se desplaza al 5% */
+  margin: 0 0 0.5rem 0; /* Sin margen izquierdo para que el fondo empiece en 0% */
+  width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Aumento de separación vertical del subtítulo en Contrataciones AI */
+.rpt-subtitle {
+  margin-bottom: 1.2rem !important;
 }
 
 /* =============================================================================
@@ -78,6 +88,7 @@
 /* Detalle del subinforme en gris suave (#8C8C8C) */
 .rpt-subreport-ai-anterior td {
   color: #8C8C8C !important;
+  font-size: 7pt !important;
 }
 
 /* Asegurar que el badge AI también sea gris en el subinforme */
@@ -154,7 +165,7 @@
   /* Subtítulo - Espacio ajustado */
   .rpt-subtitle {
     font-size: 8pt !important;
-    margin-bottom: 0.4rem !important;
+    margin-bottom: 1.2rem !important; /* Separación vertical incrementada para paridad con la versión Web */
   }
 
   /* Banner - Espacio ajustado */
@@ -182,6 +193,11 @@
   /* Informe principal: fuente 8pt estándar */
   .rpt-table-contrataciones-ai td {
     font-size: 8pt !important;
+  }
+
+  /* Subinforme histórico: fuente 7pt */
+  .rpt-subreport-ai-anterior td {
+    font-size: 7pt !important;
   }
 
   /* Cabecera de sección con hairline en PDF */

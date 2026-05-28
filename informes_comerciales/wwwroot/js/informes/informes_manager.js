@@ -59,9 +59,6 @@ export function limpiarCssInformes() {
 function inicializarTooltipsFiltros() {
     if (typeof tippy === 'undefined') return;
 
-    // Destruir instancias previas
-    tippy.destroyAll?.();
-
     // 1. Identificar botones que requieren Popover (Límites o Umbral)
     const allBtns = document.querySelectorAll('.btn.rpt-btn-index');
     const btnsConPop = [];
@@ -70,7 +67,14 @@ function inicializarTooltipsFiltros() {
         // En HTML5, los data-* siempre se normalizan a minúsculas en el dataset
         const ds = btn.dataset;
         if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined || ds.umbral1 !== undefined) {
+            
+            // Destruir instancia de Tippy previa si existe en este botón para evitar acumulaciones
+            if (btn._tippy) {
+                btn._tippy.destroy();
+            }
+
             btnsConPop.push(btn);
+            
             // Extraer nombre del informe del onclick original y guardarlo en el dataset
             if (!ds.nombreInforme) {
                 const onclickAttr = btn.getAttribute('onclick');
@@ -159,18 +163,30 @@ function inicializarTooltipsFiltros() {
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 1º (Euros):</label>
                         <input type="number" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral1}" step="1000" style="font-size: 0.8rem;">
+                               value="${defaultUmbral1}" step="100" style="font-size: 0.8rem;">
                     </div>
+                `;
+            }
+            if (ds.umbral2 !== undefined) {
+                content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 2º (Euros):</label>
                         <input type="number" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral2}" step="1000" style="font-size: 0.8rem;">
+                               value="${defaultUmbral2}" step="100" style="font-size: 0.8rem;">
                     </div>
+                `;
+            }
+            if (ds.umbral3 !== undefined) {
+                content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 3º (Euros):</label>
                         <input type="number" id="pop-umbral3" class="form-control form-control-sm text-center fw-bold" 
                                value="${defaultUmbral3}" step="1000" style="font-size: 0.8rem;">
                     </div>
+                `;
+            }
+            if (ds.umbral4 !== undefined) {
+                content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 4º (Euros):</label>
                         <input type="number" id="pop-umbral4" class="form-control form-control-sm text-center fw-bold" 
@@ -319,7 +335,11 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
                 limiteImporte: limiteImporteFinal,
                 limitePaises: limitePaisesFinal,
                 umbral: umbralFinal,
-                numeroPaises: numeroPaisesFinal
+                numeroPaises: numeroPaisesFinal,
+                umbral1: umbral1Final,
+                umbral2: umbral2Final,
+                umbral3: umbral3Final,
+                umbral4: umbral4Final
             });
         }
         return;

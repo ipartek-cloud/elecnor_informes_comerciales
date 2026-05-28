@@ -10,7 +10,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes" })]
+[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes", "umbral1", "umbral2" })]
 public class ContratacionesAIController : ControllerBase
 {
     private readonly InformeContratacionesAIService _service;
@@ -24,12 +24,12 @@ public class ContratacionesAIController : ControllerBase
     /// Obtiene el informe completo de Contrataciones AI.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> Get(int anio, int mes)
+    public async Task<IActionResult> Get(int anio, int mes, [FromQuery] decimal? umbral1 = null, [FromQuery] decimal? umbral2 = null)
     {
         if (anio > DateTime.Now.Year)
             return BadRequest("El año de consulta no puede ser superior al año actual.");
 
-        var result = await _service.ObtenerInformeCompletoAsync(anio, mes);
+        var result = await _service.ObtenerInformeCompletoAsync(anio, mes, umbral1, umbral2);
         return Ok(result);
     }
 

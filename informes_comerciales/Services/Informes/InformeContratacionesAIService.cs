@@ -19,15 +19,15 @@ public class InformeContratacionesAIService
     /// <summary>
     /// Obtiene el informe completo de Contrataciones AI incluyendo subinforme acumulado.
     /// </summary>
-    public async Task<ContratacionesAIResponseDto> ObtenerInformeCompletoAsync(int anio, int mes)
+    public async Task<ContratacionesAIResponseDto> ObtenerInformeCompletoAsync(int anio, int mes, decimal? umbral1 = null, decimal? umbral2 = null)
     {
-        // Umbrales específicos según análisis técnico
-        const decimal umbralPrincipal = 300; // > 0,3M
-        const decimal umbralAnterior = 700;  // > 0,7M
+        // Umbrales específicos según análisis técnico (con valores por defecto)
+        decimal u1 = umbral1 ?? 300; // > 0,3M
+        decimal u2 = umbral2 ?? 700;  // > 0,7M
 
         // Ejecutar consultas en paralelo para optimizar rendimiento
-        var taskPrincipal = _repository.ObtenerContratacionesAIAsync(anio, mes, umbralPrincipal);
-        var taskAnterior = _repository.ObtenerContratacionesAnnoAIAnteriorAsync(anio, mes, umbralAnterior);
+        var taskPrincipal = _repository.ObtenerContratacionesAIAsync(anio, mes, u1);
+        var taskAnterior = _repository.ObtenerContratacionesAnnoAIAnteriorAsync(anio, mes, u2);
 
         await Task.WhenAll(taskPrincipal, taskAnterior);
 
@@ -41,7 +41,7 @@ public class InformeContratacionesAIService
                 Titulo = "Principales Contrataciones del Año",
                 SubTitulo = "Contratos",
                 Descripcion = "CONSEJO ELECNOR - Contrataciones Asociadas a Inversión",
-                Filtros = new { Anio = anio, Mes = mes },
+                Filtros = new { Anio = anio, Mes = mes, Umbral1 = u1, Umbral2 = u2 },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema"
             }
