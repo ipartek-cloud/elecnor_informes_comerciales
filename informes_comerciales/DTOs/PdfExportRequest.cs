@@ -23,4 +23,12 @@ public class PdfExportRequest
     /// Nombre clave del informe (ej: mercados, actividades) para cargar su CSS específico.
     /// </summary>
     public string? ReportName { get; set; }
+
+    /// <summary>
+    /// Número de página base para numeración consecutiva en PDF.
+    /// Si tiene valor, se aplica post-proceso: se eliminan los spans .rpt-page-number
+    /// del HTML y se pintan los números consecutivos (base + índice) en cada página del PDF.
+    /// Si es null, el PDF se genera sin modificaciones (comportamiento actual).
+    /// </summary>
+    public int? NroPagina { get; set; }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Elecnor_Informes_Comerciales.Services;
 using Elecnor_Informes_Comerciales.DTOs;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 
@@ -69,6 +70,15 @@ public class PdfExportController : ControllerBase
             var logoBase64 = await GetLogoBase64Async();
             var processedHtml = request.HtmlContent.Replace("/images/logoElecnor.png", logoBase64);
 
+            if (request.NroPagina.HasValue)
+            {
+                processedHtml = Regex.Replace(
+                    processedHtml,
+                    @"<span[^>]*class\s*=\s*""[^""]*rpt-page-number[^""]*""[^>]*>[^<]*</span>",
+                    string.Empty,
+                    RegexOptions.IgnoreCase);
+            }
+
             // 3. Ensamblar la página HTML completa
             var htmlBuilder = new StringBuilder();
             htmlBuilder.AppendLine("<!DOCTYPE html>");
@@ -123,7 +133,7 @@ public class PdfExportController : ControllerBase
             var fullHtml = htmlBuilder.ToString();
 
             // 4. Generar PDF usando el servicio Puppeteer
-            var pdfBytes = await _pdfGeneratorService.GeneratePdfFromHtmlAsync(fullHtml, cts.Token);
+            var pdfBytes = await _pdfGeneratorService.GeneratePdfFromHtmlAsync(fullHtml, request.NroPagina, request.ReportName, cts.Token);
 
             // 5. Devolver archivo PDF para descarga directa
             return base.File(pdfBytes, "application/pdf", request.FileName);

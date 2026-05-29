@@ -16,6 +16,7 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
     private IBrowser? _browser;
     private readonly string _chromiumDownloadPath;
     private readonly string _chromiumRevision;
+    private readonly PdfPageNumberService _pageNumberService;
 
     private string? ResolveChromeExecutable()
     {
@@ -41,9 +42,10 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
         return options;
     }
 
-    public PdfGeneratorService(ILogger<PdfGeneratorService> logger, IConfiguration configuration)
+    public PdfGeneratorService(ILogger<PdfGeneratorService> logger, IConfiguration configuration, PdfPageNumberService pageNumberService)
     {
         _logger = logger;
+        _pageNumberService = pageNumberService;
         var chromiumSection = configuration.GetSection("Chromium");
         _chromiumDownloadPath = chromiumSection["DownloadPath"]
             ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "puppeteer_chromium");
@@ -140,6 +142,21 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
 
         _logger.LogDebug("Generando bytes del PDF...");
         return await page.PdfDataAsync(pdfOptions);
+    }
+
+    public async Task<byte[]> GeneratePdfFromHtmlAsync(string htmlContent, int? nroPagina, string? reportName, CancellationToken cancellationToken = default)
+    {
+        // Generar PDF con Puppeteer
+        var pdfBytes = await GeneratePdfFromHtmlAsync(htmlContent, cancellationToken);
+
+        // Post-proceso de numeración solo si nroPagina tiene valor y es > 0
+        if (nroPagina.HasValue && nroPagina.Value > 0)
+        {
+            _logger.LogInformation("Iniciando post-proceso de numeración. Base={Base}, Informe={Report}", nroPagina.Value, reportName);
+            pdfBytes = _pageNumberService.AplicarNumeracion(pdfBytes, nroPagina.Value, reportName);
+        }
+
+        return pdfBytes;
     }
 
     /// <summary>

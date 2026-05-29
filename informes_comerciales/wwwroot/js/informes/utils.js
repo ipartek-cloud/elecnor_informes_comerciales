@@ -226,6 +226,7 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
             let htmlContent = null;
             let fileName = null;
             let reportName = null;
+            let pageNum = null;
 
             // Interceptamos temporalmente window.print
             window.print = function () {
@@ -243,7 +244,6 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
                     }
                     reportName = rName;
 
-                    let pageNum = null;
                     const pageNumElem = capaPrint.querySelector('.rpt-page-number');
                     if (pageNumElem) {
                         pageNum = pageNumElem.textContent.trim();
@@ -276,7 +276,7 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
 
             // Validamos e iniciamos la descarga o informamos de fallos
             if (htmlContent) {
-                await descargarPdfDesdeServidor(htmlContent, fileName, reportName);
+                await descargarPdfDesdeServidor(htmlContent, fileName, reportName, parseInt(pageNum) || null);
             } else {
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
@@ -319,12 +319,13 @@ export function inicializarEventListenersBase(estado, renderFn, imprimirFn) {
 /**
  * Envía el HTML del informe al servidor y descarga el PDF generado.
  */
-async function descargarPdfDesdeServidor(htmlContent, fileName, reportName) {
+async function descargarPdfDesdeServidor(htmlContent, fileName, reportName, nroPagina) {
     try {
         const response = await ApiClient.post('/api/PdfExport/download', {
             htmlContent: htmlContent,
             fileName: fileName,
-            reportName: reportName
+            reportName: reportName,
+            nroPagina: nroPagina || null
         }, true);
 
         if (!response.ok) {
