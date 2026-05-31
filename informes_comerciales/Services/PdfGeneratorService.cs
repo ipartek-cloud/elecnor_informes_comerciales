@@ -152,7 +152,7 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
         // Post-proceso de numeración solo si nroPagina tiene valor y es > 0
         if (nroPagina.HasValue && nroPagina.Value > 0)
         {
-            _logger.LogInformation("Iniciando post-proceso de numeración. Base={Base}, Informe={Report}", nroPagina.Value, reportName);
+            //_logger.LogInformation("Iniciando post-proceso de numeración. Base={Base}, Informe={Report}", nroPagina.Value, reportName);
             pdfBytes = _pageNumberService.AplicarNumeracion(pdfBytes, nroPagina.Value, reportName);
         }
 

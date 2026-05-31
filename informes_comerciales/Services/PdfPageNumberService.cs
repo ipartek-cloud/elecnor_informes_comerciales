@@ -29,7 +29,7 @@ public class PdfPageNumberService
             if (GlobalFontSettings.FontResolver == null)
             {
                 GlobalFontSettings.FontResolver = new SimpleFontResolver();
-                _logger.LogInformation("[PdfPageNumber] SimpleFontResolver registrado con éxito.");
+                //_logger.LogInformation("[PdfPageNumber] SimpleFontResolver registrado con éxito.");
             }
         }
         catch (Exception ex)
@@ -132,15 +132,13 @@ public class PdfPageNumberService
                 config = specificConfig;
             }
 
-            _logger.LogInformation(
-                "[PdfPageNumber] Aplicando numeración consecutiva. Base={Base}, Informe={Report}, Páginas a procesar...",
-                nroPaginaBase, reportName ?? "default");
+            //_logger.LogInformation("[PdfPageNumber] Aplicando numeración consecutiva. Base={Base}, Informe={Report}, Páginas a procesar...", nroPaginaBase, reportName ?? "default");
 
             using var inputStream = new MemoryStream(pdfBytes);
             var document = PdfReader.Open(inputStream, PdfDocumentOpenMode.Modify);
             int totalPages = document.PageCount;
 
-            _logger.LogInformation("[PdfPageNumber] PDF abierto: {PageCount} páginas.", totalPages);
+            //_logger.LogInformation("[PdfPageNumber] PDF abierto: {PageCount} páginas.", totalPages);
 
             // Color azul corporativo Elecnor: #00468B → RGB(0, 70, 139)
             var brushBlue = new XSolidBrush(XColor.FromArgb(0, 70, 139));
@@ -167,16 +165,14 @@ public class PdfPageNumberService
                 // Dibujar el número de página
                 gfx.DrawString(textoNumero, font, brushBlue, new XPoint(posXReal, posY));
 
-                _logger.LogDebug(
-                    "[PdfPageNumber] Página {Index}: número {Numero} pintado en ({X}, {Y}) (posX original: {OrigX})",
-                    i + 1, numeroReal, posXReal, posY, posX);
+                _logger.LogDebug("[PdfPageNumber] Página {Index}: número {Numero} pintado en ({X}, {Y}) (posX original: {OrigX})", i + 1, numeroReal, posXReal, posY, posX);
             }
 
             using var outputStream = new MemoryStream();
             document.Save(outputStream);
             var result = outputStream.ToArray();
 
-            _logger.LogInformation("[PdfPageNumber] Post-proceso completado. {PageCount} páginas numeradas.", totalPages);
+            //_logger.LogInformation("[PdfPageNumber] Post-proceso completado. {PageCount} páginas numeradas.", totalPages);
             return result;
         }
         catch (Exception ex)

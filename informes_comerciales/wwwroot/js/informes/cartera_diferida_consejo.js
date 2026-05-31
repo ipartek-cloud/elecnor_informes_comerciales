@@ -614,12 +614,12 @@ function _renderVentas(agrupacion) {
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="rpt-ventas-row-label">Internacional</td>
-                        ${anios.map(a => `<td class="rpt-text-end">${v(internacional[`anio${a}`])}</td>`).join('')}
-                    </tr>
-                    <tr>
                         <td class="rpt-ventas-row-label">Nacional</td>
                         ${anios.map(a => `<td class="rpt-text-end">${v(nacional[`anio${a}`])}</td>`).join('')}
+                    </tr>
+                    <tr>
+                        <td class="rpt-ventas-row-label">Internacional</td>
+                        ${anios.map(a => `<td class="rpt-text-end">${v(internacional[`anio${a}`])}</td>`).join('')}
                     </tr>
                 </tbody>
                 <tfoot>
