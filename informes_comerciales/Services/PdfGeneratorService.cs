@@ -131,6 +131,7 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
         {
             Format = PaperFormat.A4,
             PrintBackground = true,
+            PreferCSSPageSize = true,
             MarginOptions = new MarginOptions
             {
                 Top = "0px",

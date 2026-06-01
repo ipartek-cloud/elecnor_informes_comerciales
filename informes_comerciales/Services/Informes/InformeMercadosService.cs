@@ -46,7 +46,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             // BLOQUE 1: Resumen Global (Nacional, Internacional)
             var globalMercados = datosValidos.GroupBy(d => d.Pais)
                                      .Select(g => CrearFilaDato(g.Key, g, true, true, mesActual))
-                                     .OrderBy(f => f.Nombre)
+                                     .OrderByDescending(f => f.Nombre)
                                      .ToList();
 
             response.ResumenGlobal.AddRange(globalMercados);
