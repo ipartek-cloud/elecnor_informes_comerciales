@@ -84,7 +84,6 @@
 .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-anterior,
 .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-actual {
     border-top: 0.3pt solid #00468B !important;
-    border-bottom: 0.3pt solid #00468B !important;
     padding-top: 4px !important;
     color: #00468B !important;
 }
@@ -182,7 +181,6 @@
     .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-anterior,
     .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-actual {
         border-top: 0.3pt solid #00468B !important;
-        border-bottom: 0.3pt solid #00468B !important; /* Añadido border-bottom en impresión para paridad de totales */
     }
 
     .rpt-banner-top {
