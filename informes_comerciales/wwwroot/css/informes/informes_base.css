@@ -719,7 +719,7 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
         height: auto !important;
         margin: 0 !important;
         padding: var(--rpt-padding-pdf) !important;
-        padding-top: 8mm !important;
+        /* padding-top: 8mm !important; */
         max-width: 100% !important; /* En impresión, el papel ocupa el 100% del A4 */
         box-shadow: none !important;
         border: none !important;
