@@ -104,11 +104,11 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 .rpt-mt-6 { margin-top: 3.5rem !important; } /* Un paso más que mt-5 (3rem) */
 
 /* Definición de anchos de columna fijos en pantalla (Web) para Cartera Diferida */
-.rpt-col-cd-inicial { width: 95px !important; }
+.rpt-col-cd-inicial { width: 80px !important; }
 .rpt-col-cd-nuevos { width: 95px !important; }
 .rpt-col-cd-total { width: 95px !important; }
-.rpt-col-cd-concepto { width: 125px !important; }
-.rpt-col-cd-contr { width: 95px !important; }
+.rpt-col-cd-concepto { width: 155px !important; }
+.rpt-col-cd-contr { width: 80px !important; }
 .rpt-col-cd-ip { width: 60px !important; }
 .rpt-col-cd-anio1 { width: 82px !important; }
 .rpt-col-cd-anio2 { width: 82px !important; }
@@ -212,11 +212,12 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 
 /* Override específico: .rpt-label-blue-header dentro de .rpt-table-triple */
 .rpt-table-triple .rpt-label-blue-header {
-    padding: 1px 7px; /* CMAI usa 1px en lugar de 2px (base) */
+    padding: 1px 7px;
+    white-space: nowrap;
 }
 
 .rpt-label-blue-header {
-    padding: 1px 0 !important;
+    /*padding: 1px 0 !important;*/
     margin-bottom: 0 !important;
 }
 
@@ -431,11 +432,11 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
     .rpt-col-cp-delta { width: 23.7% !important; }
 
     /* Definir los porcentajes correspondientes en print para la tabla de Cartera Diferida (.rpt-table-cd) */
-    .rpt-table-cd .rpt-col-cd-inicial { width: 11.4% !important; }
+    .rpt-table-cd .rpt-col-cd-inicial { width: 9.4% !important; }
     .rpt-table-cd .rpt-col-cd-nuevos { width: 11.4% !important; }
     .rpt-table-cd .rpt-col-cd-total { width: 11.4% !important; }
-    .rpt-table-cd .rpt-col-cd-concepto { width: 15.0% !important; }
-    .rpt-table-cd .rpt-col-cd-contr { width: 11.4% !important; }
+    .rpt-table-cd .rpt-col-cd-concepto { width: 19.0% !important; }
+    .rpt-table-cd .rpt-col-cd-contr { width: 9.4% !important; }
     .rpt-table-cd .rpt-col-cd-ip { width: 7.2% !important; }
     .rpt-table-cd .rpt-col-cd-anio1 { width: 10.0% !important; }
     .rpt-table-cd .rpt-col-cd-anio2 { width: 10.0% !important; }
@@ -559,7 +560,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
 
 /* Clasificación por Plan Estratégico (Colores suavizados sólidos) */
 .rpt-ventas-bg-pe1 { background-color: #BFBFBF !important; } /* Gris suave */
-.rpt-ventas-bg-pe2 { background-color: #6FA8DC !important; } /* Azul suave */
+.rpt-ventas-bg-pe2 { background-color: #b1d5f7 !important; } /* Azul suave */
 .rpt-ventas-bg-pe3 { background-color: #F2F2F2 !important; } /* Crema pálido */
 .rpt-ventas-bg-pe4 { background-color: #F4B084 !important; } /* Naranja suave */
 
@@ -672,7 +673,7 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
        que los background-color se declaren dentro del contexto print para
        respetarlos cuando PrintBackground = true. */
     .rpt-ventas-bg-pe1 { background-color: #BFBFBF !important; }
-    .rpt-ventas-bg-pe2 { background-color: #6FA8DC !important; }
+    .rpt-ventas-bg-pe2 { background-color: #b1d5f7 !important; }
     .rpt-ventas-bg-pe3 { background-color: #F2F2F2 !important; }
     .rpt-ventas-bg-pe4 { background-color: #F4B084 !important; }
 

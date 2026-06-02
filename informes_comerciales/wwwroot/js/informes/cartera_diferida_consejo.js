@@ -488,6 +488,7 @@ function _renderCarteraDiferida(agrup) {
                 <col class="rpt-col-10px">
                 <col class="rpt-col-cd-contr">
                 <col class="rpt-col-cd-ip">
+                <col class="rpt-col-10px">
                 <col class="rpt-col-cd-anio1">
                 <col class="rpt-col-cd-anio2">
                 <col class="rpt-col-cd-anio3">
@@ -496,6 +497,7 @@ function _renderCarteraDiferida(agrup) {
                     <thead>
                         <tr rpt-row-height-20>
                             <th colspan="3" class="rpt-text-center" rpt-border-none>Cart.</th>
+                            <th rpt-border-none></th>
                             <th rpt-border-none></th>
                             <th rpt-border-none></th>
                             <th rpt-border-none></th>
@@ -512,6 +514,7 @@ function _renderCarteraDiferida(agrup) {
                             <th rpt-border-none></th>
                             <th class="rpt-text-end">Contr.</th>
                             <th class="rpt-text-end">Ip</th>
+                            <th rpt-border-none></th>
                             <th class="rpt-text-end">${data.tituloColAnio1}</th>
                             <th class="rpt-text-end">${data.tituloColAnio2}</th>
                             <th class="rpt-text-end">${data.tituloColAnio3}</th>
@@ -530,13 +533,14 @@ function _renderCarteraDiferida(agrup) {
                                     <td rpt-border-none></td>
                                     <td class="rpt-text-end" data-label="Contr.">${val(v.contr)}</td>
                                     <td class="rpt-text-end" data-label="Ip">${l.total === 0 ? '####' : formatCurrency(v.ip, 2)}</td>
+                                    <td rpt-border-none></td>
                                     <td class="rpt-text-end" data-label="${data.tituloColAnio1}">${val(v.v1)}</td>
                                     <td class="rpt-text-end" data-label="${data.tituloColAnio2}">${val(v.v2)}</td>
                                     <td class="rpt-text-end" data-label="${data.tituloColAnio3}">${val(v.v3)}</td>
                                 </tr>
                             `;
                         }).join('')}
-                        <tr class="rpt-spacer-row-totales"><td colspan="11" class="rpt-spacer-cell-totales"></td></tr>
+                        <tr class="rpt-spacer-row-totales"><td colspan="12" class="rpt-spacer-cell-totales"></td></tr>
                     </tbody>
                 <tfoot>
 <tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
@@ -548,7 +552,8 @@ function _renderCarteraDiferida(agrup) {
                             <td rpt-border-none></td>
                             <td class="rpt-text-end rpt-td-total" data-label="Total Contr.">${val(t.contr)}</td>
                             <td class="rpt-text-end rpt-td-total" data-label="Total Ip">${t.total === 0 ? '####' : formatCurrency(t.ip, 2)}</td>
-                                <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColAnio1}">${val(t.v1)}</td>
+                            <td rpt-border-none></td>
+                            <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColAnio1}">${val(t.v1)}</td>
                             <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColAnio2}">${val(t.v2)}</td>
                             <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColAnio3}">${val(t.v3)}</td>
                         </tr>
