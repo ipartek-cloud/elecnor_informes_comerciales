@@ -70,9 +70,9 @@ function _renderizarPagina() {
 function _getHtmlEncabezado() {
     const meta = estado.informeGlobalData?.meta;
     const filtros = meta?.filtros || {};
-    const umbralMiles = filtros.limiteImporte
-        ? Math.round(Number(filtros.limiteImporte) / 1000)
-        : 13;
+    const limiteImporte = filtros.limiteImporte !== undefined && filtros.limiteImporte !== null ? Number(filtros.limiteImporte) : 13000;
+    const valorM = limiteImporte / 1000;
+    const labelUmbral = (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
     
     // Usamos el título dinámico del backend si existe, si no, usamos el fallback
     const tituloInforme = meta?.titulo || `Cartera Contratación DG ${filtros.codSubDirGeneral === '286' ? 'Proyectos' : 'Servicios'} (Detalle)`;
@@ -93,7 +93,7 @@ function _getHtmlEncabezado() {
 
     const subtituloBarra = `
         <div class="rpt-ccdop-subtitulo-bar">
-            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
+            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${labelUmbral}</span>
         </div>
     `;
 

@@ -86,9 +86,9 @@ function _renderizarPagina() {
 function _getHtmlEncabezado() {
     const meta = estado.informeGlobalData?.meta;
     const filtros = meta?.filtros || {};
-    const umbralMiles = filtros.limiteImporte
-        ? Math.round(Number(filtros.limiteImporte) / 1000)
-        : 13;
+    const limiteImporte = filtros.limiteImporte !== undefined && filtros.limiteImporte !== null ? Number(filtros.limiteImporte) : 13000;
+    const valorM = limiteImporte / 1000;
+    const labelUmbral = (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 
     const esInternacional = filtros.mercado && filtros.mercado.toLowerCase() === 'internacional';
     const textoBanner2 = esInternacional
@@ -112,7 +112,7 @@ function _getHtmlEncabezado() {
     // Barra de filtro: solo el indicador de umbral (Cierre y Miles ya están en el banner)
     const subtituloBarra = `
         <div class="rpt-ccd-subtitulo-bar">
-            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
+            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${labelUmbral}</span>
         </div>
     `;
 

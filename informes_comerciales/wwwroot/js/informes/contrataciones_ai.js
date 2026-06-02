@@ -112,7 +112,7 @@ async function _renderCuerpoInforme() {
         html += `
         <div class="rpt-content-block">
           <div class="rpt-section-ai-header">
-            Asociado a Inversión > ${_formatearUmbral(u1)}M
+            Asociado a Inversión > ${_formatearUmbral(u1)}
           </div>
           <div class="rpt-month-header">${mesNombre}</div>
           ${tieneFilas ? `
@@ -141,7 +141,7 @@ async function _renderCuerpoInforme() {
         html += `
         <div class="rpt-content-block rpt-subreport-ai-anterior">
           <div class="rpt-section-ai-header">
-            Anterior > ${_formatearUmbral(u2)}M
+            Anterior > ${_formatearUmbral(u2)}
           </div>
           ${tieneFilas ? `
           <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones-ai">
@@ -162,11 +162,11 @@ async function _renderCuerpoInforme() {
 /**
  * Formatea un umbral numérico (en miles de euros) dividiéndolo entre 1000
  * para mostrar en el título con el sufijo "M".
- * Ej: 300 → "0,3", 700 → "0,7", 1000 → "1"
+ * Ej: 300 → "0.3M", 700 → "0.7M", 1000 → "1M"
  */
 function _formatearUmbral(valor) {
-    const millones = valor / 1000;
-    return millones.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(',0', '');
+    const valorM = valor / 1000;
+    return (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 }
 
 /**

@@ -158,6 +158,10 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     padding-right: 3pt !important;
 }
 
+.rpt-triple-container .rpt-number-cell.rpt-pr-extra-5px {
+    padding-right: 9px !important; /* Incremento de 5px sobre la base de 4px (3pt) */
+}
+
 /* =============================================================================
    TABLA TRIPLE - ESTRUCTURA PROPIA DE CMAI
    Esta estructura NO está en informes_base.css, es única de este informe
@@ -471,6 +475,10 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
     /* Reafirmar padding corregido en print para mantener alineación detalle/totales */
     .rpt-triple-container .rpt-number-cell {
         padding-right: 3pt !important;
+    }
+
+    .rpt-triple-container .rpt-number-cell.rpt-pr-extra-5px {
+        padding-right: 9px !important;
     }
 
     /* Redefinición de las columnas de Asociado Inversión (SI) en print (proporcionales dentro de su tabla) */

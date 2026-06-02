@@ -49,7 +49,7 @@
     background-color: #00468B;
     color: #ffffff;
     font-weight: bold !important;
-    padding: 2pt 8pt;
+    padding: 2pt 5px;
     display: inline-block;
     font-size: 9pt;
     width: 40%;
@@ -59,7 +59,8 @@
 .rpt-cont-sig-month-row td {
     background-color: #E2EBF4 !important;
     color: #00468B !important;
-    padding-left: 10pt !important;
+    padding-left: 5px !important;
+    padding-bottom: 3px !important;
     font-size: 9pt !important;
     font-weight: bold !important;
 }
@@ -67,18 +68,21 @@
 /* Definición de Columnas */
 .rpt-col-mes-cliente {
     width: 32%;
-    padding-left: 8pt !important;
+    padding-left: 5px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .rpt-col-mes-oferta {
-    width: 47%;
+    width: 57%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .rpt-col-mes-importe {
-    width: 20%;
+    width: 10%;
     padding-right: 10pt !important;
 }
 
@@ -93,6 +97,7 @@
 .rpt-cont-sig-anterior-label td {
     padding-top: 12pt !important;
     padding-bottom: 2pt !important;
+    padding-left: 5px !important;
     border-bottom: 0.3pt solid #666 !important;
     font-weight: bold !important;
     font-size: 8pt !important;
@@ -231,12 +236,18 @@
         page-break-inside: avoid !important;
     }
 
+    /* Reafirmar truncación en impresión */
+    .rpt-col-mes-cliente,
     .rpt-col-mes-oferta {
-        white-space: normal !important;
-        overflow: visible !important;
-        max-width: none !important;
-        text-overflow: clip !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
+
+    /* Reafirmar anchos en impresión */
+    .rpt-col-mes-cliente { width: 32% !important; }
+    .rpt-col-mes-oferta { width: 57% !important; }
+    .rpt-col-mes-importe { width: 10% !important; }
 
     .rpt-cont-sig-anterior-label td {
         border-bottom: 0.3pt solid #666 !important;

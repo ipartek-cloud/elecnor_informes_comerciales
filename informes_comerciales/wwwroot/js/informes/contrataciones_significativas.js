@@ -17,7 +17,7 @@ const estado = crearEstadoInforme();
 /**
  * Punto de entrada del informe.
  */
-export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true }) {
+export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true, limiteImporte = 1000 }) {
     try {
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
         if (chkGenerar?.checked) {
@@ -33,11 +33,12 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umb
         }
 
         const subDir = codSubDir || '221';
-        const url = `/api/ContratacionesSignificativas?anio=${anio}&mes=${mes}&mercado=${encodeURIComponent(mercado)}&codSubDirGeneral=${encodeURIComponent(subDir)}&_=${Date.now()}`;
+        const url = `/api/ContratacionesSignificativas?anio=${anio}&mes=${mes}&mercado=${encodeURIComponent(mercado)}&codSubDirGeneral=${encodeURIComponent(subDir)}&limiteImporte=${limiteImporte}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
+        estado.limiteImporte = limiteImporte;
 
         await inicializarInforme({
             url,
@@ -119,6 +120,10 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
     const dataMes = estado.informeGlobalData?.datosMes || [];
     const dataAnterior = estado.informeGlobalData?.datosMesesAnteriores || [];
     const nombreMes = getNombreMes(estado.informeGlobalData?.meta?.filtros?.mes);
+    const filtros = estado.informeGlobalData?.meta?.filtros || {};
+    const limiteImporte = filtros.limiteImporte || estado.limiteImporte || 1000;
+    const valorM = limiteImporte / 1000;
+    const labelUmbral = (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 
     const contratosMes = dataMes.filter(item => item.nombreDirNegocio === direccion.nombreDirNegocio);
     const contratosAnt = dataAnterior.filter(item => item.nombreDirNegocio === direccion.nombreDirNegocio);
@@ -161,7 +166,7 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
     const headerHtml = mostrarHeader ? `
         <thead>
             <tr class="rpt-font-bold">
-                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
+                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
                 <th></th>
                 <th rpt-border-none></th>
                 <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
@@ -261,6 +266,9 @@ function _renderTablaMaestraNacional() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     const mercado = filtros.mercado || 'Nacional';
     const nroPagina = estado.nroPagina || 9;
+    const limiteImporte = filtros.limiteImporte || estado.limiteImporte || 1000;
+    const valorM = limiteImporte / 1000;
+    const labelUmbral = (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 
     let tbodiesHtml = '';
 
@@ -342,7 +350,7 @@ function _renderTablaMaestraNacional() {
                     </th>
                 </tr>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
+                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
                     <th></th>
                     <th rpt-border-none></th>
                     <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
@@ -367,6 +375,9 @@ function _renderTablaMaestraInternacional() {
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
     const mercado = filtros.mercado || 'Internacional';
     const nroPagina = estado.nroPagina || 10;
+    const limiteImporte = filtros.limiteImporte || estado.limiteImporte || 1000;
+    const valorM = limiteImporte / 1000;
+    const labelUmbral = (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 
     let tbodiesHtml = '';
 
@@ -446,7 +457,7 @@ function _renderTablaMaestraInternacional() {
                     </th>
                 </tr>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;1M</th>
+                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
                     <th></th>
                     <th rpt-border-none></th>
                     <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>

@@ -67,11 +67,11 @@ function _renderizarPagina() {
 function _getHtmlEncabezado() {
     const meta = estado.informeGlobalData?.meta;
     const filtros = meta?.filtros || {};
-    const umbralMiles = filtros.limiteImporte
-        ? Math.round(Number(filtros.limiteImporte) / 1000)
-        : 17;
+    const limiteImporte = filtros.limiteImporte !== undefined && filtros.limiteImporte !== null ? Number(filtros.limiteImporte) : 17000;
+    const valorM = limiteImporte / 1000;
+    const labelUmbral = (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 
-    const esInternacional = filtros.mercado && filtros.mercado.toLowerCase() === 'internacional';
+    const esInternacional = filtros.market && filtros.market.toLowerCase() === 'internacional' || filtros.mercado && filtros.mercado.toLowerCase() === 'internacional';
     const textoBanner2 = esInternacional
         ? 'Cartera Contratación Países (Detalle) Internacional'
         : 'Cartera Contratación Países (Detalle)';
@@ -92,7 +92,7 @@ function _getHtmlEncabezado() {
 
     const subtituloBarra = `
         <div class="rpt-ccdp-subtitulo-bar">
-            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${umbralMiles}M</span>
+            <span class="rpt-subtitle-indicator rpt-fs-11pt rpt-font-bold">Cartera > ${labelUmbral}</span>
         </div>
     `;
 

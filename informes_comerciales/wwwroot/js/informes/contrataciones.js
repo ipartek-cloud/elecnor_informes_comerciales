@@ -101,7 +101,7 @@ async function _renderCuerpoInforme() {
     if (data?.subInformes?.annoNacionalAnterior?.length > 0) {
         const u2 = data.meta?.filtros?.umbral2 ?? 15000;
         html += _renderSubInformeGenerico(data.subInformes.annoNacionalAnterior, {
-            titulo: `Anterior > ${_formatearUmbral(u2)} M`,
+            titulo: `Anterior > ${_formatearUmbral(u2)}`,
             mostrarMes: false,
             claseSeccion: 'rpt-contrataciones-anno-nacional-anterior-section'
         });
@@ -111,7 +111,7 @@ async function _renderCuerpoInforme() {
     if (data?.subInformes?.annoInternacionalMes?.length > 0) {
         const u3 = data.meta?.filtros?.umbral3 ?? 10000;
         html += _renderSubInformeGenerico(data.subInformes.annoInternacionalMes, {
-            titulo: `Mercado Internacional > ${_formatearUmbral(u3)} M`,
+            titulo: `Mercado Internacional > ${_formatearUmbral(u3)}`,
             mostrarMes: true,
             claseSeccion: '' // Sin clase extra, usa la base rpt-content-block
         });
@@ -121,7 +121,7 @@ async function _renderCuerpoInforme() {
   if (data?.subInformes?.annoInternacionalAnterior?.length > 0) {
     const u4 = data.meta?.filtros?.umbral4 ?? 25000;
     html += _renderSubInformeGenerico(data.subInformes.annoInternacionalAnterior, {
-      titulo: `Anterior > ${_formatearUmbral(u4)} M`,
+      titulo: `Anterior > ${_formatearUmbral(u4)}`,
       mostrarMes: false,
       claseSeccion: 'rpt-contrataciones-last' // Clase especial para el último subinforme (sin borde)
     });
@@ -170,17 +170,17 @@ function _renderSubInformeGenerico(datos, config) {
 function _renderTituloSeccion() {
     const data = estado.informeGlobalData;
     const u1 = data?.meta?.filtros?.umbral1 ?? 5000;
-    return `<h3 class="rpt-section-title">Mercado Nacional > ${_formatearUmbral(u1)} M</h3>`;
+    return `<h3 class="rpt-section-title">Mercado Nacional > ${_formatearUmbral(u1)}</h3>`;
 }
 
 /**
  * Formatea un umbral numérico (en miles de euros) dividiéndolo entre 1000
  * para mostrar en el título con el sufijo "M".
- * Ej: 5000 → "5", 15000 → "15", 10000 → "10"
+ * Ej: 5000 → "5M", 15000 → "15M", 13100 → "13.1M"
  */
 function _formatearUmbral(valor) {
-    const miles = valor / 1000;
-    return Number.isInteger(miles) ? miles.toString() : miles.toFixed(1);
+    const valorM = valor / 1000;
+    return (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 }
 
 function _renderCabeceraMes(data) {

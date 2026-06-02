@@ -141,7 +141,7 @@ function inicializarTooltipsFiltros() {
             if (ds.limiteimporte !== undefined) {
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto (Euros):</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto (Miles de Euros):</label>
                         <input type="text" id="pop-monto" class="form-control form-control-sm text-center fw-bold input-miles" 
                                value="${formatearMiles(defaultMonto)}" style="font-size: 0.8rem;">
                     </div>
@@ -181,7 +181,7 @@ function inicializarTooltipsFiltros() {
             if (ds.umbral1 !== undefined) {
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 1º (Euros):</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 1º (Miles de Euros):</label>
                         <input type="text" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold input-miles" 
                                value="${formatearMiles(defaultUmbral1)}" style="font-size: 0.8rem;">
                     </div>
@@ -190,7 +190,7 @@ function inicializarTooltipsFiltros() {
             if (ds.umbral2 !== undefined) {
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 2º (Euros):</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 2º (Miles de Euros):</label>
                         <input type="text" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold input-miles" 
                                value="${formatearMiles(defaultUmbral2)}" style="font-size: 0.8rem;">
                     </div>
@@ -199,7 +199,7 @@ function inicializarTooltipsFiltros() {
             if (ds.umbral3 !== undefined) {
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 3º (Euros):</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 3º (Miles de Euros):</label>
                         <input type="text" id="pop-umbral3" class="form-control form-control-sm text-center fw-bold input-miles" 
                                value="${formatearMiles(defaultUmbral3)}" style="font-size: 0.8rem;">
                     </div>
@@ -208,7 +208,7 @@ function inicializarTooltipsFiltros() {
             if (ds.umbral4 !== undefined) {
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 4º (Euros):</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 4º (Miles de Euros):</label>
                         <input type="text" id="pop-umbral4" class="form-control form-control-sm text-center fw-bold input-miles" 
                                value="${formatearMiles(defaultUmbral4)}" style="font-size: 0.8rem;">
                     </div>

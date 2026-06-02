@@ -20,20 +20,20 @@ public class InformeContratacionesSignificativasService
         await _repository.EjecutarSPObrasRPTAsync(anio, mes);
     }
 
-    public async Task<ContratacionesSignificativasResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral)
+    public async Task<ContratacionesSignificativasResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, decimal limiteImporte = 1000)
     {
         // ═══════════════════════════════════════════════════════
         // 1. Definir umbral (Logica de Negocio centralizada en el Servicio)
         // ═══════════════════════════════════════════════════════
-        const decimal importe = 1000; // >= 1M ke o <= -1M ke
+        // Usamos el límite dinámico pasado como parámetro.
 
         // ═══════════════════════════════════════════════════════
         // 2. Lanzar TODAS las queries EN PARALELO (Task.WhenAll)
         //    Patron B en Repository permite conexiones independientes
         // ═══════════════════════════════════════════════════════
         var tareaPrincipal  = _repository.ObtenerContratacionesSignificativasAsync(anio, mes, mercado, codSubDirGeneral);
-        var tareaMes        = _repository.ObtenerContratacionesSignificativasMesAsync(anio, mes, mercado, codSubDirGeneral, importe);
-        var tareaAnteriores = _repository.ObtenerContratacionesSignificativasMesesAnterioresAsync(anio, mes, mercado, codSubDirGeneral, importe);
+        var tareaMes        = _repository.ObtenerContratacionesSignificativasMesAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte);
+        var tareaAnteriores = _repository.ObtenerContratacionesSignificativasMesesAnterioresAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte);
 
         await Task.WhenAll(tareaPrincipal, tareaMes, tareaAnteriores);
 
@@ -48,7 +48,7 @@ public class InformeContratacionesSignificativasService
         {
             return new ContratacionesSignificativasResponseDto
             {
-                Meta                 = _crearMeta(anio, mes, mercado, codSubDirGeneral),
+                Meta                 = _crearMeta(anio, mes, mercado, codSubDirGeneral, limiteImporte),
                 Datos                = new(),
                 TotalGeneral         = 0m,
                 DatosMes             = new(), // Explicito: sin subinforme si no hay datos base
@@ -99,7 +99,7 @@ public class InformeContratacionesSignificativasService
         // ═══════════════════════════════════════════════════════
         return new ContratacionesSignificativasResponseDto
         {
-            Meta                 = _crearMeta(anio, mes, mercado, codSubDirGeneral),
+            Meta                 = _crearMeta(anio, mes, mercado, codSubDirGeneral, limiteImporte),
             Datos                = datosDto,
             TotalGeneral         = totalGeneral,
             DatosMes             = datosMesDto,
@@ -110,7 +110,8 @@ public class InformeContratacionesSignificativasService
     private static MetaContSigDto _crearMeta( int anio, 
                                               int mes, 
                                               string mercado, 
-                                              string codSubDirGeneral) => new() {
+                                              string codSubDirGeneral,
+                                              decimal limiteImporte) => new() {
                                                                                     Titulo          = $"Contrataciones Significativas Mercado {mercado}",
                                                                                     FechaGeneracion = DateTime.Now,
                                                                                     Filtros = new ContSigFiltrosDto
@@ -118,7 +119,8 @@ public class InformeContratacionesSignificativasService
                                                                                         Anio             = anio,
                                                                                         Mes              = mes,
                                                                                         Mercado          = mercado,
-                                                                                        CodSubDirGeneral = codSubDirGeneral
+                                                                                        CodSubDirGeneral = codSubDirGeneral,
+                                                                                        LimiteImporte    = limiteImporte
                                                                                     }
                                                                                 };
 }
