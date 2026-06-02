@@ -163,7 +163,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
    Esta estructura NO está en informes_base.css, es única de este informe
    ============================================================================= */
 .rpt-table-triple {
-    width: 693px !important;
+    width: auto !important;
     margin-left: auto !important;
     margin-right: auto !important;
     border-collapse: collapse;
@@ -205,6 +205,17 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     padding-bottom: 1px;
 }
 
+/* Alinear la cabecera "Mercado" (informe base) con sus datos a 5px */
+.rpt-block-labels .rpt-label-blue-header {
+    padding-left: 5px !important;
+}
+
+/* Alinear títulos de cabeceras de subinformes ("Asociado Inversión", "Cartera Producción" y "Cartera Diferida") con sus datos a 5px */
+.rpt-table-triple thead th.rpt-ps-2,
+.rpt-table-triple .rpt-label-blue-header {
+    padding-left: 5px !important;
+}
+
 /* Forzar que el th que envuelve el badge azul tenga fondo azul para eliminar el hueco inferior de alineación */
 .rpt-table-triple thead tr.rpt-border-header th.rpt-border-none.rpt-pad-0 {
     background-color: #00468B !important;
@@ -225,7 +236,7 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
 
 /* =============================================================================
    SUBINFORMES CMAI - ANCHO DE CONTENEDOR Y CENTRADO
-   La tabla triple mide 770px, el contenedor debe ser al menos igual
+   El contenedor de subinformes se posiciona a 90px para alinear con Mercado.
    ============================================================================= */
 .rpt-sub-report-container {
     width: 693px !important;
@@ -233,20 +244,47 @@ LITERALES DE ENCABEZADO ESPECÍFICOS CMAI
     margin-right: auto !important;
 }
 
-/* Columnas de Asociado Inversión (SI) - Suma: 110 + 10 + 240 + 10 + 100 + 110 + 113 = 693px */
-.rpt-col-si-mensual { width: 110px !important; }
-.rpt-col-si-spacer { width: 10px !important; }
-.rpt-col-si-concepto { width: 240px !important; }
-.rpt-col-si-acum-contr { width: 100px !important; }
-.rpt-col-si-acum-perc { width: 110px !important; }
-.rpt-col-si-acum-var { width: 113px !important; }
+/* Asegurar que el contenedor de subinformes alinee sus hijos al inicio (izquierda) en vez de centrarlos */
+.rpt-sub-report-wrapper {
+    align-items: flex-start !important;
+}
 
-/* Columnas de Cartera Producción (CP) - Suma: 110 + 10 + 240 + 10 + 160 + 163 = 693px */
-.rpt-col-cp-inicial { width: 110px !important; }
-.rpt-col-cp-spacer { width: 10px !important; }
-.rpt-col-cp-concepto { width: 240px !important; }
-.rpt-col-cp-actual { width: 160px !important; }
-.rpt-col-cp-delta { width: 163px !important; }
+/* Posicionamiento y alineación horizontal de subtablas AI y CP en pantalla (Web) */
+.rpt-sub-report-container-ai,
+.rpt-sub-report-container-cp {
+    margin-left: 90px !important;
+    margin-right: 0 !important;
+}
+.rpt-sub-report-container-ai {
+    width: 640px !important;
+}
+.rpt-sub-report-container-cp {
+    width: 540px !important;
+}
+.rpt-sub-report-container-ai .rpt-table-triple,
+.rpt-sub-report-container-cp .rpt-table-triple {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Espaciadores de columnas en subinformes (Web) */
+.rpt-col-si-spacer, .rpt-col-cp-spacer {
+    width: 10px !important;
+}
+
+/* Columnas de Asociado Inversión (SI) - Suma: 90 + 10 + 230 + 10 + 100 + 100 + 100 = 640px */
+.rpt-col-si-col1 { width: 90px !important; }
+.rpt-col-si-concepto { width: 230px !important; }
+.rpt-col-si-acum-contr { width: 100px !important; }
+.rpt-col-si-acum-perc { width: 100px !important; }
+.rpt-col-si-acum-var { width: 100px !important; }
+
+/* Columnas de Cartera Producción (CP) - Suma: 90 + 10 + 230 + 10 + 100 + 100 = 540px */
+.rpt-col-cp-col1 { width: 90px !important; }
+.rpt-col-cp-concepto { width: 230px !important; }
+.rpt-col-cp-actual { width: 100px !important; }
+.rpt-col-cp-delta { width: 100px !important; }
 
 /* =============================================================================
  SUBINFORMES CMAI - BORDES EN TOTALES
@@ -372,11 +410,30 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
         margin-right: 0 !important;
     }
 
-    /* Contenedores de subinforme: 90% de ancho para Inversión y Producción, centrados */
+    /* Contenedores de subinforme: 90% de ancho para Inversión y Producción, alineados por la izquierda */
     .rpt-sub-report-container {
         width: 90% !important;
-        margin-left: auto !important;
+        margin-left: 0 !important;
         margin-right: auto !important;
+    }
+
+    /* Alineación vertical perfecta y anchos proporcionales en print para subinformes AI y CP */
+    .rpt-sub-report-container-ai,
+    .rpt-sub-report-container-cp {
+        margin-left: 9.65% !important;
+        margin-right: 0 !important;
+    }
+    .rpt-sub-report-container-ai {
+        width: 68.83% !important;
+    }
+    .rpt-sub-report-container-cp {
+        width: 58.07% !important;
+    }
+    .rpt-sub-report-container-ai .rpt-table-triple,
+    .rpt-sub-report-container-cp .rpt-table-triple {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
 
     /* Reset de colgroup: eliminar anchos fijos en px para permitir fluidez en tablas tradicionales */
@@ -416,37 +473,50 @@ IMPRESIÓN — AJUSTES ESPECÍFICOS CMAI
         padding-right: 3pt !important;
     }
 
-    /* Redefinición de las columnas de Asociado Inversión (SI) en print (proporcionales dentro de su tabla del 90%) */
-    .rpt-col-si-mensual { width: 15.9% !important; }
-    .rpt-col-si-spacer { width: 1.4% !important; }
-    .rpt-col-si-concepto { width: 34.6% !important; }
-    .rpt-col-si-acum-contr { width: 14.5% !important; }
-    .rpt-col-si-acum-perc { width: 16.0% !important; }
-    .rpt-col-si-acum-var { width: 16.2% !important; }
+    /* Redefinición de las columnas de Asociado Inversión (SI) en print (proporcionales dentro de su tabla) */
+    .rpt-col-si-col1 { width: 14.0% !important; }
+    .rpt-col-si-spacer { width: 1.6% !important; }
+    .rpt-col-si-concepto { width: 35.9% !important; }
+    .rpt-col-si-acum-contr { width: 15.6% !important; }
+    .rpt-col-si-acum-perc { width: 15.6% !important; }
+    .rpt-col-si-acum-var { width: 15.7% !important; }
 
-    /* Redefinición de las columnas de Cartera Producción (CP) en print (proporcionales dentro de su tabla del 90%) */
-    .rpt-col-cp-inicial { width: 15.9% !important; }
-    .rpt-col-cp-spacer { width: 1.4% !important; }
-    .rpt-col-cp-concepto { width: 34.6% !important; }
-    .rpt-col-cp-actual { width: 23.0% !important; }
-    .rpt-col-cp-delta { width: 23.7% !important; }
+    /* Redefinición de las columnas de Cartera Producción (CP) en print (proporcionales dentro de su tabla) */
+    .rpt-col-cp-col1 { width: 16.6% !important; }
+    .rpt-col-cp-spacer { width: 1.9% !important; }
+    .rpt-col-cp-concepto { width: 42.5% !important; }
+    .rpt-col-cp-actual { width: 18.5% !important; }
+    .rpt-col-cp-delta { width: 18.6% !important; }
 
     /* Definir los porcentajes correspondientes en print para la tabla de Cartera Diferida (.rpt-table-cd) */
-    .rpt-table-cd .rpt-col-cd-inicial { width: 9.4% !important; }
-    .rpt-table-cd .rpt-col-cd-nuevos { width: 11.4% !important; }
-    .rpt-table-cd .rpt-col-cd-total { width: 11.4% !important; }
-    .rpt-table-cd .rpt-col-cd-concepto { width: 19.0% !important; }
-    .rpt-table-cd .rpt-col-cd-contr { width: 9.4% !important; }
-    .rpt-table-cd .rpt-col-cd-ip { width: 7.2% !important; }
-    .rpt-table-cd .rpt-col-cd-anio1 { width: 10.0% !important; }
-    .rpt-table-cd .rpt-col-cd-anio2 { width: 10.0% !important; }
-    .rpt-table-cd .rpt-col-cd-anio3 { width: 10.2% !important; }
+    .rpt-table-cd .rpt-col-cd-inicial { width: 8.8% !important; }
+    .rpt-table-cd .rpt-col-cd-nuevos { width: 10.4% !important; }
+    .rpt-table-cd .rpt-col-cd-total { width: 10.4% !important; }
+    .rpt-table-cd .rpt-col-10px { width: 1.1% !important; }
+    .rpt-table-cd .rpt-col-cd-concepto { width: 17.0% !important; }
+    .rpt-table-cd .rpt-col-cd-contr { width: 8.8% !important; }
+    .rpt-table-cd .rpt-col-cd-ip { width: 6.6% !important; }
+    .rpt-table-cd .rpt-col-cd-anio1 { width: 9.0% !important; }
+    .rpt-table-cd .rpt-col-cd-anio2 { width: 9.0% !important; }
+    .rpt-table-cd .rpt-col-cd-anio3 { width: 6.7% !important; }
 
     /* Densidad extra en celdas para maximizar espacio útil en A4 */
     .rpt-table-triple th,
     .rpt-table-triple td {
         padding-left: 2px !important;
         padding-right: 2px !important;
+    }
+
+    /* Alinear cabeceras y celdas de conceptos (.rpt-ps-2) a 5px en print para mantener consistencia con el principal */
+    .rpt-table-triple thead th.rpt-ps-2,
+    .rpt-table-triple td.rpt-ps-2,
+    .rpt-table-triple .rpt-label-blue-header {
+        padding-left: 5px !important;
+    }
+
+    /* Preservar la indentación del desglose en print para Cartera Producción (gana a td.rpt-ps-2) */
+    .rpt-table-triple td.rpt-cp-indent {
+        padding-left: 1.75rem !important;
     }
 
     /* Footer Cartera Diferida: fluido, eliminar paddings fijos de alineación */
@@ -724,3 +794,5 @@ SUBINFORME VENTAS - DISEÑO REFINADO (Imagen 2)
         font-family: Verdana, Arial, sans-serif !important;
     }
 }
+
+

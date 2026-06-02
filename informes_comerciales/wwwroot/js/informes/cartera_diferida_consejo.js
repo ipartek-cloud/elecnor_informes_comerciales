@@ -65,14 +65,14 @@ function _renderizarPagina(index) {
             ${_getHtmlEncabezado()}
             <div class="report-body rpt-cmai-mt-standard">
                 ${_renderTripleBlock(agrupacion)}
-                <div class="rpt-sub-report-wrapper rpt-d-flex rpt-flex-column rpt-align-items-center">
+                <div class="rpt-sub-report-wrapper rpt-d-flex rpt-flex-column rpt-align-items-start">
                     ${agrupacion.subMercadosAI?.length > 0 ? `
-                        <div class="rpt-sub-report-container">
+                        <div class="rpt-sub-report-container rpt-sub-report-container-ai">
                             ${_renderSubsetTripleBlock(agrupacion)}
                         </div>
                     ` : ''}
                     ${agrupacion.carteraProduccion?.lineas?.length > 0 ? `
-                        <div class="rpt-sub-report-container rpt-w-100 rpt-cmai-mt-medium">
+                        <div class="rpt-sub-report-container rpt-sub-report-container-cp rpt-cmai-mt-medium">
                             ${_renderCarteraProduccion(agrupacion)}
                         </div>
                     ` : ''}
@@ -140,14 +140,14 @@ async function _imprimirInforme() {
         renderContenido: (agrupacion) => {
             return _renderTripleBlock(agrupacion) +
                 ((agrupacion.subMercadosAI?.length > 0 || agrupacion.carteraProduccion?.lineas?.length > 0 || agrupacion.carteraDiferida?.lineas?.length > 0) ? `
-                    <div class="rpt-sub-report-wrapper rpt-d-flex rpt-flex-column rpt-align-items-center">
+                    <div class="rpt-sub-report-wrapper rpt-d-flex rpt-flex-column rpt-align-items-start">
                         ${agrupacion.subMercadosAI?.length > 0 ? `
-                            <div class="rpt-sub-report-container">
+                            <div class="rpt-sub-report-container rpt-sub-report-container-ai">
                                 ${_renderSubsetTripleBlock(agrupacion)}
                             </div>
                         ` : ''}
                         ${agrupacion.carteraProduccion?.lineas?.length > 0 ? `
-                            <div class="rpt-sub-report-container rpt-w-100 rpt-cmai-mt-medium">
+                            <div class="rpt-sub-report-container rpt-sub-report-container-cp rpt-cmai-mt-medium">
                                 ${_renderCarteraProduccion(agrupacion)}
                             </div>
                         ` : ''}
@@ -310,7 +310,7 @@ function _renderSubsetTripleBlock(agrup) {
     return `
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
-                <col class="rpt-col-si-mensual">
+                <col class="rpt-col-si-col1">
                 <col class="rpt-col-si-spacer">
                 <col class="rpt-col-si-concepto">
                 <col class="rpt-col-si-spacer">
@@ -321,9 +321,9 @@ function _renderSubsetTripleBlock(agrup) {
             <thead>
                 <tr rpt-row-height-20>
                     <th>Mensual</th>
+                    <th rpt-border-none></th>
                     <th></th>
-                    <th></th>
-                    <th></th>
+                    <th rpt-border-none></th>
                     <th colspan="3">Acumulado</th>
                 </tr>
                 <tr class="rpt-border-header" rpt-row-height-18>
@@ -379,7 +379,7 @@ function _renderCarteraProduccion(agrup) {
     return `
         <table class="rpt-table-triple rpt-table-stackable">
             <colgroup>
-                <col class="rpt-col-cp-inicial">
+                <col class="rpt-col-cp-col1">
                 <col class="rpt-col-cp-spacer">
                 <col class="rpt-col-cp-concepto">
                 <col class="rpt-col-cp-spacer">
@@ -387,64 +387,63 @@ function _renderCarteraProduccion(agrup) {
                 <col class="rpt-col-cp-delta">
             </colgroup>
  
-                    <thead>
-                        <tr rpt-row-height-20>
-                            <th class="rpt-text-center" rpt-border-none>Cart.</th>
-                            <th rpt-border-none></th>
-                            <th rpt-border-none></th>
-                            <th rpt-border-none></th>
-                            <th colspan="2" class="rpt-text-center" rpt-border-none>Cartera</th>
-                        </tr>
-                        <tr class="rpt-border-header" rpt-row-height-18>
-                            <th class="rpt-text-end" rpt-border-top-none>${data.tituloColInicial}</th>
-                            <th rpt-border-none></th>
-                            <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-w-100 rpt-text-start rpt-ps-2">Cartera Producción</div></th>
-                            <th rpt-border-none></th>
-                            <th class="rpt-text-end" rpt-border-top-none>${data.tituloColActual}</th>
-                            <th class="rpt-text-end" rpt-border-top-none>${data.tituloColDelta}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.lineas.map(l => {
-                            const cleanConcept = l.concepto.trim();
-                            const isIndented = l.isIndented;
+            <thead>
+                <tr rpt-row-height-20>
+                    <th class="rpt-text-center" rpt-border-none>Cart.</th>
+                    <th rpt-border-none></th>
+                    <th rpt-border-none></th>
+                    <th rpt-border-none></th>
+                    <th colspan="2" class="rpt-text-center" rpt-border-none>Cartera</th>
+                </tr>
+                <tr class="rpt-border-header" rpt-row-height-18>
+                    <th class="rpt-text-end" rpt-border-top-none>${data.tituloColInicial}</th>
+                    <th rpt-border-none></th>
+                    <th class="rpt-border-none rpt-pad-0"><div class="rpt-label-blue-header rpt-w-100 rpt-text-start rpt-ps-2">Cartera Producción</div></th>
+                    <th rpt-border-none></th>
+                    <th class="rpt-text-end" rpt-border-top-none>${data.tituloColActual}</th>
+                    <th class="rpt-text-end" rpt-border-top-none>${data.tituloColDelta}</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.lineas.map(l => {
+                    const cleanConcept = l.concepto.trim();
+                    const isIndented = l.isIndented;
 
-                            const showInitial = val(l.importeInicial);
-                            const showActual = (l.importeActual === 0) ? '' : val(l.importeActual);
-                            const showVar = (l.porcentajeIncremento === null || l.porcentajeIncremento === 0) ? '' : formatPercentage(l.porcentajeIncremento);
+                    const showInitial = val(l.importeInicial);
+                    const showActual = (l.importeActual === 0) ? '' : val(l.importeActual);
+                    const showVar = (l.porcentajeIncremento === null || l.porcentajeIncremento === 0) ? '' : formatPercentage(l.porcentajeIncremento);
 
-                            const labelClass = isIndented ? 'rpt-cp-indent rpt-text-grey' : '';
+                    const labelClass = isIndented ? 'rpt-cp-indent rpt-text-grey' : '';
 
-                            return `
-                                <tr rpt-row-height-18>
-                                    <td class="rpt-text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColInicial}">${showInitial}</td>
-                                    <td rpt-border-none></td>
-                                    <td class="rpt-ps-2 ${labelClass}" data-label="Concepto">${cleanConcept}</td>
-                                    <td rpt-border-none></td>
-                                    <td class="rpt-text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColActual}">${showActual}</td>
-                                    <td class="rpt-text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColDelta}">${showVar}</td>
-                                </tr>
-                            `;
-                        }).join('')}
-                        <tr class="rpt-spacer-row-totales"><td colspan="6" class="rpt-spacer-cell-totales"></td></tr>
-                    </tbody>
-                <tfoot>
-<tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
-<td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(totales.importeInicial)}</td>
+                    return `
+                        <tr rpt-row-height-18>
+                            <td class="rpt-text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColInicial}">${showInitial}</td>
                             <td rpt-border-none></td>
-                            <td class="rpt-td-total"></td>
+                            <td class="rpt-ps-2 ${labelClass}" data-label="Concepto">${cleanConcept}</td>
                             <td rpt-border-none></td>
-                            <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColActual}">${val(totales.importeActual)}</td>
-                            <td class="rpt-text-end rpt-td-total" data-label="Variación">${totales.variacionCartera || ''}</td>
+                            <td class="rpt-text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColActual}">${showActual}</td>
+                            <td class="rpt-text-end ${isIndented ? 'rpt-text-grey' : ''}" data-label="${data.tituloColDelta}">${showVar}</td>
                         </tr>
-                        <tr class="rpt-fs-8pt rpt-text-corporate">
-                            <td class="rpt-text-end rpt-py-1" data-label="Variación Anual">
-                                Δ / ${agrup.año - 1} <span class="rpt-font-bold">${totales.variacionAñoAnterior || ''}</span>
-                            </td>
-                            <td colspan="5" class="rpt-d-none rpt-d-print-table-cell"></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                    `;
+                }).join('')}
+                <tr class="rpt-spacer-row-totales"><td colspan="6" class="rpt-spacer-cell-totales"></td></tr>
+            </tbody>
+            <tfoot>
+                <tr class="rpt-font-bold rpt-fs-7pt rpt-text-corporate" rpt-row-height-18>
+                    <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColInicial}">${val(totales.importeInicial)}</td>
+                    <td rpt-border-none></td>
+                    <td class="rpt-td-total"></td>
+                    <td rpt-border-none></td>
+                    <td class="rpt-text-end rpt-td-total" data-label="Total ${data.tituloColActual}">${val(totales.importeActual)}</td>
+                    <td class="rpt-text-end rpt-td-total" data-label="Variación">${totales.variacionCartera || ''}</td>
+                </tr>
+                <tr class="rpt-fs-8pt rpt-text-corporate">
+                    <td class="rpt-text-end rpt-py-1" data-label="Variación Anual" colspan="6">
+                        Δ / ${agrup.año - 1} <span class="rpt-font-bold">${totales.variacionAñoAnterior || ''}</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     `;
 }
 

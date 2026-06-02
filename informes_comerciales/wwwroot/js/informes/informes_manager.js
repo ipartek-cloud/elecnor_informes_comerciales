@@ -56,6 +56,26 @@ export function limpiarCssInformes() {
  * - Si el informe tiene límites (Monto/Países), muestra una ventana con inputs.
  * - Si NO tiene límites, el botón mantiene su comportamiento directo (excepción UX).
  */
+// Helper para formatear un valor numérico con puntos de miles (es-ES)
+const formatearMiles = (val) => {
+    if (val === undefined || val === null || val === '') return '';
+    const num = parseInt(val.toString().replace(/\./g, ''), 10);
+    if (isNaN(num)) return '';
+    return num.toLocaleString('es-ES');
+};
+
+// Helper para obtener el número puro eliminando puntos de miles
+const desformatearMiles = (val) => {
+    if (val === undefined || val === null || val === '') return null;
+    const limpio = val.toString().replace(/\./g, '');
+    return limpio ? parseFloat(limpio) : null;
+};
+
+/**
+ * Inicializa los Popovers interactivos (Tippy.js) para los botones de informe.
+ * - Si el informe tiene límites (Monto/Países), muestra una ventana con inputs.
+ * - Si NO tiene límites, el botón mantiene su comportamiento directo (excepción UX).
+ */
 function inicializarTooltipsFiltros() {
     if (typeof tippy === 'undefined') return;
 
@@ -122,8 +142,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto (Euros):</label>
-                        <input type="number" id="pop-monto" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultMonto}" step="1000" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-monto" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultMonto)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -132,8 +152,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Países:</label>
-                        <input type="number" id="pop-paises" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultPaises}" min="1" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-paises" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultPaises)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -142,8 +162,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Umbral de Filtrado (0 = Todos):</label>
-                        <input type="number" id="pop-umbral" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral}" step="1000" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-umbral" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultUmbral)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -152,8 +172,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Número de Países (0 = Todos):</label>
-                        <input type="number" id="pop-numeropaises" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultNumeroPaises}" min="0" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-numeropaises" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultNumeroPaises)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -162,8 +182,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 1º (Euros):</label>
-                        <input type="number" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral1}" step="100" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultUmbral1)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -171,8 +191,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 2º (Euros):</label>
-                        <input type="number" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral2}" step="100" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultUmbral2)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -180,8 +200,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 3º (Euros):</label>
-                        <input type="number" id="pop-umbral3" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral3}" step="1000" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-umbral3" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultUmbral3)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -189,8 +209,8 @@ function inicializarTooltipsFiltros() {
                 content += `
                     <div class="mb-2">
                         <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 4º (Euros):</label>
-                        <input type="number" id="pop-umbral4" class="form-control form-control-sm text-center fw-bold" 
-                               value="${defaultUmbral4}" step="1000" style="font-size: 0.8rem;">
+                        <input type="text" id="pop-umbral4" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultUmbral4)}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -209,6 +229,20 @@ function inicializarTooltipsFiltros() {
             const btnAceptar = box.querySelector('#btn-pop-aceptar');
             
             if (btnAceptar) {
+                // Formatear automáticamente con separador de miles al escribir
+                const inputsMiles = box.querySelectorAll('.input-miles');
+                inputsMiles.forEach(input => {
+                    input.oninput = () => {
+                        let rawVal = input.value.replace(/\D/g, ''); // Eliminar caracteres no numéricos
+                        if (!rawVal) {
+                            input.value = '';
+                            return;
+                        }
+                        const num = parseInt(rawVal, 10);
+                        input.value = num.toLocaleString('es-ES');
+                    };
+                });
+
                 btnAceptar.onclick = () => {
                     const monto = box.querySelector('#pop-monto')?.value;
                     const paises = box.querySelector('#pop-paises')?.value;
@@ -223,16 +257,16 @@ function inicializarTooltipsFiltros() {
                     
                     instance.hide(); // Cerrar popover
                     
-                    // Ejecutar carga de informe con los valores del popover
+                    // Ejecutar carga de informe con los valores numéricos puros (sin puntos)
                     window.cargarInforme(instance.reference, nombreInforme, {
-                        limiteImporte: monto ? parseFloat(monto) : null,
-                        limitePaises: paises ? parseInt(paises, 10) : null,
-                        umbral: umbral ? parseFloat(umbral) : null,
-                        numeroPaises: numeroPaises ? parseInt(numeroPaises, 10) : null,
-                        umbral1: umbral1 ? parseFloat(umbral1) : null,
-                        umbral2: umbral2 ? parseFloat(umbral2) : null,
-                        umbral3: umbral3 ? parseFloat(umbral3) : null,
-                        umbral4: umbral4 ? parseFloat(umbral4) : null
+                        limiteImporte: desformatearMiles(monto),
+                        limitePaises: desformatearMiles(paises) ? parseInt(desformatearMiles(paises), 10) : null,
+                        umbral: desformatearMiles(umbral),
+                        numeroPaises: desformatearMiles(numeroPaises) ? parseInt(desformatearMiles(numeroPaises), 10) : null,
+                        umbral1: desformatearMiles(umbral1),
+                        umbral2: desformatearMiles(umbral2),
+                        umbral3: desformatearMiles(umbral3),
+                        umbral4: desformatearMiles(umbral4)
                     });
                 };
 

@@ -137,7 +137,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
 
             var dto = new CarteraProducirDto
             {
-                TituloColInicial = $"31.12.{anio - 1}",
+                TituloColInicial = $"31.12.{(anio - 1) % 100}",
                 TituloColActual = $"{mesCorto} {anio}",
                 TituloColDelta = $"Δ Dic {anio - 1}",
                 Lineas = datos.Select(d => new CarteraLineaDto
