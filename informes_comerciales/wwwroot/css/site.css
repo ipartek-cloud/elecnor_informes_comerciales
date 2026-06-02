@@ -86,12 +86,13 @@ body {
   position: sticky;
   top: 0;
   background-color: var(--elecnor-white);
-  min-height: 80px;
+  min-height: 60px; /* Reducido de 80px a 60px para portátil */
   display: flex;
   align-items: center;
   padding: 0 1rem;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 0.375rem !important; /* Reducido de nuevo a la mitad (6px) */
 }
 
 @media (min-width: 768px) {
@@ -110,7 +111,7 @@ body {
 }
 
 .header-logo {
-  height: clamp(35px, 8vw, 55px);
+  height: clamp(30px, 5vw, 42px); /* Reducido de 55px a 42px máx */
   width: auto;
 }
 
@@ -118,7 +119,7 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif !important;
   color: var(--elecnor-blue);
   font-weight: 700;
-  font-size: var(--text-xl);
+  font-size: clamp(1.375rem, 1.25rem + 0.6vw, 1.75rem); /* Ajustado a la alternativa A (22px - 28px) */
   text-align: center;
   margin: 0;
   letter-spacing: -0.5px;
@@ -400,6 +401,10 @@ body.modal-open {
     background-color: #ffffff;
 }
 
+.rpt-index-card .card-body {
+    padding: 0.5rem !important; /* Más compacto para portátil */
+}
+
 .rpt-index-header {
     background-color: #6c757d !important; /* Gris ligeramente más claro (Bootstrap Secondary tone) */
     color: #ffffff !important;
@@ -422,7 +427,7 @@ body.modal-open {
     color: #ffffff !important;
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
     font-weight: 700 !important;
-    font-size: 1.1rem !important;
+    font-size: 0.85rem !important; /* Reducido para portátil */
     text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
     margin-bottom: 0;
 }
@@ -434,32 +439,37 @@ body.modal-open {
 
 /* --- Checkbox para "Generar Contratación" --- */
 .rpt-checkbox-label {
-    font-size: 0.95rem !important; /* Mismo tamaño que los botones de informe */
+    font-size: 0.85rem !important; /* Reducido para portátil */
     font-weight: 500 !important;
     color: #495057 !important;
     cursor: pointer;
 }
 
 .form-check-input {
-    width: 1.2em !important;
-    height: 1.2em !important;
+    width: 1.0em !important;
+    height: 1.0em !important;
     margin-top: 0 !important; /* Centrado vertical con el label */
     cursor: pointer;
 }
 
+/* Contenedor de filtros con margen reducido de nuevo a la mitad (6px) */
+.rpt-filters-container {
+    margin-bottom: 0.375rem !important;
+}
+
 /* Estilo compacto para la fila de filtros */
 .rpt-filters-row {
-    font-size: 0.9rem !important;
+    font-size: 0.85rem !important; /* Reducido para portátil */
 }
 
 .rpt-filters-row .form-control, 
 .rpt-filters-row .form-select {
-    font-size: 0.9rem !important;
-    padding: 0.4rem 0.6rem !important;
+    font-size: 0.85rem !important; /* Reducido para portátil */
+    padding: 0.3rem 0.5rem !important; /* Reducido para portátil */
 }
 
 .rpt-filters-row label {
-    font-size: 0.9rem !important;
+    font-size: 0.85rem !important; /* Reducido para portátil */
 }
 
 /* -------------------------------------------------------------------
@@ -565,10 +575,10 @@ body.modal-open {
     border: 1px solid rgba(0, 70, 139, 0.1) !important;
     border-bottom: none !important;
     border-radius: 10px 10px 0 0 !important;
-    padding: 12px 30px !important;
+    padding: 6px 20px !important;
     transition: all 0.2s ease;
     background-color: #8a95a1; /* Gris más oscuro para que la letra blanca sea legible */
-    font-size: 1rem; /* Aumentado ligeramente */
+    font-size: 0.85rem !important; /* Reducido para pantallas de portátil */
     /* Sombra doble: una nítida para relieve y una difuminada para profundidad */
     text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
@@ -597,6 +607,12 @@ body.modal-open {
 
 .rpt-tab-pane {
     animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Separación intermedia de 6px para las filas de botones en las pestañas */
+#consejoAdministracionContainer,
+#reportButtonsContainer {
+    gap: 6px !important;
 }
 
 @keyframes fadeIn {

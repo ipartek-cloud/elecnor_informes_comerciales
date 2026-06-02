@@ -7,7 +7,7 @@
     <div id="mainContent" class="d-none">
         
         <!-- ==================== FILTROS DE INFORME ==================== -->
-        <div class="mb-4 p-3 bg-light bg-opacity-50 rounded">
+        <div class="rpt-filters-container py-2 px-3 bg-light bg-opacity-50 rounded">
             <div class="row g-3 align-items-center justify-content-start rpt-filters-row">
                 <div class="col-auto">
                     <label for="txtAnno" class="col-form-label fw-bold">Año</label>
@@ -62,6 +62,12 @@
                     COMITÉ
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="opciones-tab" data-bs-toggle="tab" data-bs-target="#opciones-pane" 
+                        type="button" role="tab" aria-controls="opciones-pane" aria-selected="false">
+                    OPCIONES DE GENERACIÓN
+                </button>
+            </li>
         </ul>
 
         <div class="tab-content rpt-tab-content" id="reportTabsContent">
@@ -70,10 +76,10 @@
             <div class="tab-pane fade show active rpt-tab-pane" id="consejo-pane" role="tabpanel" aria-labelledby="consejo-tab" tabindex="0">
                 <div class="card border-0">
                     <div class="card-body p-0">
-                        <div id="consejoAdministracionContainer" class="d-flex flex-column gap-2 align-items-start p-3">
+                        <div id="consejoAdministracionContainer" class="d-flex flex-column gap-1 align-items-start p-3">
                             
                             <!-- ENCABEZADOS DE COLUMNA -->
-                            <div class="d-flex align-items-center gap-2 w-100 mb-2">
+                            <div class="d-flex align-items-center gap-2 w-100">
                                 <div class="input-group rpt-input-group-index flex-fill">
                                     <div class="rpt-header-index-col--blue text-center w-100">
                                         Informe
@@ -362,10 +368,10 @@
             <div class="tab-pane fade rpt-tab-pane" id="comite-pane" role="tabpanel" aria-labelledby="comite-tab" tabindex="0">
                 <div class="card border-0">
                     <div class="card-body p-0">
-                        <div id="reportButtonsContainer" class="d-flex flex-column gap-2 align-items-start p-3">
+                        <div id="reportButtonsContainer" class="d-flex flex-column gap-1 align-items-start p-3">
                             
                             <!-- ENCABEZADOS DE COLUMNA -->
-                            <div class="d-flex align-items-center gap-2 w-100 mb-2">
+                            <div class="d-flex align-items-center gap-2 w-100">
                                 <div class="input-group rpt-input-group-index flex-fill">
                                     <div class="rpt-header-index-col--blue text-center w-100">
                                         Comité Elecnor
@@ -834,47 +840,43 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- PESTAÑA 3: OPCIONES DE GENERACIÓN -->
+            <div class="tab-pane fade rpt-tab-pane" id="opciones-pane" role="tabpanel" aria-labelledby="opciones-tab" tabindex="0">
+                <div class="card border-0">
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-column gap-3 align-items-start p-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       id="chkGenerarRPTPrincipalesObras"
+                                       name="chkGenerarRPTPrincipalesObras">
+                                <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
+                                    Generar Contratación
+                                </label>
+                            </div>
 
-        <!-- ==================== CARD 4: OPCIONES DE GENERACIÓN ==================== -->
-        <div class="card mb-4 rpt-index-card">
-            <div class="card-header rpt-index-header--blue text-center">
-                <h5 class="mb-0 text-uppercase">
-                    Opciones de Generación
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center gap-4 w-100 p-3 bg-light bg-opacity-50">
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
-                            Generar Contratación
-                        </label>
-                        <input class="form-check-input mt-0" type="checkbox"
-                               id="chkGenerarRPTPrincipalesObras"
-                               name="chkGenerarRPTPrincipalesObras">
-                    </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       id="chkGenerarRPTPrincipalesObrasAI"
+                                       name="chkGenerarRPTPrincipalesObrasAI">
+                                <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
+                                    Generar Contratación(AI)
+                                </label>
+                            </div>
 
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
-                            Generar Contratación(AI)
-                        </label>
-                        <input class="form-check-input mt-0" type="checkbox"
-                               id="chkGenerarRPTPrincipalesObrasAI"
-                               name="chkGenerarRPTPrincipalesObrasAI">
-                    </div>
-
-                    <div class="d-flex align-items-center gap-2">
-                        <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
-                            Generar Contrataciones Significativas
-                        </label>
-                        <input class="form-check-input mt-0" type="checkbox"
-                               id="chkGenerarRPTPrincipalesContrataciones"
-                               name="chkGenerarRPTPrincipalesContrataciones">
+                            <div class="d-flex align-items-center gap-2">
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       id="chkGenerarRPTPrincipalesContrataciones"
+                                       name="chkGenerarRPTPrincipalesContrataciones">
+                                <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
+                                    Generar Contrataciones Significativas
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 

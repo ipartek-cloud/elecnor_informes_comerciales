@@ -934,37 +934,43 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
    Aseguran que botones e inputs tengan el mismo alto al píxel.
    ========================================================================== */
 
-/* Altura fija estándar para que coincida con botones Bootstrap (aprox 38px) */
+/* Altura fija estándar para que coincida con botones Bootstrap (aprox 30px) */
 .rpt-control-height {
-    height: 38px !important;
+    height: 30px !important;
 }
 
 /* Ajuste específico para el input de número de página */
 .rpt-input-page {
     width: 65px !important;
     max-width: 65px;
-    height: 38px !important; /* Fuerza altura exacta del botón */
+    height: 30px !important; /* Fuerza altura exacta del botón */
     border: 1px solid #ced4da !important;
     color: #00468B !important;
     font-weight: bold !important;
     text-align: center;
     border-left: none !important; /* Elimina la doble línea entre botón e input */
     padding: 0 !important;
-    font-size: 1rem !important;
+    font-size: 0.85rem !important; /* Reducido para portátil */
     border-radius: 0 6px 6px 0 !important; /* Solo redondea esquinas derechas */
 }
 
 /* Ajuste para el botón si va dentro de un grupo */
 .rpt-btn-index {
     border-radius: 6px 0 0 6px !important; /* Solo redondea esquinas izquierdas */
-    height: 38px !important;
+    height: 30px !important; /* Reducido de 38px */
+    font-size: 0.85rem !important; /* Reducido de 1rem */
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
     white-space: nowrap !important; /* Evita que el texto salte a la siguiente línea */
 }
 
 /* Botón solo (sin input-group) - esquinas redondeadas a ambos lados */
 .rpt-btn-index-alone {
     border-radius: 6px !important;
-    height: 38px !important;
+    height: 30px !important; /* Reducido de 38px */
+    font-size: 0.85rem !important; /* Reducido de 1rem */
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
     white-space: nowrap !important;
 }
 
@@ -994,7 +1000,8 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
     color: #00468B !important;         /* Texto en azul corporativo */
     border: 1px solid #ced4da !important;
     font-weight: bold !important;
-    padding: 6px 0 !important;
+    padding: 4px 0 !important; /* Reducido de 6px */
+    font-size: 0.85rem !important; /* Reducido de 1rem */
     border-radius: 0 !important;
 }
 /* Encabezado de columnas Informe / Anexo en Index (Variante Azul Prueba) */
@@ -1003,7 +1010,8 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
     color: white !important;           /* Texto en blanco */
     border: 1px solid #003a74 !important;
     font-weight: normal !important;    /* Peso normal por petición del usuario */
-    padding: 6px 0 !important;
+    padding: 4px 0 !important; /* Reducido de 6px */
+    font-size: 0.85rem !important; /* Reducido de 1rem */
     border-radius: 0 !important;       /* Rectangulares por petición del usuario */
 }
 
