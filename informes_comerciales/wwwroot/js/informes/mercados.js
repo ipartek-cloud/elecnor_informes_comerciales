@@ -123,7 +123,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = t
 
   <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Objet.</th>
   <th class="rpt-align-end rpt-pad-right-15 rpt-mercado-th-border rpt-text-corporate">Contr.</th>
-  <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate">Ip</th>
+  <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate rpt-mercado-ip-title-shift">Ip</th>
   <th class="rpt-align-center rpt-mercado-th-border rpt-text-corporate">Var/${anioAnterior}</th>
   </tr>
   </thead>

@@ -108,7 +108,9 @@ function _renderTablaPaises() {
                 <col class="rpt-paises-col-porc">
                 <col class="rpt-paises-col-contr">
                 <col class="rpt-paises-col-pos">
+                <col class="rpt-paises-col-spacer">
                 <col class="rpt-paises-col-pais">
+                <col class="rpt-paises-col-spacer">
                 <col class="rpt-paises-col-pos">
                 <col class="rpt-paises-col-contr">
                 <col class="rpt-paises-col-porc">
@@ -116,17 +118,19 @@ function _renderTablaPaises() {
             <thead>
                 <tr class="rpt-paises-header-year">
                     <th colspan="3">Cierre ${anioAnterior}</th>
-                    <th></th>
+                    <th colspan="3" rpt-border-none></th>
                     <th colspan="3">${anioActual}</th>
                 </tr>
                 <tr class="rpt-th-blue-segmented">
-<th class="rpt-paises-porc-cell rpt-paises-th-border">% S/Internac.</th>
-            <th class="rpt-align-end rpt-pad-right-15 rpt-paises-th-border">Contr.</th>
-            <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
-            <th class="rpt-paises-pais-cell rpt-paises-th-border-pais">País</th>
-            <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
-            <th class="rpt-align-end rpt-pad-right-15 rpt-paises-th-border">Contr.</th>
-            <th class="rpt-paises-porc-cell rpt-paises-th-border">% S/Internac.</th>
+                    <th class="rpt-paises-porc-cell rpt-paises-th-border">S/Internac.</th>
+                    <th class="rpt-align-end rpt-pad-right-15 rpt-paises-th-border">Contr.</th>
+                    <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
+                    <th rpt-border-none></th>
+                    <th class="rpt-paises-pais-cell rpt-paises-th-border-pais">País</th>
+                    <th rpt-border-none></th>
+                    <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
+                    <th class="rpt-align-end rpt-pad-right-15 rpt-paises-th-border">Contr.</th>
+                    <th class="rpt-paises-porc-cell rpt-paises-th-border">S/Internac.</th>
                 </tr>
             </thead>
             <tbody>
@@ -138,22 +142,22 @@ function _renderTablaPaises() {
         
         html += `
             <tr class="rpt-detail-row">
-<td class="rpt-paises-porc-cell">${porcAnterior}%</td>
-      <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
-      <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
-
-      <td class="rpt-paises-pais-cell">
-        <div class="rpt-paises-pais-wrapper">
-          <span class="rpt-paises-asterisk-container">
-            ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}
-          </span>
-          <span>${p.pais}</span>
-        </div>
-      </td>
-
-      <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>
-      <td class="rpt-paises-num-cell">${formatCurrency(p.importeActual / 1000, 0)}</td>
-      <td class="rpt-paises-porc-cell">${porcActual}%</td>
+                <td class="rpt-paises-porc-cell">${porcAnterior}%</td>
+                <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
+                <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
+                <td rpt-border-none></td>
+                <td class="rpt-paises-pais-cell">
+                    <div class="rpt-paises-pais-wrapper">
+                        <span class="rpt-paises-asterisk-container">
+                            ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}
+                        </span>
+                        <span>${p.pais}</span>
+                    </div>
+                </td>
+                <td rpt-border-none></td>
+                <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>
+                <td class="rpt-paises-num-cell">${formatCurrency(p.importeActual / 1000, 0)}</td>
+                <td class="rpt-paises-porc-cell">${porcActual}%</td>
             </tr>
         `;
     });
@@ -167,35 +171,38 @@ function _renderTablaPaises() {
         : '0';
 
     html += `
-</tbody>
-  <tfoot class="rpt-paises-total-row">
-  <!-- Fila separadora 6px (Estándar V-11 - Gap de Totales) -->
-  <tr class="rpt-spacer-row-totales">
-    <td colspan="7" class="rpt-spacer-cell-totales"></td>
-  </tr>
-  <tr>
-    <td class="rpt-paises-porc-cell rpt-paises-total-line">${subtotalPorcAnterior}%</td>
-    <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
-    <td></td>
-    <td class="rpt-paises-total-line"></td>
-    <td></td>
-    <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
-    <td class="rpt-paises-porc-cell rpt-paises-total-line">${subtotalPorcActual}%</td>
-  </tr>
-  <!-- Fila 2: Total Internacional Global -->
-  <tr class="rpt-paises-total-global">
-    <td></td>
-    <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
-    <td></td>
-  </tr>
-  </tfoot>
+            </tbody>
+            <tfoot class="rpt-paises-total-row">
+            <!-- Fila separadora 6px (Estándar V-11 - Gap de Totales) -->
+            <tr class="rpt-spacer-row-totales">
+                <td colspan="9" class="rpt-spacer-cell-totales"></td>
+            </tr>
+            <tr>
+                <td class="rpt-paises-porc-cell rpt-paises-total-line">${subtotalPorcAnterior}%</td>
+                <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
+                <td></td>
+                <td rpt-border-none></td>
+                <td class="rpt-paises-total-line"></td>
+                <td rpt-border-none></td>
+                <td></td>
+                <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
+                <td class="rpt-paises-porc-cell rpt-paises-total-line">${subtotalPorcActual}%</td>
+            </tr>
+            <!-- Fila 2: Total Internacional Global -->
+            <tr class="rpt-paises-total-global">
+                <td></td>
+                <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
+                <td></td>
+                <td rpt-border-none></td>
+                <td class="rpt-paises-pais-cell rpt-paises-total-label-blue">Total Internacional</td>
+                <td rpt-border-none></td>
+                <td></td>
+                <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
+                <td class="rpt-paises-total-label-blue rpt-paises-total-label-left">Miles de Euros</td>
+            </tr>
+            </tfoot>
         </table>
     `;
-
 
     return html;
 }

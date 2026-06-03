@@ -28,11 +28,12 @@ ESTILOS ESPECÍFICOS PARA EL INFORME PAÍSES
   .rpt-paises-col-pais { width: 30%; }
 }
 
-/* Layout de Columnas (Simetría) - Redistribuido para evitar wrap en % S/Internac */
-.rpt-paises-col-porc { width: 16%; }   /* Aumentado para evitar wrap del título */
-.rpt-paises-col-contr { width: 13%; }  /* Reducido para dar espacio a % S/Internac */
-.rpt-paises-col-pos { width: 7%; }     /* Reducido ligeramente */
-.rpt-paises-col-pais { width: 28%; }
+/* Layout de Columnas (Simetría) - Redistribuido para reducir S/Internac y dar espacio a País con separadores */
+.rpt-paises-col-porc { width: 12%; }
+.rpt-paises-col-contr { width: 13%; }
+.rpt-paises-col-pos { width: 7%; }
+.rpt-paises-col-spacer { width: 2%; }
+.rpt-paises-col-pais { width: 32%; }
 
 .rpt-paises-table {
   width: 88% !important;
@@ -173,6 +174,19 @@ tbody .rpt-paises-pais-cell {
 .rpt-align-end { text-align: end !important; text-align: right !important; }
 .rpt-pad-right-15 { padding-right: 15px !important; }
 
+/* Estilos para los literales del total global en el informe Países */
+.rpt-paper[data-informe="paises"] .rpt-paises-total-label-blue {
+  color: #00468B !important;
+  font-weight: bold !important;
+  font-size: 8pt !important;
+}
+
+.rpt-paper[data-informe="paises"] .rpt-paises-total-label-left {
+  text-align: left !important;
+  white-space: nowrap !important;
+  padding-left: 8px !important;
+}
+
 /* Impresión - Paridad con Access (Margen 16mm) */
 @media print {
   .rpt-paper[data-informe="paises"],
@@ -184,10 +198,11 @@ tbody .rpt-paises-pais-cell {
     border: none !important;
   }
 
-  .rpt-paises-col-porc { width: 16% !important; }   /* Aumentado para evitar wrap del título */
-  .rpt-paises-col-contr { width: 13% !important; }  /* Reducido para dar espacio a % S/Internac */
-  .rpt-paises-col-pos { width: 7% !important; }     /* Reducido ligeramente */
-  .rpt-paises-col-pais { width: 28% !important; }
+  .rpt-paises-col-porc { width: 12% !important; }
+  .rpt-paises-col-contr { width: 13% !important; }
+  .rpt-paises-col-pos { width: 7% !important; }
+  .rpt-paises-col-spacer { width: 2% !important; }
+  .rpt-paises-col-pais { width: 32% !important; }
 
   .rpt-table {
     font-size: 8pt !important;
@@ -262,6 +277,21 @@ tbody .rpt-paises-pais-cell {
 
   .rpt-paises-new-flag {
     font-size: 8pt !important;
+  }
+
+  /* Literales del total global en print */
+  .rpt-paper[data-informe="paises"] .rpt-paises-total-label-blue,
+  .rpt-paper--print.rpt-paper--paises .rpt-paises-total-label-blue {
+    color: #00468B !important;
+    font-weight: bold !important;
+    font-size: 8pt !important;
+  }
+
+  .rpt-paper[data-informe="paises"] .rpt-paises-total-label-left,
+  .rpt-paper--print.rpt-paper--paises .rpt-paises-total-label-left {
+    text-align: left !important;
+    white-space: nowrap !important;
+    padding-left: 8px !important;
   }
 }
 

@@ -82,6 +82,12 @@ Clases para reemplazar estilos inline del JS
   padding-bottom: 5px !important;
 }
 
+/* Desplazar el título "Ip" ligeramente a la izquierda en el informe Mercados */
+.rpt-paper[data-informe="mercados"] .rpt-mercado-ip-title-shift {
+  padding-right: 10px !important;
+  padding-left: 0 !important;
+}
+
 /* Fila separadora de 5px */
 .rpt-mercado-row-spacer {
   height: 5px;
@@ -309,6 +315,13 @@ border: none !important;
   }
   .rpt-cmai-titulo-container {
     margin-top: 8px !important;
+  }
+
+  /* Desplazar el título "Ip" en print */
+  .rpt-paper[data-informe="mercados"] .rpt-mercado-ip-title-shift,
+  .rpt-paper--print.rpt-paper--mercados .rpt-mercado-ip-title-shift {
+    padding-right: 10px !important;
+    padding-left: 0 !important;
   }
 }
 
