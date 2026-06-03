@@ -96,7 +96,7 @@ function _renderBloquePais(pais) {
       <th class="rpt-col-act-nombre"></th>
       <th colspan="3" class="rpt-align-center rpt-p-0">${anioActual}</th>
     </tr>
-    <tr class="rpt-th-year">
+    <tr class="rpt-th-year rpt-act-line-row">
       <th colspan="2" class="rpt-act-line-segment rpt-align-center rpt-p-0"></th>
       <th class="rpt-col-act-nombre"></th>
       <th colspan="3" class="rpt-act-line-segment rpt-align-center rpt-p-0"></th>
@@ -112,7 +112,7 @@ function _renderBloquePais(pais) {
         <div class="rpt-act-header-line">Contr.</div>
       </th>
       <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-p-0">
-        <div class="rpt-act-badge rpt-text-uppercase">${pais.nombrePais}</div>
+        <div class="rpt-act-badge">${pais.nombrePais}</div>
       </th>
       <th class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">
         <div class="rpt-act-header-line">Contr.</div>
