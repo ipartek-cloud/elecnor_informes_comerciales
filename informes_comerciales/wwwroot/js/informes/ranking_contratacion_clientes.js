@@ -157,8 +157,7 @@ function _renderCuerpoInforme() {
                         ${!esInternacional ? '<th class="rpt-col-ant"></th>' : ''}
                     </tr>
                     <tr>
-                        <th class="rpt-col-row"></th>
-                        <th class="rpt-header-blue rpt-col-cliente">Cliente</th>
+                        <th class="rpt-header-blue-cell" colspan="2"><div class="rpt-header-blue">Cliente</div></th>
                         <th class="rpt-col-num rpt-th-border-blue-cell">Contr</th>
                         <th class="rpt-col-pct rpt-text-center rpt-th-border-blue-cell">% s/${filtros.mercado === 'Internacional' ? 'Intern.' : (filtros.mercado || 'Nacional')}</th>
                         ${!esInternacional ? `<th class="rpt-col-ant rpt-th-border-gray-container"><div class="rpt-th-border-gray rpt-w-100">${anioAnterior || '----'} *</div></th>` : ''}

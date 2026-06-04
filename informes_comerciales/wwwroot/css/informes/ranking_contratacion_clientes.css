@@ -121,15 +121,22 @@ GUÍA: Estándar Print-Perfect
 }
 
 /* Header azul para "Cliente" */
+.rpt-header-blue-cell {
+    padding: 0 !important;
+    vertical-align: bottom !important;
+}
+
 .rpt-header-blue {
     background-color: #00468B;
     color: #ffffff !important;
-    padding: 1pt 8pt !important;
+    padding: 1pt 8pt 1pt 10pt !important;
     font-weight: bold;
     text-align: left;
+    margin-right: 6pt !important;
+    display: block;
 }
 
-.rpt-ranking-table thead th.rpt-header-blue {
+.rpt-ranking-table thead .rpt-header-blue {
     padding-top: 1pt !important;
     padding-bottom: 1pt !important;
 }
@@ -200,34 +207,32 @@ GUÍA: Estándar Print-Perfect
 }
 
 .rpt-col-row {
-    width: 12pt;
+    width: 6pt;
     text-align: right;
-    padding-right: 4pt !important;
+    padding-right: 0 !important;
     color: #333;
 }
 
 .rpt-ranking-table col.rpt-col-row {
-    width: 12pt !important;
+    width: 6pt !important;
 }
 
 .rpt-col-cliente {
-    width: 110pt !important;
-    min-width: 110pt !important;
-    max-width: 110pt !important;
+    width: 116pt !important;
+    min-width: 116pt !important;
+    max-width: 116pt !important;
     font-weight: normal;
     padding-left: 4pt !important;
 }
 
 .rpt-ranking-table col.rpt-col-cliente {
-    width: 110pt !important;
-    min-width: 110pt !important;
-    max-width: 110pt !important;
+    width: 116pt !important;
+    min-width: 116pt !important;
+    max-width: 116pt !important;
 }
 
 /* Estilo específico para la cabecera de cliente */
-.rpt-header-blue.rpt-col-cliente {
-    width: 110pt !important;
-}
+
 
 .rpt-col-num {
     width: 24pt;
@@ -488,7 +493,7 @@ GUÍA: Estándar Print-Perfect
         padding: 2pt 4pt !important;
     }
 
-    .rpt-ranking-table thead th.rpt-header-blue {
+    .rpt-ranking-table thead .rpt-header-blue {
         padding-top: 1pt !important;
         padding-bottom: 1pt !important;
     }
@@ -520,9 +525,9 @@ GUÍA: Estándar Print-Perfect
 
     /* Anchos de columna para PDF - sincronizados con web */
     .rpt-col-ai { width: 20pt !important; }
-    .rpt-col-row { width: 12pt !important; }
-    .rpt-col-cliente { width: 110pt !important; }
-    .rpt-header-blue.rpt-col-cliente { width: 110pt !important; }
+    .rpt-col-row { width: 6pt !important; }
+    .rpt-col-cliente { width: 116pt !important; }
+
     .rpt-col-num { width: 24pt !important; }
     .rpt-col-pct { width: 30pt !important; }
     .rpt-col-ant { width: 24pt !important; }
