@@ -98,8 +98,8 @@ function _renderBloquePais(pais) {
         Contr.
       </th>
       <th rpt-border-none></th>
-      <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-ps-3 rpt-fs-8pt">
-        <div class="rpt-act-badge rpt-text-uppercase">${pais.nombrePais}</div>
+      <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-p-0">
+        <div class="rpt-act-badge">${pais.nombrePais}</div>
       </th>
       <th rpt-border-none></th>
       <th class="rpt-col-act-obj rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">

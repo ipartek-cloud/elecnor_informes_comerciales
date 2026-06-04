@@ -112,10 +112,10 @@
 
 /* Anchos de columna optimizados */
 .rpt-col-act-porc-ant { width: 10%; }
-.rpt-col-act-imp-ant  { width: 14%; }
-.rpt-col-act-nombre   { width: 38%; }
-.rpt-col-act-imp-act  { width: 14%; }
-.rpt-col-act-var      { width: 12%; }
+.rpt-col-act-imp-ant  { width: 17.5%; }
+.rpt-col-act-nombre   { width: 33%; }
+.rpt-col-act-imp-act  { width: 17.5%; }
+.rpt-col-act-var      { width: 10%; }
 .rpt-col-act-porc-act { width: 12%; }
 
 
@@ -149,6 +149,12 @@
 }
 .report-body {
   margin-top: 2.5rem !important;
+}
+
+/* Alineación de detalle con líneas de cabecera y totales (padding-right 19px para compensar el margen lateral) */
+.rpt-table-actividades tbody tr.rpt-detail-row td.rpt-col-act-imp-ant,
+.rpt-table-actividades tbody tr.rpt-detail-row td.rpt-col-act-imp-act {
+  padding-right: 19px !important;
 }
 
 /* =============================================================================
