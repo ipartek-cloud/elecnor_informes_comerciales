@@ -67,7 +67,7 @@
 
 /* Definición de Columnas */
 .rpt-col-mes-cliente {
-    width: 32%;
+    width: 33.5%;
     padding-left: 5px !important;
     white-space: nowrap;
     overflow: hidden;
@@ -75,14 +75,14 @@
 }
 
 .rpt-col-mes-oferta {
-    width: 57%;
+    width: 58.5%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .rpt-col-mes-importe {
-    width: 10%;
+    width: 7%;
     padding-right: 10pt !important;
 }
 
@@ -245,9 +245,9 @@
     }
 
     /* Reafirmar anchos en impresión */
-    .rpt-col-mes-cliente { width: 32% !important; }
-    .rpt-col-mes-oferta { width: 57% !important; }
-    .rpt-col-mes-importe { width: 10% !important; }
+    .rpt-col-mes-cliente { width: 33.5% !important; }
+    .rpt-col-mes-oferta { width: 58.5% !important; }
+    .rpt-col-mes-importe { width: 7% !important; }
 
     .rpt-cont-sig-anterior-label td {
         border-bottom: 0.3pt solid #666 !important;
