@@ -14,11 +14,11 @@
 }
 
 .rpt-col-cliente {
-  width: 38%;
+  width: 44%;
 }
 
 .rpt-col-importe {
-  width: 12%;
+  width: 6%;
 }
 
 /* Tabla del informe AI - Rigidez columnar */
@@ -37,38 +37,51 @@
   vertical-align: middle;
 }
 
+/* Evitar saltos de línea y truncar con elipsis en Descripción y Cliente */
+.rpt-table-contrataciones-ai td.rpt-col-desc,
+.rpt-table-contrataciones-ai td.rpt-col-cliente {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
 /* Cabecera de Sección (Asociado a Inversión > 0,3M)
-   Refinado: Fondo blanco, texto azul negrita, línea inferior
+   Refinado: Fondo blanco, texto azul negrita, línea inferior. Alineado con la col 1.
 */
 .rpt-section-ai-header {
   background-color: transparent !important;
   color: #00468B;
   font-weight: bold;
   font-size: 10pt !important;
-  padding: 2px 0 2px 5%; /* Desplazar texto al 5% para alinear con el detalle */
+  padding: 2px 0 2px 2.3% !important; /* Desplazado al 2.3% para alinear perfectamente con la "I" del detalle */
   border-bottom: 0.3pt solid #00468B;
-  margin: 1rem 0 0 0; /* Sin margen izquierdo para que la línea empiece en 0% */
-  width: 100%;
+  margin: 1rem auto 0 auto !important; /* Centrado como la tabla al 98% */
+  width: 98% !important; /* Mismo ancho que la tabla */
   box-sizing: border-box;
   display: block;
 }
 
-/* Cabecera de mes (Mantener paridad con Contrataciones) */
+/* Cabecera de mes (Mantener paridad con Contrataciones) - Alineado con la col 1. */
 .rpt-month-header {
   background-color: #D6EAF8;
   color: #00468B;
   font-weight: bold;
   font-size: 9pt !important; /* Incrementado de 8pt a 9pt */
-  padding: 4px 10px 4px 5%; /* El fondo empieza en 0%, el texto se desplaza al 5% */
-  margin: 0 0 0.5rem 0; /* Sin margen izquierdo para que el fondo empiece en 0% */
-  width: 100%;
+  padding: 4px 10px 4px 2.3% !important; /* Desplazado al 2.3% para alinear perfectamente con la "I" del detalle */
+  margin: 0 auto 0.5rem auto !important; /* Centrado como la tabla al 98% */
+  width: 98% !important; /* Mismo ancho que la tabla */
   box-sizing: border-box;
   overflow: hidden;
 }
 
 /* Aumento de separación vertical del subtítulo en Contrataciones AI */
 .rpt-subtitle {
-  margin-bottom: 1.2rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Anulación de márgenes parásitos del cuerpo para controlar la separación únicamente desde el subtítulo */
+.rpt-paper[data-informe="contrataciones_ai"] .report-body.rpt-cmai-mt-standard {
+  margin-top: 0 !important;
 }
 
 /* =============================================================================
@@ -83,6 +96,7 @@
 .rpt-subreport-ai-anterior .rpt-section-ai-header {
   color: #8C8C8C !important;
   border-bottom: 0.3pt solid #8C8C8C !important;
+  margin-bottom: 0.5rem !important; /* Separación vertical con la primera línea de datos */
 }
 
 /* Detalle del subinforme en gris suave (#8C8C8C) */
@@ -165,7 +179,7 @@
   /* Subtítulo - Espacio ajustado */
   .rpt-subtitle {
     font-size: 8pt !important;
-    margin-bottom: 1.2rem !important; /* Separación vertical incrementada para paridad con la versión Web */
+    margin-bottom: 1.5rem !important; /* Separación vertical incrementada para paridad con la versión Web */
   }
 
   /* Banner - Espacio ajustado */
@@ -175,9 +189,10 @@
     font-weight: normal !important;
   }
 
-  /* Separación cabecera-contenido en PDF */
-  .report-body {
-    margin-top: 0.8rem !important;
+  /* Separación cabecera-contenido en PDF - Anulamos margen superior e inyección de padding-top */
+  .rpt-print-layer .rpt-paper--contrataciones_ai .report-body {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
   }
 
   /* Evitar cortes dentro de filas de detalle */

@@ -166,7 +166,7 @@ async function _renderCuerpoInforme() {
  */
 function _formatearUmbral(valor) {
     const valorM = valor / 1000;
-    return (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
+    return (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1).replace('.', ',')}M`;
 }
 
 /**

@@ -61,7 +61,7 @@ const formatearMiles = (val) => {
     if (val === undefined || val === null || val === '') return '';
     const num = parseInt(val.toString().replace(/\./g, ''), 10);
     if (isNaN(num)) return '';
-    return num.toLocaleString('es-ES');
+    return num.toLocaleString('es-ES', { useGrouping: true });
 };
 
 // Helper para obtener el número puro eliminando puntos de miles
@@ -69,6 +69,12 @@ const desformatearMiles = (val) => {
     if (val === undefined || val === null || val === '') return null;
     const limpio = val.toString().replace(/\./g, '');
     return limpio ? parseFloat(limpio) : null;
+};
+
+// Helper para formatear un valor numérico con decimales (reemplaza puntos por comas)
+const formatearDecimal = (val) => {
+    if (val === undefined || val === null || val === '') return '';
+    return val.toString().replace(/\./g, ',');
 };
 
 /**
@@ -120,14 +126,15 @@ function inicializarTooltipsFiltros() {
         onShow(instance) {
             const btn = instance.reference;
             const ds = btn.dataset;
+            const esContratacionesAI = ds.nombreInforme === 'contrataciones_ai';
             
             // Valores por defecto
             const defaultMonto = ds.limiteimporte || 13000;
             const defaultPaises = ds.limitepaises || 20;
             const defaultUmbral = ds.umbral || 0;
             const defaultNumeroPaises = ds.numeropaises || 0;
-            const defaultUmbral1 = ds.umbral1 || 5000;
-            const defaultUmbral2 = ds.umbral2 || 15000;
+            const defaultUmbral1 = ds.umbral1 || (esContratacionesAI ? 0.3 : 5000);
+            const defaultUmbral2 = ds.umbral2 || (esContratacionesAI ? 0.7 : 15000);
             const defaultUmbral3 = ds.umbral3 || 10000;
             const defaultUmbral4 = ds.umbral4 || 25000;
 
@@ -179,20 +186,28 @@ function inicializarTooltipsFiltros() {
             }
 
             if (ds.umbral1 !== undefined) {
+                const labelText = esContratacionesAI ? "Límite Monto 1º (Millones de Euros):" : "Límite Monto 1º (Miles de Euros):";
+                const inputClass = esContratacionesAI ? "input-decimal" : "input-miles";
+                const formattedVal = esContratacionesAI ? formatearDecimal(defaultUmbral1) : formatearMiles(defaultUmbral1);
+                
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 1º (Miles de Euros):</label>
-                        <input type="text" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold input-miles" 
-                               value="${formatearMiles(defaultUmbral1)}" style="font-size: 0.8rem;">
+                        <label class="small fw-bold d-block mb-1 text-muted">${labelText}</label>
+                        <input type="text" id="pop-umbral1" class="form-control form-control-sm text-center fw-bold ${inputClass}" 
+                               value="${formattedVal}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
             if (ds.umbral2 !== undefined) {
+                const labelText = esContratacionesAI ? "Límite Monto 2º (Millones de Euros):" : "Límite Monto 2º (Miles de Euros):";
+                const inputClass = esContratacionesAI ? "input-decimal" : "input-miles";
+                const formattedVal = esContratacionesAI ? formatearDecimal(defaultUmbral2) : formatearMiles(defaultUmbral2);
+                
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Límite Monto 2º (Miles de Euros):</label>
-                        <input type="text" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold input-miles" 
-                               value="${formatearMiles(defaultUmbral2)}" style="font-size: 0.8rem;">
+                        <label class="small fw-bold d-block mb-1 text-muted">${labelText}</label>
+                        <input type="text" id="pop-umbral2" class="form-control form-control-sm text-center fw-bold ${inputClass}" 
+                               value="${formattedVal}" style="font-size: 0.8rem;">
                     </div>
                 `;
             }
@@ -239,7 +254,21 @@ function inicializarTooltipsFiltros() {
                             return;
                         }
                         const num = parseInt(rawVal, 10);
-                        input.value = num.toLocaleString('es-ES');
+                        input.value = num.toLocaleString('es-ES', { useGrouping: true });
+                    };
+                });
+
+                // Formatear automáticamente con decimales y coma al escribir
+                const inputsDecimal = box.querySelectorAll('.input-decimal');
+                inputsDecimal.forEach(input => {
+                    input.oninput = () => {
+                        let val = input.value.replace(/\./g, ','); // Convertir puntos a comas
+                        val = val.replace(/[^0-9,]/g, ''); // Permitir solo números y comas
+                        const parts = val.split(',');
+                        if (parts.length > 2) {
+                            val = parts[0] + ',' + parts.slice(1).join(''); // Evitar múltiples comas
+                        }
+                        input.value = val;
                     };
                 });
 
@@ -254,8 +283,23 @@ function inicializarTooltipsFiltros() {
                     const umbral4 = box.querySelector('#pop-umbral4')?.value;
                     
                     const nombreInforme = instance.reference.dataset.nombreInforme;
+                    const esContratacionesAI = nombreInforme === 'contrataciones_ai';
                     
                     instance.hide(); // Cerrar popover
+                    
+                    const desformatearDecimal = (v) => {
+                        if (v === undefined || v === null || v === '') return null;
+                        const limpio = v.toString().replace(/,/g, '.');
+                        return limpio ? parseFloat(limpio) : null;
+                    };
+
+                    let u1Val = esContratacionesAI ? desformatearDecimal(umbral1) : desformatearMiles(umbral1);
+                    let u2Val = esContratacionesAI ? desformatearDecimal(umbral2) : desformatearMiles(umbral2);
+
+                    if (esContratacionesAI) {
+                        if (u1Val !== null) u1Val = u1Val * 1000;
+                        if (u2Val !== null) u2Val = u2Val * 1000;
+                    }
                     
                     // Ejecutar carga de informe con los valores numéricos puros (sin puntos)
                     window.cargarInforme(instance.reference, nombreInforme, {
@@ -263,8 +307,8 @@ function inicializarTooltipsFiltros() {
                         limitePaises: desformatearMiles(paises) ? parseInt(desformatearMiles(paises), 10) : null,
                         umbral: desformatearMiles(umbral),
                         numeroPaises: desformatearMiles(numeroPaises) ? parseInt(desformatearMiles(numeroPaises), 10) : null,
-                        umbral1: desformatearMiles(umbral1),
-                        umbral2: desformatearMiles(umbral2),
+                        umbral1: u1Val,
+                        umbral2: u2Val,
                         umbral3: desformatearMiles(umbral3),
                         umbral4: desformatearMiles(umbral4)
                     });
@@ -335,14 +379,20 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
     if (filtrosManuales && filtrosManuales.umbral1 !== undefined && filtrosManuales.umbral1 !== null) {
         umbral1Final = filtrosManuales.umbral1;
     } else {
-        umbral1Final = btn?.dataset?.umbral1 ? parseFloat(btn.dataset.umbral1) : null;
+        umbral1Final = btn?.dataset?.umbral1 ? parseFloat(btn.dataset.umbral1.toString().replace(',', '.')) : null;
+        if (nombreInforme === 'contrataciones_ai' && umbral1Final !== null) {
+            umbral1Final = umbral1Final * 1000;
+        }
     }
 
     let umbral2Final;
     if (filtrosManuales && filtrosManuales.umbral2 !== undefined && filtrosManuales.umbral2 !== null) {
         umbral2Final = filtrosManuales.umbral2;
     } else {
-        umbral2Final = btn?.dataset?.umbral2 ? parseFloat(btn.dataset.umbral2) : null;
+        umbral2Final = btn?.dataset?.umbral2 ? parseFloat(btn.dataset.umbral2.toString().replace(',', '.')) : null;
+        if (nombreInforme === 'contrataciones_ai' && umbral2Final !== null) {
+            umbral2Final = umbral2Final * 1000;
+        }
     }
 
     let umbral3Final;
@@ -530,7 +580,11 @@ async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labe
                 // Ignorar atributos propios del manager (inputPag, etc.)
                 if (key === 'inputPag') continue;
                 if (value !== undefined && value !== null && value !== '') {
-                    url += `&${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                    let valFinal = value;
+                    if (nombreInforme === 'contrataciones_ai' && (key === 'umbral1' || key === 'umbral2')) {
+                        valFinal = parseFloat(value.toString().replace(',', '.')) * 1000;
+                    }
+                    url += `&${encodeURIComponent(key)}=${encodeURIComponent(valFinal)}`;
                 }
             }
         }
