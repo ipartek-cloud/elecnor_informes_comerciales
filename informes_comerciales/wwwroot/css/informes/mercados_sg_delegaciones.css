@@ -256,3 +256,8 @@
         break-before: page !important;
     }
 }
+
+/* Ajuste quirúrgico de alineación del encabezado IP (ligeramente a la izquierda) */
+.rpt-table-delegaciones thead th.rpt-dg-col-ip:not([colspan]) {
+    padding-right: 15px !important;
+}

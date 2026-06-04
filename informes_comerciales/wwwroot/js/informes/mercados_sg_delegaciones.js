@@ -135,7 +135,7 @@ function _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader) {
                 <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 2 -->
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Objet.</th>
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
-                <th class="rpt-align-center rpt-text-corporate rpt-fs-8pt">Ip</th>
+                <th class="rpt-dg-col-ip rpt-align-end rpt-text-corporate rpt-fs-8pt">Ip</th>
                 <th rpt-border-none></th> <!-- Spacer -->
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Cart.(${mesAnteriorLabel})</th>
