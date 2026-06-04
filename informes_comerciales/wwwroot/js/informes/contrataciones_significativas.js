@@ -296,19 +296,32 @@ function _renderTablaMaestraNacional() {
 
         if (contratosAnt.length > 0) {
             rowsHtml += `
-                <tr class="rpt-spacer-row-totales">
-                    <td colspan="4" class="rpt-spacer-cell-totales"></td>
-                </tr>
-                <tr class="rpt-cont-sig-anterior-label">
-                    <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
+                <tr>
+                    <td colspan="4" class="rpt-inner-wrapper-cell">
+                        <table class="rpt-table rpt-inner-direction-table">
+                            <colgroup>
+                                <col class="rpt-col-mes-cliente">
+                                <col class="rpt-col-mes-oferta">
+                                <col class="rpt-col-10px">
+                                <col class="rpt-col-mes-importe">
+                            </colgroup>
+                            <thead>
+                                <tr class="rpt-cont-sig-anterior-label">
+                                    <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${contratosAnt.map(item => `
+                                <tr class="rpt-detail-row rpt-cont-sig-hist-row">
+                                    <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
+                                    <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
+                                    <td rpt-border-none></td>
+                                    <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>`;
-            rowsHtml += contratosAnt.map(item => `
-                <tr class="rpt-detail-row rpt-cont-sig-hist-row">
-                    <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
-                    <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
-                    <td rpt-border-none></td>
-                    <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
-                </tr>`).join('');
         }
 
         // Cada dirección va en su propio tbody. Se fuerza salto de página antes (excepto en el primero)
@@ -405,19 +418,32 @@ function _renderTablaMaestraInternacional() {
 
         if (contratosAnt.length > 0) {
             rowsHtml += `
-                <tr class="rpt-spacer-row-totales">
-                    <td colspan="4" class="rpt-spacer-cell-totales"></td>
-                </tr>
-                <tr class="rpt-cont-sig-anterior-label">
-                    <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
+                <tr>
+                    <td colspan="4" class="rpt-inner-wrapper-cell">
+                        <table class="rpt-table rpt-inner-direction-table">
+                            <colgroup>
+                                <col class="rpt-col-mes-cliente">
+                                <col class="rpt-col-mes-oferta">
+                                <col class="rpt-col-10px">
+                                <col class="rpt-col-mes-importe">
+                            </colgroup>
+                            <thead>
+                                <tr class="rpt-cont-sig-anterior-label">
+                                    <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${contratosAnt.map(item => `
+                                <tr class="rpt-detail-row rpt-cont-sig-hist-row">
+                                    <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
+                                    <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
+                                    <td rpt-border-none></td>
+                                    <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>`;
-            rowsHtml += contratosAnt.map(item => `
-                <tr class="rpt-detail-row rpt-cont-sig-hist-row">
-                    <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
-                    <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
-                    <td rpt-border-none></td>
-                    <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
-                </tr>`).join('');
         }
 
         tbodiesHtml += `<tbody class="rpt-group-tbody">${rowsHtml}</tbody>`;

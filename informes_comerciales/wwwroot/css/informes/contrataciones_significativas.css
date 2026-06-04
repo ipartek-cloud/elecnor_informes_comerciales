@@ -24,17 +24,17 @@
     border-collapse: collapse;
 }
 
-.rpt-table-cont-sig thead,
-.rpt-table-cont-sig thead tr,
-.rpt-table-cont-sig thead th,
-.rpt-table-cont-sig .rpt-table-header-columns,
-.rpt-table-cont-sig .rpt-table-header-columns th {
+.rpt-table-cont-sig > thead,
+.rpt-table-cont-sig > thead > tr,
+.rpt-table-cont-sig > thead > tr > th,
+.rpt-table-cont-sig > .rpt-table-header-columns,
+.rpt-table-cont-sig > .rpt-table-header-columns > th {
     border-style: hidden !important;
     border-width: 0 !important;
 }
 
-.rpt-table-cont-sig thead th,
-.rpt-table-cont-sig .rpt-table-header-columns th {
+.rpt-table-cont-sig > thead > tr > th,
+.rpt-table-cont-sig > .rpt-table-header-columns > th {
     padding-bottom: 5px !important;
 }
 
@@ -126,6 +126,38 @@
 }
 
 /* =============================================================================
+   TABLA INTERNA — Repetición de "Anterior" en saltos de página PDF
+   La sección Anterior se envuelve en una tabla interna con <thead> propio.
+   Chromium repite automáticamente el thead en cada página donde la tabla continúa.
+   ============================================================================= */
+
+/* Celda envolvente: transparente para la tabla interna */
+.rpt-inner-wrapper-cell {
+    padding: 0 !important;
+    border: none !important;
+    vertical-align: top;
+}
+
+/* Tabla interna: hereda layout de la tabla maestra */
+.rpt-inner-direction-table {
+    width: 100% !important;
+    border: none !important;
+    border-collapse: collapse;
+    table-layout: fixed !important;
+}
+
+/* Forzar repetición del thead interno en saltos de página */
+.rpt-inner-direction-table thead {
+    display: table-header-group !important;
+}
+
+/* Ajuste de espaciado y bordes en el label Anterior de la tabla interna */
+.rpt-inner-direction-table .rpt-cont-sig-anterior-label td {
+    padding-top: 6px !important;
+    border-bottom: 0.3pt solid #666 !important;
+}
+
+/* =============================================================================
    ESTILOS PARA TABLA MAESTRA DE IMPRESIÓN (Modo Internacional)
    ============================================================================= */
 
@@ -146,7 +178,7 @@
 }
 
 /* TÉCNICA MAESTRA: Inyecta margen superior en saltos de página (Pág 2+) */
-.rpt-table-cont-sig.rpt-table-print-master thead::before {
+.rpt-table-cont-sig.rpt-table-print-master > thead::before {
     content: "";
     display: block;
     height: 8mm;
@@ -231,9 +263,11 @@
         page-break-inside: auto !important;
     }
 
-    /* Evitar que una agrupación (dirección de negocio) se divida entre dos páginas */
-    .rpt-group-tbody {
-        page-break-inside: avoid !important;
+    /* Permitir desbordamiento controlado dentro de cada Dirección.
+       La tabla interna de "Anterior" repite su thead en cada salto de página,
+       proporcionando contexto visual sin necesidad de forzar avoid. */
+    .rpt-table-cont-sig.rpt-table-print-master .rpt-group-tbody {
+        page-break-inside: auto !important;
     }
 
     /* Reafirmar truncación en impresión */
@@ -285,14 +319,14 @@
        la especificidad del selector. Además, igualamos la especificidad
        del selector invasor para máxima robustez.
        ═══════════════════════════════════════════════════════════════════════ */
-    .rpt-table-cont-sig thead,
-    .rpt-table-cont-sig thead tr,
-    .rpt-table-cont-sig thead th,
-    .rpt-table-cont-sig.rpt-table-print-master thead,
-    .rpt-table-cont-sig.rpt-table-print-master thead tr,
-    .rpt-table-cont-sig.rpt-table-print-master thead th,
-    .rpt-table-cont-sig.rpt-table-print-master thead tr.rpt-table-header-columns th,
-    .rpt-table-cont-sig.rpt-table-print-master thead tr.rpt-font-bold th {
+    .rpt-table-cont-sig > thead,
+    .rpt-table-cont-sig > thead > tr,
+    .rpt-table-cont-sig > thead > tr > th,
+    .rpt-table-cont-sig.rpt-table-print-master > thead,
+    .rpt-table-cont-sig.rpt-table-print-master > thead > tr,
+    .rpt-table-cont-sig.rpt-table-print-master > thead > tr > th,
+    .rpt-table-cont-sig.rpt-table-print-master > thead > tr.rpt-table-header-columns > th,
+    .rpt-table-cont-sig.rpt-table-print-master > thead > tr.rpt-font-bold > th {
         border-style: hidden !important;
         border-width: 0 !important;
     }
