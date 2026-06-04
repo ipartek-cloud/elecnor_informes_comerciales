@@ -136,9 +136,9 @@
 /* PROPORCIONES DE COLUMNAS (Total 100%) */
 .rpt-ger-col-m       { width: 11%; }
 .rpt-ger-col-desc    { width: 30%; }
-.rpt-ger-col-a       { width: 10.5%; }
+.rpt-ger-col-a       { width: 11.5%; }
 .rpt-ger-col-ip      { width: 7%; }
-.rpt-ger-col-v-contr { width: 9.5%; }
+.rpt-ger-col-v-contr { width: 7.5%; }
 .rpt-ger-col-v-cart  { width: 11.5%; }
 
 /* ENCABEZADOS ESPECÍFICOS */
@@ -188,4 +188,12 @@
 
 .rpt-cmai-margin-left {
   margin-left: 12pt !important;
+}
+
+/* Desplazamiento a la izquierda de los literales en col 1, 2, 4 y 5 */
+.rpt-gerencias-layout thead .rpt-ger-header-row-sub th:nth-child(1) .rpt-ger-header-line,
+.rpt-gerencias-layout thead .rpt-ger-header-row-sub th:nth-child(2) .rpt-ger-header-line,
+.rpt-gerencias-layout thead .rpt-ger-header-row-sub th:nth-child(4) .rpt-ger-header-line,
+.rpt-gerencias-layout thead .rpt-ger-header-row-sub th:nth-child(5) .rpt-ger-header-line {
+  padding-right: 6px !important;
 }

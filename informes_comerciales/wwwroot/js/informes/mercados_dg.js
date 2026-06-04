@@ -271,13 +271,13 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
 
     <td class="${acumuladoClass} rpt-pad-right-15" data-label="Obj. Acum.">${wrapTotal(formatCurrency(acu.importeObjetivo, 0))}</td>
     <td class="${acumuladoClass} rpt-pad-right-15" data-label="Real Acum.">${wrapTotal(formatCurrency(acu.importeContratado, 0))}</td>
-    <td class="${acumuladoClass} rpt-align-end rpt-pad-right-15 ${ipColorClass}"
+    <td class="${acumuladoClass} rpt-mercado-cell-ip ${ipColorClass}"
       data-label="IP Acum."
       role="img"
       aria-label="Índice de producción: ${acu.indiceProduccion ?? 0}">
       ${wrapTotal(formatCurrency(acu.indiceProduccion, 2))}
     </td>
-    <td class="${acumuladoClass} rpt-align-end rpt-pad-right-15 ${varColorClass}"
+    <td class="${acumuladoClass} rpt-mercado-cell-var ${varColorClass}"
       data-label="Var. %"
       role="img"
       aria-label="Variación porcentual: ${acu.variacion || '0%'}">

@@ -55,20 +55,20 @@ Basado en colgroup y table-layout: fixed.
 .rpt-col-10px { width: 10px; }
 .rpt-mercado-col-desc { width: 30.0%; }
 .rpt-mercado-col-obj-a { width: 12%; }
-.rpt-mercado-col-contr-a { width: 12%; }
+.rpt-mercado-col-contr-a { width: 10%; }
 .rpt-mercado-col-ip { width: 10.0%; }
-.rpt-mercado-col-var { width: 11.0%; }
+.rpt-mercado-col-var { width: 13.0%; }
 
 /* Columnas específicas para el subinforme Cartera Diferida (10 columnas) */
 /* Cartera Diferida - Ajuste de anchos para alineación con subinformes superiores */
 .rpt-cd-col-data { width: 10%; }
 .rpt-cd-col-concept { width: 30%; }
 
-/* Columnas derecha (6,7,8,9): igualar anchos a subinformes superiores (12+12+10+11 = 45%) */
+/* Columnas derecha (6,7,8,9): igualar anchos a subinformes superiores (12+10+10+13 = 45%) */
 .rpt-cd-separator colgroup col:nth-child(6) { width: 12% !important; }
-.rpt-cd-separator colgroup col:nth-child(7) { width: 12% !important; }
+.rpt-cd-separator colgroup col:nth-child(7) { width: 10% !important; }
 .rpt-cd-separator colgroup col:nth-child(8) { width: 10% !important; }
-.rpt-cd-separator colgroup col:nth-child(9) { width: 11% !important; }
+.rpt-cd-separator colgroup col:nth-child(9) { width: 13% !important; }
 .rpt-cd-col-sep { width: 10px; }
 
 /* Separadores sin borde (rompen continuidad del border-top en totales) */
@@ -171,6 +171,14 @@ están definidas en informes_base.css y mercados.css
 
 /* Margen superior del primer bloque: heredado de report-body (rpt-cmai-mt-standard) */
 .rpt-mt-6 { margin-top: 0 !important; }
+
+/* Centrado absoluto de celdas de IP y Variación (normales y totales) */
+.rpt-mercado-layout .rpt-mercado-cell-ip,
+.rpt-mercado-layout .rpt-mercado-cell-var {
+  text-align: center !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
 
 /* =============================================================================
 LITERALES DE ENCABEZADO ESPECÍFICOS CMAI (Patrón Cartera Diferida)
@@ -327,9 +335,9 @@ Las reglas generales de impresión están en informes_base.css
   .rpt-mercado-col-contr-m { width: 11% !important; }
   .rpt-mercado-col-desc { width: 30% !important; }
   .rpt-mercado-col-obj-a { width: 13% !important; }
-  .rpt-mercado-col-contr-a { width: 13% !important; }
+  .rpt-mercado-col-contr-a { width: 11% !important; }
   .rpt-mercado-col-ip { width: 10% !important; }
-  .rpt-mercado-col-var { width: 8% !important; }
+  .rpt-mercado-col-var { width: 10% !important; }
   .rpt-col-10px { width: 5px !important; }
 
   /* Proporciones de columnas para Cartera Diferida (10 columnas) en A4 */
@@ -337,11 +345,11 @@ Las reglas generales de impresión están en informes_base.css
   .rpt-cd-col-concept { width: 30% !important; }
   .rpt-cd-col-sep { width: 5px !important; }
 
-  /* Columnas derecha (6,7,8,9) en A4: igualar anchos a subinformes superiores (13+13+10+8 = 44%) */
+  /* Columnas derecha (6,7,8,9) en A4: igualar anchos a subinformes superiores (13+11+10+10 = 44%) */
   .rpt-cd-separator colgroup col:nth-child(6) { width: 13% !important; }
-  .rpt-cd-separator colgroup col:nth-child(7) { width: 13% !important; }
+  .rpt-cd-separator colgroup col:nth-child(7) { width: 11% !important; }
   .rpt-cd-separator colgroup col:nth-child(8) { width: 10% !important; }
-  .rpt-cd-separator colgroup col:nth-child(9) { width: 8% !important; }
+  .rpt-cd-separator colgroup col:nth-child(9) { width: 10% !important; }
 
   /* Reducir márgenes verticales entre bloques */
   .rpt-mercado-layout {
@@ -444,6 +452,14 @@ Las reglas generales de impresión están en informes_base.css
   .rpt-td-total {
     padding-right: 5px !important;
     padding-left: 5px !important;
+  }
+
+  /* Asegurar centrado simétrico absoluto en impresión */
+  .rpt-mercado-layout .rpt-mercado-cell-ip,
+  .rpt-mercado-layout .rpt-mercado-cell-var {
+    text-align: center !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
   }
 
 
