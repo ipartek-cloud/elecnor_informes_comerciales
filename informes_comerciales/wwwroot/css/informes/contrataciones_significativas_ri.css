@@ -77,22 +77,34 @@
 }
 
 /* Definición de Columnas */
-.rpt-col-mes-cliente { width: 36%; text-align: left; padding-left: 8px !important; }
-.rpt-table-cont-sig .rpt-cont-sig-mes-item td.rpt-col-mes-cliente { padding-left: 8px !important; }
-.rpt-col-mes-oferta { 
-    width: 54%; 
-    text-align: left; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-    max-width: 0; 
+/* Cliente: 36% - 1 línea truncada con elipsis */
+.rpt-col-mes-cliente {
+    width: 36%;
+    text-align: left;
+    padding-left: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
-.rpt-col-mes-importe { 
-    width: 10%; 
-    padding-right: 10px !important; 
-    min-width: 90px; 
-    font-variant-numeric: tabular-nums; 
-    white-space: nowrap; 
+.rpt-table-cont-sig .rpt-cont-sig-mes-item td.rpt-col-mes-cliente { padding-left: 8px !important; }
+
+/* Oferta: 59% (incremento de 5pp procedente de Importe) - 1 línea truncada con elipsis */
+.rpt-col-mes-oferta {
+    width: 59%;
+    text-align: left;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 0;
+}
+
+/* Importe: 5% (reducido un 50% sobre 10%) - alineado a la derecha */
+.rpt-col-mes-importe {
+    width: 5%;
+    padding-right: 10px !important;
+    min-width: 75px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 /* Filas de Detalle - Valores intermedio */
@@ -125,12 +137,19 @@
     margin-top: 20px !important;
 }
 
-/* Ajustes finos de columnas de detalle para PDF */
+/* Truncamiento de 1 línea en PDF (paridad con Web) */
+.rpt-paper--print .rpt-col-mes-cliente,
 .rpt-paper--print .rpt-col-mes-oferta {
-    white-space: normal !important;
-    max-width: none !important;
-    text-overflow: clip !important;
+    white-space: nowrap !important;
+    max-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
+
+/* Reforzar anchos de columna también en PDF */
+.rpt-paper--print .rpt-col-mes-cliente { width: 36% !important; }
+.rpt-paper--print .rpt-col-mes-oferta  { width: 59% !important; }
+.rpt-paper--print .rpt-col-mes-importe { width: 5% !important; }
 
 .rpt-paper--print .rpt-cont-sig-group-header {
     border-bottom: none !important;

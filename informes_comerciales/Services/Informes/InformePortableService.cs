@@ -280,7 +280,7 @@ public class InformePortableService
                 if (filtros != null && filtros.TryGetValue("limiteImporte", out var limiteImporteStr) && decimal.TryParse(limiteImporteStr, out var limiteImporte))
                     args.Add(limiteImporte);
                 else
-                    args.Add(13000);
+                    args.Add(2000m);
                 continue;
             }
 

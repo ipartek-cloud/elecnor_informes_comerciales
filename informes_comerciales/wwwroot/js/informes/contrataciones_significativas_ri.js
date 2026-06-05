@@ -15,7 +15,7 @@ import { ApiClient, GlobalUI } from '../site.js';
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true }) {
+export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true, limiteImporte = 2000 }) {
     try {
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
         if (chkGenerar?.checked) {
@@ -29,13 +29,14 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umb
             GlobalUI.hideLoading();
         }
 
-        let url = `/api/ContratacionesSignificativasRi?anio=${anio}&mes=${mes}&mercado=${encodeURIComponent(mercado)}&codSubDirGeneral=${encodeURIComponent(codSubDir || '221')}`;
+        let url = `/api/ContratacionesSignificativasRi?anio=${anio}&mes=${mes}&mercado=${encodeURIComponent(mercado)}&codSubDirGeneral=${encodeURIComponent(codSubDir || '221')}&limiteImporte=${limiteImporte}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`;
-        
+
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina != null);
         estado.mostrarTitulo = mostrarTitulo;
+        estado.limiteImporte = limiteImporte;
 
         await inicializarInforme({
             url,
@@ -85,7 +86,8 @@ async function _renderizarPagina() {
 function _renderCuerpoInforme(direcciones) {
     const dataMes = estado.informeGlobalData?.datosMes || [];
     const filtros = estado.informeGlobalData?.meta?.filtros || {};
-    const umbralTexto = estado.informeGlobalData?.meta?.umbralTexto || 'Contratación > 2M';
+    const limiteImporte = filtros.limiteImporte ?? estado.limiteImporte ?? 2000;
+    const labelUmbral = _formatearUmbral(limiteImporte);
 
   const filaMesHtml = `
     <tr class="rpt-cont-sig-month-row">
@@ -115,13 +117,18 @@ function _renderCuerpoInforme(direcciones) {
             </colgroup>
   <thead>
       <tr class="rpt-font-bold">
-        <th class="rpt-text-corporate rpt-text-start rpt-ps-2 rpt-fs-11pt">${_escapeHtml(umbralTexto)}</th>
+        <th class="rpt-text-corporate rpt-text-start rpt-ps-2 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
         <th></th>
         <th class="rpt-text-corporate rpt-text-end rpt-pe-3 rpt-fs-9pt">Mensual</th>
       </tr>
     </thead>
             <tbody>${filaMesHtml}${bloquesHtml}</tbody>
         </table>`;
+}
+
+function _formatearUmbral(limiteImporte) {
+    const valorM = (Number(limiteImporte) || 0) / 1000;
+    return (valorM % 1 === 0) ? `${valorM}M` : `${valorM.toFixed(1)}M`;
 }
 
 function _getHtmlEncabezado() {

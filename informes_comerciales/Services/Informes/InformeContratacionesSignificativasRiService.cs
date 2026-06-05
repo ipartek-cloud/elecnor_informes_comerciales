@@ -20,12 +20,13 @@ public class InformeContratacionesSignificativasRiService
         await _repository.EjecutarSPObrasRPTAsync(anio, mes);
     }
 
-    public async Task<ContratacionesSignificativasRiResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina = null)
+    public async Task<ContratacionesSignificativasRiResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina = null, decimal limiteImporte = 2000m)
     {
         // ═══════════════════════════════════════════════════════
-        // 1. Definir umbral (2M para RI)
+        // 1. Definir umbral dinámico (por defecto 2M k€ para RI)
         // ═══════════════════════════════════════════════════════
-        const decimal importeRi = 2000; // >= 2M ke o <= -2M ke
+        // Se interpreta como >= N k€ o <= -N k€ (positivo y negativo)
+        var importeRi = limiteImporte;
 
         // ═══════════════════════════════════════════════════════
         // 2. Lanzar queries EN PARALELO
@@ -45,7 +46,7 @@ public class InformeContratacionesSignificativasRiService
         {
             return new ContratacionesSignificativasRiResponseDto
             {
-                Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral, nroPagina),
+                Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral, nroPagina, importeRi),
                 Datos        = new(),
                 TotalGeneral = 0m,
                 DatosMes     = new()
@@ -81,17 +82,17 @@ public class InformeContratacionesSignificativasRiService
         // ═══════════════════════════════════════════════════════
         return new ContratacionesSignificativasRiResponseDto
         {
-            Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral, nroPagina),
+            Meta         = _crearMeta(anio, mes, mercado, codSubDirGeneral, nroPagina, importeRi),
             Datos        = datosDto,
             TotalGeneral = totalGeneral,
             DatosMes     = datosMesDto
         };
     }
 
-    private static MetaContSigRiDto _crearMeta(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina) => new()
+    private static MetaContSigRiDto _crearMeta(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina, decimal limiteImporte) => new()
     {
         Titulo          = $"Contrataciones Significativas Mercado {mercado}",
-        UmbralTexto     = "Contratación > 2M", // Enviamos el literal dinámico
+        UmbralTexto     = $"Contratación > {FormatearUmbral(limiteImporte)}",
         FechaGeneracion = DateTime.Now,
         NroPagina       = nroPagina,
         Filtros         = new ContSigFiltrosDto
@@ -100,7 +101,18 @@ public class InformeContratacionesSignificativasRiService
             Mes              = mes,
             Mercado          = mercado,
             CodSubDirGeneral = codSubDirGeneral,
-            NroPagina        = nroPagina
+            NroPagina        = nroPagina,
+            LimiteImporte    = limiteImporte
         }
     };
+
+    /// <summary>
+    /// Convierte un importe en miles de euros a su notación corta (M / X.YM).
+    /// Ejemplos: 2000 -> "2M", 2500 -> "2.5M", 1500 -> "1.5M", 1000 -> "1M".
+    /// </summary>
+    private static string FormatearUmbral(decimal limiteImporte)
+    {
+        var valorM = limiteImporte / 1000m;
+        return (valorM % 1m == 0m) ? $"{valorM:0}M" : $"{valorM:0.#}M";
+    }
 }
