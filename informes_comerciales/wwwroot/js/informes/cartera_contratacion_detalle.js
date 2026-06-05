@@ -141,8 +141,8 @@ function _renderGrupo(grupo, mostrarHeader) {
             <tr class="${RPT_CLASSES.TH_BLUE}">
                 <th class="rpt-align-center rpt-fs-9pt rpt-font-bold">Proyecto</th>
                 <th class="rpt-align-center rpt-fs-9pt rpt-font-bold">Cliente</th>
-                <th class="rpt-align-end rpt-fs-9pt rpt-font-bold">Cartera</th>
-                <th class="rpt-align-end rpt-fs-9pt rpt-font-bold">TOTAL</th>
+                <th class="rpt-align-end rpt-fs-9pt rpt-font-bold rpt-ccd-col-cartera">Cartera</th>
+                <th class="rpt-fs-9pt rpt-font-bold rpt-ccd-col-total">Total</th>
             </tr>
         </thead>
     ` : '';
@@ -283,8 +283,8 @@ function _renderTablaMaestraPDF() {
                 <tr class="rpt-font-bold rpt-table-header-columns">
                     <th class="rpt-text-corporate rpt-align-center rpt-fs-9pt">Proyecto</th>
                     <th class="rpt-text-corporate rpt-align-center rpt-fs-9pt">Cliente</th>
-                    <th class="rpt-text-corporate rpt-align-end rpt-fs-9pt">Cartera</th>
-                    <th class="rpt-text-corporate rpt-align-end rpt-fs-9pt">TOTAL</th>
+                    <th class="rpt-text-corporate rpt-align-end rpt-fs-9pt rpt-ccd-col-cartera">Cartera</th>
+                    <th class="rpt-text-corporate rpt-fs-9pt rpt-ccd-col-total">Total</th>
                 </tr>
             </thead>
             <tfoot class="rpt-print-tfoot-master">

@@ -47,6 +47,15 @@
     border-bottom: 0.3pt solid #00468B !important;
 }
 
+.rpt-ccd-table thead th.rpt-ccd-col-total {
+    text-align: center !important;
+    padding-left: 22px !important;
+}
+
+.rpt-ccd-table thead th.rpt-ccd-col-cartera {
+    padding-right: 8px !important;
+}
+
 @media screen {
     .rpt-paper[data-informe="cartera_contratacion_detalle"] .report-body.rpt-cmai-mt-standard {
         margin-top: 0.5rem !important;

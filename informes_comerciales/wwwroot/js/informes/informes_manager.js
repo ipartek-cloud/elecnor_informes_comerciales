@@ -234,7 +234,7 @@ function inicializarTooltipsFiltros() {
                 const defaultContratacionAnioAnteriorEspana = ds.contratacionanioanteriorespania || 1950280;
                 content += `
                     <div class="mb-2">
-                        <label class="small fw-bold d-block mb-1 text-muted">Contr. anterior (Miles de Euros):</label>
+                        <label class="small fw-bold d-block mb-1 text-muted">Constr. España (Miles de Euros):</label>
                         <input type="text" id="pop-contratacion-anio-anterior-espana" class="form-control form-control-sm text-center fw-bold input-miles" 
                                value="${formatearMiles(defaultContratacionAnioAnteriorEspana)}" style="font-size: 0.8rem;">
                     </div>
