@@ -43,9 +43,13 @@ public class PaisesController : ControllerBase
     /// Punto de entrada para el informe de Países (Nacional + Internacional) - Todos los países.
     /// Título: "Países Relevantes". Umbral fijo: 100000 (relevantes).
     /// </summary>
+    /// <param name="contratacionAnioAnteriorEspana">
+    /// Valor (en euros) que se asigna forzosamente al país "España" en la columna
+    /// de contratación del año anterior. Default: 1950280 (configurable desde el popover del Index).
+    /// </param>
     [HttpGet("paises_all")]
     [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
-    public async Task<IActionResult> GetPaisesAll([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
+    public async Task<IActionResult> GetPaisesAll([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina, [FromQuery] decimal contratacionAnioAnteriorEspana = 1950280m)
     {
         // Validaciones básicas
         if (anio > DateTime.Now.Year + 1)
@@ -54,7 +58,7 @@ public class PaisesController : ControllerBase
             return BadRequest("El mes debe estar entre 1 y 12.");
 
         // Ejecución de servicio (Método estandarizado)
-        var resultado = await _service.ObtenerInformePaisesAllAsync(anio, mes, nroPagina);
+        var resultado = await _service.ObtenerInformePaisesAllAsync(anio, mes, nroPagina, contratacionAnioAnteriorEspana);
 
         return Ok(resultado);
     }

@@ -92,7 +92,7 @@ function inicializarTooltipsFiltros() {
     allBtns.forEach(btn => {
         // En HTML5, los data-* siempre se normalizan a minúsculas en el dataset
         const ds = btn.dataset;
-        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined || ds.umbral1 !== undefined) {
+        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined || ds.umbral1 !== undefined || ds.contratacionanioanteriorespania !== undefined) {
             
             // Destruir instancia de Tippy previa si existe en este botón para evitar acumulaciones
             if (btn._tippy) {
@@ -230,6 +230,17 @@ function inicializarTooltipsFiltros() {
                 `;
             }
 
+            if (ds.contratacionanioanteriorespania !== undefined) {
+                const defaultContratacionAnioAnteriorEspana = ds.contratacionanioanteriorespania || 1950280;
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Contr. anterior (Miles de Euros):</label>
+                        <input type="text" id="pop-contratacion-anio-anterior-espana" class="form-control form-control-sm text-center fw-bold input-miles" 
+                               value="${formatearMiles(defaultContratacionAnioAnteriorEspana)}" style="font-size: 0.8rem;">
+                    </div>
+                `;
+            }
+
             content += `
                 <button class="btn btn-primary btn-sm w-100 mt-2 rpt-btn-pop-aceptar" id="btn-pop-aceptar">
                     <i class="fas fa-play me-1"></i> Generar Informe
@@ -281,6 +292,7 @@ function inicializarTooltipsFiltros() {
                     const umbral2 = box.querySelector('#pop-umbral2')?.value;
                     const umbral3 = box.querySelector('#pop-umbral3')?.value;
                     const umbral4 = box.querySelector('#pop-umbral4')?.value;
+                    const contratacionAnioAnteriorEspana = box.querySelector('#pop-contratacion-anio-anterior-espana')?.value;
                     
                     const nombreInforme = instance.reference.dataset.nombreInforme;
                     const esContratacionesAI = nombreInforme === 'contrataciones_ai';
@@ -310,7 +322,8 @@ function inicializarTooltipsFiltros() {
                         umbral1: u1Val,
                         umbral2: u2Val,
                         umbral3: desformatearMiles(umbral3),
-                        umbral4: desformatearMiles(umbral4)
+                        umbral4: desformatearMiles(umbral4),
+                        contratacionAnioAnteriorEspana: desformatearMiles(contratacionAnioAnteriorEspana)
                     });
                 };
 
@@ -408,7 +421,14 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
     } else {
         umbral4Final = btn?.dataset?.umbral4 ? parseFloat(btn.dataset.umbral4) : null;
     }
-    
+
+    let contratacionAnioAnteriorEspanaFinal;
+    if (filtrosManuales && filtrosManuales.contratacionAnioAnteriorEspana !== undefined && filtrosManuales.contratacionAnioAnteriorEspana !== null) {
+        contratacionAnioAnteriorEspanaFinal = filtrosManuales.contratacionAnioAnteriorEspana;
+    } else {
+        contratacionAnioAnteriorEspanaFinal = btn?.dataset?.contratacionanioanteriorespania ? parseFloat(btn.dataset.contratacionanioanteriorespania) : 1950280;
+    }
+
     // 0. Verificar si está activado el modo HTML Portable
     const chkPortable = document.getElementById('chkGenerarHtmlPortable');
     if (chkPortable && chkPortable.checked) {
@@ -486,7 +506,8 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
                 umbral1: umbral1Final,
                 umbral2: umbral2Final,
                 umbral3: umbral3Final,
-                umbral4: umbral4Final
+                umbral4: umbral4Final,
+                contratacionAnioAnteriorEspana: contratacionAnioAnteriorEspanaFinal
             };
 
             await modulo.ejecutar(parametros);

@@ -18,21 +18,38 @@ Reutiliza los estilos de paises.css con selectors para data-informe="paises_all"
   .rpt-paises-new-flag {
     font-size: 8pt;
   }
-  .rpt-paises-col-porc { width: 16%; }
-  .rpt-paises-col-contr { width: 12%; }
-  .rpt-paises-col-pos { width: 7%; }
-  .rpt-paises-col-pais { width: 30%; }
+  .rpt-paises-col-porc { width: 15%; }
+  .rpt-paises-col-contr { width: 11%; }
+  .rpt-paises-col-pos { width: 6%; }
+  .rpt-paises-col-spacer { width: 2%; }
+  .rpt-paises-col-pais { width: 32%; }
 }
 
-/* Layout de Columnas (Simetría) */
-.rpt-paises-col-porc { width: 16%; }
-.rpt-paises-col-contr { width: 12%; }
-.rpt-paises-col-pos { width: 7%; }
-.rpt-paises-col-pais { width: 30%; }
+/* Layout de Columnas (Simetría) - 9 columnas con 2 spacers centrales */
+.rpt-paises-col-porc { width: 15%; }
+.rpt-paises-col-contr { width: 11%; }
+.rpt-paises-col-pos { width: 6%; }
+.rpt-paises-col-spacer { width: 2%; }
+.rpt-paises-col-pais { width: 32%; }
 
 .rpt-paises-table {
   width: 88% !important;
   margin: 0 auto !important;
+}
+
+/* Separación vertical entre cabecera de columnas y primera fila de datos (5px) */
+.rpt-paises-row-spacer {
+  height: 6px;
+  border: none !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
+}
+.rpt-paises-row-spacer td {
+  border: none !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
 }
 
 /* Cabecera: Azul corporativo Elecnor */
@@ -94,6 +111,12 @@ tbody .rpt-paises-pais-cell {
   font-size: 0 !important;
 }
 
+/* Más separación entre última fila de datos y fila de totales (12px) - Específico paises_all */
+.rpt-paper[data-informe="paises_all"] .rpt-spacer-row-totales,
+.rpt-paper[data-informe="paises_all"] .rpt-spacer-cell-totales {
+  height: 12px !important;
+}
+
 .rpt-paises-total-line {
   border-top: 0.3pt solid #00468B !important;
 }
@@ -102,6 +125,22 @@ tbody .rpt-paises-pais-cell {
   border-top: none !important;
   padding-top: 0.6rem !important;
   padding-bottom: 0.2rem !important;
+}
+
+/* =============================================================================
+   LITERAL "MILES DE EUROS" - Fila 2 de Totales (específico de paises_all)
+   Estilo equivalente al que paises.css aplica con data-informe="paises"
+   ============================================================================= */
+.rpt-paper[data-informe="paises_all"] .rpt-paises-total-label-blue {
+  color: #00468B !important;
+  font-weight: bold !important;
+  font-size: 8pt !important;
+}
+
+.rpt-paper[data-informe="paises_all"] .rpt-paises-total-label-left {
+  text-align: left !important;
+  white-space: nowrap !important;
+  padding-left: 8px !important;
 }
 
 .rpt-paises-footer-nota {
@@ -150,11 +189,12 @@ tbody .rpt-paises-pais-cell {
     margin-bottom: 0.5rem !important;
   }
 
-  /* Paridad Web/PDF: reafirmar anchos de columnas en impresión */
-  .rpt-paises-col-porc { width: 16% !important; }
-  .rpt-paises-col-contr { width: 12% !important; }
-  .rpt-paises-col-pos { width: 7% !important; }
-  .rpt-paises-col-pais { width: 30% !important; }
+  /* Paridad Web/PDF: reafirmar anchos de columnas en impresión (9 cols con spacers) */
+  .rpt-paises-col-porc { width: 15% !important; }
+  .rpt-paises-col-contr { width: 11% !important; }
+  .rpt-paises-col-pos { width: 6% !important; }
+  .rpt-paises-col-spacer { width: 2% !important; }
+  .rpt-paises-col-pais { width: 32% !important; }
 
   .rpt-paises-num-cell {
     padding-right: 5px !important;
@@ -178,6 +218,30 @@ tbody .rpt-paises-pais-cell {
   .rpt-banner-top,
   .rpt-subtitle {
     page-break-after: avoid;
+  }
+
+  /* Paridad Web/PDF: separadores y literales azules */
+  .rpt-paises-row-spacer {
+    height: 6px !important;
+  }
+
+  .rpt-paper[data-informe="paises_all"] .rpt-spacer-row-totales,
+  .rpt-paper[data-informe="paises_all"] .rpt-spacer-cell-totales {
+    height: 12px !important;
+  }
+
+  .rpt-paper[data-informe="paises_all"] .rpt-paises-total-label-blue,
+  .rpt-paper--print.rpt-paper--paises_all .rpt-paises-total-label-blue {
+    color: #00468B !important;
+    font-weight: bold !important;
+    font-size: 8pt !important;
+  }
+
+  .rpt-paper[data-informe="paises_all"] .rpt-paises-total-label-left,
+  .rpt-paper--print.rpt-paper--paises_all .rpt-paises-total-label-left {
+    text-align: left !important;
+    white-space: nowrap !important;
+    padding-left: 8px !important;
   }
 }
 

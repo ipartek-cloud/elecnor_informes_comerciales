@@ -14,16 +14,17 @@ const estado = crearEstadoInforme();
  * Punto de entrada llamado por el gestor de informes.
  * @param {object} params - Objeto de parámetros
  */
-export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, contratacionAnioAnteriorEspana = 1950280 }) {
     try {
         // URL para el endpoint de países todos (Nacional + Internacional)
-        let url = `/api/Paises/paises_all?anio=${anio}&mes=${mes}`;
+        let url = `/api/Paises/paises_all?anio=${anio}&mes=${mes}&contratacionAnioAnteriorEspana=${contratacionAnioAnteriorEspana}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
         url += `&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
+        estado.contratacionAnioAnteriorEspana = contratacionAnioAnteriorEspana;
 
         await inicializarInforme({
             url,
@@ -106,7 +107,9 @@ function _renderTablaPaises() {
                 <col class="rpt-paises-col-porc">
                 <col class="rpt-paises-col-contr">
                 <col class="rpt-paises-col-pos">
+                <col class="rpt-paises-col-spacer">
                 <col class="rpt-paises-col-pais">
+                <col class="rpt-paises-col-spacer">
                 <col class="rpt-paises-col-pos">
                 <col class="rpt-paises-col-contr">
                 <col class="rpt-paises-col-porc">
@@ -114,20 +117,25 @@ function _renderTablaPaises() {
             <thead>
                 <tr class="rpt-paises-header-year">
                     <th colspan="3">Cierre ${anioAnterior}</th>
+                    <th rpt-border-none></th>
                     <th></th>
+                    <th rpt-border-none></th>
                     <th colspan="3">${anioActual}</th>
                 </tr>
                 <tr class="rpt-th-blue-segmented">
                     <th class="rpt-align-center rpt-paises-th-border">% S/Total</th>
                     <th class="rpt-align-end rpt-paises-th-border rpt-pad-right-15">Contr.</th>
                     <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
+                    <th rpt-border-none></th>
                     <th class="rpt-paises-pais-cell rpt-paises-th-border-pais">País</th>
+                    <th rpt-border-none></th>
                     <th class="rpt-align-center rpt-paises-th-border">Pos.</th>
                     <th class="rpt-align-end rpt-paises-th-border rpt-pad-right-15">Contr.</th>
                     <th class="rpt-align-center rpt-paises-th-border">% S/Total</th>
                 </tr>
             </thead>
             <tbody>
+                <tr class="rpt-paises-row-spacer"><td colspan="9"></td></tr>
     `;
 
     data.paises.forEach(p => {
@@ -140,9 +148,13 @@ function _renderTablaPaises() {
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
                 <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
 
+                <td rpt-border-none></td>
+
                 <td class="rpt-paises-pais-cell ${p.esNuevo ? 'rpt-hanging-indent' : ''}">
                     ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}${p.pais}
                 </td>
+
+                <td rpt-border-none></td>
 
                 <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>
                 <td class="rpt-paises-num-cell">${formatCurrency(p.importeActual / 1000, 0)}</td>
@@ -161,13 +173,15 @@ function _renderTablaPaises() {
 
     html += `
             </tbody>
-            <tr class="rpt-spacer-row-totales"><td colspan="7" class="rpt-spacer-cell-totales"></td></tr>
+            <tr class="rpt-spacer-row-totales"><td colspan="9" class="rpt-spacer-cell-totales"></td></tr>
             <tfoot class="rpt-paises-total-row">
                 <tr>
                     <td class="rpt-align-center rpt-paises-total-line">${subtotalPorcAnterior}%</td>
                     <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
                     <td></td>
+                    <td rpt-border-none></td>
                     <td class="rpt-paises-total-line"></td>
+                    <td rpt-border-none></td>
                     <td></td>
                     <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
                     <td class="rpt-align-center rpt-paises-total-line">${subtotalPorcActual}%</td>
@@ -177,10 +191,12 @@ function _renderTablaPaises() {
                     <td></td>
                     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
                     <td></td>
+                    <td rpt-border-none></td>
                     <td>Total</td>
+                    <td rpt-border-none></td>
                     <td></td>
                     <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
-                    <td></td>
+                    <td class="rpt-paises-total-label-blue rpt-paises-total-label-left">Miles de Euros</td>
                 </tr>
             </tfoot>
         </table>

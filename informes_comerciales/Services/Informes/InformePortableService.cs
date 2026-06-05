@@ -337,6 +337,26 @@ public class InformePortableService
                 continue;
             }
 
+            // Parámetro: contratacionAnioAnteriorEspana (paises_all)
+            // El atributo del botón es 'data-contratacionanioanteriorespania' (con 'i' final),
+            // por lo que se inyecta como query param tal cual. Aceptamos ambas variantes del paramName
+            // (con/sin 'i' final) para máxima robustez.
+            if (paramName == "contratacionanioanteriorespana" || paramName == "contratacionanioanteriorespania")
+            {
+                if (filtros != null
+                    && (filtros.TryGetValue("contratacionanioanteriorespania", out var caeStr1)
+                        || filtros.TryGetValue("contratacionAnioAnteriorEspana", out caeStr1))
+                    && decimal.TryParse(caeStr1, out var caeVal))
+                {
+                    args.Add(caeVal);
+                }
+                else
+                {
+                    args.Add(1950280m);
+                }
+                continue;
+            }
+
             // Para cualquier otro parámetro, usar el valor por defecto del método si existe
             args.Add(ResolveDefaultValue(param));
         }

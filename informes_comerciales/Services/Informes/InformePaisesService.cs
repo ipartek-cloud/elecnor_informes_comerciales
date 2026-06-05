@@ -26,13 +26,11 @@ public class InformePaisesService
         var datosPlanos = await _repository.ObtenerPaisesAsync(anio, mes);
 
         // 2. Preparar respuesta
-        //var tituloBase = umbral > 0 ? "Países Relevantes" : "Países";
         var tituloBase = "Mercado internacional por países";
         var response = new PaisesResponseDto
         {
             Meta = new MetaInformeDto
             {
-                //Titulo = $"{tituloBase} (Mercado Internacional)",
                 Titulo = tituloBase,
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
                 Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = umbral, NumeroPaises = numeroPaises },
@@ -45,8 +43,8 @@ public class InformePaisesService
         if (datosPlanos == null || !datosPlanos.Any())
             return response;
 
-        // 3. Procesar y Filtrar Detalle
-        _ProcesarDetalleYTotales(response, datosPlanos, umbral, numeroPaises);
+        // 3. Procesar y Filtrar Detalle (sin sobrescritura de España)
+        _ProcesarDetalleYTotales(response, datosPlanos, umbral, numeroPaises, null);
 
         return response;
     }
@@ -54,7 +52,13 @@ public class InformePaisesService
     /// <summary>
     /// Obtiene el informe de Países ALL (Nacional + Internacional).
     /// </summary>
-    public async Task<PaisesResponseDto> ObtenerInformePaisesAllAsync(int anio, int mes, int? nroPagina)
+    /// <param name="contratacionAnioAnteriorEspana">
+    /// Valor (en euros) que se asigna forzosamente al país "España" en la columna
+    /// de contratación del año anterior. Esto fuerza también un ajuste del total
+    /// global del año anterior y un recálculo del % S/Total de todos los países
+    /// para mantener la coherencia matemática (Opción C).
+    /// </param>
+    public async Task<PaisesResponseDto> ObtenerInformePaisesAllAsync(int anio, int mes, int? nroPagina, decimal contratacionAnioAnteriorEspana = 1950280m)
     {
         // 1. Obtener datos del repositorio (Nacional + Internacional)
         var datosPlanos = await _repository.ObtenerPaisesAllAsync(anio, mes);
@@ -66,7 +70,7 @@ public class InformePaisesService
             {
                 Titulo = "Mercado por Países",
                 Descripcion = "CONSEJO ELECNOR - Informe de Contratación",
-                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = 100000 },
+                Filtros = new { Anio = anio, Mes = mes, NroPagina = nroPagina, Umbral = 100000, ContratacionAnioAnteriorEspana = contratacionAnioAnteriorEspana },
                 FechaGeneracion = DateTime.Now,
                 Usuario = "Sistema",
                 NroPagina = nroPagina
@@ -76,8 +80,8 @@ public class InformePaisesService
         if (datosPlanos == null || !datosPlanos.Any())
             return response;
 
-        // 3. Procesar y Filtrar Detalle (Umbral fijo 100.000 para ALL)
-        _ProcesarDetalleYTotales(response, datosPlanos, 100000, 0);
+        // 3. Procesar y Filtrar Detalle (Umbral fijo 100.000 para ALL) con sobrescritura de España
+        _ProcesarDetalleYTotales(response, datosPlanos, 100000, 0, contratacionAnioAnteriorEspana);
 
         return response;
     }
@@ -89,7 +93,12 @@ public class InformePaisesService
     /// <summary>
     /// Procesa la lista plana de países, aplica el umbral y calcula los subtotales/totales.
     /// </summary>
-    private void _ProcesarDetalleYTotales(PaisesResponseDto response, List<PaisesPoco> datosPlanos, int umbral, int numeroPaises)
+    /// <param name="contratacionAnioAnteriorEspana">
+    /// Si es distinto de null, sobrescribe el ImporteAnterior de "España" con este valor (en euros)
+    /// y ajusta el total global + recalcula los % S/Total de todos los países para mantener
+    /// la coherencia matemática (Opción C).
+    /// </param>
+    private void _ProcesarDetalleYTotales(PaisesResponseDto response, List<PaisesPoco> datosPlanos, int umbral, int numeroPaises, decimal? contratacionAnioAnteriorEspana)
     {
         // Cálculos Globales (El 100% real del mercado)
         decimal totalGlobalActual = datosPlanos.Sum(x => x.ImporteContratadoAcumulado);
@@ -105,8 +114,8 @@ public class InformePaisesService
             if (p.Pais == "OTROS") continue;
 
             // Lógica de filtrado por umbral
-            bool cumpleUmbral = umbral == 0 
-                ? p.ImporteContratadoAcumulado > 0 
+            bool cumpleUmbral = umbral == 0
+                ? p.ImporteContratadoAcumulado > 0
                 : p.ImporteContratadoAcumulado >= umbral;
 
             if (cumpleUmbral)
@@ -118,7 +127,7 @@ public class InformePaisesService
                 {
                     Pais = p.Pais,
                     EsNuevo = p.SinContratacionAñoAnterior == "*",
-                    
+
                     // Año Actual
                     ImporteActual = p.ImporteContratadoAcumulado,
                     PosicionActual = posRelativa++,
@@ -132,10 +141,46 @@ public class InformePaisesService
             }
         }
 
+        // ═══════════════════════════════════════════════════════════════════════
+        // SOBRESCRITURA DE ESPAÑA (Opción C: ajuste coherente del total global)
+        // Solo se aplica para el informe de Países ALL (cuando se recibe el valor).
+        // ═══════════════════════════════════════════════════════════════════════
+        decimal totalGlobalAnteriorAjustado = totalGlobalAnterior;
+
+        if (contratacionAnioAnteriorEspana.HasValue)
+        {
+            var filaEspana = response.Paises.FirstOrDefault(p =>
+                string.Equals(p.Pais, "España", StringComparison.OrdinalIgnoreCase));
+
+            if (filaEspana != null)
+            {
+                // 1) Sobrescribir el ImporteAnterior de España con el valor del popover
+                filaEspana.ImporteAnterior = contratacionAnioAnteriorEspana.Value;
+
+                // 2) Ajustar el total global del año anterior:
+                //    restar el dato original de España y sumar el valor sobrescrito
+                decimal importeEspanaAnteriorOriginal = datosPlanos
+                    .Where(x => string.Equals(x.Pais, "España", StringComparison.OrdinalIgnoreCase))
+                    .Sum(x => x.ImporteContratadoAcumuladoAñoAnterior);
+
+                totalGlobalAnteriorAjustado = totalGlobalAnterior
+                    - importeEspanaAnteriorOriginal
+                    + contratacionAnioAnteriorEspana.Value;
+
+                // 3) Recalcular el % S/Total de TODOS los países con el nuevo denominador
+                //    para mantener la coherencia matemática de la tabla
+                foreach (var p in response.Paises)
+                {
+                    p.PorcentajeSobreInternacionalAnterior =
+                        _CalcularPorcentaje(p.ImporteAnterior, totalGlobalAnteriorAjustado);
+                }
+            }
+        }
+
         // Asignación de Totales
         response.Totales = new TotalesPaisesDto
         {
-            // Fila 1: Subtotal de los países visibles (filtrados)
+            // Fila 1: Subtotal de los países visibles (suma de lo mostrado en el detalle)
             SubtotalImporteActual = response.Paises.Sum(x => x.ImporteActual),
             SubtotalImporteAnterior = response.Paises.Sum(x => x.ImporteAnterior),
             SubtotalPorcentajeActual = response.Paises.Sum(x => x.PorcentajeSobreInternacionalActual),
@@ -143,7 +188,7 @@ public class InformePaisesService
 
             // Fila 2: Total Global del Mercado (Euros Reales)
             TotalInternacionalActual = totalGlobalActual,
-            TotalInternacionalAnterior = totalGlobalAnterior,
+            TotalInternacionalAnterior = totalGlobalAnteriorAjustado,
             TotalInternacionalDGInfrActual = totalDGInfrActual
         };
     }

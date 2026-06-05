@@ -170,8 +170,7 @@ function _renderCuerpoInforme() {
   <!-- Fila separadora antes de totales -->
   <tr class="rpt-spacer-row-totales"><td colspan="${esInternacional ? 4 : 5}" class="rpt-spacer-cell-totales"></td></tr>
   <tr class="rpt-ranking-total-row">
-                        <td class="rpt-col-row"></td>
-                        <td class="rpt-col-cliente rpt-td-border-blue-container">
+                        <td colspan="2" class="rpt-td-border-blue-container">
                             <div class="rpt-td-border-blue"></div>
                         </td>
                         <td class="rpt-col-num rpt-text-corporate rpt-font-bold rpt-td-border-blue-cell">
