@@ -166,10 +166,10 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
     const headerHtml = mostrarHeader ? `
         <thead>
             <tr class="rpt-font-bold">
-                <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
-                <th></th>
-                <th rpt-border-none></th>
-                <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                <th class="rpt-col-mes-cliente rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
+                <th class="rpt-col-mes-oferta rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                <th class="rpt-col-10px" rpt-border-none></th>
+                <th class="rpt-col-mes-importe" rpt-border-none></th>
             </tr>
         </thead>` : '';
 
@@ -306,6 +306,12 @@ function _renderTablaMaestraNacional() {
                                 <col class="rpt-col-mes-importe">
                             </colgroup>
                             <thead>
+                                <tr style="height: 0 !important; line-height: 0 !important;">
+                                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                </tr>
                                 <tr class="rpt-cont-sig-anterior-label">
                                     <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
                                 </tr>
@@ -338,6 +344,12 @@ function _renderTablaMaestraNacional() {
                 <col class="rpt-col-mes-importe">
             </colgroup>
             <thead class="rpt-print-thead-corporate">
+                <tr style="height: 0 !important; line-height: 0 !important;">
+                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                </tr>
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
@@ -363,10 +375,10 @@ function _renderTablaMaestraNacional() {
                     </th>
                 </tr>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
-                    <th></th>
-                    <th rpt-border-none></th>
-                    <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                    <th class="rpt-col-mes-cliente rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
+                    <th class="rpt-col-mes-oferta rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                    <th class="rpt-col-10px" rpt-border-none></th>
+                    <th class="rpt-col-mes-importe" rpt-border-none></th>
                 </tr>
             </thead>
             <tfoot class="rpt-print-tfoot-master">
@@ -428,6 +440,12 @@ function _renderTablaMaestraInternacional() {
                                 <col class="rpt-col-mes-importe">
                             </colgroup>
                             <thead>
+                                <tr style="height: 0 !important; line-height: 0 !important;">
+                                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                </tr>
                                 <tr class="rpt-cont-sig-anterior-label">
                                     <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
                                 </tr>
@@ -458,6 +476,12 @@ function _renderTablaMaestraInternacional() {
                 <col class="rpt-col-mes-importe">
             </colgroup>
             <thead class="rpt-print-thead-corporate">
+                <tr style="height: 0 !important; line-height: 0 !important;">
+                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                </tr>
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
                         <div class="${RPT_CLASSES.HEADER}">
@@ -483,10 +507,10 @@ function _renderTablaMaestraInternacional() {
                     </th>
                 </tr>
                 <tr class="rpt-font-bold rpt-table-header-columns">
-                    <th class="rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
-                    <th></th>
-                    <th rpt-border-none></th>
-                    <th class="rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                    <th class="rpt-col-mes-cliente rpt-text-corporate rpt-align-start rpt-ps-3 rpt-fs-11pt">Contratación &gt;${labelUmbral}</th>
+                    <th class="rpt-col-mes-oferta rpt-text-corporate rpt-align-end rpt-pe-3 rpt-fs-10pt">Mensual</th>
+                    <th class="rpt-col-10px" rpt-border-none></th>
+                    <th class="rpt-col-mes-importe" rpt-border-none></th>
                 </tr>
             </thead>
             <tfoot class="rpt-print-tfoot-master">

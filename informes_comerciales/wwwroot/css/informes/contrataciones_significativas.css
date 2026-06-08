@@ -15,7 +15,7 @@
 
 /* Ajuste de compactación para paridad visual */
 .rpt-subtitle {
-    margin-bottom: 0.5rem !important; /* Reducido drásticamente en Web */
+    margin-bottom: 1rem !important; /* Igualado al PDF por petición del usuario */
 }
 
 .rpt-table-cont-sig {
@@ -84,6 +84,10 @@
 .rpt-col-mes-importe {
     width: 7%;
     padding-right: 10pt !important;
+}
+
+.rpt-col-10px {
+    width: 10px !important;
 }
 
 /* Filas de detalle */
@@ -281,6 +285,7 @@
     /* Reafirmar anchos en impresión */
     .rpt-col-mes-cliente { width: 33.5% !important; }
     .rpt-col-mes-oferta { width: 58.5% !important; }
+    .rpt-col-10px { width: 10px !important; }
     .rpt-col-mes-importe { width: 7% !important; }
 
     .rpt-cont-sig-anterior-label td {
