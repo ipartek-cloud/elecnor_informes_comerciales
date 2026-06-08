@@ -59,20 +59,13 @@ GUÍA: Estándar Print-Perfect
     border: none;
 }
 
-/* Estilo para el header "Acumulado" - alineado a la derecha */
-/* En Nacional: colspan="3" (Cliente+Contr+%) - En Internacional: colspan="2" (Cliente+Contr) */
+/* Estilo para el header "Acumulado" - alineado al centro sobre Contr y % */
 .rpt-header-acumulado {
     font-size: 7pt !important;
     color: #00468B;
-    text-align: right;
+    text-align: center;
     padding-bottom: 0 !important;
-    padding-right: 25pt !important;
     font-weight: normal;
-}
-
-/* Ajuste específico para Internacional (colspan menor) */
-.rpt-header-acumulado[colspan="2"] {
-    padding-right: 15pt !important;
 }
 
 /* ==========================================================================

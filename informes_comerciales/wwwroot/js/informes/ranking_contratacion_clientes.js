@@ -152,8 +152,8 @@ function _renderCuerpoInforme() {
                 </colgroup>
                 <thead>
                     <tr class="rpt-header-grouping">
-                        <th class="rpt-col-row"></th>
-                        <th class="rpt-header-acumulado" colspan="${esInternacional ? 2 : 3}">Acumulado</th>
+                        <th colspan="2"></th>
+                        <th class="rpt-header-acumulado" colspan="2">Acumulado</th>
                         ${!esInternacional ? '<th class="rpt-col-ant"></th>' : ''}
                     </tr>
                     <tr>
