@@ -66,26 +66,26 @@ function _renderizarPagina() {
     data.actividades.forEach(act => {
         rowsHtml += `
             <tr class="rpt-detail-row rpt-act-principal">
-                <td class="rpt-col-pct-ant rpt-number-cell">${_formatActividad(act.porcentajeSobreMercadoAnterior, 0, true)}</td>
+                <td class="rpt-col-pct-ant rpt-align-center">${_formatActividad(act.porcentajeSobreMercadoAnterior, 0, true)}</td>
                 <td class="rpt-col-contr-ant rpt-number-cell">${_formatActividad(act.importeContratadoAcumuladoAñoAnterior / 1000, 0)}</td>
                 <td class="rpt-col-actividad">${escapeHtml(act.nombre)}</td>
                 <td class="rpt-col-objetivo rpt-number-cell">${_formatActividad(act.importeObjetivos, 0)}</td>
                 <td class="rpt-col-contr-actual rpt-number-cell">${_formatActividad(act.importeContratadoAcumulado / 1000, 0)}</td>
                 <td class="rpt-col-ip rpt-align-center">${_formatActividad(act.indiceProduccion, 2)}</td>
-                <td class="rpt-col-pct-actual rpt-number-cell">${_formatActividad(act.porcentajeSobreMercado, 0, true)}</td>
+                <td class="rpt-col-pct-actual rpt-align-center">${_formatActividad(act.porcentajeSobreMercado, 0, true)}</td>
             </tr>`;
 
         if (act.subActividades && act.subActividades.length > 0) {
             act.subActividades.forEach(sub => {
                 rowsHtml += `
                     <tr class="rpt-detail-row rpt-act-sub">
-                        <td class="rpt-col-pct-ant rpt-number-cell">${_formatSubActividad(sub.porcentajeSobreMercadoAnterior, 0, true)}</td>
+                        <td class="rpt-col-pct-ant rpt-align-center">${_formatSubActividad(sub.porcentajeSobreMercadoAnterior, 0, true)}</td>
                         <td class="rpt-col-contr-ant rpt-number-cell">${_formatSubActividad(sub.importeContratadoAcumuladoAñoAnterior / 1000, 0)}</td>
                         <td class="rpt-col-actividad rpt-sub-indent">${escapeHtml(sub.nombre)}</td>
                         <td class="rpt-col-objetivo rpt-number-cell">${_formatSubActividad(0, 0)}</td>
                         <td class="rpt-col-contr-actual rpt-number-cell">${_formatSubActividad(sub.importeContratadoAcumulado / 1000, 0)}</td>
                         <td class="rpt-col-ip rpt-align-center">${_formatSubActividad(0, 2)}</td>
-                        <td class="rpt-col-pct-actual rpt-number-cell">${_formatSubActividad(sub.porcentajeSobreMercado, 0, true)}</td>
+                        <td class="rpt-col-pct-actual rpt-align-center">${_formatSubActividad(sub.porcentajeSobreMercado, 0, true)}</td>
                     </tr>`;
             });
         }
@@ -95,13 +95,13 @@ function _renderizarPagina() {
     rowsHtml += `
         <tr class="rpt-spacer-row-totales"><td colspan="7" class="rpt-spacer-cell-totales"></td></tr>
         <tr class="rpt-detail-row rpt-total-row">
-            <td class="rpt-col-pct-ant rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercadoAnterior, 0, true)}</div></td>
+            <td class="rpt-col-pct-ant rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercadoAnterior, 0, true)}</div></td>
             <td class="rpt-col-contr-ant rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeContratadoAcumuladoAñoAnterior / 1000, 0)}</div></td>
             <td class="rpt-col-actividad"></td>
             <td class="rpt-col-objetivo rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeObjetivos, 0)}</div></td>
             <td class="rpt-col-contr-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeContratadoAcumulado / 1000, 0)}</div></td>
             <td class="rpt-col-ip rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.indiceProduccion, 2)}</div></td>
-            <td class="rpt-col-pct-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercado, 0, true)}</div></td>
+            <td class="rpt-col-pct-actual rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercado, 0, true)}</div></td>
         </tr>`;
 
     container.innerHTML = `
@@ -202,26 +202,26 @@ function _renderTablaParaPdf() {
     data.actividades.forEach(act => {
         rowsHtml += `
             <tr class="rpt-detail-row rpt-act-principal">
-                <td class="rpt-col-pct-ant rpt-number-cell">${_formatActividad(act.porcentajeSobreMercadoAnterior, 0, true)}</td>
+                <td class="rpt-col-pct-ant rpt-align-center">${_formatActividad(act.porcentajeSobreMercadoAnterior, 0, true)}</td>
                 <td class="rpt-col-contr-ant rpt-number-cell">${_formatActividad(act.importeContratadoAcumuladoAñoAnterior / 1000, 0)}</td>
                 <td class="rpt-col-actividad">${escapeHtml(act.nombre)}</td>
                 <td class="rpt-col-objetivo rpt-number-cell">${_formatActividad(act.importeObjetivos, 0)}</td>
                 <td class="rpt-col-contr-actual rpt-number-cell">${_formatActividad(act.importeContratadoAcumulado / 1000, 0)}</td>
                 <td class="rpt-col-ip rpt-align-center">${_formatActividad(act.indiceProduccion, 2)}</td>
-                <td class="rpt-col-pct-actual rpt-number-cell">${_formatActividad(act.porcentajeSobreMercado, 0, true)}</td>
+                <td class="rpt-col-pct-actual rpt-align-center">${_formatActividad(act.porcentajeSobreMercado, 0, true)}</td>
             </tr>`;
 
         if (act.subActividades && act.subActividades.length > 0) {
             act.subActividades.forEach(sub => {
                 rowsHtml += `
                     <tr class="rpt-detail-row rpt-act-sub">
-                        <td class="rpt-col-pct-ant rpt-number-cell">${_formatSubActividad(sub.porcentajeSobreMercadoAnterior, 0, true)}</td>
+                        <td class="rpt-col-pct-ant rpt-align-center">${_formatSubActividad(sub.porcentajeSobreMercadoAnterior, 0, true)}</td>
                         <td class="rpt-col-contr-ant rpt-number-cell">${_formatSubActividad(sub.importeContratadoAcumuladoAñoAnterior / 1000, 0)}</td>
                         <td class="rpt-col-actividad rpt-sub-indent">${escapeHtml(sub.nombre)}</td>
                         <td class="rpt-col-objetivo rpt-number-cell">${_formatSubActividad(0, 0)}</td>
                         <td class="rpt-col-contr-actual rpt-number-cell">${_formatSubActividad(sub.importeContratadoAcumulado / 1000, 0)}</td>
                         <td class="rpt-col-ip rpt-align-center">${_formatSubActividad(0, 2)}</td>
-                        <td class="rpt-col-pct-actual rpt-number-cell">${_formatSubActividad(sub.porcentajeSobreMercado, 0, true)}</td>
+                        <td class="rpt-col-pct-actual rpt-align-center">${_formatSubActividad(sub.porcentajeSobreMercado, 0, true)}</td>
                     </tr>`;
             });
         }
@@ -231,13 +231,13 @@ function _renderTablaParaPdf() {
     rowsHtml += `
         <tr class="rpt-spacer-row-totales"><td colspan="7" class="rpt-spacer-cell-totales"></td></tr>
         <tr class="rpt-detail-row rpt-total-row">
-            <td class="rpt-col-pct-ant rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercadoAnterior, 0, true)}</div></td>
+            <td class="rpt-col-pct-ant rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercadoAnterior, 0, true)}</div></td>
             <td class="rpt-col-contr-ant rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeContratadoAcumuladoAñoAnterior / 1000, 0)}</div></td>
             <td class="rpt-col-actividad"></td>
             <td class="rpt-col-objetivo rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeObjetivos, 0)}</div></td>
             <td class="rpt-col-contr-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.importeContratadoAcumulado / 1000, 0)}</div></td>
             <td class="rpt-col-ip rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.indiceProduccion, 2)}</div></td>
-            <td class="rpt-col-pct-actual rpt-number-cell"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercado, 0, true)}</div></td>
+            <td class="rpt-col-pct-actual rpt-align-center"><div class="rpt-total-line">${_formatActividad(tot.porcentajeSobreMercado, 0, true)}</div></td>
         </tr>`;
 
     return `

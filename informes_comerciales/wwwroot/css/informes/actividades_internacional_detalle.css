@@ -14,7 +14,7 @@
 /* ─── Anchos de columna ─── */
 .rpt-col-pct-ant      { width: 12%; }
 .rpt-col-contr-ant    { width: 12%; }
-.rpt-col-actividad    { width: 34%; padding-left: 0 !important; text-align: left !important; }
+.rpt-col-actividad    { width: 34%; padding-left: 8px !important; padding-right: 8px !important; text-align: left !important; }
 .rpt-col-objetivo     { width: 12%; }
 .rpt-col-contr-actual { width: 12%; }
 .rpt-col-ip           { width: 6%;  }
@@ -59,6 +59,9 @@
     padding: 1px 10px !important;
     text-align: center !important;
     vertical-align: middle !important;
+    border-left: 8px solid #fff !important;
+    border-right: 8px solid #fff !important;
+    background-clip: padding-box !important;
 }
 
 .rpt-col-internacional-header .rpt-act-header-line {
