@@ -9,8 +9,8 @@
     border-collapse: collapse;
 }
 
-.rpt-ccrsdg-col-dn       { width: 55%; }
-.rpt-ccrsdg-col-sep1     { width: 2.5%; }
+.rpt-ccrsdg-col-dn       { width: 40%; }
+.rpt-ccrsdg-col-sep1     { width: 17.5%; }
 .rpt-ccrsdg-col-anterior { width: 20%; }
 .rpt-ccrsdg-col-sep2     { width: 2.5%; }
 .rpt-ccrsdg-col-actual   { width: 20%; }
@@ -176,6 +176,15 @@
     .rpt-ccrsdg-col-sep2,
     .rpt-table-print-master thead .rpt-ccrsdg-col-sep2 {
         border-bottom: none !important;
+    }
+
+    /* Sobrescribir con especificidad ultra alta para evitar bordes inferiores y superiores intrusos */
+    .rpt-table-print-master thead tr th.rpt-ccrsdg-header-elecnor,
+    .rpt-table-print-master thead tr th.rpt-ccrsdg-col-sep1,
+    .rpt-table-print-master thead tr th.rpt-ccrsdg-col-sep2,
+    .rpt-table-print-master thead tr th.rpt-print-thead-cell-empty {
+        border-bottom: none !important;
+        border-top: none !important;
     }
 
     .rpt-ccrsdg-grand-total-row .rpt-ccrsdg-col-anterior,
