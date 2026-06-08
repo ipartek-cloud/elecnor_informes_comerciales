@@ -12,11 +12,11 @@
 }
 
 /* Anchos de columna (proporciones basadas en coordenadas Access) */
-.rpt-ccdp-col-cliente   { width: 38%; }
-.rpt-ccdp-col-proyecto  { width: 32%; }
-.rpt-ccdp-col-anterior  { width: 10%; }
-.rpt-ccdp-col-actual    { width: 10%; }
-.rpt-ccdp-col-total     { width: 10%; }
+.rpt-ccdp-col-cliente   { width: 30%; }
+.rpt-ccdp-col-proyecto  { width: 41%; }
+.rpt-ccdp-col-anterior  { width: 9%; }
+.rpt-ccdp-col-actual    { width: 11%; }
+.rpt-ccdp-col-total     { width: 9%; }
 
 /* ════════════════════════════════════════════════════════════════════════ */
 /* SUBTÍTULO DE FILTRO (Cartera > X M)                                    */
