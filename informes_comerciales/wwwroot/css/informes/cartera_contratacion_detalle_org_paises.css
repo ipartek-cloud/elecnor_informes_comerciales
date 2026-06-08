@@ -12,11 +12,11 @@
 }
 
 /* Anchos de columna (proporciones basadas en imagen presentacion.jpg) */
-.rpt-ccdop-col-cliente   { width: 30%; }
-.rpt-ccdop-col-proyecto  { width: 35%; }
-.rpt-ccdop-col-anterior  { width: 12%; }
-.rpt-ccdop-col-actual    { width: 12%; }
-.rpt-ccdop-col-total     { width: 11%; }
+.rpt-ccdop-col-cliente   { width: 25%; }
+.rpt-ccdop-col-proyecto  { width: 47%; }
+.rpt-ccdop-col-anterior  { width: 10%; }
+.rpt-ccdop-col-actual    { width: 10%; }
+.rpt-ccdop-col-total     { width: 8%; }
 
 /* ════════════════════════════════════════════════════════════════════════ */
 /* SUBTÍTULO DE FILTRO (Cartera > X M)                                    */
