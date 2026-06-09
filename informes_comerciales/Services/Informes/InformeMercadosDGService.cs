@@ -22,9 +22,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             _informeRepository = informeRepository;
         }
 
-        public async Task<MercadosDGResponseDto> ObtenerInformeMercadosDGAsync(int anio, int mes, int? nroPagina)
+        public async Task<MercadosDGResponseDto> ObtenerInformeMercadosDGAsync(int anio, int mes, int? nroPagina, string loginUsuario)
         {
-            var taskMercados = _informeRepository.ObtenerMercadosAsync(anio, mes);
+            var taskMercados = _informeRepository.ObtenerMercadosAsync(anio, mes, loginUsuario);
             var taskCarteraDiferida = _informeRepository.ObtenerMercadosDGCarteraDiferidaAsync(anio, mes);
 
             await Task.WhenAll(taskMercados, taskCarteraDiferida);

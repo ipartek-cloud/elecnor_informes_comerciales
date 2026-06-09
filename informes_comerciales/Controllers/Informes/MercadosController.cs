@@ -20,7 +20,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
         }
 
         [HttpGet]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByHeader = "Authorization")]
         public async Task<ActionResult<MercadosResponseDto>> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int nroPagina = 1)
         {
             if (anio > DateTime.Now.Year)
@@ -43,7 +43,8 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
                 nroPagina = 1;
             }
 
-            var datos = await _informeMercadosService.ObtenerInformeMercadosAsync(anio, mes, nroPagina);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var datos = await _informeMercadosService.ObtenerInformeMercadosAsync(anio, mes, nroPagina, loginUsuario);
             return Ok(datos);
         }
     }

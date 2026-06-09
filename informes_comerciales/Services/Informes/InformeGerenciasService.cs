@@ -25,9 +25,9 @@ public class InformeGerenciasService
     /// <summary>
     /// Obtiene el informe completo de Gerencias con todos los cálculos aplicados.
     /// </summary>
-    public async Task<GerenciasResponseDto> ObtenerInformeGerenciasAsync(int anio, int mes, int? nroPagina)
+    public async Task<GerenciasResponseDto> ObtenerInformeGerenciasAsync(int anio, int mes, int? nroPagina, string loginUsuario)
     {
-        var datosPlanos = await _informeRepository.ObtenerGerenciasAsync(anio, mes);
+        var datosPlanos = await _informeRepository.ObtenerGerenciasAsync(anio, mes, loginUsuario);
 
         var response = new GerenciasResponseDto
         {

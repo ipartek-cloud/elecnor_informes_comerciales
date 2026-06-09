@@ -20,9 +20,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             _repository = repository;
         }
 
-        public async Task<CarteraDiferidaConsejoDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina)
+        public async Task<CarteraDiferidaConsejoDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina, string loginUsuario)
         {
-            var (principal, subreporte, cartera, carteraDiferida, ventas) = await _repository.ObtenerCarteraDiferidaConsejoAsync(anio, mes);
+            var (principal, subreporte, cartera, carteraDiferida, ventas) = await _repository.ObtenerCarteraDiferidaConsejoAsync(anio, mes, loginUsuario);
 
             // Validación de datos nulos o vacíos
             if (principal == null || !principal.Any())
@@ -68,7 +68,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                             Detalles = listaGlobalPrincipal
                                 .Select(d => new MercadoDetalleDto
                                 {
-                                    Pais = d.Pais,
+                                    Pais = d.Pais?.Trim() ?? string.Empty,
                                     ObjetivoMensual = d.ObjetivosMensual,
                                     ImporteContratadoMensual = d.Importe_Contratado,
                                     ObjetivoAnual = d.Objetivos,
@@ -82,7 +82,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                             SubMercadosAI = dataSubreporteAnio
                                 .Select(s => new SubMercadoAIDto
                                 {
-                                    Mercado = s.Mercado,
+                                    Mercado = s.Mercado?.Trim() ?? string.Empty,
                                     ImporteContratadoMensual = s.Mensual_Contratacion,
                                     ImporteContratadoAcumulado = s.Acumulado_Contratacion,
                                     PorcentajeSobreMercado = Math.Round(s.Mer * 1000 * 100, 2, MidpointRounding.AwayFromZero),
@@ -140,16 +140,18 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 TituloColInicial = $"31.12.{(anio - 1) % 100}",
                 TituloColActual = $"{mesCorto} {anio}",
                 TituloColDelta = $"Δ Dic {anio - 1}",
-                Lineas = datos.Select(d => new CarteraLineaDto
-                {
-                    Concepto = ((d.Concepto == "Nacional" || d.Concepto == "Internacional") && d.SumarCartera == 0)
-                               ? $"     {d.Concepto}" 
-                               : d.Concepto,
-                    ImporteInicial = d.ImporteInicial,
-                    ImporteActual = d.ImporteActual,
-                    PorcentajeIncremento = d.ImporteInicial == 0 ? null : (d.ImporteActual - d.ImporteInicial) * 100 / d.ImporteInicial,
-                    IsIndented = (d.Concepto == "Nacional" || d.Concepto == "Internacional") && d.SumarCartera == 0,
-                    IsMainConcept = d.SumarCartera == 1
+                Lineas = datos.Select(d => {
+                    var cleanConcept = d.Concepto?.Trim() ?? string.Empty;
+                    var isIndented = (cleanConcept == "Nacional" || cleanConcept == "Internacional") && d.SumarCartera == 0;
+                    return new CarteraLineaDto
+                    {
+                        Concepto = isIndented ? $"     {cleanConcept}" : cleanConcept,
+                        ImporteInicial = d.ImporteInicial,
+                        ImporteActual = d.ImporteActual,
+                        PorcentajeIncremento = d.ImporteInicial == 0 ? null : (d.ImporteActual - d.ImporteInicial) * 100 / d.ImporteInicial,
+                        IsIndented = isIndented,
+                        IsMainConcept = d.SumarCartera == 1
+                    };
                 }).ToList()
             };
 
@@ -190,7 +192,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 TituloColAnio3 = (anio + 2).ToString(),                             // ej: "2028" para 2026
                 Lineas = datos.OrderBy(d => d.Orden).Select(d => new CarteraDiferidaLineaDto
                 {
-                    Concepto = d.CarteraDiferida,
+                    Concepto = d.CarteraDiferida?.Trim() ?? string.Empty,
                     ValorCart1_1 = d.ValorCart1_1,    // Antes: d.Cart1_1
                     Nuevos = d.Nuevos,                // PRESERVAR
                     Total = d.Total,                  // PRESERVAR
@@ -269,7 +271,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
 
             var lineas = datos.Select(d => new VentasLineaDto
             {
-                Mercado  = d.Mercado,
+                Mercado  = d.Mercado?.Trim() ?? string.Empty,
                 Anio2017 = d.Anio2017,
                 Anio2018 = d.Anio2018,
                 Anio2019 = d.Anio2019,

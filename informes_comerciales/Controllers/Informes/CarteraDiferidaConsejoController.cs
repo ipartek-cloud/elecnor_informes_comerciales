@@ -13,7 +13,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByHeader = "Authorization")]
     public class CarteraDiferidaConsejoController : ControllerBase
     {
         private readonly InformeCarteraDiferidaConsejoService _service;
@@ -32,7 +32,8 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
             if (anio > DateTime.Now.Year) return BadRequest("El año de consulta no puede ser superior al año actual.");
             if (mes < 1 || mes > 12) return BadRequest("Mes inválido.");
 
-            var resultado = await _service.ObtenerInformeAsync(anio, mes, nroPagina);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var resultado = await _service.ObtenerInformeAsync(anio, mes, nroPagina, loginUsuario);
             return Ok(resultado);
         }
     }

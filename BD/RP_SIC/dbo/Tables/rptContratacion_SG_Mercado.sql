@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[rptContratacion_SG_Mercado] (
+CREATE TABLE [dbo].[rptContratacion_SG_Mercado] (
     [idContratacionCentro]                  INT             IDENTITY (1, 1) NOT NULL,
     [CodCentro]                             NVARCHAR (255)  NULL,
     [Año]                                   INT             NULL,
@@ -6,6 +6,11 @@
     [ImporteContratado]                     DECIMAL (18, 2) NULL,
     [ImporteContratadoAcumulado]            DECIMAL (18, 2) NULL,
     [ImporteContratadoAcumuladoAñoAnterior] DECIMAL (18, 2) NULL,
+    [LoginUsuario]                          NVARCHAR (100)  NULL DEFAULT ('ACCESS'),
+    [FechaCreacion]                         DATETIME        NULL DEFAULT (GETDATE()),
     CONSTRAINT [PK_rptContratacion_SG_Mercado] PRIMARY KEY CLUSTERED ([idContratacionCentro] ASC)
 );
+
+CREATE NONCLUSTERED INDEX [IX_rptContrSGM_LoginUsuario]
+    ON [dbo].[rptContratacion_SG_Mercado]([LoginUsuario] ASC);
 

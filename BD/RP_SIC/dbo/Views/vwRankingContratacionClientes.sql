@@ -1,12 +1,12 @@
-﻿CREATE VIEW dbo.vwRankingContratacionClientes
+CREATE VIEW dbo.vwRankingContratacionClientes
 AS
-SELECT rpt.Año, rpt.Row, rpt.Mercado, rpt.Pais, rpt.AI, rpt.Cliente, rpt.ImporteContratadoAcumulado, rpt.ImporteContratadoAcumulado_AñoAnterior, MAX(CASE WHEN ant.[NomAgrupado] IS NOT NULL THEN 1 ELSE 0 END) 
+SELECT rpt.Año, rpt.Row, rpt.Mercado, rpt.Pais, rpt.AI, rpt.Cliente, rpt.ImporteContratadoAcumulado, rpt.ImporteContratadoAcumulado_AñoAnterior, rpt.LoginUsuario, MAX(CASE WHEN ant.[NomAgrupado] IS NOT NULL THEN 1 ELSE 0 END) 
                   AS VerAñoAnterior
 FROM     dbo.rptContratacion_Clientes AS rpt WITH (NOLOCK) INNER JOIN
                   dbo.ClientesSQL AS csql WITH (NOLOCK) ON rpt.Cliente = csql.NomAgrupado LEFT OUTER JOIN
                   dbo.ClientesSQL_MostrarContratacion_AñoAnterior AS ant WITH (NOLOCK) ON rpt.Cliente = ant.NomAgrupado AND rpt.Año = ant.Año
 WHERE  (csql.Visible = 1) AND (rpt.Cliente <> '')
-GROUP BY rpt.Año, rpt.Row, rpt.Mercado, rpt.Pais, rpt.AI, rpt.Cliente, rpt.ImporteContratadoAcumulado, rpt.ImporteContratadoAcumulado_AñoAnterior
+GROUP BY rpt.Año, rpt.Row, rpt.Mercado, rpt.Pais, rpt.AI, rpt.Cliente, rpt.ImporteContratadoAcumulado, rpt.ImporteContratadoAcumulado_AñoAnterior, rpt.LoginUsuario
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]

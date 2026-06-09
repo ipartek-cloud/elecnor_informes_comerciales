@@ -16,7 +16,7 @@ public class RankingContratacionClientesController : ControllerBase
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> Get([FromQuery] string? mercado, [FromQuery] int? anio, [FromQuery] int? mes, [FromQuery] int? nroPagina)
     {
         if (anio == null || mes == null)
@@ -24,7 +24,8 @@ public class RankingContratacionClientesController : ControllerBase
 
         if (string.IsNullOrEmpty(mercado)) mercado = "Nacional";
         
-        var response = await _service.ObtenerRankingAsync(mercado, anio.Value, mes.Value, nroPagina);
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+        var response = await _service.ObtenerRankingAsync(mercado, anio.Value, mes.Value, nroPagina, loginUsuario);
         return Ok(response);
     }
 }

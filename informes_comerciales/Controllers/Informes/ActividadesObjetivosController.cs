@@ -21,7 +21,7 @@ public class ActividadesObjetivosController : ControllerBase
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
     {
         try
@@ -29,7 +29,8 @@ public class ActividadesObjetivosController : ControllerBase
             if (anio > DateTime.Now.Year)
                 return BadRequest("El año de consulta no puede ser superior al año actual.");
 
-            var result = await _service.ObtenerInformeAsync(anio, mes, nroPagina);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var result = await _service.ObtenerInformeAsync(anio, mes, nroPagina, loginUsuario);
 
             if (result == null || result.Paises.Count == 0)
                 return NotFound("No se encontraron resultados para el periodo seleccionado.");

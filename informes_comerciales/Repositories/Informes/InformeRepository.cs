@@ -47,13 +47,15 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos consolidados para el informe de Cartera Diferida (CONSEJO ELECNOR).
     /// </summary>
-    public async Task<(List<CarteraDiferidaConsejoPoco> Principal, List<MercadoAIPoco> mercadoAI, List<CarteraProducirPoco> Cartera, List<CarteraDiferidaPoco> CarteraDiferida, List<VentasPoco> Ventas)> ObtenerCarteraDiferidaConsejoAsync(int anio, int mes)
+    public async Task<(List<CarteraDiferidaConsejoPoco> Principal, List<MercadoAIPoco> mercadoAI, List<CarteraProducirPoco> Cartera, List<CarteraDiferidaPoco> CarteraDiferida, List<VentasPoco> Ventas)> ObtenerCarteraDiferidaConsejoAsync(int anio, int mes, string loginUsuario)
     {
         // SECCIÓN A: INFORME PRINCIPAL (Mercados por País)
-        const string sqlDeletePrincipal = "DELETE FROM rptContratacion_DG_SDG_DN_SDNA";
+        const string sqlDeletePrincipal = @"DELETE FROM rptContratacion_DG_SDG_DN_SDNA 
+                                            WHERE LoginUsuario = @LoginUsuario 
+                                               OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
         const string sqlExecPrincipal = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
-        const string sqlInsertManualPrincipal = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo)
-                                                VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo)";
+        const string sqlInsertManualPrincipal = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo, LoginUsuario)
+                                                VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo, @LoginUsuario)";
 
         const string sqlSelectPrincipal = @"SELECT
                                                 c.Año,
@@ -70,12 +72,15 @@ public class InformeRepository
                                             ON  
                                                     o.Mercado = c.Pais
                                                 AND o.Año = c.Año
+                                            WHERE c.LoginUsuario = @LoginUsuario
                                             GROUP BY c.Año, c.Pais, o.Importe;";
 
         // SECCIÓN B: ASOCIADO INVERSIÓN (MercadoAI)
-        const string sqlDeleteSub = "DELETE FROM rptContratacionAsociadoInversion";
-        const string sqlInsertExecSub = "EXEC spWEB_ContratacionAsociadoInversion @Anio, @Mes";
-        const string sqlUpdateAnioSub = "UPDATE rptContratacionAsociadoInversion SET Año = @Anio";
+        const string sqlDeleteSub = @"DELETE FROM rptContratacionAsociadoInversion 
+                                      WHERE LoginUsuario = @LoginUsuario 
+                                         OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
+        const string sqlInsertExecSub = "EXEC spWEB_ContratacionAsociadoInversion @Anio, @Mes, @LoginUsuario";
+        const string sqlUpdateAnioSub = "UPDATE rptContratacionAsociadoInversion SET Año = @Anio WHERE LoginUsuario = @LoginUsuario";
 
         const string sqlSelectMercadoAI = @" SELECT
                                                 r.Año,
@@ -92,7 +97,9 @@ public class InformeRepository
                                             INNER JOIN 
                                                 vwMercadoImporteContratacionAcumulado v 
                                             ON 
-                                                r.Mercado = v.Mercado";
+                                                r.Mercado = v.Mercado
+                                                AND r.LoginUsuario = v.LoginUsuario
+                                            WHERE r.LoginUsuario = @LoginUsuario";
 
         // SECCIÓN C: CARTERA PRODUCCIÓN (Pendiente Producir)
         const string sqlSelectCartera = @"  SELECT Año, Mes, Concepto, ImporteInicial, ImporteActual, PorcentajeIncrementoAñoAnterior, SumarCartera, CarteraAñoAnterior
@@ -145,7 +152,7 @@ public class InformeRepository
         // ─────────────────────────────────────────────────────────────────────────────────
         // ─────────────────────────────────────────────────────────────────────────────────
 
-        var parametros = new { Anio = anio, Mes = mes };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -155,7 +162,7 @@ public class InformeRepository
         {
             // ── Ejecución Sección A: Informe Principal ──
             var datosSp = (await _connection.QueryAsync<dynamic>(sqlExecPrincipal, parametros, transaction: transaction)).ToList();
-            await _connection.ExecuteAsync(sqlDeletePrincipal, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDeletePrincipal, new { LoginUsuario = loginUsuario }, transaction: transaction);
             
             foreach (var fila in datosSp)
             {
@@ -169,14 +176,15 @@ public class InformeRepository
                     ImporteContratado = fila.ImporteContratado,
                     ImporteContratadoAcumulado = fila.ImporteContratadoAcumulado,
                     ImporteContratadoAcumuladoAñoAnterior = fila.ImporteContratadoAcumuladoAñoAnterior,
-                    ImporteObjetivo = fila.ImporteObjetivo
+                    ImporteObjetivo = fila.ImporteObjetivo,
+                    LoginUsuario = loginUsuario
                 }, transaction: transaction);
             }
 
             var principal = (await _connection.QueryAsync<CarteraDiferidaConsejoPoco>(sqlSelectPrincipal, parametros, transaction)).ToList();
 
             // ── Ejecución Sección B: MercadoAI ──
-            await _connection.ExecuteAsync(sqlDeleteSub, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDeleteSub, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExecSub, parametros, transaction: transaction);
             await _connection.ExecuteAsync(sqlUpdateAnioSub, parametros, transaction: transaction);
             var mercadoAI = (await _connection.QueryAsync<MercadoAIPoco>(sqlSelectMercadoAI, parametros, transaction)).ToList();
@@ -209,13 +217,15 @@ public class InformeRepository
      * Obtiene los datos de mercados mediante la población de una tabla de trabajo temporal.
      * Utiliza spContratacion_DG_SDG_DN_SDNA para el cálculo de importes.
      */
-    public async Task<List<MercadosPoco>> ObtenerMercadosAsync(int anio, int mes)
+    public async Task<List<MercadosPoco>> ObtenerMercadosAsync(int anio, int mes, string loginUsuario)
     {
-        const string sqlDelete = "DELETE FROM rptContratacion_DG_SDG_DN_SDNA";
+        const string sqlDelete = @"DELETE FROM rptContratacion_DG_SDG_DN_SDNA 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
         const string sqlExec = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
 
-        const string sqlInsertManual = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo)
-                                         VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo)";
+        const string sqlInsertManual = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo, LoginUsuario)
+                                         VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo, @LoginUsuario)";
 
         const string sqlSelect = @" SELECT
                                         rpt.Año,
@@ -239,10 +249,11 @@ public class InformeRepository
                                        AND vw_m.Mercado = rpt.Pais
                                     LEFT JOIN SubDirGeneral sg WITH (NOLOCK)
                                         ON rpt.CodSubDirGeneral = sg.CodSubDirGeneral
+                                    WHERE rpt.LoginUsuario = @LoginUsuario
                                     GROUP BY
                                         rpt.Año, rpt.Pais, rpt.NombreSubDirGeneral, rpt.NombreDirNegocio";
 
-        var parametros = new { Anio = anio, Mes = mes };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -254,7 +265,7 @@ public class InformeRepository
             var datosSp = (await _connection.QueryAsync<dynamic>(sqlExec, parametros, transaction: transaction)).ToList();
             
             // 2. Limpiar tabla de trabajo para la sesión
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             
             // 3. Poblar tabla de trabajo con el periodo solicitado
             foreach (var fila in datosSp)
@@ -269,7 +280,8 @@ public class InformeRepository
                     ImporteContratado = fila.ImporteContratado,
                     ImporteContratadoAcumulado = fila.ImporteContratadoAcumulado,
                     ImporteContratadoAcumuladoAñoAnterior = fila.ImporteContratadoAcumuladoAñoAnterior,
-                    ImporteObjetivo = fila.ImporteObjetivo
+                    ImporteObjetivo = fila.ImporteObjetivo,
+                    LoginUsuario = loginUsuario
                 }, transaction: transaction);
             }
 
@@ -333,10 +345,12 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos para el informe de Países (Internacional).
     /// </summary>
-    public async Task<List<PaisesPoco>> ObtenerPaisesAsync(int anio, int mes)
+    public async Task<List<PaisesPoco>> ObtenerPaisesAsync(int anio, int mes, string loginUsuario)
     {
         // ─── PASO 1: Vaciar la tabla de trabajo ───
-        const string sqlDelete = "DELETE FROM rptContratacion_Internacional";
+        const string sqlDelete = @"DELETE FROM rptContratacion_Internacional 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         // ─── PASO 2: Poblado automático vía SP (el SP original de Access) ───
         // Sincronizado con las 5 columnas que devuelve el SP (según inspección)
@@ -346,7 +360,9 @@ public class InformeRepository
                                        EXEC spContratacion_InternacionalWEB @Anio, @Mes";
 
         // Asignamos el Año (campo extra) para que el SELECT lo encuentre
-        const string sqlUpdateAnio = "UPDATE rptContratacion_Internacional SET Año = @Anio WHERE Año IS NULL";
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_Internacional 
+                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
+                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
 
         // ─── PASO 3: Selección optimizada (Año Actual vs Histórico Año Anterior) ───
         const string sqlSelect = @" SELECT
@@ -367,7 +383,7 @@ public class InformeRepository
                                                 0 AS Orden
                                             FROM
                                                 rptContratacion_Internacional WITH (NOLOCK)
-                                            WHERE Año = @Anio
+                                            WHERE Año = @Anio AND LoginUsuario = @LoginUsuario
 
                                         UNION ALL
 
@@ -386,7 +402,7 @@ public class InformeRepository
                                     GROUP BY t.Pais
                                     ORDER BY ImporteContratadoAcumulado DESC";
 
-        var parametros = new { Anio = anio, Mes = mes };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -394,7 +410,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
@@ -418,17 +434,21 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos para el informe de Países (Nacional + Internacional).
     /// </summary>
-    public async Task<List<PaisesPoco>> ObtenerPaisesAllAsync(int anio, int mes)
+    public async Task<List<PaisesPoco>> ObtenerPaisesAllAsync(int anio, int mes, string loginUsuario)
     {
         // ─── PASO 1: Vaciar la tabla de trabajo (misma que el internacional) ───
-        const string sqlDelete = "DELETE FROM rptContratacion_Internacional";
-
+        const string sqlDelete = @"DELETE FROM rptContratacion_Internacional 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
+ 
         // ─── PASO 2: Poblado vía SP (Paises ALL: Nac + Int) ───
         const string sqlInsertExec = @"INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
                                        EXEC spContratacion_NacIntTODO @Anio, @Mes, ''";
-
-        const string sqlUpdateAnio = "UPDATE rptContratacion_Internacional SET Año = @Anio WHERE Año IS NULL";
-
+ 
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_Internacional 
+                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
+                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
+ 
         // ─── PASO 3: Selección y Cruce con Histórico (Cruce por PAÍS para asegurar 'España') ───
         const string sqlSelect = @" SELECT 
                                         @Anio AS Año,
@@ -448,10 +468,10 @@ public class InformeRepository
                                                 0 AS Orden
                                             FROM 
                                                 rptContratacion_Internacional WITH (NOLOCK)
-                                            WHERE Año = @Anio
-
+                                            WHERE Año = @Anio AND LoginUsuario = @LoginUsuario
+ 
                                         UNION ALL
-
+ 
                                             -- Datos Históricos (Cruce por nombre de País para Nacional + Int)
                                             SELECT 
                                                 CASE 
@@ -471,7 +491,8 @@ public class InformeRepository
                                     GROUP BY t.Pais
                                     ORDER BY ImporteContratadoAcumulado DESC";
 
-        var parametros = new { Anio = anio, Mes = mes };
+
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -479,7 +500,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
@@ -503,15 +524,19 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos para el informe de Actividades.
     /// </summary>
-    public async Task<List<ActividadPoco>> ObtenerActividadesAsync(int anio, int mes)
+    public async Task<List<ActividadPoco>> ObtenerActividadesAsync(int anio, int mes, string loginUsuario)
     {
-        const string sqlDelete = "DELETE FROM rptContratacion_Actividad";
+        const string sqlDelete = @"DELETE FROM rptContratacion_Actividad 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         const string sqlInsertExec = @" INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
                                         EXEC spContratacion_Actividades_Ajuste @Anio, @Mes";
 
         // Inyectamos el Año como campo extra (estándar del proyecto)
-        const string sqlUpdateAnio = "UPDATE rptContratacion_Actividad SET Año = @Anio WHERE Año IS NULL";
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad 
+                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
+                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
 
         const string sqlSelect = @";WITH vwActividades AS (
 	                                    SELECT DISTINCT
@@ -531,7 +556,7 @@ public class InformeRepository
                                     FROM
                                         vwActividades a
                                     LEFT JOIN rptContratacion_Actividad c WITH (NOLOCK)
-                                    ON  a.Pais = c.Pais AND a.Agrupacion = c.Actividad
+                                    ON  a.Pais = c.Pais AND a.Agrupacion = c.Actividad AND c.LoginUsuario = @LoginUsuario
                                     GROUP BY
                                         a.Pais,
                                         a.Agrupacion,
@@ -539,7 +564,7 @@ public class InformeRepository
                                     ORDER BY
                                         ImporteContratadoAcumuladosAñoAnterior DESC";
 
-        var parametros = new { Anio = anio, Mes = mes };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -547,7 +572,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
@@ -572,14 +597,18 @@ public class InformeRepository
     /// Obtiene los datos para el informe de Actividades_Objetivos.
     /// Incluye contratación acumulada + objetivos + cálculos de IP.
     /// </summary>
-    public async Task<List<ActividadObjetivoPoco>> ObtenerActividadesObjetivosAsync(int anio, int mes)
+    public async Task<List<ActividadObjetivoPoco>> ObtenerActividadesObjetivosAsync(int anio, int mes, string loginUsuario)
     {
-        const string sqlDelete = "DELETE FROM rptContratacion_Actividad";
+        const string sqlDelete = @"DELETE FROM rptContratacion_Actividad 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         const string sqlInsertExec = @"INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
                                        EXEC spContratacion_Actividades_Ajuste @Anio, @Mes";
 
-        const string sqlUpdateAnio = "UPDATE rptContratacion_Actividad SET Año = @Anio WHERE Año IS NULL";
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad 
+                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
+                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
 
         const string sqlSelect = @"WITH CTE_BaseActividades AS (
                                         SELECT DISTINCT
@@ -614,6 +643,7 @@ public class InformeRepository
                                         ON  base.Pais      = rpt.Pais
                                         AND base.Actividad = rpt.Actividad
                                         AND rpt.Año        = @Anio
+                                        AND rpt.LoginUsuario = @LoginUsuario
                                     LEFT JOIN CTE_Objetivos obj
                                         ON  rpt.Actividad  = obj.Agrupacion
                                         AND rpt.Pais       = obj.Mercados
@@ -625,7 +655,7 @@ public class InformeRepository
                                         OR SUM(rpt.ImporteContratadoAcumuladoAñoAnterior) <> 0
                                         OR MAX(obj.ImporteObjetivos) <> 0";
 
-        var parametros = new { Anio = anio, Mes = mes };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -633,7 +663,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
 
@@ -1070,7 +1100,7 @@ public class InformeRepository
     /// <summary>
     /// Ejecuta el PA para generar los datos de Ranking de Clientes.
     /// </summary>
-    public async Task EjecutarSPObrasRankingClientesAsync(string mercado, int anio, int mes)
+    public async Task EjecutarSPObrasRankingClientesAsync(string mercado, int anio, int mes, string loginUsuario)
     {
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -1079,7 +1109,10 @@ public class InformeRepository
         try
         {
             // 1. Limpiar tabla de trabajo
-            await conn.ExecuteAsync("DELETE FROM rptContratacion_Clientes", transaction: transaction);
+            await conn.ExecuteAsync(@"DELETE FROM rptContratacion_Clientes 
+                                      WHERE LoginUsuario = @LoginUsuario 
+                                         OR FechaCreacion < DATEADD(hour, -1, GETDATE())", 
+                                    new { LoginUsuario = loginUsuario }, transaction: transaction);
 
             // 2. Ejecutar SP (3 parámetros: Mercado, Año, Mes) y obtener resultados en memoria
             // El SP devuelve ImporteContratadoAcumuladoAñoAnterior en Real Euros.
@@ -1100,6 +1133,7 @@ public class InformeRepository
             table.Columns.Add("ImporteContratadoAcumulado", typeof(decimal));
             table.Columns.Add("ImporteContratadoAcumulado_AñoAnterior", typeof(decimal));
             table.Columns.Add("ImporteContratadoAcumulado_Ajuste", typeof(decimal));
+            table.Columns.Add("LoginUsuario", typeof(string));
 
             foreach (var fila in resultadosSp)
             {
@@ -1116,7 +1150,8 @@ public class InformeRepository
                     fila.Cliente?.Trim(),
                     importe,
                     anterior,
-                    ajuste
+                    ajuste,
+                    loginUsuario
                 );
             }
 
@@ -1137,6 +1172,7 @@ public class InformeRepository
             bulk.ColumnMappings.Add("ImporteContratadoAcumulado", "ImporteContratadoAcumulado");
             bulk.ColumnMappings.Add("ImporteContratadoAcumulado_AñoAnterior", "ImporteContratadoAcumulado_AñoAnterior");
             bulk.ColumnMappings.Add("ImporteContratadoAcumulado_Ajuste", "ImporteContratadoAcumulado_Ajuste");
+            bulk.ColumnMappings.Add("LoginUsuario", "LoginUsuario");
 
             await bulk.WriteToServerAsync(table);
 
@@ -1152,7 +1188,7 @@ public class InformeRepository
     /// <summary>
     /// Ejecuta el PA para generar los datos de Desglose de Clientes.
     /// </summary>
-    public async Task EjecutarSPObrasRankingClientesDesgloseAsync(string mercado, int anio, int mes)
+    public async Task EjecutarSPObrasRankingClientesDesgloseAsync(string mercado, int anio, int mes, string loginUsuario)
     {
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -1161,7 +1197,10 @@ public class InformeRepository
         try
         {
             // 1. Limpiar tabla de trabajo de desglose
-            await conn.ExecuteAsync("DELETE FROM rptContratacion_Clientes_Desglose", transaction: transaction);
+            await conn.ExecuteAsync(@"DELETE FROM rptContratacion_Clientes_Desglose 
+                                      WHERE LoginUsuario = @LoginUsuario 
+                                         OR FechaCreacion < DATEADD(hour, -1, GETDATE())", 
+                                    new { LoginUsuario = loginUsuario }, transaction: transaction);
 
             // 2. Ejecutar SP de desglose (3 parámetros: Mercado, Año, Mes)
             var resultadosSp = (await conn.QueryAsync<RankingClientesDesgloseSpResult>( "EXEC spContratacion_Clientes_Desglose @Mercado, @Anio, @Mes",
@@ -1180,6 +1219,7 @@ public class InformeRepository
             table.Columns.Add("ClienteDesglose", typeof(string));
             table.Columns.Add("ImporteContratadoAcumulado", typeof(decimal));
             table.Columns.Add("ImporteContratadoAcumuladoAñoAnterior", typeof(decimal));
+            table.Columns.Add("LoginUsuario", typeof(string));
 
             foreach (var fila in resultadosSp)
             {
@@ -1194,7 +1234,8 @@ public class InformeRepository
                     fila.Cliente?.Trim(),
                     fila.ClienteDesglose?.Trim(),
                     importe,
-                    anterior
+                    anterior,
+                    loginUsuario
                 );
             }
 
@@ -1213,6 +1254,7 @@ public class InformeRepository
             bulk.ColumnMappings.Add("ClienteDesglose", "ClienteDesglose");
             bulk.ColumnMappings.Add("ImporteContratadoAcumulado", "ImporteContratadoAcumulado");
             bulk.ColumnMappings.Add("ImporteContratadoAcumuladoAñoAnterior", "ImporteContratadoAcumuladoAñoAnterior");
+            bulk.ColumnMappings.Add("LoginUsuario", "LoginUsuario");
 
             await bulk.WriteToServerAsync(table);
 
@@ -1228,7 +1270,7 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los 30 primeros clientes del ranking filtrando por mercado, año e importe mínimo.
     /// </summary>
-    public async Task<List<RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(string mercado, int anio, int mes, decimal importe)
+    public async Task<List<RankingContratacionClientesPoco>> ObtenerRankingContratacionClientesAsync(string mercado, int anio, int mes, decimal importe, string loginUsuario)
     {        
         const string sqlSelect = @"SELECT TOP(30)
                                         Año,
@@ -1244,6 +1286,7 @@ public class InformeRepository
                                         vwRankingContratacionClientes
                                     WHERE 
                                         ImporteContratadoAcumulado > @Importe
+                                        AND LoginUsuario = @LoginUsuario
                                     ORDER BY Row ASC";
 
         using var conn = new SqlConnection(_connectionString);
@@ -1251,7 +1294,7 @@ public class InformeRepository
 
         return (await conn.QueryAsync<RankingContratacionClientesPoco>(
             sqlSelect,
-            new {Importe = importe },
+            new { Importe = importe, LoginUsuario = loginUsuario },
             commandTimeout: 300
         )).ToList();
     }
@@ -1259,7 +1302,7 @@ public class InformeRepository
     /// <summary>
     /// Obtiene el detalle de desglose de clientes desde la tabla de trabajo filtrando por mercado y año.
     /// </summary>
-    public async Task<List<RankingContratacionClientesDesglosePoco>> ObtenerRankingContratacionClientesDesgloseAsync(string mercado, int anio, int mes)
+    public async Task<List<RankingContratacionClientesDesglosePoco>> ObtenerRankingContratacionClientesDesgloseAsync(string mercado, int anio, int mes, string loginUsuario)
     {
         const string sql = @"WITH HistoricoAcumulado AS (
                                 SELECT
@@ -1287,6 +1330,7 @@ public class InformeRepository
                                 AND D.Mercado = H.Mercado
                             WHERE
                                 NULLIF(D.ClienteDesglose, '') IS NOT NULL
+                                AND D.LoginUsuario = @LoginUsuario
                             ORDER BY
                                 D.ImporteContratadoAcumulado";
 
@@ -1295,7 +1339,7 @@ public class InformeRepository
 
         return (await conn.QueryAsync<RankingContratacionClientesDesglosePoco>(
             sql, 
-            new { Mercado = mercado, Año = anio, Mes = mes }, 
+            new { Mercado = mercado, Año = anio, Mes = mes, LoginUsuario = loginUsuario }, 
             commandTimeout: 300
         )).ToList();
     }
@@ -1303,14 +1347,14 @@ public class InformeRepository
     /// <summary>
     /// Obtiene la suma total de todo el mercado para el informe de Ranking de Clientes.
     /// </summary>
-    public async Task<decimal> ObtenerSumaTotalMercadoClientesAsync(string mercado, int anio)
+    public async Task<decimal> ObtenerSumaTotalMercadoClientesAsync(string mercado, int anio, string loginUsuario)
     {
-        const string sqlSum = "SELECT ISNULL(Sum(ImporteContratadoAcumulado), 0) FROM rptContratacion_Clientes WHERE Mercado = @Mercado AND Año = @Anio";
+        const string sqlSum = "SELECT ISNULL(Sum(ImporteContratadoAcumulado), 0) FROM rptContratacion_Clientes WHERE Mercado = @Mercado AND Año = @Anio AND LoginUsuario = @LoginUsuario";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
-        return await conn.ExecuteScalarAsync<decimal>(sqlSum, new { Mercado = mercado, Anio = anio }, commandTimeout: 300);
+        return await conn.ExecuteScalarAsync<decimal>(sqlSum, new { Mercado = mercado, Anio = anio, LoginUsuario = loginUsuario }, commandTimeout: 300);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1581,17 +1625,21 @@ public class InformeRepository
     // └─ Método: ObtenerGerenciasAsync(int anio, int mes)
     // ═══════════════════════════════════════════════════════════════════════════
 
-    public async Task<List<GerenciasPoco>> ObtenerGerenciasAsync(int anio, int mes)
+    public async Task<List<GerenciasPoco>> ObtenerGerenciasAsync(int anio, int mes, string loginUsuario)
     {
         // PASO 1: Vaciar tabla de trabajo
-        const string sqlDelete = "DELETE FROM rptContratacion_GerenciaCentro";
+        const string sqlDelete = @"DELETE FROM rptContratacion_GerenciaCentro 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         // PASO 2: Poblar desde el SP (columnas exactas que devuelve el SP)
         const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
                                        EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes";
 
-        // PASO 3: Asignar el año a todas las filas
-        const string sqlUpdateAnio = "UPDATE rptContratacion_GerenciaCentro SET Año = @Anio";
+        // PASO 3: Asignar el año y usuario a todas las filas recién insertadas (las que tienen DEFAULT ACCESS)
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_GerenciaCentro 
+                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
+                                       WHERE LoginUsuario = 'ACCESS'";
 
         // PASO 4: SELECT enriquecido con JOINs
         const string sqlSelect = @"SELECT
@@ -1619,6 +1667,7 @@ public class InformeRepository
                                     LEFT JOIN vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
                                         ON rpt.CodCentro = vw.CodCentro
                                         AND rpt.Año = vw.Año
+                                    WHERE rpt.LoginUsuario = @LoginUsuario
                                     GROUP BY
                                         rpt.Año,
                                         cg.SumarizaGerentes,
@@ -1627,7 +1676,8 @@ public class InformeRepository
 
         var parametros = new { 
             Anio = anio, 
-            Mes = mes
+            Mes = mes,
+            LoginUsuario = loginUsuario
         };
 
         if (_connection.State != ConnectionState.Open)
@@ -1636,7 +1686,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction, commandTimeout: 300);
             var resultado = (await _connection.QueryAsync<GerenciasPoco>(sqlSelect, parametros, transaction, commandTimeout: 300)).ToList();
@@ -1656,16 +1706,20 @@ public class InformeRepository
     // ═══════════════════════════════════════════════════════════════════════════
 
     public async Task<List<MercadoSGDelegacionPoco>> ObtenerMercadosSGDelegacionesAsync(
-        int anio, int mes,
+        int anio, int mes, string loginUsuario,
         string codSdgOrdenDel = "090")
     {
-        const string sqlDelete = "DELETE FROM rptContratacion_SG_Mercado WHERE Año = @Anio OR Año IS NULL";
+        const string sqlDelete = @"DELETE FROM rptContratacion_SG_Mercado 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         const string sqlInsertExec = @"INSERT INTO rptContratacion_SG_Mercado
                                             (Pais, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
                                         EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes";
 
-        const string sqlUpdateAnio = "UPDATE rptContratacion_SG_Mercado SET Año = @Anio WHERE Año IS NULL";
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_SG_Mercado 
+                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
+                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
 
         const string sqlSelect = @"WITH CTE_Estructura_Delegacion AS (
                                         SELECT DISTINCT
@@ -1693,7 +1747,7 @@ public class InformeRepository
                                             SUM(C.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior
                                         FROM dbo.rptContratacion_SG_Mercado C WITH (NOLOCK)
                                         INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON C.CodCentro = S.CodCentro AND C.Año = S.Año
-                                        WHERE C.Año = @Anio
+                                        WHERE C.Año = @Anio AND C.LoginUsuario = @LoginUsuario
                                         GROUP BY S.CodDelegacion
                                     ),
                                     CTE_Objetivos_Del AS (
@@ -1745,7 +1799,8 @@ public class InformeRepository
         {
             Anio = anio,
             Mes = mes,
-            CodSdgOrdenDel = codSdgOrdenDel
+            CodSdgOrdenDel = codSdgOrdenDel,
+            LoginUsuario = loginUsuario
         };
 
         if (_connection.State != ConnectionState.Open)
@@ -1754,7 +1809,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, parametros, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
             await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
 
@@ -1775,27 +1830,30 @@ public class InformeRepository
     // ═══════════════════════════════════════════════════════════════════════════
 
     public async Task<List<CarteraContratacionDetallePoco>> ObtenerCarteraContratacionDetalleAsync(
-        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
+        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe, string loginUsuario)
     {
         const string sqlDelete = @"DELETE FROM rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises 
-                                   WHERE AnioInforme = @Anio AND MesInforme = @Mes";
+                                   WHERE (AnioInforme = @Anio AND MesInforme = @Mes AND LoginUsuario = @LoginUsuario)
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
         
         const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
 
         const string sqlInsert = @"INSERT INTO rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises
-                                            (AnioInforme, MesInforme, Pais, NomCliente, DesOferta, ImporteCarteraOferta, ImporteContratadoOferta, ImporteCarteraPais)
+                                            (AnioInforme, MesInforme, Pais, NomCliente, DesOferta, ImporteCarteraOferta, ImporteContratadoOferta, ImporteCarteraPais, LoginUsuario)
                                        VALUES
-                                            (@AnioInforme, @MesInforme, @Pais, @NomCliente, @DesOferta, @ImporteCarteraOferta, @ImporteContratadoOferta, @ImporteCarteraPais)";
+                                            (@AnioInforme, @MesInforme, @Pais, @NomCliente, @DesOferta, @ImporteCarteraOferta, @ImporteContratadoOferta, @ImporteCarteraPais, @LoginUsuario)";
         
         const string sqlSelect = @"SELECT AnioInforme, MesInforme, Pais, DesOferta, NomCliente, ImporteCarteraOferta, ImporteContratadoOferta, ImporteCarteraPais
                                    FROM rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises WITH (NOLOCK)
                                    WHERE AnioInforme = @Anio 
                                      AND MesInforme = @Mes 
+                                     AND LoginUsuario = @LoginUsuario
                                      AND (ISNULL(ImporteCarteraOferta, 0) + ISNULL(ImporteContratadoOferta, 0)) <> 0";
 
         var parametros = new { 
             Anio = anio, Mes = mes, TodoInternacional = todoInternacional, 
-            LimiteImporte = limiteImporte, LimitePaises = limitePaises, Informe = informe 
+            LimiteImporte = limiteImporte, LimitePaises = limitePaises, Informe = informe,
+            LoginUsuario = loginUsuario
         };
 
         if (_connection.State != ConnectionState.Open)
@@ -1819,7 +1877,8 @@ public class InformeRepository
                     d.DesOferta,
                     d.ImporteCarteraOferta,
                     ImporteContratadoOferta = (d.ImporteContratadoOferta ?? 0) / 1000m,
-                    d.ImporteCarteraPais
+                    d.ImporteCarteraPais,
+                    LoginUsuario = loginUsuario
                 }).ToList();
 
                 await _connection.ExecuteAsync(sqlInsert, datosTransformados, transaction: transaction, commandTimeout: 600);
@@ -1905,20 +1964,24 @@ public class InformeRepository
     // INFORME: Detalle Actividades Internacional
     // ═══════════════════════════════════════════════════════════════════════════
 
-    public async Task<List<ActividadesInternacionalDetallePoco>> ObtenerActividadesInternacionalDetalleAsync(int anio, int mes)
+    public async Task<List<ActividadesInternacionalDetallePoco>> ObtenerActividadesInternacionalDetalleAsync(int anio, int mes, string loginUsuario)
     {
-        const string sqlDelete = "DELETE FROM rptContratacion_Actividad_SubActividad";
+        const string sqlDelete = @"DELETE FROM rptContratacion_Actividad_SubActividad 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         const string sqlExec = "EXEC spContratacion_Actividades_SubActividades @Anio, @Mes";
 
         const string sqlInsertManual = @"INSERT INTO rptContratacion_Actividad_SubActividad
                                                 (Año, Orden, CodActividad, Actividad, CodAct1, CodAct2, Pais,
-                                                 ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Desglose_AñoAnterior)
+                                                 ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Desglose_AñoAnterior, LoginUsuario)
                                          VALUES
                                                 (@Año, @Orden, @CodActividad, @Actividad, @CodAct1, @CodAct2, @Pais,
-                                                 @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @Desglose_AñoAnterior)";
+                                                 @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @Desglose_AñoAnterior, @LoginUsuario)";
 
-        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad_SubActividad SET Año = @Anio WHERE Año IS NULL";
+        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad_SubActividad 
+                                       SET Año = @Anio 
+                                       WHERE Año IS NULL AND LoginUsuario = @LoginUsuario";
 
         const string sqlSelect = @" ;WITH Resumen AS (
                                         SELECT
@@ -1935,6 +1998,7 @@ public class InformeRepository
                                         WHERE r.Desglose_AñoAnterior = 0
                                           AND r.Pais = 'internacional'
                                           AND r.Año = @Anio
+                                          AND r.LoginUsuario = @LoginUsuario
                                         GROUP BY r.Año, r.Pais, r.Actividad, r.Orden
 
                                         UNION ALL
@@ -1952,13 +2016,14 @@ public class InformeRepository
                                             ON r.Actividad = s.Descrip_Activ_Espec AND r.CodAct2 = s.CDAC2
                                         WHERE r.Pais = 'internacional'
                                           AND r.Año = @Anio
+                                          AND r.LoginUsuario = @LoginUsuario
                                           AND s.Descrip_Activ_Espec_Desglose <> ''
                                         GROUP BY r.Año, r.Pais, s.Descrip_Activ_Espec, 
                                                  s.Descrip_Activ_Espec_Desglose, s.Ord_Descrip_Activ_Espec_Desglose
                                     )
                                     SELECT * FROM Resumen";
 
-        var parametros = new { Anio = anio, Mes = mes };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
@@ -1966,7 +2031,7 @@ public class InformeRepository
         using var transaction = _connection.BeginTransaction();
         try
         {
-            await _connection.ExecuteAsync(sqlDelete, transaction: transaction);
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             var datosSp = (await _connection.QueryAsync<dynamic>(sqlExec, parametros, transaction: transaction)).ToList();
 
             foreach (var fila in datosSp)
@@ -1981,7 +2046,8 @@ public class InformeRepository
                     Pais = (string?)fila.Pais,
                     ImporteContratadoAcumulado = (decimal?)fila.ImporteContratadoAcumulado,
                     ImporteContratadoAcumuladoAñoAnterior = (decimal?)fila.ImporteContratadoAcumuladoAñoAnterior,
-                    Desglose_AñoAnterior = (int?)fila.Desglose_AñoAnterior
+                    Desglose_AñoAnterior = (int?)fila.Desglose_AñoAnterior,
+                    LoginUsuario = loginUsuario
                 }, transaction: transaction);
             }
 

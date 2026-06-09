@@ -61,7 +61,8 @@ public class InformePortableService
         int anio,
         int mesHasta,
         List<int>? mesesSeleccionados,
-        Dictionary<string, string>? filtros)
+        Dictionary<string, string>? filtros,
+        string loginUsuario)
     {
         // Normalizar filtros a case-insensitive: los data-* del frontend llegan en minúsculas (ej: "limitepaises")
         // pero los parámetros de servicio usan camelCase (ej: "limitePaises").
@@ -91,7 +92,7 @@ public class InformePortableService
         {
             try
             {
-                var datosMes = await ObtenerDatosMesAsync(scope, tipoInforme, anio, mes, filtrosNormalizados);
+                var datosMes = await ObtenerDatosMesAsync(scope, tipoInforme, anio, mes, filtrosNormalizados, loginUsuario);
                 if (datosMes != null)
                 {
                     datosPorMes[mes] = datosMes;
@@ -126,7 +127,7 @@ public class InformePortableService
     /// Obtiene los datos de un mes específico invocando dinámicamente al servicio correspondiente.
     /// </summary>
     private async Task<object?> ObtenerDatosMesAsync(
-        IServiceScope scope, string tipoInforme, int anio, int mes, Dictionary<string, string>? filtros)
+        IServiceScope scope, string tipoInforme, int anio, int mes, Dictionary<string, string>? filtros, string loginUsuario)
     {
         if (!_serviceMap.TryGetValue(tipoInforme, out var serviceInfo))
         {
@@ -154,7 +155,7 @@ public class InformePortableService
         }
 
         // 3. Preparar argumentos según el tipo de informe y filtros disponibles
-        var parameters = PrepareMethodParameters(method, anio, mes, filtros, tipoInforme);
+        var parameters = PrepareMethodParameters(method, anio, mes, filtros, tipoInforme, loginUsuario);
 
         // 4. Invocar el método asincrónicamente
         try
@@ -185,7 +186,8 @@ public class InformePortableService
         int anio,
         int mes,
         Dictionary<string, string>? filtros,
-        string tipoInforme)
+        string tipoInforme,
+        string loginUsuario)
     {
         var parameters = method.GetParameters();
         var args = new List<object?>();
@@ -193,6 +195,13 @@ public class InformePortableService
         foreach (var param in parameters)
         {
             var paramName = param.Name?.ToLowerInvariant() ?? string.Empty;
+
+            // Parámetro de loginUsuario
+            if (paramName == "loginusuario" || paramName == "loginUsuario")
+            {
+                args.Add(loginUsuario);
+                continue;
+            }
 
             // Parámetro básico: anio
             if (paramName == "anio" || paramName == "año")

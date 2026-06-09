@@ -30,7 +30,7 @@ public class GerenciasController : ControllerBase
     /// Obtiene el informe de Gerencias para un año y mes dados.
     /// </summary>
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<ActionResult<GerenciasResponseDto>> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
     {
         if (anio > DateTime.Now.Year)
@@ -46,7 +46,8 @@ public class GerenciasController : ControllerBase
 
         try
         {
-            var datos = await _informeGerenciasService.ObtenerInformeGerenciasAsync(anio, mes, nroPagina);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var datos = await _informeGerenciasService.ObtenerInformeGerenciasAsync(anio, mes, nroPagina, loginUsuario);
             return Ok(datos);
         }
         catch (Exception ex)

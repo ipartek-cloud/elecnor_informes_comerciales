@@ -24,18 +24,18 @@ public class InformeRankingContratacionClientesService
     /// <summary>
     /// Genera los datos del informe y retorna el DTO estructurado para la vista.
     /// </summary>
-    public async Task<RankingContratacionClientesResponseDto> ObtenerRankingAsync(string mercado, int anio, int mes, int? nroPagina)
+    public async Task<RankingContratacionClientesResponseDto> ObtenerRankingAsync(string mercado, int anio, int mes, int? nroPagina, string loginUsuario)
     {
         // 1. Ejecutar los generadores en paralelo (usando conexiones independientes administradas en Repo)
         await Task.WhenAll(
-            _repository.EjecutarSPObrasRankingClientesAsync(mercado, anio, mes),
-            _repository.EjecutarSPObrasRankingClientesDesgloseAsync(mercado, anio, mes)
+            _repository.EjecutarSPObrasRankingClientesAsync(mercado, anio, mes, loginUsuario),
+            _repository.EjecutarSPObrasRankingClientesDesgloseAsync(mercado, anio, mes, loginUsuario)
         );
 
         // 2. Obtener datos de ambas tablas (Ranking y Desglose) + Total Mercado filtrando por contexto
-        var taskRanking = _repository.ObtenerRankingContratacionClientesAsync(mercado, anio, mes, 0.5m);
-        var taskDesglose = _repository.ObtenerRankingContratacionClientesDesgloseAsync(mercado, anio, mes);
-        var taskTotalMercado = _repository.ObtenerSumaTotalMercadoClientesAsync(mercado, anio);
+        var taskRanking = _repository.ObtenerRankingContratacionClientesAsync(mercado, anio, mes, 0.5m, loginUsuario);
+        var taskDesglose = _repository.ObtenerRankingContratacionClientesDesgloseAsync(mercado, anio, mes, loginUsuario);
+        var taskTotalMercado = _repository.ObtenerSumaTotalMercadoClientesAsync(mercado, anio, loginUsuario);
 
         await Task.WhenAll(taskRanking, taskDesglose, taskTotalMercado);
 

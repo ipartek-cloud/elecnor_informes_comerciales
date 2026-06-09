@@ -18,9 +18,9 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             _informeRepository = informeRepository;
         }
 
-        public async Task<MercadosResponseDto> ObtenerInformeMercadosAsync(int anio, int mes, int nroPagina = 1)
+        public async Task<MercadosResponseDto> ObtenerInformeMercadosAsync(int anio, int mes, int nroPagina, string loginUsuario)
         {
-            var datos = await _informeRepository.ObtenerMercadosAsync(anio, mes);
+            var datos = await _informeRepository.ObtenerMercadosAsync(anio, mes, loginUsuario);
 
             var response = new MercadosResponseDto
             {

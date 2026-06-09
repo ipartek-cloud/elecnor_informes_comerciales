@@ -17,10 +17,10 @@ public class InformeActividadesService
         _repository = repository;
     }
 
-    public async Task<ActividadesResponseDto> ObtenerInformeAsync(int anio, int mes)
+    public async Task<ActividadesResponseDto> ObtenerInformeAsync(int anio, int mes, string loginUsuario)
     {
         // 1. Obtener datos planos del repositorio (vienen convertidos a Miles)
-        var datosPlanos = await _repository.ObtenerActividadesAsync(anio, mes);
+        var datosPlanos = await _repository.ObtenerActividadesAsync(anio, mes, loginUsuario);
 
         var response = new ActividadesResponseDto
         {

@@ -14,9 +14,9 @@ public class InformeActividadesInternacionalDetalleService
         _repository = repository;
     }
 
-    public async Task<ActividadesInternacionalDetalleResponseDto> ObtenerInformeAsync(int anio, int mes)
+    public async Task<ActividadesInternacionalDetalleResponseDto> ObtenerInformeAsync(int anio, int mes, string loginUsuario)
     {
-        var datosPlanos = await _repository.ObtenerActividadesInternacionalDetalleAsync(anio, mes);
+        var datosPlanos = await _repository.ObtenerActividadesInternacionalDetalleAsync(anio, mes, loginUsuario);
 
         if (datosPlanos == null || !datosPlanos.Any())
         {

@@ -21,7 +21,7 @@ public class ActividadesInternacionalDetalleController : ControllerBase
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes)
     {
         if (anio > DateTime.Now.Year)
@@ -43,7 +43,8 @@ public class ActividadesInternacionalDetalleController : ControllerBase
             "Consultando Detalle Actividades Internacional - Año: {Anio}, Mes: {Mes}", 
             anio, mes);
         
-        var resultado = await _service.ObtenerInformeAsync(anio, mes);
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+        var resultado = await _service.ObtenerInformeAsync(anio, mes, loginUsuario);
         return Ok(resultado);
     }
 }

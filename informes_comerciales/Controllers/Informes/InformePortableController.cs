@@ -54,7 +54,8 @@ public class InformePortableController : ControllerBase
         {
             var mesesSeleccionados = ParseMeses(meses);
 
-            var htmlContent = await _informePortableService.GenerarInformePortableAsync(tipoInforme, anio, mes, mesesSeleccionados, filtros);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var htmlContent = await _informePortableService.GenerarInformePortableAsync(tipoInforme, anio, mes, mesesSeleccionados, filtros, loginUsuario);
 
             if (string.IsNullOrWhiteSpace(htmlContent))
             {

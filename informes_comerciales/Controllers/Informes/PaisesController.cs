@@ -7,7 +7,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByHeader = "Authorization")]
 public class PaisesController : ControllerBase
 {
     private readonly InformePaisesService _service;
@@ -24,7 +24,7 @@ public class PaisesController : ControllerBase
     /// - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes) -> "Países Relevantes (Mercado Internacional)"
     /// </summary>
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina, [FromQuery] int umbral = 0, [FromQuery] int numeroPaises = 0)
     {
         // Validaciones básicas
@@ -34,7 +34,8 @@ public class PaisesController : ControllerBase
             return BadRequest("El mes debe estar entre 1 y 12.");
 
         // Ejecución de servicio (Método estandarizado)
-        var resultado = await _service.ObtenerInformePaisesAsync(anio, mes, nroPagina, umbral, numeroPaises);
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+        var resultado = await _service.ObtenerInformePaisesAsync(anio, mes, nroPagina, loginUsuario, umbral, numeroPaises);
 
         return Ok(resultado);
     }
@@ -48,7 +49,7 @@ public class PaisesController : ControllerBase
     /// de contratación del año anterior. Default: 1950280 (configurable desde el popover del Index).
     /// </param>
     [HttpGet("paises_all")]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> GetPaisesAll([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina, [FromQuery] decimal contratacionAnioAnteriorEspana = 1950280m)
     {
         // Validaciones básicas
@@ -58,7 +59,8 @@ public class PaisesController : ControllerBase
             return BadRequest("El mes debe estar entre 1 y 12.");
 
         // Ejecución de servicio (Método estandarizado)
-        var resultado = await _service.ObtenerInformePaisesAllAsync(anio, mes, nroPagina, contratacionAnioAnteriorEspana);
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+        var resultado = await _service.ObtenerInformePaisesAllAsync(anio, mes, nroPagina, loginUsuario, contratacionAnioAnteriorEspana);
 
         return Ok(resultado);
     }

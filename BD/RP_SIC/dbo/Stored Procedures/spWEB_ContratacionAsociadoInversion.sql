@@ -1,9 +1,10 @@
-﻿
+
 --EXEC spWEB_ContratacionAsociadoInversion 2026,3
 
 CREATE PROCEDURE [dbo].[spWEB_ContratacionAsociadoInversion]
-    @pAño   INT,
-    @pMes   INT
+    @pAño          INT,
+    @pMes          INT,
+    @LoginUsuario  NVARCHAR(100) = 'ACCESS'
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -99,23 +100,25 @@ BEGIN
 
         -- Contratacion NACIONAL
         INSERT INTO rptContratacionAsociadoInversion
-            (Año, Mensual_Contratacion, Mercado, Acumulado_Contratacion, Acumulado_ContratacionAñoAnterior)
+            (Año, Mensual_Contratacion, Mercado, Acumulado_Contratacion, Acumulado_ContratacionAñoAnterior, LoginUsuario)
         VALUES
             (YEAR(GETDATE()),
              @vContratacionMensual_Nacional_AsociadaInversion,
              'Nacional',
              @vContratacionAcumulada_Nacional_AsociadaInversion,
-             @vContratacionAcumulada_Nacional_AsociadaInversion_AnoAnterior)
+             @vContratacionAcumulada_Nacional_AsociadaInversion_AnoAnterior,
+             @LoginUsuario)
 
         -- Contratacion INTERNACIONAL
         INSERT INTO rptContratacionAsociadoInversion
-            (Año, Mensual_Contratacion, Mercado, Acumulado_Contratacion, Acumulado_ContratacionAñoAnterior)
+            (Año, Mensual_Contratacion, Mercado, Acumulado_Contratacion, Acumulado_ContratacionAñoAnterior, LoginUsuario)
         VALUES
             (YEAR(GETDATE()),
              @vContratacionMensual_Internacional_AsociadaInversion,
              'Internacional',
              @vContratacionAcumulada_Internacional_AsociadaInversion,
-             @vContratacionAcumulada_Internacional_AsociadaInversion_AnoAnterior)
+             @vContratacionAcumulada_Internacional_AsociadaInversion_AnoAnterior,
+             @LoginUsuario)
 
     END TRY
     BEGIN CATCH

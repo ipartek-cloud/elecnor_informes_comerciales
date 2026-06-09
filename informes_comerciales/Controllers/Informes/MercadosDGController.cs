@@ -20,7 +20,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
         }
 
         [HttpGet]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
         public async Task<ActionResult<MercadosDGResponseDto>> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina)
         {
             if (anio > DateTime.Now.Year)
@@ -45,7 +45,8 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
                 return BadRequest($"El año de consulta ({anio}) excede el límite del subinforme Cartera Diferida (máx. {maxAnioCartera}).");
             }
 
-            var datos = await _informeMercadosDGService.ObtenerInformeMercadosDGAsync(anio, mes, nroPagina);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var datos = await _informeMercadosDGService.ObtenerInformeMercadosDGAsync(anio, mes, nroPagina, loginUsuario);
             return Ok(datos);
         }
     }

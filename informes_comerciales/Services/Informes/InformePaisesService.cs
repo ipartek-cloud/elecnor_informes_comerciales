@@ -20,10 +20,10 @@ public class InformePaisesService
     /// <summary>
     /// Obtiene el informe de Países (Mercado Internacional).
     /// </summary>
-    public async Task<PaisesResponseDto> ObtenerInformePaisesAsync(int anio, int mes, int? nroPagina, int umbral = 0, int numeroPaises = 0)
+    public async Task<PaisesResponseDto> ObtenerInformePaisesAsync(int anio, int mes, int? nroPagina, string loginUsuario, int umbral = 0, int numeroPaises = 0)
     {
         // 1. Obtener datos del repositorio (Patrón Estándar)
-        var datosPlanos = await _repository.ObtenerPaisesAsync(anio, mes);
+        var datosPlanos = await _repository.ObtenerPaisesAsync(anio, mes, loginUsuario);
 
         // 2. Preparar respuesta
         var tituloBase = "Mercado internacional por países";
@@ -58,10 +58,10 @@ public class InformePaisesService
     /// global del año anterior y un recálculo del % S/Total de todos los países
     /// para mantener la coherencia matemática (Opción C).
     /// </param>
-    public async Task<PaisesResponseDto> ObtenerInformePaisesAllAsync(int anio, int mes, int? nroPagina, decimal contratacionAnioAnteriorEspana = 1950280m)
+    public async Task<PaisesResponseDto> ObtenerInformePaisesAllAsync(int anio, int mes, int? nroPagina, string loginUsuario, decimal contratacionAnioAnteriorEspana = 1950280m)
     {
         // 1. Obtener datos del repositorio (Nacional + Internacional)
-        var datosPlanos = await _repository.ObtenerPaisesAllAsync(anio, mes);
+        var datosPlanos = await _repository.ObtenerPaisesAllAsync(anio, mes, loginUsuario);
 
         // 2. Preparar respuesta
         var response = new PaisesResponseDto

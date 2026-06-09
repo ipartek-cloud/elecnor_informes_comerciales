@@ -21,9 +21,9 @@ public class InformeActividadesObjetivosService
     /// <summary>
     /// Obtiene el informe completo de Actividades_Objetivos.
     /// </summary>
-    public async Task<ActividadesObjetivosResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina)
+    public async Task<ActividadesObjetivosResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina, string loginUsuario)
     {
-        var datosPlanos = await _repository.ObtenerActividadesObjetivosAsync(anio, mes);
+        var datosPlanos = await _repository.ObtenerActividadesObjetivosAsync(anio, mes, loginUsuario);
 
         var response = new ActividadesObjetivosResponseDto
         {
