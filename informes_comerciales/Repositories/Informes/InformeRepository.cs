@@ -53,7 +53,7 @@ public class InformeRepository
         const string sqlDeletePrincipal = @"DELETE FROM rptContratacion_DG_SDG_DN_SDNA 
                                             WHERE LoginUsuario = @LoginUsuario 
                                                OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
-        const string sqlExecPrincipal = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
+        const string sqlExecPrincipal = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes, @LoginUsuario";
         const string sqlInsertManualPrincipal = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo, LoginUsuario)
                                                 VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo, @LoginUsuario)";
 
@@ -222,7 +222,7 @@ public class InformeRepository
         const string sqlDelete = @"DELETE FROM rptContratacion_DG_SDG_DN_SDNA 
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
-        const string sqlExec = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes";
+        const string sqlExec = "EXEC spContratacion_DG_SDG_DN_SDNA @Anio, @Mes, @LoginUsuario";
 
         const string sqlInsertManual = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo, LoginUsuario)
                                          VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo, @LoginUsuario)";
@@ -721,27 +721,39 @@ public class InformeRepository
     /// Obtiene los datos para el informe de Principales Contrataciones del Año.
     /// Datos acumulados desde Enero hasta el mes seleccionado.
     /// </summary>
-    public async Task<List<ContratacionesPoco>> ObtenerContratacionesAsync(int anio, int mes, decimal importe, string pais)
+    public async Task<List<ContratacionesPoco>> ObtenerContratacionesAsync(int anio, int mes, decimal importe, string pais, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
-                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
-                                    FROM
-                                        rptPrincipalesObras rpt WITH (NOLOCK)
-                                    WHERE rpt.Año = @Anio
-                                      AND rpt.Mes = @Mes
-                                      AND rpt.Ocultar = 0
-                                      AND rpt.Pais = @Pais
-                                      AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                                      AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                                      AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-                                    GROUP BY
-                                        rpt.NombreCliente_OK,
-                                        rpt.DescripcionOferta_OK
-                                    HAVING
-                                        SUM(rpt.ImporteContratado_OK) >= @Importe
-                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
+                                         REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                         REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                         SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
+                                     FROM
+                                         rptPrincipalesObras rpt WITH (NOLOCK)
+                                     INNER JOIN dbo.Sumarigrama S WITH (NOLOCK) ON rpt.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                     WHERE rpt.Año = @Anio
+                                       AND rpt.Mes = @Mes
+                                       AND rpt.Ocultar = 0
+                                       AND rpt.Pais = @Pais
+                                       AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                       AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                       AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                       AND (
+                                           @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                           OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                           OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                           OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                           OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                           OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                       )
+                                     GROUP BY
+                                         rpt.NombreCliente_OK,
+                                         rpt.DescripcionOferta_OK
+                                     HAVING
+                                         SUM(rpt.ImporteContratado_OK) >= @Importe
+                                         OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -750,7 +762,8 @@ public class InformeRepository
             Anio = anio,
             Mes = mes,
             Importe = importe,
-            Pais = pais
+            Pais = pais,
+            LoginUsuario = loginUsuario
         }, commandTimeout: 300)).ToList();
     }
 
@@ -792,38 +805,48 @@ public class InformeRepository
     /// Obtiene los datos del subinforme Contrataciones Año Nacional Anterior (solo meses anteriores al seleccionado).
     /// Umbral: 1.500€
     /// </summary>
-    public async Task<List<ContratacionesAnnoNacionalAnteriorPoco>> ObtenerContratacionesAnnoNacionalAnteriorAsync(int anio, int mes, decimal importe, string pais)
+    public async Task<List<ContratacionesAnnoNacionalAnteriorPoco>> ObtenerContratacionesAnnoNacionalAnteriorAsync(int anio, int mes, decimal importe, string pais, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
-                                        m.Nombre_Mes AS Meses,
-                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                                        rpt.NombreDirNegocio_OK,
-                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
-                                        CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
-                                    FROM
-                                        rptPrincipalesObras rpt WITH (NOLOCK)
-                                    INNER JOIN
-                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-                                    LEFT JOIN
-                                        OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
-                                    WHERE
-                                        rpt.Año = @Anio
-                                        AND rpt.Mes < @Mes
-                                        AND rpt.Ocultar = 0
-                                        AND rpt.Pais = @Pais
-                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-                                    GROUP BY
-                                        m.Nombre_Mes,
-                                        rpt.NombreCliente_OK,
-                                        rpt.NombreDirNegocio_OK,
-                                        rpt.DescripcionOferta_OK,
-                                        oai.JVAYNB
-                                    HAVING
-                                        SUM(rpt.ImporteContratado_OK) >= @Importe
-                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
+                                         '' AS Meses,
+                                         REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                         S.NombreDirNegocio AS NombreDirNegocio_OK,
+                                         REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                         SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
+                                         CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
+                                     FROM
+                                         rptPrincipalesObras rpt WITH (NOLOCK)
+                                     INNER JOIN
+                                         dbo.Sumarigrama S WITH (NOLOCK) ON rpt.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                     LEFT JOIN
+                                         OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
+                                     WHERE
+                                         rpt.Año = @Anio
+                                         AND rpt.Mes < @Mes
+                                         AND rpt.Ocultar = 0
+                                         AND rpt.Pais = @Pais
+                                         AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                         AND (
+                                             @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                             OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                             OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                             OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                             OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                             OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                         )
+                                     GROUP BY
+                                         rpt.NombreCliente_OK,
+                                         S.NombreDirNegocio,
+                                         rpt.DescripcionOferta_OK,
+                                         oai.JVAYNB
+                                     HAVING
+                                         SUM(rpt.ImporteContratado_OK) >= @Importe
+                                         OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -834,7 +857,8 @@ public class InformeRepository
                 Anio = anio,
                 Mes = mes,
                 Importe = importe,
-                Pais = pais
+                Pais = pais,
+                LoginUsuario = loginUsuario
             },
             commandTimeout: 300
         )).ToList();
@@ -847,38 +871,51 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos del subinforme Contrataciones Año Internacional Mes (solo el mes seleccionado).
     /// </summary>
-    public async Task<List<ContratacionesAnnoInternacionalMesPoco>> ObtenerContratacionesAnnoInternacionalMesAsync(int anio, int mes, decimal importe, string pais)
+    public async Task<List<ContratacionesAnnoInternacionalMesPoco>> ObtenerContratacionesAnnoInternacionalMesAsync(int anio, int mes, decimal importe, string pais, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
-                                        m.Nombre_Mes AS Meses,
-                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                                        rpt.NombreDirNegocio_OK,
-                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
-                                        CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
-                                    FROM
-                                        rptPrincipalesObras rpt WITH (NOLOCK)
-                                    INNER JOIN
-                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-                                    LEFT JOIN
-                                        OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
-                                    WHERE
-                                        rpt.Año = @Anio
-                                        AND rpt.Mes = @Mes
-                                        AND rpt.Ocultar = 0
-                                        AND rpt.Pais = @Pais
-                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-                                    GROUP BY
-                                        m.Nombre_Mes,
-                                        rpt.NombreCliente_OK,
-                                        rpt.DescripcionOferta_OK,
-                                        rpt.NombreDirNegocio_OK,
-                                        oai.JVAYNB
-                                    HAVING
-                                        SUM(rpt.ImporteContratado_OK) >= @Importe
-                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
+                                         m.Nombre_Mes AS Meses,
+                                         REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                         REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                         S.NombreDirNegocio AS NombreDirNegocio_OK,
+                                         SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
+                                         CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
+                                     FROM
+                                         rptPrincipalesObras rpt WITH (NOLOCK)
+                                     INNER JOIN
+                                         Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                     INNER JOIN
+                                         dbo.Sumarigrama S WITH (NOLOCK) ON rpt.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                     LEFT JOIN
+                                         OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
+                                     WHERE
+                                         rpt.Año = @Anio
+                                         AND rpt.Mes = @Mes
+                                         AND rpt.Ocultar = 0
+                                         AND rpt.Pais = @Pais
+                                         AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                         AND (
+                                             @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                             OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                             OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                             OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                             OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                             OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                         )
+                                     GROUP BY
+                                         m.Nombre_Mes,
+                                         rpt.NombreCliente_OK,
+                                         rpt.DescripcionOferta_OK,
+                                         S.NombreDirNegocio,
+                                         oai.JVAYNB
+                                     HAVING
+                                         SUM(rpt.ImporteContratado_OK) >= @Importe
+                                         OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -889,7 +926,8 @@ public class InformeRepository
                 Anio = anio,
                 Mes = mes,
                 Importe = importe,
-                Pais = pais
+                Pais = pais,
+                LoginUsuario = loginUsuario
             },
             commandTimeout: 300
         )).ToList();
@@ -903,39 +941,48 @@ public class InformeRepository
     /// <summary>
     /// SubInforme 3: Obtiene el acumulado de contrataciones internacionales de meses anteriores.
     /// </summary>
-    public async Task<List<ContratacionesAnnoInternacionalAnteriorPoco>> ObtenerContratacionesAnnoInternacionalAnteriorAsync(int anio, int mes, decimal importe, string pais)
+    public async Task<List<ContratacionesAnnoInternacionalAnteriorPoco>> ObtenerContratacionesAnnoInternacionalAnteriorAsync(int anio, int mes, decimal importe, string pais, string loginUsuario)
     {
-        const string sqlSelect = @"
-            SELECT
-                m.Nombre_Mes AS Meses,
-                REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
-                CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI,
-                rpt.NombreDirNegocio_OK
-            FROM
-                rptPrincipalesObras rpt WITH (NOLOCK)
-            INNER JOIN
-                Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-            LEFT JOIN
-                OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
-            WHERE
-                rpt.Año = @Anio
-                AND rpt.Mes < @Mes
-                AND rpt.Ocultar = 0
-                AND rpt.Pais = @Pais
-                AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-            GROUP BY
-                m.Nombre_Mes,
-                rpt.NombreCliente_OK,
-                rpt.DescripcionOferta_OK,
-                oai.JVAYNB,
-                rpt.NombreDirNegocio_OK
-            HAVING
-                SUM(rpt.ImporteContratado_OK) >= @Importe
-                OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
+                                        '' AS Meses,
+                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
+                                        CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI,
+                                        S.NombreDirNegocio AS NombreDirNegocio_OK
+                                    FROM
+                                        rptPrincipalesObras rpt WITH (NOLOCK)
+                                    INNER JOIN
+                                        dbo.Sumarigrama S WITH (NOLOCK) ON rpt.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                    LEFT JOIN
+                                        OfertaAsociadaInversion oai WITH (NOLOCK) ON rpt.CodOferta = oai.JVAYNB
+                                    WHERE
+                                        rpt.Año = @Anio
+                                        AND rpt.Mes < @Mes
+                                        AND rpt.Ocultar = 0
+                                        AND rpt.Pais = @Pais
+                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                        AND (
+                                            @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                            OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                            OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                            OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                            OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                            OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                        )
+                                    GROUP BY
+                                        rpt.NombreCliente_OK,
+                                        rpt.DescripcionOferta_OK,
+                                        oai.JVAYNB,
+                                        S.NombreDirNegocio
+                                    HAVING
+                                        SUM(rpt.ImporteContratado_OK) >= @Importe
+                                        OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
@@ -946,7 +993,8 @@ public class InformeRepository
                 Anio = anio,
                 Mes = mes,
                 Importe = importe,
-                Pais = pais
+                Pais = pais,
+                LoginUsuario = loginUsuario
             },
             commandTimeout: 300
         )).ToList();
@@ -959,41 +1007,56 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos del informe ContratacionesAI (mes seleccionado).
     /// </summary>
-    public async Task<List<ContratacionesAIPoco>> ObtenerContratacionesAIAsync(int anio, int mes, decimal importe)
+    public async Task<List<ContratacionesAIPoco>> ObtenerContratacionesAIAsync(int anio, int mes, decimal importe, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
-                                        rpt.Año,
-                                        CASE WHEN rpt.Pais = 'InterNacional' THEN 'I' ELSE '' END AS Paises,
-                                        m.Nombre_Mes AS Meses,
-                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
-                                    FROM
-                                        rptPrincipalesObrasAI rpt WITH (NOLOCK)
-                                    INNER JOIN
-                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-                                    WHERE
-                                        rpt.Año = @Anio
-                                        AND rpt.Mes = @Mes
-                                        AND rpt.Ocultar = 0
-                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-                                    GROUP BY
-                                        rpt.Año,
-                                        rpt.Pais,
-                                        m.Nombre_Mes,
-                                        rpt.DescripcionOferta_OK,
-                                        rpt.NombreCliente_OK
-                                    HAVING
-                                        SUM(rpt.ImporteContratado_OK) > @Importe";
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
+                                         rpt.Año,
+                                         CASE WHEN rpt.Pais = 'InterNacional' THEN 'I' ELSE '' END AS Paises,
+                                         m.Nombre_Mes AS Meses,
+                                         REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                         REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                         SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
+                                     FROM
+                                         rptPrincipalesObrasAI rpt WITH (NOLOCK)
+                                     INNER JOIN
+                                         Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                     INNER JOIN
+                                         dbo.OfertasSQL o WITH (NOLOCK) ON rpt.CodOferta = o.CodOferta
+                                     INNER JOIN
+                                         dbo.Sumarigrama S WITH (NOLOCK) ON o.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                     WHERE
+                                         rpt.Año = @Anio
+                                         AND rpt.Mes = @Mes
+                                         AND rpt.Ocultar = 0
+                                         AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                         AND (
+                                             @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                             OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                             OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                             OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                             OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                             OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                         )
+                                     GROUP BY
+                                         rpt.Año,
+                                         rpt.Pais,
+                                         m.Nombre_Mes,
+                                         rpt.DescripcionOferta_OK,
+                                         rpt.NombreCliente_OK
+                                     HAVING
+                                         SUM(rpt.ImporteContratado_OK) > @Importe";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
         return (await conn.QueryAsync<ContratacionesAIPoco>(
             sqlSelect,
-            new { Anio = anio, Mes = mes, Importe = importe },
+            new { Anio = anio, Mes = mes, Importe = importe, LoginUsuario = loginUsuario },
             commandTimeout: 300
         )).ToList();
     }
@@ -1026,43 +1089,58 @@ public class InformeRepository
     /// <summary>
     /// Obtiene los datos para el subinforme de Contrataciones AI (Meses Anteriores).
     /// </summary>
-    public async Task<List<ContratacionesAIPoco>> ObtenerContratacionesAnnoAIAnteriorAsync(int anio, int mes, decimal importe)
+    public async Task<List<ContratacionesAIPoco>> ObtenerContratacionesAnnoAIAnteriorAsync(int anio, int mes, decimal importe, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
-                                        rpt.Año,
-                                        CASE
-                                            WHEN rpt.Pais = 'InterNacional' THEN 'I'
-                                            ELSE ''
-                                        END AS Paises,
-                                        'Anterior' AS Meses, 
-                                        REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                                        REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                                        SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
-                                    FROM
-                                        rptPrincipalesObrasAI rpt WITH (NOLOCK)
-                                    INNER JOIN
-                                        Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-                                    WHERE
-                                        rpt.Año = @Anio
-                                        AND rpt.Mes < @Mes
-                                        AND rpt.Ocultar = 0
-                                        AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                                        AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-                                    GROUP BY
-                                        rpt.Año,
-                                        rpt.Pais,
-                                        rpt.DescripcionOferta_OK,
-                                        rpt.NombreCliente_OK
-                                    HAVING
-                                        SUM(rpt.ImporteContratado_OK) > @Importe";
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
+                                         rpt.Año,
+                                         CASE
+                                             WHEN rpt.Pais = 'InterNacional' THEN 'I'
+                                             ELSE ''
+                                         END AS Paises,
+                                         'Anterior' AS Meses, 
+                                         REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
+                                         REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
+                                         SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
+                                     FROM
+                                         rptPrincipalesObrasAI rpt WITH (NOLOCK)
+                                     INNER JOIN
+                                         Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                     INNER JOIN
+                                         dbo.OfertasSQL o WITH (NOLOCK) ON rpt.CodOferta = o.CodOferta
+                                     INNER JOIN
+                                         dbo.Sumarigrama S WITH (NOLOCK) ON o.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                     WHERE
+                                         rpt.Año = @Anio
+                                         AND rpt.Mes < @Mes
+                                         AND rpt.Ocultar = 0
+                                         AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                         AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                         AND (
+                                             @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                             OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                             OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                             OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                             OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                             OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                         )
+                                     GROUP BY
+                                         rpt.Año,
+                                         rpt.Pais,
+                                         rpt.DescripcionOferta_OK,
+                                         rpt.NombreCliente_OK
+                                     HAVING
+                                         SUM(rpt.ImporteContratado_OK) > @Importe";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
         return (await conn.QueryAsync<ContratacionesAIPoco>(
             sqlSelect,
-            new { Anio = anio, Mes = mes, Importe = importe },
+            new { Anio = anio, Mes = mes, Importe = importe, LoginUsuario = loginUsuario },
             commandTimeout: 300
         )).ToList();
     }
@@ -1391,17 +1469,20 @@ public class InformeRepository
     // ═══════════════════════════════════════════════════════════════════════════
 
     public async Task<List<ContratacionesSignificativasPoco>> ObtenerContratacionesSignificativasAsync(
-        int anio, int mes, string mercado, string codSubDirGeneral)
+        int anio, int mes, string mercado, string codSubDirGeneral, string loginUsuario)
     {
         int mesMenos1 = mes - 1;
 
-        const string sqlSelect = @" SELECT
+        const string sqlSelect = @" DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
                                         ocdn.Orden_CodDDirNegocio AS Orden,
                                         s.NombreDirNegocio,
                                         ISNULL(SUM(rpc.ImporteContratado_OK), 0) AS ImporteContratado
                                     FROM
                                         rptPrincipalesContratacion   rpc
-                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro AND rpc.Año = s.Año
                                     INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
                                     WHERE
                                             rpc.Año            = @Anio
@@ -1409,6 +1490,14 @@ public class InformeRepository
                                         AND rpc.Ocultar        = 0
                                         AND rpc.Pais           = @Mercado
                                         AND s.CodSubDirGeneral = @CodSubDirGeneral
+                                        AND (
+                                            @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                            OR (@vPuesto = 'SDG'  AND s.CodSubDirGeneral = @vCodEntidad)
+                                            OR (@vPuesto = 'DN'   AND s.CodDDirNegocio = @vCodEntidad)
+                                            OR (@vPuesto = 'AREA' AND s.CodSubDirNegocioArea = @vCodEntidad)
+                                            OR (@vPuesto = 'DEL'  AND s.CodDelegacion = @vCodEntidad)
+                                            OR (@vPuesto = 'CT'   AND s.CodCentro = @vCodEntidad)
+                                        )
                                     GROUP BY
                                         ocdn.Orden_CodDDirNegocio,
                                         s.NombreDirNegocio";
@@ -1422,7 +1511,8 @@ public class InformeRepository
                                                                                 Mes              = mes,
                                                                                 MesMenos1        = mesMenos1,
                                                                                 Mercado          = mercado,
-                                                                                CodSubDirGeneral = codSubDirGeneral
+                                                                                CodSubDirGeneral = codSubDirGeneral,
+                                                                                LoginUsuario     = loginUsuario
                                                                             },
                                                                             commandTimeout: 300
                                                                         )).ToList();
@@ -1437,9 +1527,12 @@ public class InformeRepository
     /// Obtiene el detalle mensual de contrataciones individuales (>= @Importe k€).
     /// </summary>
     public async Task<List<ContratacionesSignificativasMesPoco>> ObtenerContratacionesSignificativasMesAsync(
-        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe)
+        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
                                         ocdn.Orden_CodDDirNegocio                   AS Orden,
                                         s.NombreDirNegocio,
                                         REPLACE(rpc.NombreCliente_OK,  '''', '')     AS NombreCliente_OK,
@@ -1447,7 +1540,7 @@ public class InformeRepository
                                         ISNULL(SUM(rpc.ImporteContratado_OK), 0)    AS ImporteContratado
                                     FROM
                                         rptPrincipalesContratacion   rpc
-                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro AND rpc.Año = s.Año
                                     INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
                                     WHERE
                                             rpc.Año            = @Anio
@@ -1456,6 +1549,14 @@ public class InformeRepository
                                         AND rpc.Pais           = @Mercado
                                         AND s.CodSubDirGeneral = @CodSubDirGeneral
                                         AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
+                                        AND (
+                                            @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                            OR (@vPuesto = 'SDG'  AND s.CodSubDirGeneral = @vCodEntidad)
+                                            OR (@vPuesto = 'DN'   AND s.CodDDirNegocio = @vCodEntidad)
+                                            OR (@vPuesto = 'AREA' AND s.CodSubDirNegocioArea = @vCodEntidad)
+                                            OR (@vPuesto = 'DEL'  AND s.CodDelegacion = @vCodEntidad)
+                                            OR (@vPuesto = 'CT'   AND s.CodCentro = @vCodEntidad)
+                                        )
                                     GROUP BY
                                         ocdn.Orden_CodDDirNegocio,
                                         s.NombreDirNegocio,
@@ -1475,7 +1576,8 @@ public class InformeRepository
                 Mes              = mes,
                 Mercado          = mercado,
                 CodSubDirGeneral = codSubDirGeneral,
-                Importe          = importe
+                Importe          = importe,
+                LoginUsuario     = loginUsuario
             },
             commandTimeout: 300
         )).ToList();
@@ -1491,9 +1593,12 @@ public class InformeRepository
     /// de los meses anteriores al consultado dentro del mismo año.
     /// </summary>
     public async Task<List<ContratacionesSignificativasMesPoco>> ObtenerContratacionesSignificativasMesesAnterioresAsync(
-        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe)
+        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
                                         ocdn.Orden_CodDDirNegocio                   AS Orden,
                                         s.NombreDirNegocio,
                                         REPLACE(rpc.NombreCliente_OK,  '''', '')     AS NombreCliente_OK,
@@ -1501,7 +1606,7 @@ public class InformeRepository
                                         ISNULL(SUM(rpc.ImporteContratado_OK), 0)    AS ImporteContratado
                                     FROM
                                         rptPrincipalesContratacion   rpc
-                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro AND rpc.Año = s.Año
                                     INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
                                     WHERE
                                             rpc.Año            = @Anio
@@ -1510,6 +1615,14 @@ public class InformeRepository
                                         AND rpc.Pais           = @Mercado
                                         AND s.CodSubDirGeneral = @CodSubDirGeneral
                                         AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
+                                        AND (
+                                            @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                            OR (@vPuesto = 'SDG'  AND s.CodSubDirGeneral = @vCodEntidad)
+                                            OR (@vPuesto = 'DN'   AND s.CodDDirNegocio = @vCodEntidad)
+                                            OR (@vPuesto = 'AREA' AND s.CodSubDirNegocioArea = @vCodEntidad)
+                                            OR (@vPuesto = 'DEL'  AND s.CodDelegacion = @vCodEntidad)
+                                            OR (@vPuesto = 'CT'   AND s.CodCentro = @vCodEntidad)
+                                        )
                                     GROUP BY
                                         ocdn.Orden_CodDDirNegocio,
                                         s.NombreDirNegocio,
@@ -1529,7 +1642,8 @@ public class InformeRepository
                 Mes              = mes,
                 Mercado          = mercado,
                 CodSubDirGeneral = codSubDirGeneral,
-                Importe          = importe
+                Importe          = importe,
+                LoginUsuario     = loginUsuario
             },
             commandTimeout: 300
         )).ToList();
@@ -1540,21 +1654,32 @@ public class InformeRepository
     // ═══════════════════════════════════════════════════════════════════════════
 
     public async Task<List<ContratacionesSignificativasPoco>> ObtenerContratacionesSignificativasRiAsync(
-        int anio, int mes, string mercado, string codSubDirGeneral)
+        int anio, int mes, string mercado, string codSubDirGeneral, string loginUsuario)
     {
-        const string sqlSelect = @" SELECT
+        const string sqlSelect = @" DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
                                         ocdn.Orden_CodDDirNegocio AS Orden,
                                         s.NombreDirNegocio,
                                         ISNULL(SUM(rpc.ImporteContratado_OK), 0) AS ImporteContratado
                                     FROM
                                         rptPrincipalesContratacion   rpc
-                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro AND rpc.Año = s.Año
                                     INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
                                     WHERE
                                             rpc.Año            = @Anio
                                         AND rpc.Mes            = @Mes
                                         AND rpc.Ocultar        = 0
                                         AND rpc.Pais           = @Mercado
+                                        AND (
+                                            @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                            OR (@vPuesto = 'SDG'  AND s.CodSubDirGeneral = @vCodEntidad)
+                                            OR (@vPuesto = 'DN'   AND s.CodDDirNegocio = @vCodEntidad)
+                                            OR (@vPuesto = 'AREA' AND s.CodSubDirNegocioArea = @vCodEntidad)
+                                            OR (@vPuesto = 'DEL'  AND s.CodDelegacion = @vCodEntidad)
+                                            OR (@vPuesto = 'CT'   AND s.CodCentro = @vCodEntidad)
+                                        )
                                     GROUP BY
                                         s.OrdenSubDirGeneral,
                                         ocdn.Orden_CodDDirNegocio,
@@ -1571,16 +1696,20 @@ public class InformeRepository
                                                                             new {
                                                                                 Anio             = anio,
                                                                                 Mes              = mes,
-                                                                                Mercado          = mercado
+                                                                                Mercado          = mercado,
+                                                                                LoginUsuario     = loginUsuario
                                                                             },
                                                                             commandTimeout: 300
                                                                         )).ToList();
     }
 
     public async Task<List<ContratacionesSignificativasMesPoco>> ObtenerContratacionesSignificativasMesRiAsync(
-        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe)
+        int anio, int mes, string mercado, string codSubDirGeneral, decimal importe, string loginUsuario)
     {
-        const string sqlSelect = @"SELECT
+        const string sqlSelect = @"DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
+                                    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
+
+                                    SELECT
                                         ocdn.Orden_CodDDirNegocio                   AS Orden,
                                         s.NombreDirNegocio,
                                         REPLACE(rpc.NombreCliente_OK,  '''', '')     AS NombreCliente_OK,
@@ -1588,7 +1717,7 @@ public class InformeRepository
                                         ISNULL(SUM(rpc.ImporteContratado_OK), 0)    AS ImporteContratado
                                     FROM
                                         rptPrincipalesContratacion   rpc
-                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro
+                                    INNER JOIN Sumarigrama           s    ON rpc.CodCentro    = s.CodCentro AND rpc.Año = s.Año
                                     INNER JOIN Orden_CodDDirNegocio  ocdn ON s.CodDDirNegocio = ocdn.CodDDirNegocio
                                     WHERE
                                             rpc.Año            = @Anio
@@ -1596,6 +1725,14 @@ public class InformeRepository
                                         AND rpc.Ocultar        = 0
                                         AND rpc.Pais           = @Mercado
                                         AND rpc.NombreCliente_OK <> 'ZZ_CARTERA DIFERIDA'
+                                        AND (
+                                            @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                            OR (@vPuesto = 'SDG'  AND s.CodSubDirGeneral = @vCodEntidad)
+                                            OR (@vPuesto = 'DN'   AND s.CodDDirNegocio = @vCodEntidad)
+                                            OR (@vPuesto = 'AREA' AND s.CodSubDirNegocioArea = @vCodEntidad)
+                                            OR (@vPuesto = 'DEL'  AND s.CodDelegacion = @vCodEntidad)
+                                            OR (@vPuesto = 'CT'   AND s.CodCentro = @vCodEntidad)
+                                        )
                                     GROUP BY
                                         ocdn.Orden_CodDDirNegocio,
                                         s.NombreDirNegocio,
@@ -1614,7 +1751,8 @@ public class InformeRepository
                 Anio             = anio,
                 Mes              = mes,
                 Mercado          = mercado,
-                Importe          = importe
+                Importe          = importe,
+                LoginUsuario     = loginUsuario
             },
             commandTimeout: 300
         )).ToList();
@@ -1715,7 +1853,7 @@ public class InformeRepository
 
         const string sqlInsertExec = @"INSERT INTO rptContratacion_SG_Mercado
                                             (Pais, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
-                                        EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes";
+                                        EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes, @LoginUsuario";
 
         const string sqlUpdateAnio = @"UPDATE rptContratacion_SG_Mercado 
                                        SET Año = @Anio, LoginUsuario = @LoginUsuario 

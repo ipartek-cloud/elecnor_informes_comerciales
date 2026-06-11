@@ -29,9 +29,9 @@ public class ContratacionesSignificativasController : ControllerBase
         if (mes < 1 || mes > 12)
             return BadRequest("El mes debe estar entre 1 y 12.");
 
-        var resultado = await _service.ObtenerInformeAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte);
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+        var resultado = await _service.ObtenerInformeAsync(anio, mes, mercado, codSubDirGeneral, loginUsuario, limiteImporte);
         return Ok(resultado);
-
     }
 
     [HttpPost("generar")]

@@ -1,63 +1,9 @@
-
+﻿
 CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado] 		
 	@pAño int,
-	@pMes int,
-	@pLoginUsuario nvarchar(100) = NULL
+	@pMes int
 	AS
 BEGIN
-
-    ----------------------------------------------------------
-    -- Recuperar el Sumarigrama del ejercicio consultado y aplicar RLS
-    CREATE TABLE #Sumarigrama
-    (
-        Año                     smallint      not null,
-        CodDirGeneral           varchar(3),
-        NombreDirGeneral        nvarchar(100) not null,
-        CodSubDirGeneral        varchar(3),
-        NombreSubDirGeneral     nvarchar(100) not null,
-        CodDDirNegocio          varchar(3),
-        NombreDirNegocio        nvarchar(30)  not null,
-        CodSubDirNegocioArea    varchar(3),
-        NombreSubDirNegocioArea nvarchar(100) not null,
-        CodDelegacion           varchar(3),
-        NombreDelegacion        nvarchar(30)  not null,
-        CodCentro               varchar(3),
-        NombreCentro            nvarchar(30)  not null,
-        OrdenSubDirGeneral      int           not null
-    )
-	DECLARE @SQL_Sumarigrama as nvarchar(max)
-    DECLARE @TablaSumarigrama as varchar(100)
-    SET @TablaSumarigrama = 'Sumarigrama'+CAST(@pAño as varchar(4))
-    
-    IF OBJECT_ID(@TablaSumarigrama, 'U') IS NOT NULL
-        SET @SQL_Sumarigrama = 'SELECT * FROM ' + @TablaSumarigrama
-    ELSE
-        SET @SQL_Sumarigrama = 'SELECT * FROM Sumarigrama'
-
-    INSERT INTO #Sumarigrama
-    EXEC sp_executesql  @SQL_Sumarigrama
-
-    IF @pLoginUsuario IS NOT NULL
-    BEGIN
-        DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-        
-        SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-        FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-        WHERE Usuario = @pLoginUsuario
-        
-        IF @vPuesto IS NOT NULL AND @vPuesto <> 'DG'
-        BEGIN
-            DELETE FROM #Sumarigrama
-            WHERE NOT (
-                (@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
-                (@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
-                (@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
-                (@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
-                (@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
-            )
-        END
-    END
-    ----------------------------------------------------------
 
 /*
 ---------------------------------------------------------------- desde AQUÍ
@@ -149,8 +95,8 @@ BEGIN
 			sum(dbo.fnImporteContratacion_MesActual(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratado,
 			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
 			0
-	FROM #Sumarigrama INNER JOIN
-		 #vwWEB_OFERTAS_Local vwOfertas ON #Sumarigrama.CodCentro = vwOfertas.CodCentro
+	FROM dbo.Sumarigrama INNER JOIN
+		 #vwWEB_OFERTAS_Local vwOfertas ON dbo.Sumarigrama.CodCentro = vwOfertas.CodCentro
 	WHERE  (year(FAdjudicacion)=@pAño ) AND month(FAdjudicacion) <= @pMes 
 	GROUP BY Pais,vwOfertas.CodCentro
 	
@@ -161,7 +107,7 @@ BEGIN
 			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
 			0
 	FROM        #vwRegularizaciones_Local AS vwRegularizacionesQ
-				INNER JOIN #Sumarigrama ON vwRegularizacionesQ.CodCentro = #Sumarigrama.CodCentro
+				INNER JOIN dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
 	GROUP BY Pais,vwRegularizacionesQ.CodCentro
 	
 	-- OFERTASsql
@@ -175,15 +121,15 @@ BEGIN
 -- y la tabla OfertasSQL no devolvía correectamente lo que tenía que devolver.
 -- el orden de la informacion es diferente en unaa caso y en otro
 				dbo.Provincias ON dbo.OfertasSQL.CodProv  COLLATE Latin1_General_BIN = dbo.Provincias.CDPRO  COLLATE Latin1_General_BIN
-					INNER JOIN #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
+					INNER JOIN dbo.Sumarigrama ON dbo.OfertasSQL.CodCentro = dbo.Sumarigrama.CodCentro
 	WHERE  (year(FAdjudicacion)=@pAño ) AND month(FAdjudicacion) <= @pMes 
 	GROUP BY Pais,OfertasSQL.CodCentro
 	
 	-- CONTRATACION AÑO ANTERIOR de HISTORICO
 	INSERT INTO @vContratacion(Pais,CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
 	SELECT Mercado,dbo.HistoricoContratacionGrupoSQL.CodCentro,0, 0,sum(Importe) 
-	FROM #Sumarigrama INNER JOIN
-		 dbo.HistoricoContratacionGrupoSQL ON #Sumarigrama.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
+	FROM dbo.Sumarigrama INNER JOIN
+		 dbo.HistoricoContratacionGrupoSQL ON dbo.Sumarigrama.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
 	WHERE  HistoricoContratacionGrupoSQL.Año=@pAño-1 AND Mes <= @pMes 
 	GROUP BY Mercado,dbo.HistoricoContratacionGrupoSQL.CodCentro
 	
@@ -194,5 +140,4 @@ BEGIN
 		--INNER JOIN Sumarigrama S ON C.CodCentro=S.CodCentro
 	GROUP BY Pais,C.CodCentro--,S.CodDDirNegocio
 	
-	DROP TABLE #Sumarigrama;
 END

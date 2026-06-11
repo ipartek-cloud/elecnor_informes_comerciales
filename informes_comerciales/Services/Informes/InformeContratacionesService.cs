@@ -20,7 +20,7 @@ public class InformeContratacionesService
     /// <summary>
     /// Obtiene el informe completo de Contrataciones (informe principal + todos los subinformes).
     /// </summary>
-    public async Task<ContratacionesResponseDto> ObtenerInformeCompletoAsync(int anio, int mes, decimal? umbral1 = null, decimal? umbral2 = null, decimal? umbral3 = null, decimal? umbral4 = null)
+    public async Task<ContratacionesResponseDto> ObtenerInformeCompletoAsync(int anio, int mes, string loginUsuario, decimal? umbral1 = null, decimal? umbral2 = null, decimal? umbral3 = null, decimal? umbral4 = null)
     {
         // 1. Definir umbrales y parámetros (Lógica de Negocio centralizada en el Servicio, usando valores por defecto si son nulos)
         decimal u1 = umbral1 ?? 5000;
@@ -29,10 +29,10 @@ public class InformeContratacionesService
         decimal u4 = umbral4 ?? 25000;
 
         // 2. Lanzar las 4 consultas en paralelo
-        var tareaPrincipal = ObtenerInformeAsync(anio, mes, u1, "nacional");
-        var tareaNacionalAnterior = _repository.ObtenerContratacionesAnnoNacionalAnteriorAsync(anio, mes, u2, "nacional");
-        var tareaInternacionalMes = _repository.ObtenerContratacionesAnnoInternacionalMesAsync(anio, mes, u3, "internacional");
-        var tareaInternacionalAnterior = _repository.ObtenerContratacionesAnnoInternacionalAnteriorAsync(anio, mes, u4, "internacional");
+        var tareaPrincipal = ObtenerInformeAsync(anio, mes, u1, "nacional", loginUsuario);
+        var tareaNacionalAnterior = _repository.ObtenerContratacionesAnnoNacionalAnteriorAsync(anio, mes, u2, "nacional", loginUsuario);
+        var tareaInternacionalMes = _repository.ObtenerContratacionesAnnoInternacionalMesAsync(anio, mes, u3, "internacional", loginUsuario);
+        var tareaInternacionalAnterior = _repository.ObtenerContratacionesAnnoInternacionalAnteriorAsync(anio, mes, u4, "internacional", loginUsuario);
         
         // 3. Esperar a que todas terminen
         await Task.WhenAll(tareaPrincipal, tareaNacionalAnterior, tareaInternacionalMes, tareaInternacionalAnterior);
@@ -87,9 +87,9 @@ public class InformeContratacionesService
         return response;
     }
 
-    public async Task<ContratacionesDto> ObtenerInformeAsync(int anio, int mes, decimal importe, string pais)
+    public async Task<ContratacionesDto> ObtenerInformeAsync(int anio, int mes, decimal importe, string pais, string loginUsuario)
     {
-        var datosPlanos = await _repository.ObtenerContratacionesAsync(anio, mes, importe, pais);
+        var datosPlanos = await _repository.ObtenerContratacionesAsync(anio, mes, importe, pais, loginUsuario);
 
         if (datosPlanos == null || !datosPlanos.Any())
         {
@@ -143,10 +143,10 @@ public class InformeContratacionesService
     /// <summary>
     /// Obtiene los datos del subinforme Contrataciones Año Nacional Anterior (meses anteriores al seleccionado).
     /// </summary>
-    public async Task<ContratacionesAnnoNacionalAnteriorDto> ObtenerContratacionesAnnoNacionalAnteriorAsync(int anio, int mes)
+    public async Task<ContratacionesAnnoNacionalAnteriorDto> ObtenerContratacionesAnnoNacionalAnteriorAsync(int anio, int mes, string loginUsuario = null)
     {
         const decimal umbralDefecto = 15000;
-        var datosPlanos = await _repository.ObtenerContratacionesAnnoNacionalAnteriorAsync(anio, mes, umbralDefecto, "Nacional");
+        var datosPlanos = await _repository.ObtenerContratacionesAnnoNacionalAnteriorAsync(anio, mes, umbralDefecto, "Nacional", loginUsuario);
 
         if (datosPlanos == null || !datosPlanos.Any())
         {

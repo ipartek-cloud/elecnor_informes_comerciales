@@ -1,7 +1,6 @@
-CREATE PROCEDURE [dbo].[spContratacion_DG_SDG_DN_SDNA] 		
+﻿CREATE PROCEDURE [dbo].[spContratacion_DG_SDG_DN_SDNA] 		
 	@pAño int,
-	@pMes int,
-	@pLoginUsuario nvarchar(100) = NULL
+	@pMes int
 	AS
 BEGIN
     ----------------------------------------------------------
@@ -38,31 +37,6 @@ BEGIN
 
     INSERT INTO #Sumarigrama
     EXEC sp_executesql  @SQL_Sumarigrama
-
-    -- ═══════════════════════════════════════════════════════════════
-    -- BLOQUE RLS: Filtrado de seguridad sobre #Sumarigrama
-    -- ═══════════════════════════════════════════════════════════════
-    IF @pLoginUsuario IS NOT NULL
-    BEGIN
-        DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-        
-        SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-        FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-        WHERE Usuario = @pLoginUsuario
-        
-        IF @vPuesto IS NOT NULL AND @vPuesto <> 'DG'
-        BEGIN
-            DELETE FROM #Sumarigrama
-            WHERE NOT (
-                (@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
-                (@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
-                (@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
-                (@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
-                (@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
-            )
-        END
-    END
-    -- ═══════════════════════════════════════════════════════════════
     ----------------------------------------------------------
 
 /*

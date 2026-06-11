@@ -20,7 +20,7 @@ public class InformeContratacionesSignificativasRiService
         await _repository.EjecutarSPObrasRPTAsync(anio, mes);
     }
 
-    public async Task<ContratacionesSignificativasRiResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina = null, decimal limiteImporte = 2000m)
+    public async Task<ContratacionesSignificativasRiResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, int? nroPagina, string loginUsuario, decimal limiteImporte = 2000m)
     {
         // ═══════════════════════════════════════════════════════
         // 1. Definir umbral dinámico (por defecto 2M k€ para RI)
@@ -31,8 +31,8 @@ public class InformeContratacionesSignificativasRiService
         // ═══════════════════════════════════════════════════════
         // 2. Lanzar queries EN PARALELO
         // ═══════════════════════════════════════════════════════
-        var tareaPrincipal = _repository.ObtenerContratacionesSignificativasRiAsync(anio, mes, mercado, codSubDirGeneral);
-        var tareaMes       = _repository.ObtenerContratacionesSignificativasMesRiAsync(anio, mes, mercado, codSubDirGeneral, importeRi);
+        var tareaPrincipal = _repository.ObtenerContratacionesSignificativasRiAsync(anio, mes, mercado, codSubDirGeneral, loginUsuario);
+        var tareaMes       = _repository.ObtenerContratacionesSignificativasMesRiAsync(anio, mes, mercado, codSubDirGeneral, importeRi, loginUsuario);
 
         await Task.WhenAll(tareaPrincipal, tareaMes);
 

@@ -29,7 +29,8 @@ public class ContratacionesAIController : ControllerBase
         if (anio > DateTime.Now.Year)
             return BadRequest("El año de consulta no puede ser superior al año actual.");
 
-        var result = await _service.ObtenerInformeCompletoAsync(anio, mes, umbral1, umbral2);
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+        var result = await _service.ObtenerInformeCompletoAsync(anio, mes, loginUsuario, umbral1, umbral2);
         return Ok(result);
     }
 

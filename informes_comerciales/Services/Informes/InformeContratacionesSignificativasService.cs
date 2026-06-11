@@ -20,7 +20,7 @@ public class InformeContratacionesSignificativasService
         await _repository.EjecutarSPObrasRPTAsync(anio, mes);
     }
 
-    public async Task<ContratacionesSignificativasResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, decimal limiteImporte = 1000)
+    public async Task<ContratacionesSignificativasResponseDto> ObtenerInformeAsync(int anio, int mes, string mercado, string codSubDirGeneral, string loginUsuario, decimal limiteImporte = 1000)
     {
         // ═══════════════════════════════════════════════════════
         // 1. Definir umbral (Logica de Negocio centralizada en el Servicio)
@@ -31,9 +31,9 @@ public class InformeContratacionesSignificativasService
         // 2. Lanzar TODAS las queries EN PARALELO (Task.WhenAll)
         //    Patron B en Repository permite conexiones independientes
         // ═══════════════════════════════════════════════════════
-        var tareaPrincipal  = _repository.ObtenerContratacionesSignificativasAsync(anio, mes, mercado, codSubDirGeneral);
-        var tareaMes        = _repository.ObtenerContratacionesSignificativasMesAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte);
-        var tareaAnteriores = _repository.ObtenerContratacionesSignificativasMesesAnterioresAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte);
+        var tareaPrincipal  = _repository.ObtenerContratacionesSignificativasAsync(anio, mes, mercado, codSubDirGeneral, loginUsuario);
+        var tareaMes        = _repository.ObtenerContratacionesSignificativasMesAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte, loginUsuario);
+        var tareaAnteriores = _repository.ObtenerContratacionesSignificativasMesesAnterioresAsync(anio, mes, mercado, codSubDirGeneral, limiteImporte, loginUsuario);
 
         await Task.WhenAll(tareaPrincipal, tareaMes, tareaAnteriores);
 
