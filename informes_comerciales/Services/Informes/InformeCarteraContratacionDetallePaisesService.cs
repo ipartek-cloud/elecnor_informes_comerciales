@@ -20,13 +20,13 @@ public class InformeCarteraContratacionDetallePaisesService
     /// Obtiene el informe de Cartera Contratación Detalle Países.
     /// </summary>
     public async Task<CarteraContratacionDetallePaisesResponseDto> ObtenerInformeAsync(
-        int anio, int mes, int? nroPagina, decimal limiteImporte, int limitePaises, string mercado, string informe)
+        int anio, int mes, int? nroPagina, decimal limiteImporte, int limitePaises, string mercado, string informe, string loginUsuario)
     {
         int todoInternacional = mercado.Equals("Todo", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
         string sufijoMercado = mercado.Equals("Internacional", StringComparison.OrdinalIgnoreCase) ? " Internacional" : "";
 
         // Ejecutar consultas en paralelo para minimizar latencia
-        var tDatos = _repository.ObtenerCarteraContratacionDetallePaisesAsync(anio, mes, todoInternacional, limiteImporte, limitePaises, informe);
+        var tDatos = _repository.ObtenerCarteraContratacionDetallePaisesAsync(anio, mes, todoInternacional, limiteImporte, limitePaises, informe, loginUsuario);
         var tTotalGeneral = _repository.ObtenerTotalCarteraGeneralAsync(anio, mes, todoInternacional);
 
         await Task.WhenAll(tDatos, tTotalGeneral);

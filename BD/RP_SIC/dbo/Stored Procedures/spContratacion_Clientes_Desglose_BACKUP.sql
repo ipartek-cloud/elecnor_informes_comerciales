@@ -1,56 +1,10 @@
-IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'spContratacion_Clientes_Desglose')
-    DROP PROCEDURE [dbo].[spContratacion_Clientes_Desglose]
-GO
-
-CREATE PROCEDURE [dbo].[spContratacion_Clientes_Desglose] 		
+CREATE PROCEDURE [dbo].[spContratacion_Clientes_Desglose_BACKUP] 		
     @pMercado varchar(50),
     @pAño     int,
-    @pMes     int,
-    @pLoginUsuario nvarchar(100) = NULL
+    @pMes     int
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    -- ═══════════════════════════════════════════════════════════════
-    -- BLOQUE RLS: Filtrado de #Sumarigrama por permisos de usuario
-    -- ═══════════════════════════════════════════════════════════════
-    CREATE TABLE #Sumarigrama (
-        [Año]                     SMALLINT       NOT NULL,
-        [CodCentro]               VARCHAR (3)    NULL,
-        [CodDelegacion]           VARCHAR (3)    NULL,
-        [CodSubDirNegocioArea]    VARCHAR (3)    NULL,
-        [CodDDirNegocio]          VARCHAR (3)    NULL,
-        [CodSubDirGeneral]        VARCHAR (3)    NULL
-    );
-
-    DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-    FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-    WHERE Usuario = @pLoginUsuario
-
-    IF @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-    BEGIN
-        INSERT INTO #Sumarigrama (Año, CodCentro, CodDelegacion, CodSubDirNegocioArea, CodDDirNegocio, CodSubDirGeneral)
-        SELECT Año, CodCentro, CodDelegacion, CodSubDirNegocioArea, CodDDirNegocio, CodSubDirGeneral 
-        FROM dbo.Sumarigrama WITH (NOLOCK) 
-        WHERE Año = @pAño
-    END
-    ELSE
-    BEGIN
-        INSERT INTO #Sumarigrama (Año, CodCentro, CodDelegacion, CodSubDirNegocioArea, CodDDirNegocio, CodSubDirGeneral)
-        SELECT S.Año, S.CodCentro, S.CodDelegacion, S.CodSubDirNegocioArea, S.CodDDirNegocio, S.CodSubDirGeneral
-        FROM dbo.Sumarigrama S WITH (NOLOCK)
-        WHERE S.Año = @pAño
-          AND (
-              (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-              (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-              (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-              (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-              (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-          )
-    END
-    -- ═══════════════════════════════════════════════════════════════
 
     -- Tabla acumuladora de contratación por cliente y desglose
     DECLARE @vContratacionClientes TABLE (
@@ -79,7 +33,7 @@ BEGIN
             CodCentro,
             AñoAdjudicacion
     INTO    #tmpOfertas_Desglose
-    FROM    dbo.vwOfertas_AsociadasInversion_Pais_Cliente_Desglose WITH (NOLOCK)
+    FROM    dbo.vwOfertas_AsociadasInversion_Pais_Cliente_Desglose
     WHERE   AñoAdjudicacion IN (@pAño, @pAño - 1)
       AND   MesAdjudicacion <= @pMes
 
@@ -94,7 +48,7 @@ BEGIN
     SELECT  o.Mercado, o.Pais, o.AsociadaInversion, o.NomAgrupado, o.NomAgrupadoDesglose,
             sum(o.ImporteContratado), 0
     FROM    #tmpOfertas_Desglose AS o
-            INNER JOIN #Sumarigrama AS s ON o.CodCentro = s.CodCentro
+            INNER JOIN dbo.Sumarigrama AS s ON o.CodCentro = s.CodCentro
     WHERE   o.AñoAdjudicacion = @pAño
     GROUP BY o.Mercado, o.Pais, o.AsociadaInversion, o.NomAgrupado, o.NomAgrupadoDesglose
 
@@ -105,7 +59,7 @@ BEGIN
     SELECT  o.Mercado, o.Pais, o.AsociadaInversion, o.NomAgrupado, o.NomAgrupadoDesglose,
             0, sum(o.ImporteContratado)
     FROM    #tmpOfertas_Desglose AS o
-            INNER JOIN #Sumarigrama AS s ON o.CodCentro = s.CodCentro
+            INNER JOIN dbo.Sumarigrama AS s ON o.CodCentro = s.CodCentro
     WHERE   o.AñoAdjudicacion = @pAño - 1
     GROUP BY o.Mercado, o.Pais, o.AsociadaInversion, o.NomAgrupado, o.NomAgrupadoDesglose
 
@@ -127,7 +81,7 @@ BEGIN
             CodCentro,
             AñoAdjudicacion
     INTO    #tmpRegularizaciones_Desglose
-    FROM    dbo.vwRegularizaciones_AsociadasInversion_Pais_Cliente_Desglose WITH (NOLOCK)
+    FROM    dbo.vwRegularizaciones_AsociadasInversion_Pais_Cliente_Desglose
     WHERE   AñoAdjudicacion IN (@pAño, @pAño - 1)
       AND   MesAdjudicacion <= @pMes
 
@@ -142,7 +96,7 @@ BEGIN
     SELECT  r.Mercado, r.Pais, r.AsociadaInversion, r.NomAgrupado, r.NomAgrupadoDesglose,
             sum(r.ImporteContratado), 0
     FROM    #tmpRegularizaciones_Desglose AS r
-            INNER JOIN #Sumarigrama AS s ON r.CodCentro = s.CodCentro
+            INNER JOIN dbo.Sumarigrama AS s ON r.CodCentro = s.CodCentro
     WHERE   r.AñoAdjudicacion = @pAño
     GROUP BY r.Mercado, r.Pais, r.AsociadaInversion, r.NomAgrupado, r.NomAgrupadoDesglose
 
@@ -153,7 +107,7 @@ BEGIN
     SELECT  r.Mercado, r.Pais, r.AsociadaInversion, r.NomAgrupado, r.NomAgrupadoDesglose,
             0, sum(r.ImporteContratado)
     FROM    #tmpRegularizaciones_Desglose AS r
-            INNER JOIN #Sumarigrama AS s ON r.CodCentro = s.CodCentro
+            INNER JOIN dbo.Sumarigrama AS s ON r.CodCentro = s.CodCentro
     WHERE   r.AñoAdjudicacion = @pAño - 1
     GROUP BY r.Mercado, r.Pais, r.AsociadaInversion, r.NomAgrupado, r.NomAgrupadoDesglose
 
@@ -169,11 +123,11 @@ BEGIN
          ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoanterior)
     SELECT  dbo.Provincias.Pais, NMPRO, JVAYNB, NomAgrupado, NomAgrupadoDesglose,
             sum(ImporteContratado), 0
-    FROM    dbo.OfertasSQL WITH (NOLOCK)
-            INNER JOIN dbo.Provincias WITH (NOLOCK) ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO
-            INNER JOIN #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
-            LEFT  JOIN dbo.ClientesSQL WITH (NOLOCK) ON dbo.OfertasSQL.CodCliente = dbo.ClientesSQL.CodCliente
-            LEFT  JOIN dbo.OfertaAsociadaInversion WITH (NOLOCK) ON dbo.OfertasSQL.CodOferta = dbo.OfertaAsociadaInversion.JVAYNB
+    FROM    dbo.OfertasSQL
+            INNER JOIN dbo.Provincias              ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO
+            INNER JOIN dbo.Sumarigrama             ON dbo.OfertasSQL.CodCentro = dbo.Sumarigrama.CodCentro
+            LEFT  JOIN dbo.ClientesSQL             ON dbo.OfertasSQL.CodCliente = dbo.ClientesSQL.CodCliente
+            LEFT  JOIN dbo.OfertaAsociadaInversion ON dbo.OfertasSQL.CodOferta = dbo.OfertaAsociadaInversion.JVAYNB
     WHERE   AñoAdjudicacion      = @pAño
       AND   month(FAdjudicacion) <= @pMes
       AND   VisibleDesglose       = 1
@@ -185,11 +139,10 @@ BEGIN
          ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoanterior)
     SELECT  dbo.Provincias.Pais, NMPRO, JVAYNB, NomAgrupado, NomAgrupadoDesglose,
             0, sum(ImporteContratado)
-    FROM    dbo.OfertasSQL WITH (NOLOCK)
-            INNER JOIN dbo.Provincias WITH (NOLOCK) ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO
-            INNER JOIN #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
-            LEFT  JOIN dbo.ClientesSQL WITH (NOLOCK) ON dbo.OfertasSQL.CodCliente = dbo.ClientesSQL.CodCliente
-            LEFT  JOIN dbo.OfertaAsociadaInversion WITH (NOLOCK) ON dbo.OfertasSQL.CodOferta = dbo.OfertaAsociadaInversion.JVAYNB
+    FROM    dbo.OfertasSQL
+            INNER JOIN dbo.Provincias              ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO
+            LEFT  JOIN dbo.ClientesSQL             ON dbo.OfertasSQL.CodCliente = dbo.ClientesSQL.CodCliente
+            LEFT  JOIN dbo.OfertaAsociadaInversion ON dbo.OfertasSQL.CodOferta = dbo.OfertaAsociadaInversion.JVAYNB
     WHERE   AñoAdjudicacion      = @pAño - 1
       AND   month(FAdjudicacion) <= @pMes
       AND   VisibleDesglose       = 1
@@ -234,7 +187,5 @@ BEGIN
     FROM    @vContratacionClientes_Agrupado
     WHERE   Mercado = @pMercado
     GROUP BY Mercado, Pais, dbo.fnAI(AsociadaInversion), Cliente, ClienteDesglose
-
-    DROP TABLE #Sumarigrama;
 
 END

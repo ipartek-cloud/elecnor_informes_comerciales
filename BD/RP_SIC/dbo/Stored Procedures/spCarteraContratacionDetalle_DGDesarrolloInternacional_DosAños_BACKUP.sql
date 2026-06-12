@@ -1,44 +1,21 @@
-CREATE PROCEDURE [dbo].[spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños]
+CREATE PROCEDURE [dbo].[spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños_BACKUP]
 	@pAño int,
 	@pMes int,
 	@pTodoInternacional int=1, -- =1 => todo / <>1 => Internacional
 	@pLimiteImporte float =10000,
 	@pLimitePaises int = 1000,
-	@pInforme as varchar(10) = '9.1',
-	@pLoginUsuario nvarchar(100) = NULL
+	@pInforme as varchar(10) = '9.1'
 	AS
 BEGIN
 
 CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
 	INSERT INTO #Ofertas
-	EXEC [spContratacion_PorOferta] @pAño, @pMes, @pLoginUsuario
+	EXEC [spContratacion_PorOferta] @pAño, @pMes
 
 --CREATE TABLE #OfertasAñoAnterior (CodOferta varchar(10), ImporteContratadoAñoAnterior float)
  	DECLARE @AñoAnterior int = @pAño - 1
 -- 	INSERT INTO #OfertasAñoAnterior
--- 	EXEC [spContratacion_PorOferta] @AñoAnterior, @pMes, @pLoginUsuario
-
-	-- ═══════════════════════════════════════════════════════════════
-	-- BLOQUE RLS: Filtrado de #SumarigramaHistorico por permisos de usuario
-	-- ═══════════════════════════════════════════════════════════════
-	DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-	SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-	FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-	WHERE Usuario = @pLoginUsuario
-
-	SELECT S.* INTO #SumarigramaHistorico 
-	FROM dbo.SumarigramaHistorico S WITH (NOLOCK)
-	WHERE S.Año IN (@pAño, @AñoAnterior)
-	  AND (
-		  @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-		  OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
-		  OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
-		  OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
-		  OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
-		  OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-	  )
-	-- ═══════════════════════════════════════════════════════════════
+-- 	EXEC [spContratacion_PorOferta] @AñoAnterior, @pMes
 
 	DECLARE @Sql as varchar(max)
 	CREATE TABLE #CarteraPorPais (Pais varchar(100), ImporteCarteraPais float, ImporteCarteraPaisAñoAnterior float)
@@ -52,7 +29,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
 				, Sum(ImporteEUR) AS SumaDeImporteEUR
 				, Sum(ISNULL(ImporteContratado, 0)) AS SumaDeImporteContratado
 		FROM CarterasContratacionSQL C
-				LEFT JOIN #SumarigramaHistorico S ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
+				LEFT JOIN SumarigramaHistorico S ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
 				LEFT JOIN #Ofertas O ON C.CodOferta=O.CodOferta
 		WHERE C.AnioInforme = ' + CAST(@pAño as varchar(4)) + ' AND C.MesInforme = ' + CAST(@pMes as varchar(2)) + '
 			AND (' + CAST(@pTodoInternacional as varchar(1)) + '=1 OR Pais<>''Nacional'') -- si @pTodoInternacional=1 saca todo / si no, solo lo que no es Nacional (Internacional)
@@ -76,7 +53,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                              S.CodDDirNegocio,
                              SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
                        FROM CarterasContratacionSQL AS a
-                                INNER JOIN #SumarigramaHistorico S
+                                INNER JOIN SumarigramaHistorico S
                                            ON a.CentroChar = S.CodCentro
                                                AND a.AnioInforme = S.Año
                        WHERE a.AnioInforme = ' + CAST(@pAño as varchar(4)) + '
@@ -91,7 +68,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                                    S.CodDDirNegocio,
                                    ISNULL(SUM(ISNULL(a.ImporteEUR, 0)), 0) AS TotAño
                                 FROM CarterasContratacionSQL AS a
-                                         INNER JOIN #SumarigramaHistorico S
+                                         INNER JOIN SumarigramaHistorico S
                                                     ON a.CentroChar = S.CodCentro
                                                         AND a.AnioInforme = S.Año
                                 WHERE a.AnioInforme = ' + CAST(@AñoAnterior as varchar(4)) + '
@@ -130,7 +107,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
 				, Sum(ISNULL(ImporteContratado, 0)) AS ImporteContratadoOferta
 		FROM #CarteraPorPais P
 				LEFT JOIN CarterasContratacionSQL C ON P.Pais=C.Pais
-				LEFT JOIN #SumarigramaHistorico S ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
+				LEFT JOIN Sumarigrama S ON C.CentroChar = S.CodCentro AND C.AnioInforme = S.Año
 				LEFT JOIN #Ofertas O ON C.CodOferta=O.CodOferta
 		WHERE (C.AnioInforme IS NULL OR (C.AnioInforme = ' + CAST(@pAño as varchar(4)) + ' AND C.MesInforme = ' + CAST(@pMes as varchar(2)) + '))
 			AND (' + CAST(@pTodoInternacional as varchar(1)) + '=1 OR C.Pais<>''Nacional'') -- si @pTodoInternacional=1 saca todo / si no, solo lo que no es Nacional (Internacional)
@@ -177,7 +154,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                            a.NomCliente,
                            SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
                     FROM CarterasContratacionSQL AS a
-                             INNER JOIN #SumarigramaHistorico S
+                             INNER JOIN SumarigramaHistorico S
                                         ON a.CentroChar = S.CodCentro
                                             AND a.AnioInforme = S.Año
                     WHERE a.AnioInforme = ' + CAST(@pAño as varchar(4)) + '
@@ -200,7 +177,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                            a.NomCliente,
                            SUM(ISNULL(a.ImporteEUR, 0)) AS TotAñoAnterior
                     FROM CarterasContratacionSQL AS a
-                             INNER JOIN #SumarigramaHistorico S
+                             INNER JOIN SumarigramaHistorico S
                                         ON a.CentroChar = S.CodCentro
                                             AND a.AnioInforme = S.Año
                     WHERE a.AnioInforme = ' + CAST(@AñoAnterior as varchar(4)) + '
@@ -247,7 +224,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                              S.CodDDirNegocio,
                              SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
                        FROM CarterasContratacionSQL AS a
-                                INNER JOIN #SumarigramaHistorico S
+                                INNER JOIN SumarigramaHistorico S
                                            ON a.CentroChar = S.CodCentro
                                                AND a.AnioInforme = S.Año
                        WHERE a.AnioInforme = ' + CAST(@pAño as varchar(4)) + '
@@ -262,7 +239,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                                    S.CodDDirNegocio,
                                    ISNULL(SUM(ISNULL(a.ImporteEUR, 0)), 0) AS TotAño
                                 FROM CarterasContratacionSQL AS a
-                                         INNER JOIN #SumarigramaHistorico S
+                                         INNER JOIN SumarigramaHistorico S
                                                     ON a.CentroChar = S.CodCentro
                                                         AND a.AnioInforme = S.Año
                                 WHERE a.AnioInforme = ' + CAST(@AñoAnterior as varchar(4)) + '
@@ -292,7 +269,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                              S.CodDDirNegocio,
                              SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
                        FROM CarterasContratacionSQL AS a
-                                INNER JOIN #SumarigramaHistorico S
+                                INNER JOIN SumarigramaHistorico S
                                            ON a.CentroChar = S.CodCentro
                                                AND a.AnioInforme = S.Año
                        WHERE a.AnioInforme = ' + CAST(@pAño as varchar(4)) + '
@@ -307,7 +284,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                                    S.CodDDirNegocio,
                                    ISNULL(SUM(ISNULL(a.ImporteEUR, 0)), 0) AS TotAño
                                 FROM CarterasContratacionSQL AS a
-                                         INNER JOIN #SumarigramaHistorico S
+                                         INNER JOIN SumarigramaHistorico S
                                                     ON a.CentroChar = S.CodCentro
                                                         AND a.AnioInforme = S.Año
                                 WHERE a.AnioInforme = ' + CAST(@AñoAnterior as varchar(4)) + '
@@ -340,7 +317,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                                      S.CodDDirNegocio,
                                      SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
                               FROM CarterasContratacionSQL AS a
-                                       INNER JOIN #SumarigramaHistorico S
+                                       INNER JOIN SumarigramaHistorico S
                                                   ON a.CentroChar = S.CodCentro
                                                       AND a.AnioInforme = S.Año
                               WHERE a.AnioInforme = ' + CAST(@pAño as varchar(4)) + '
@@ -355,7 +332,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                                            S.CodDDirNegocio,
                                            ISNULL(SUM(ISNULL(a.ImporteEUR, 0)), 0) AS TotAño
                                         FROM CarterasContratacionSQL AS a
-                                                 INNER JOIN #SumarigramaHistorico S
+                                                 INNER JOIN SumarigramaHistorico S
                                                             ON a.CentroChar = S.CodCentro
                                                                 AND a.AnioInforme = S.Año
                                         WHERE a.AnioInforme = ' + CAST(@AñoAnterior as varchar(4)) + '
@@ -429,7 +406,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                            a.NomCliente,
                            SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
                     FROM CarterasContratacionSQL AS a
-                             INNER JOIN #SumarigramaHistorico S
+                             INNER JOIN SumarigramaHistorico S
                                         ON a.CentroChar = S.CodCentro
                                             AND a.AnioInforme = S.Año
                     WHERE a.AnioInforme = ' + CAST(@pAño as varchar(4)) + '
@@ -453,7 +430,7 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
                            a.NomCliente,
                            SUM(ISNULL(a.ImporteEUR, 0)) AS TotAñoAnterior
                     FROM CarterasContratacionSQL AS a
-                             INNER JOIN #SumarigramaHistorico S
+                             INNER JOIN SumarigramaHistorico S
                                         ON a.CentroChar = S.CodCentro
                                             AND a.AnioInforme = S.Año
                     WHERE a.AnioInforme = ' + CAST(@AñoAnterior as varchar(4)) + '
@@ -492,6 +469,4 @@ CREATE TABLE #Ofertas (CodOferta varchar(10), ImporteContratado float)
 		EXEC (@Sql)
 
 	END
-
-	DROP TABLE #SumarigramaHistorico;
 END

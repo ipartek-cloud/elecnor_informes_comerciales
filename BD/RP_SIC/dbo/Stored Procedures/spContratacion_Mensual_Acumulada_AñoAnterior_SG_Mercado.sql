@@ -189,7 +189,7 @@ BEGIN
 	
 	SELECT Pais,C.CodCentro,
 			--S.CodDDirNegocio,   
-			Sum(ImporteContratado) as ImporteContratado,Sum(ImporteContratadoAcumulado) as ImporteContratadoAcumulado, sum(ImporteContratadoAcumuladoAñoAnterior) as ImporteContratadoAcumuladoAñoAnterior 	
+			Sum(ImporteContratado) as ImporteContratado,Sum(ImporteContratadoAcumulado) as ImporteContratadoAcumulado, sum(ImporteContratadoAcumuladoAñoAnterior) as ImporteContratadoAcumuladoAñoAnterior, @pAño AS Año, @pLoginUsuario AS LoginUsuario 	
 	FROM @vContratacion	C
 		--INNER JOIN Sumarigrama S ON C.CodCentro=S.CodCentro
 	GROUP BY Pais,C.CodCentro--,S.CodDDirNegocio

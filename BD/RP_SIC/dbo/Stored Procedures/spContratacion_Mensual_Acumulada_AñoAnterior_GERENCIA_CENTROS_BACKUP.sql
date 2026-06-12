@@ -1,52 +1,8 @@
-CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS] 		
+CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS_BACKUP] 		
 	@pAño int,
-	@pMes int,
-	@pLoginUsuario nvarchar(100) = NULL
+	@pMes int
 	AS
 BEGIN
-	SET NOCOUNT ON;
-
-	-- ═══════════════════════════════════════════════════════════════
-	-- BLOQUE RLS: Filtrado de #Sumarigrama por permisos de usuario
-	-- ═══════════════════════════════════════════════════════════════
-	DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-	SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-	FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-	WHERE Usuario = @pLoginUsuario
-
-	CREATE TABLE #Sumarigrama (
-		[Año] SMALLINT NOT NULL,
-		[CodCentro] VARCHAR (3) NULL,
-		[CodSubDirGeneral] VARCHAR (3) NULL,
-		[CodDDirNegocio] VARCHAR (3) NULL,
-		[CodSubDirNegocioArea] VARCHAR (3) NULL,
-		[CodDelegacion] VARCHAR (3) NULL
-	);
-
-	IF @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-	BEGIN
-		-- Visión global total para DG o si no se provee login
-		INSERT INTO #Sumarigrama (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion)
-		SELECT Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion
-		FROM dbo.Sumarigrama WHERE Año = @pAño
-	END
-	ELSE
-	BEGIN
-		-- Visión restringida (RLS) según jerarquía
-		INSERT INTO #Sumarigrama (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion)
-		SELECT S.Año, S.CodCentro, S.CodSubDirGeneral, S.CodDDirNegocio, S.CodSubDirNegocioArea, S.CodDelegacion
-		FROM dbo.Sumarigrama S 
-		WHERE S.Año = @pAño
-		  AND (
-			  (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-			  (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-			  (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-			  (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-			  (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-		  )
-	END
-	-- ═══════════════════════════════════════════════════════════════
 
 	/*
 ---------------------------------------------------------------- desde AQUÍ
@@ -128,8 +84,8 @@ BEGIN
 			sum(dbo.fnImporteContratacion_MesActual(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratado,
 			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
 			0
-	FROM #Sumarigrama INNER JOIN
-		 #vwWEB_OFERTAS_CA_Local vwOfertas ON #Sumarigrama.CodCentro = vwOfertas.CodCentro 		
+	FROM dbo.Sumarigrama INNER JOIN
+		 #vwWEB_OFERTAS_CA_Local vwOfertas ON dbo.Sumarigrama.CodCentro = vwOfertas.CodCentro 		
 	WHERE  (year(FAdjudicacion)=@pAño ) AND month(FAdjudicacion) <= @pMes 
 	GROUP BY vwOfertas.CodCentro	
 	
@@ -143,36 +99,31 @@ BEGIN
 							FPresentacion, PresupuestoVenta, FAdjudicacion, AñoAdjudicacion, MesAdjudicacion, Adjudicada, ImporteContratado,Pais
 				  FROM     #vwRegularizaciones_Local vwRegularizaciones
 				  WHERE    (AñoAdjudicacion = @pAño) AND (MesAdjudicacion <= @pMes) ) AS vwRegularizacionesQ INNER JOIN
-							 #Sumarigrama ON vwRegularizacionesQ.CodCentro = #Sumarigrama.CodCentro
+							 dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
 	GROUP BY vwRegularizacionesQ.CodCentro
 	
 	-- OFERTASsql
 	INSERT INTO @vContratacion(CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
-	SELECT  o.CodCentro,
-			sum(dbo.fnImporteContratacion_MesActual(o.FAdjudicacion,@pAño,@pMes,o.ImporteContratado)) as ImporteContratado,
-			sum(dbo.fnImporteContratacion_Acumulado(o.FAdjudicacion,@pAño,@pMes,o.ImporteContratado)) as ImporteContratadoAcumulado,
+	SELECT  CodCentro,
+			sum(dbo.fnImporteContratacion_MesActual(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratado,
+			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
 			0 
-	FROM    dbo.OfertasSQL o
-	INNER JOIN #Sumarigrama s ON o.CodCentro = s.CodCentro
-	WHERE  (year(o.FAdjudicacion)=@pAño) AND month(o.FAdjudicacion) <= @pMes 
-	GROUP BY o.CodCentro	
+	FROM    dbo.OfertasSQL	
+	WHERE  (year(FAdjudicacion)=@pAño) AND month(FAdjudicacion) <= @pMes 
+	GROUP BY CodCentro	
 	
 	-- CONTRATACION AÑO ANTERIOR de HISTORICO
 	INSERT INTO @vContratacion(CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
-	SELECT h.CodCentro,0, 0,sum(h.Importe) 
-	FROM dbo.HistoricoContratacionGrupoSQL h
-	INNER JOIN #Sumarigrama s ON h.CodCentro = s.CodCentro
-	WHERE  h.Año=@pAño-1 AND h.Mes <= @pMes 
-	GROUP BY h.CodCentro
-	
-	SELECT cg.NombreGerente, cg.CodCentro, sum(isnull(c.ImporteContratado,0)) as ImporteContratado, Sum(isnull(c.ImporteContratadoAcumulado,0)) as ImporteContratadoAcumulado, sum(isnull(c.ImporteContratadoAcumuladoAñoAnterior,0)) as ImporteContratadoAcumuladoAñoAnterior, @pAño AS Año, @pLoginUsuario AS LoginUsuario 
-	FROM dbo.CentrosGerentesSQL cg
-	LEFT JOIN #Sumarigrama s ON cg.CodCentro = s.CodCentro
-	LEFT JOIN @vContratacion c ON c.CodCentro = cg.CodCentro AND cg.Año = @pAño
-	WHERE (@vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL OR s.CodCentro IS NOT NULL)
-	GROUP BY cg.NombreGerente, cg.CodCentro
-	ORDER BY cg.CodCentro;
+	SELECT HistoricoContratacionGrupoSQL.CodCentro,0, 0,sum(Importe) 
+	FROM dbo.HistoricoContratacionGrupoSQL 
+	WHERE  Año=@pAño-1 AND Mes <= @pMes 
+	GROUP BY CodCentro
 
-	DROP TABLE #Sumarigrama;
+	
+	SELECT NombreGerente,CentrosGerentesSQL.CodCentro, sum(isnull(ImporteContratado,0)) as ImporteContratado,Sum(isnull(ImporteContratadoAcumulado,0)) as ImporteContratadoAcumulado, sum(isnull(ImporteContratadoAcumuladoAñoAnterior,0)) as ImporteContratadoAcumuladoAñoAnterior 
+	FROM CentrosGerentesSQL	LEFT JOIN @vContratacion ON
+		[@vContratacion].CodCentro=CentrosGerentesSQL.CodCentro	AND CentrosGerentesSQL.Año=@pAño
+	GROUP BY NombreGerente,CentrosGerentesSQL.CodCentro
+	ORDER BY CentrosGerentesSQL.CodCentro
 		
 END

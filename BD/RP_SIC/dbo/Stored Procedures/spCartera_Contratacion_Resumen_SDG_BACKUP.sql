@@ -1,35 +1,28 @@
-CREATE PROCEDURE [dbo].[spCartera_Contratacion_Resumen_SDG](
+CREATE PROCEDURE [dbo].[spCartera_Contratacion_Resumen_SDG_BACKUP](
     @Año AS INT = 2026,
     @Mes AS INT = 12,
-    @TodoInt as INT = 0, -- =1 Todo / <>1 Internacional
-    @pLoginUsuario nvarchar(100) = NULL
+    @TodoInt as INT = 0 -- =1 Todo / <>1 Internacional
 )
 AS
 BEGIN
-    -- ═══════════════════════════════════════════════════════════════
-    -- BLOQUE RLS: Filtrado de #SumarigramaHistorico por permisos de usuario
-    -- ═══════════════════════════════════════════════════════════════
-    DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
+    --select * from SumarigramaHistorico where Año=2026
+--
+-- SELECT DISTINCT Año,
+--                 CodDirGeneral,
+--                 NombreDirGeneral,
+--                 CodSubDirGeneral,
+--                 NombreSubDirGeneral,
+--                 CodDDirNegocio,
+--                 NombreDirNegocio
+-- FROM SumarigramaHistorico
+--
 
-    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-    FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-    WHERE Usuario = @pLoginUsuario
-
-    SELECT S.* INTO #SumarigramaHistorico 
-    FROM dbo.SumarigramaHistorico S WITH (NOLOCK)
-    WHERE S.Año IN (@Año, @Año - 1)
-      AND (
-          @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-          OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
-          OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
-          OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
-          OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
-          OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-      )
-    -- ═══════════════════════════════════════════════════════════════
-
+print '11'
     SELECT @Año                 AS       Año,
            @Mes                 as       Mes,
+--       Base.Año,
+--       Base.CodDirGeneral,
+--       Base.NombreDirGeneral,
            Base.CodSubDirGeneral,
            Base.NombreSubDirGeneral,
            Base.CodDDirNegocio,
@@ -37,7 +30,7 @@ BEGIN
            SUM(ISNULL(DatosA_1.TotAño, 0)) AS       TotAñoAnterior,
            SUM(ISNULL(DatosA.TotAño, 0))   AS       TotAño
     FROM (
-             -- Base: todas las SubDirGenerales distintas (independiente de que haya datos)
+             -- Base: todas las SubDirGenerales distintas (independiente de que haya datos en 2026)
              SELECT DISTINCT Año,
                              CodDirGeneral,
                              NombreDirGeneral,
@@ -45,18 +38,18 @@ BEGIN
                              NombreSubDirGeneral,
                              CodDDirNegocio,
                              NombreDirNegocio
-             FROM #SumarigramaHistorico
-         ) Base
+             FROM SumarigramaHistorico
+             WHERE Año IN (@Año, @Año - 1)) Base
 
              LEFT JOIN (
-        -- Año actual - puede estar vacío
+        -- Año actual (2026) - puede estar vacío
         SELECT a.AnioInforme,
                S.CodDirGeneral,
                S.CodSubDirGeneral,
                S.CodDDirNegocio,
                SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
-        FROM CarterasContratacionSQL AS a WITH (NOLOCK)
-                 INNER JOIN #SumarigramaHistorico S WITH (NOLOCK)
+        FROM CarterasContratacionSQL AS a
+                 INNER JOIN SumarigramaHistorico S
                             ON a.CentroChar = S.CodCentro
                                 AND a.AnioInforme = S.Año
         WHERE a.AnioInforme = @Año
@@ -68,14 +61,14 @@ BEGIN
                           Base.CodDDirNegocio = DatosA.CodDDirNegocio
 
              LEFT JOIN (
-        -- Año anterior
+        -- Año anterior (2025)
         SELECT a.AnioInforme,
                S.CodDirGeneral,
                S.CodSubDirGeneral,
                S.CodDDirNegocio,
                SUM(ISNULL(a.ImporteEUR, 0)) AS TotAño
-        FROM CarterasContratacionSQL AS a WITH (NOLOCK)
-                 INNER JOIN #SumarigramaHistorico S WITH (NOLOCK)
+        FROM CarterasContratacionSQL AS a
+                 INNER JOIN SumarigramaHistorico S
                             ON a.CentroChar = S.CodCentro
                                 AND a.AnioInforme = S.Año
         WHERE a.AnioInforme = @Año - 1
@@ -86,15 +79,19 @@ BEGIN
                           Base.CodSubDirGeneral = DatosA_1.CodSubDirGeneral AND
                           Base.CodDDirNegocio = DatosA_1.CodDDirNegocio
 
-    GROUP BY Base.CodSubDirGeneral,
+    GROUP BY --Base.Año,
+             --Base.CodDirGeneral,
+             --Base.NombreDirGeneral,
+             Base.CodSubDirGeneral,
              Base.NombreSubDirGeneral,
              Base.CodDDirNegocio,
              Base.NombreDirNegocio
 
-    ORDER BY Base.CodSubDirGeneral,
+    ORDER BY --Base.Año,
+--         Base.CodDirGeneral,
+             --Base.NombreDirGeneral,
+             Base.CodSubDirGeneral,
              Base.NombreSubDirGeneral,
              Base.CodDDirNegocio,
              Base.NombreDirNegocio
-
-    DROP TABLE #SumarigramaHistorico;
-END
+end

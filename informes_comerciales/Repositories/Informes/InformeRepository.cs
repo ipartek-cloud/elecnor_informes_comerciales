@@ -813,7 +813,7 @@ public class InformeRepository
                                     SELECT
                                          '' AS Meses,
                                          REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
-                                         S.NombreDirNegocio AS NombreDirNegocio_OK,
+                                         rpt.NombreDirNegocio_OK,
                                          REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
                                          SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
                                          CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
@@ -841,7 +841,7 @@ public class InformeRepository
                                          )
                                      GROUP BY
                                          rpt.NombreCliente_OK,
-                                         S.NombreDirNegocio,
+                                         rpt.NombreDirNegocio_OK,
                                          rpt.DescripcionOferta_OK,
                                          oai.JVAYNB
                                      HAVING
@@ -880,7 +880,7 @@ public class InformeRepository
                                          m.Nombre_Mes AS Meses,
                                          REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
                                          REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
-                                         S.NombreDirNegocio AS NombreDirNegocio_OK,
+                                         rpt.NombreDirNegocio_OK,
                                          SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
                                          CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI
                                      FROM
@@ -911,7 +911,7 @@ public class InformeRepository
                                          m.Nombre_Mes,
                                          rpt.NombreCliente_OK,
                                          rpt.DescripcionOferta_OK,
-                                         S.NombreDirNegocio,
+                                         rpt.NombreDirNegocio_OK,
                                          oai.JVAYNB
                                      HAVING
                                          SUM(rpt.ImporteContratado_OK) >= @Importe
@@ -952,7 +952,7 @@ public class InformeRepository
                                         REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
                                         SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK,
                                         CASE WHEN oai.JVAYNB IS NOT NULL THEN 'AI' ELSE '' END AS AI,
-                                        S.NombreDirNegocio AS NombreDirNegocio_OK
+                                        rpt.NombreDirNegocio_OK
                                     FROM
                                         rptPrincipalesObras rpt WITH (NOLOCK)
                                     INNER JOIN
@@ -979,7 +979,7 @@ public class InformeRepository
                                         rpt.NombreCliente_OK,
                                         rpt.DescripcionOferta_OK,
                                         oai.JVAYNB,
-                                        S.NombreDirNegocio
+                                        rpt.NombreDirNegocio_OK
                                     HAVING
                                         SUM(rpt.ImporteContratado_OK) >= @Importe
                                         OR SUM(rpt.ImporteContratado_OK) <= -@Importe";
@@ -2036,12 +2036,12 @@ public class InformeRepository
 
     // Informe: Cartera Contratación Detalle Organización Países
     public async Task<List<CarteraContratacionDetalleOrgPaisesPoco>> ObtenerCarteraContratacionDetalleOrgPaisesAsync(
-        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
+        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe, string loginUsuario)
     {
-        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
+        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe, @LoginUsuario";
 
         var parametros = new { Anio = anio, Mes = mes, TodoInternacional = todoInternacional, 
-                               LimiteImporte = limiteImporte, LimitePaises = limitePaises, Informe = informe};
+                               LimiteImporte = limiteImporte, LimitePaises = limitePaises, Informe = informe, LoginUsuario = loginUsuario};
 
         var datos = (await _connection.QueryAsync<CarteraContratacionDetalleOrgPaisesPoco>(sqlExec, parametros, commandTimeout: 600)).ToList();
 
@@ -2057,9 +2057,9 @@ public class InformeRepository
 
     // Informe: Cartera Contratación Detalle Países
     public async Task<List<CarteraContratacionDetallePaisesPoco>> ObtenerCarteraContratacionDetallePaisesAsync(
-        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe)
+        int anio, int mes, int todoInternacional, decimal limiteImporte, int limitePaises, string informe, string loginUsuario)
     {
-        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
+        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe, @LoginUsuario";
 
         var parametros = new
         {
@@ -2068,7 +2068,8 @@ public class InformeRepository
             TodoInternacional = todoInternacional,
             LimiteImporte = limiteImporte,
             LimitePaises = limitePaises,
-            Informe = informe
+            Informe = informe,
+            LoginUsuario = loginUsuario
         };
 
         var datos = (await _connection.QueryAsync<CarteraContratacionDetallePaisesPoco>(sqlExec, parametros, commandTimeout: 600)).ToList();
@@ -2085,15 +2086,16 @@ public class InformeRepository
         return datos.ToList();
     }
 
+    // Target: replace_file_content target
     // Informe: Cartera Contratación (Resumen SDG)
-    public async Task<List<CarteraContratacionResumenSDGPoco>> ObtenerCarteraContratacionResumenSDGAsync(int anio, int mes, int todoInt)
+    public async Task<List<CarteraContratacionResumenSDGPoco>> ObtenerCarteraContratacionResumenSDGAsync(int anio, int mes, int todoInt, string loginUsuario)
     {
-        const string sqlExec = "EXEC spCartera_Contratacion_Resumen_SDG @Anio, @Mes, @TodoInt";
+        const string sqlExec = "EXEC spCartera_Contratacion_Resumen_SDG @Anio, @Mes, @TodoInt, @LoginUsuario";
 
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
 
-        var parametros = new { Anio = anio, Mes = mes, TodoInt = todoInt };
+        var parametros = new { Anio = anio, Mes = mes, TodoInt = todoInt, LoginUsuario = loginUsuario };
 
         return (await conn.QueryAsync<CarteraContratacionResumenSDGPoco>( sqlExec, parametros, commandTimeout: 300)).ToList();
     }

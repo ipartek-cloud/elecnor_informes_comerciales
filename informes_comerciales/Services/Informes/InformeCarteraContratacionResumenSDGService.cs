@@ -20,9 +20,9 @@ public class InformeCarteraContratacionResumenSDGService
     /// Obtiene el informe de Cartera de Contratación (Resumen SDG).
     /// </summary>
     public async Task<CarteraContratacionResumenSDGResponseDto> ObtenerInformeAsync(
-        int anio, int mes, int todoInt)
+        int anio, int mes, int todoInt, string loginUsuario)
     {
-        var datosPlanos = await _repository.ObtenerCarteraContratacionResumenSDGAsync(anio, mes, todoInt);
+        var datosPlanos = await _repository.ObtenerCarteraContratacionResumenSDGAsync(anio, mes, todoInt, loginUsuario);
 
         var response = new CarteraContratacionResumenSDGResponseDto
         {

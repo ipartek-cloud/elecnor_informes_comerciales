@@ -1,62 +1,11 @@
-CREATE PROCEDURE [dbo].[spContratacion_NacIntTODO] 		
+CREATE PROCEDURE [dbo].[spContratacion_NacIntTODO_BACKUP] 		
 	@pAño int,
 	@pMes int,
-	@pNacInt varchar(1)='', -- N = nacional / I = Internacional / cualquier otra cosa TODO
-	@pLoginUsuario nvarchar(100) = NULL
+	@pNacInt varchar(1)='' -- N = nacional / I = Internacional / cualquier otra cosa TODO
 	AS
 BEGIN
 	SET NOCOUNT ON;
 	SET @pNacInt = ISNULL(@pNacInt,'')
-
-    -- ═══════════════════════════════════════════════════════════════
-    -- BLOQUE RLS: Filtrado de #Sumarigrama por permisos de usuario
-    -- ═══════════════════════════════════════════════════════════════
-    CREATE TABLE #Sumarigrama (
-        [Año]                     SMALLINT       NOT NULL,
-        [CodDirGeneral]           VARCHAR (3)    NULL,
-        [NombreDirGeneral]        NVARCHAR (100) NOT NULL,
-        [CodSubDirGeneral]        VARCHAR (3)    NULL,
-        [NombreSubDirGeneral]     NVARCHAR (100) NOT NULL,
-        [CodDDirNegocio]          VARCHAR (3)    NULL,
-        [NombreDirNegocio]        NVARCHAR (30)  NOT NULL,
-        [CodSubDirNegocioArea]    VARCHAR (3)    NULL,
-        [NombreSubDirNegocioArea] NVARCHAR (100) NOT NULL,
-        [CodDelegacion]           VARCHAR (3)    NULL,
-        [NombreDelegacion]        NVARCHAR (30)  NOT NULL,
-        [CodCentro]               VARCHAR (3)    NULL,
-        [NombreCentro]            NVARCHAR (30)  NOT NULL,
-        [OrdenSubDirGeneral]      INT            NOT NULL
-    );
-    CREATE CLUSTERED INDEX CX_TempSumarigrama ON #Sumarigrama ([Año], [CodCentro]);
-
-    DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-    FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-    WHERE Usuario = @pLoginUsuario
-
-    IF @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-    BEGIN
-        -- Visión global total para DG o si no se provee login
-        INSERT INTO #Sumarigrama
-        SELECT * FROM dbo.Sumarigrama WITH (NOLOCK) WHERE Año = @pAño
-    END
-    ELSE
-    BEGIN
-        -- Visión restringida (RLS) según jerarquía
-        INSERT INTO #Sumarigrama
-        SELECT S.* 
-        FROM dbo.Sumarigrama S WITH (NOLOCK)
-        WHERE S.Año = @pAño
-          AND (
-              (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-              (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-              (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-              (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-              (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-          )
-    END
-    -- ═══════════════════════════════════════════════════════════════
 
 --	DECLARE @vContratacionInternacional TABLE (CodProv varchar(2),Pais varchar(50),ImporteContratadoAcumulado float, ImporteContratadoAcumuladoAñoanterior float, Ajuste bit)
 	DECLARE @Sql as varchar(8000)
@@ -79,7 +28,7 @@ BEGIN
                     FROM Ofertas O
 	                        INNER JOIN Provincias P ON O.PROOF = P.CDPRO
 		           -- Paco 21/01/2026 porque no cuadraba lo que devolvía este SP con lo de spContratacion_DG_SDG_DN_SDNA, que está bien 
-                             INNER JOIN #Sumarigrama S ON S.CodCentro = O.CDCEN
+                             INNER JOIN Sumarigrama S ON S.CodCentro = O.CDCEN
 					'
 	IF @pNacInt='I'
 		SET @SqlFrom = @SqlFrom + 'WHERE P.Pais = ''Internacional'''
@@ -112,7 +61,7 @@ BEGIN
 	               '        INNER JOIN Regularizaciones R ON O.CDOFT = R.CDOFT
 							INNER JOIN Provincias P ON O.PROOF = P.CDPRO
 		           -- Paco 21/01/2026 porque no cuadraba lo que devolvía este SP con lo de spContratacion_DG_SDG_DN_SDNA, que está bien 
-	                        INNER JOIN #Sumarigrama S ON R.CDCEN = S.CodCentro --------------------
+	                        INNER JOIN Sumarigrama S ON R.CDCEN = S.CodCentro --------------------
 					  '
 	IF @pNacInt='I'
 		SET @SqlFrom = @SqlFrom + 'WHERE P.Pais = ''Internacional'''
@@ -147,7 +96,7 @@ BEGIN
 	SELECT CodProv,Provincias.NMPRO,sum(O.ImporteContratado) ,0,0
 	FROM OfertasSQL O INNER JOIN
 			 (' + @SqlFrom + ') Provincias ON O.CodProv = Provincias.CDPRO INNER JOIN
-                       #Sumarigrama S ON O.CodCentro = S.CodCentro
+                       Sumarigrama S ON O.CodCentro = S.CodCentro
 	WHERE  AñoAdjudicacion=' + STR(@pAño) + '  AND month(FAdjudicacion)<=' + STR(@pMes) + '
 	           -- Paco 21/01/2026 Comentada esta parte de la condición porque no cuadraba lo que devolvía este SP con lo de spContratacion_DG_SDG_DN_SDNA, que está bien 
 	           --AND Reparto=0
@@ -178,9 +127,7 @@ BEGIN
 	SELECT CodProv, Pais, 
 			SUM(ImporteContratadoAcumulado) ImporteContratadoAcumulado, 
 			SUM(ImporteContratadoAcumuladoAñoAnterior) ImporteContratadoAcumuladoAñoAnterior,
-			Ajuste,
-			@pAño AS Año,
-			@pLoginUsuario AS LoginUsuario
+			Ajuste
 	FROM (
 		SELECT CASE WHEN IsNUMERIC(CodProv)=1 THEN 'Nacional' ELSE 'Internacional' END NacInt,
 				CASE WHEN IsNUMERIC(CodProv)=1 THEN '00' ELSE CodProv END CodProv, 
@@ -191,7 +138,5 @@ BEGIN
 		GROUP BY CodProv,Pais,Ajuste
 		) q
 	GROUP BY CodProv,Pais,Ajuste
-
-	DROP TABLE #Sumarigrama;
 		
 END

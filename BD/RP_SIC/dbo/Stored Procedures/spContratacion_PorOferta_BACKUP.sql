@@ -1,11 +1,10 @@
-CREATE PROCEDURE [dbo].[spContratacion_PorOferta] 		
+CREATE PROCEDURE [dbo].[spContratacion_PorOferta_BACKUP] 		
 	@pAño int,
-	@pMes int,
-	@pLoginUsuario nvarchar(100) = NULL
+	@pMes int
 	AS
 BEGIN
 
-	--[spContratacion_PorOferta] 2024,12
+	--[spContratacion_PorOferta_BACKUP] 2024,12
 
 	/*
 ---------------------------------------------------------------- desde AQUÍ
@@ -79,9 +78,9 @@ BEGIN
 										-- Paco 2025-03-31 Para que tenga en cuenta la contratación a origen
 										-- WHERE (substr( digits(dec(19000000+REG.FECHAR,8,0)), 1, 4 ) = ' + CAST(@pAño as varchar(4)) + ' AND substr( digits(dec(19000000+REG.FECHAR,8,0)), 5, 2 ) <= ' + CAST(@pMes as varchar(2)) + ')
 										WHERE (
-													((substr( digits(dec(19000000+REG.FECHAR,8,0)), 1, 4 ) = ' + CAST(@pAño as varchar(4)) + ' AND substr( digits(dec(19000000+REG.FECHAR,8,0)), 5, 2 ) <= ' + CAST(@pMes as varchar(2)) + '))
+													((substr( digits(dec(19000000+REG.FECHAR,8,0)), 1, 4 ) = ' + CAST(@pAño as varchar(4)) + ' AND substr( digits(dec(19000000+FECHAR,8,0)), 5, 2 ) <= ' + CAST(@pMes as varchar(2)) + '))
 												OR
-													(substr( digits(dec(19000000+REG.FECHAR,8,0)), 1, 4 ) < ' + CAST(@pAño as varchar(4)) + ' )
+													(substr( digits(dec(19000000+FECHAR,8,0)), 1, 4 ) < ' + CAST(@pAño as varchar(4)) + ' )
 												)
 											-------------------------------------------------------------------------------------------------
 									'')'
@@ -93,27 +92,11 @@ BEGIN
 	
 ---------------------------------------------------------------- hasta AQUÍ
 
-	-- ═══════════════════════════════════════════════════════════════
-	-- BLOQUE RLS: Filtrado de #Sumarigrama por permisos de usuario
-	-- ═══════════════════════════════════════════════════════════════
-	DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
+--SELECT '#vwWEB_OFERTAS_CA_Local', * FROM #vwWEB_OFERTAS_CA_Local
+--SELECT '#vwRegularizaciones_Local', * FROM #vwRegularizaciones_Local
+--SELECT 'OfertasSQL', * FROM OfertasSQL
+--SELECT 'HistoricoContratacionGrupoSQL', * FROM HistoricoContratacionGrupoSQL
 
-	SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-	FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-	WHERE Usuario = @pLoginUsuario
-
-	SELECT S.* INTO #Sumarigrama 
-	FROM dbo.Sumarigrama S WITH (NOLOCK)
-	WHERE S.Año = @pAño
-	  AND (
-		  @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-		  OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
-		  OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
-		  OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
-		  OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
-		  OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-	  )
-	-- ═══════════════════════════════════════════════════════════════
 
 	DECLARE @vContratacionMensualInfraEstructuras TABLE (CodOferta varchar(10), CodSubDirGeneral int,NombreSubDirGeneral varchar(100),NombreDirNegocio varchar(30),NombreSubDirNegocioArea varchar(100), Pais varchar(50)
 			, ImporteContratado float,ImporteContratadoAcumulado float, ImporteContratadoAcumuladoAñoanterior float)
@@ -125,7 +108,7 @@ BEGIN
 			CodOferta
 			, CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Pais,0, sum(ImporteContratado) as ImporteContratado,0
 	FROM #vwWEB_OFERTAS_CA_Local vwOfertas 
-			INNER JOIN #Sumarigrama ON vwOfertas.CodCentro = #Sumarigrama.CodCentro 
+			INNER JOIN dbo.Sumarigrama ON vwOfertas.CodCentro = dbo.Sumarigrama.CodCentro 
 	-------------------------------------------------------------------------------------------------
 	-- Paco 2025-03-31 Para que tenga en cuenta la contratación a origen
 	-- WHERE AñoAdjudicacion=@pAño AND MesAdjudicacion <= @pMes
@@ -149,7 +132,7 @@ BEGIN
 				  WHERE (AñoAdjudicacion < @pAño) OR ((AñoAdjudicacion = @pAño) AND (MesAdjudicacion <= @pMes))
   				  -------------------------------------------------------------------------------------------------
 				  ) AS vwRegularizacionesQ INNER JOIN
-							 #Sumarigrama ON vwRegularizacionesQ.CodCentro = #Sumarigrama.CodCentro
+							 dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
 	GROUP BY CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Pais, CodOferta
 	ORDER BY CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Pais, CodOferta
 	
@@ -161,7 +144,7 @@ BEGIN
 			, CodSubDirGeneral,NombreSubDirGeneral, NombreDirNegocio,NombreSubDirNegocioArea, dbo.Provincias.Pais, 0, sum(dbo.OfertasSQL.ImporteContratado) as ImporteContratado,0
 	FROM         dbo.OfertasSQL INNER JOIN
                       dbo.Provincias ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO INNER JOIN
-                      #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
+                      dbo.Sumarigrama ON dbo.OfertasSQL.CodCentro = dbo.Sumarigrama.CodCentro
   	-------------------------------------------------------------------------------------------------
 	-- Paco 2025-03-31 Para que tenga en cuenta la contratación a origen
 	-- WHERE AñoAdjudicacion=@pAño AND month(FAdjudicacion) <= @pMes
@@ -178,8 +161,8 @@ BEGIN
 	SELECT --'HistoricoContratacionGrupoSQL', 
 			CodOferta
 			, CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Mercado,0, 0,sum(Importe) 
-	FROM #Sumarigrama INNER JOIN
-		 dbo.HistoricoContratacionGrupoSQL ON #Sumarigrama.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
+	FROM dbo.Sumarigrama INNER JOIN
+		 dbo.HistoricoContratacionGrupoSQL ON dbo.Sumarigrama.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
 	WHERE  dbo.HistoricoContratacionGrupoSQL.Año=@pAño-1 AND Mes <= @pMes 
 	GROUP BY CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Mercado, CodOferta
 	ORDER BY CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Mercado, CodOferta
@@ -192,5 +175,4 @@ BEGIN
 	GROUP BY CodOFerta-- , CodSubDirGeneral,NombreSubDirGeneral,NombreDirNegocio,NombreSubDirNegocioArea,Pais
 	ORDER BY CodOferta
 
-	DROP TABLE #Sumarigrama;
 END

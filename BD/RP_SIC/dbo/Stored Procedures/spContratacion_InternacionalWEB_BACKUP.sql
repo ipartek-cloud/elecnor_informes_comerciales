@@ -1,7 +1,6 @@
-CREATE PROCEDURE [dbo].[spContratacion_InternacionalWEB]
+CREATE PROCEDURE [dbo].[spContratacion_InternacionalWEB_BACKUP]
     @pAño INT,
-    @pMes INT,
-    @pLoginUsuario NVARCHAR(100) = NULL
+    @pMes INT
 AS
 BEGIN
     -- Informe de Contratación Internacional (uso exclusivo aplicación web).
@@ -9,56 +8,6 @@ BEGIN
     -- El filtro FECHAD/FECHAR se envía como literal al AS/400 (formato NUMERIC 1YYMMDD)
     -- para que el motor remoto filtre en origen antes de transferir datos.
     SET NOCOUNT ON;
-
-    -- ═══════════════════════════════════════════════════════════════
-    -- BLOQUE RLS: Filtrado de #Sumarigrama por permisos de usuario
-    -- ═══════════════════════════════════════════════════════════════
-    CREATE TABLE #Sumarigrama (
-        [Año]                     SMALLINT       NOT NULL,
-        [CodDirGeneral]           VARCHAR (3)    NULL,
-        [NombreDirGeneral]        NVARCHAR (100) NOT NULL,
-        [CodSubDirGeneral]        VARCHAR (3)    NULL,
-        [NombreSubDirGeneral]     NVARCHAR (100) NOT NULL,
-        [CodDDirNegocio]          VARCHAR (3)    NULL,
-        [NombreDirNegocio]        NVARCHAR (30)  NOT NULL,
-        [CodSubDirNegocioArea]    VARCHAR (3)    NULL,
-        [NombreSubDirNegocioArea] NVARCHAR (100) NOT NULL,
-        [CodDelegacion]           VARCHAR (3)    NULL,
-        [NombreDelegacion]        NVARCHAR (30)  NOT NULL,
-        [CodCentro]               VARCHAR (3)    NULL,
-        [NombreCentro]            NVARCHAR (30)  NOT NULL,
-        [OrdenSubDirGeneral]      INT            NOT NULL
-    );
-    CREATE CLUSTERED INDEX CX_TempSumarigrama ON #Sumarigrama ([Año], [CodCentro]);
-
-    DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-    SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-    FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-    WHERE Usuario = @pLoginUsuario
-
-    IF @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-    BEGIN
-        -- Visión global total para DG o si no se provee login
-        INSERT INTO #Sumarigrama
-        SELECT * FROM dbo.Sumarigrama WITH (NOLOCK) WHERE Año = @pAño
-    END
-    ELSE
-    BEGIN
-        -- Visión restringida (RLS) según jerarquía
-        INSERT INTO #Sumarigrama
-        SELECT S.* 
-        FROM dbo.Sumarigrama S WITH (NOLOCK)
-        WHERE S.Año = @pAño
-          AND (
-              (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-              (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-              (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-              (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-              (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-          )
-    END
-    -- ═══════════════════════════════════════════════════════════════
 
     -- Rango numérico para filtro en AS/400: 1YYMMDD (ej: 2025/mes3 → 1250101..1250331)
     DECLARE @YY       VARCHAR(2) = RIGHT('0' + CAST(@pAño % 100 AS VARCHAR(2)), 2);
@@ -95,7 +44,7 @@ BEGIN
               AND ADELE = ''''S''''
         '') AS of400
         INNER JOIN dbo.ProvinciasInternacional pi ON pi.CDPRO    = of400.PROOF
-        INNER JOIN #Sumarigrama                s  ON s.CodCentro = of400.CDCEN
+        INNER JOIN dbo.Sumarigrama             s  ON s.CodCentro = of400.CDCEN
         GROUP BY pi.CDPRO, pi.NMPRO';
 
     EXEC sp_executesql @sql;
@@ -117,7 +66,7 @@ BEGIN
             WHERE r.FECHAR BETWEEN ' + @fechaMin + ' AND ' + @fechaMax + '
         '') AS reg400
         INNER JOIN dbo.ProvinciasInternacional pi ON pi.CDPRO    = reg400.PROOF
-        INNER JOIN #Sumarigrama                s  ON s.CodCentro = reg400.CDCEN
+        INNER JOIN dbo.Sumarigrama             s  ON s.CodCentro = reg400.CDCEN
         GROUP BY pi.CDPRO, pi.NMPRO';
 
     EXEC sp_executesql @sql;
@@ -133,7 +82,7 @@ BEGIN
         0
     FROM dbo.OfertasSQL                   AS o
     INNER JOIN dbo.ProvinciasInternacional AS pi ON pi.CDPRO    = o.CodProv
-    INNER JOIN #Sumarigrama               AS s  ON s.CodCentro = o.CodCentro
+    INNER JOIN dbo.Sumarigrama            AS s  ON s.CodCentro = o.CodCentro
     WHERE o.AñoAdjudicacion = @pAño
       AND o.FAdjudicacion < DATEADD(MONTH, @pMes, DATEFROMPARTS(@pAño, 1, 1))
     GROUP BY o.CodProv, pi.NMPRO;
@@ -158,12 +107,9 @@ BEGIN
         Pais,
         ISNULL(SUM(ImporteContratadoAcumulado),            0) AS ImporteContratadoAcumulado,
         ISNULL(SUM(ImporteContratadoAcumuladoAñoAnterior), 0) AS ImporteContratadoAcumuladoAñoAnterior,
-        Ajuste,
-        @pAño AS Año,
-        @pLoginUsuario AS LoginUsuario
+        Ajuste
     FROM #ContratacionInternacional
     GROUP BY CodProv, Pais, Ajuste;
 
     DROP TABLE #ContratacionInternacional;
-    DROP TABLE #Sumarigrama;
 END

@@ -47,7 +47,8 @@ public class CarteraContratacionResumenSDGController : ControllerBase
 
         try
         {
-            var datos = await _service.ObtenerInformeAsync(anio, mes, todoInt);
+            var loginUsuario = User.Identity?.Name ?? "ANONIMO";
+            var datos = await _service.ObtenerInformeAsync(anio, mes, todoInt, loginUsuario);
             return Ok(datos);
         }
         catch (Exception ex)

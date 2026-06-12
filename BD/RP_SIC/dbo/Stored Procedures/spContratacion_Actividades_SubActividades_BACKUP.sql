@@ -1,34 +1,11 @@
-CREATE PROCEDURE [dbo].[spContratacion_Actividades_SubActividades] 		
+CREATE PROCEDURE [dbo].[spContratacion_Actividades_SubActividades_BACKUP] 		
 	@pAño int,
-	@pMes int,
-	@pLoginUsuario nvarchar(100) = NULL
+	@pMes int
 	AS
 BEGIN
 
 	SET NOCOUNT ON;
 BEGIN
-	-- ═══════════════════════════════════════════════════════════════
-	-- BLOQUE RLS: Filtrado de #Sumarigrama por permisos de usuario
-	-- ═══════════════════════════════════════════════════════════════
-	DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-	SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad 
-	FROM dbo.WEB_Usuarios WITH (NOLOCK) 
-	WHERE Usuario = @pLoginUsuario
-
-	SELECT S.* INTO #Sumarigrama 
-	FROM dbo.Sumarigrama S 
-	WHERE S.Año = @pAño
-	  AND (
-		  @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL OR
-		  (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-		  (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-		  (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-		  (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-		  (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-	  )
-	-- ═══════════════════════════════════════════════════════════════
-
 -------------------------------------------------------------------------------------------------	
 	CREATE TABLE #vwWEB_OFERTAS_CA_Local  (CodCentro varchar(3), CodOferta varchar(10), AñoAdjudicacion int, MesAdjudicacion int, ImporteContratado float, CodAct1 varchar(2), CodAct2 varchar(2), Pais varchar(200))
 	CREATE TABLE #vwWEB_Regularizaciones_Local  (CodCentro varchar(3), CodOferta varchar(10), NumRegularizacion int, AñoAdjudicacion int, MesAdjudicacion int, ImporteContratado float, CodAct1 varchar(2), CodAct2 varchar(2), Pais varchar(200))
@@ -121,16 +98,16 @@ END
 			
 	INSERT INTO @vContratacionActividades(NombreDirGeneral,CodAct1,CodAct2,Pais,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
 	SELECT NombreDirGeneral,CodAct1,CodAct2,Pais,sum(ImporteContratado),0
-	FROM #Sumarigrama INNER JOIN
-		 #vwWEB_OFERTAS_CA_Local O ON #Sumarigrama.CodCentro = O.CodCentro
+	FROM dbo.Sumarigrama INNER JOIN
+		 #vwWEB_OFERTAS_CA_Local O ON dbo.Sumarigrama.CodCentro = O.CodCentro
 	WHERE  O.AñoAdjudicacion=@pAño AND O.MesAdjudicacion <= @pMes 
 	GROUP BY NombreDirGeneral,CodAct1,CodAct2,Pais
 	
 	/*
 	INSERT INTO @vContratacionActividades(NombreDirGeneral,CodAct1,CodAct2,Pais,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
 	SELECT NombreDirGeneral,CodAct1,CodAct2,Pais,0,sum(ImporteContratado)
-	FROM #Sumarigrama INNER JOIN
-		 dbo.vwOfertas ON #Sumarigrama.CodCentro = dbo.vwOfertas.CodCentro
+	FROM dbo.Sumarigrama INNER JOIN
+		 dbo.vwOfertas ON dbo.Sumarigrama.CodCentro = dbo.vwOfertas.CodCentro
 	WHERE  AñoAdjudicacion=@pAño-1 AND MesAdjudicacion <= @pMes --AND Adjudicada='S'
 	GROUP BY NombreDirGeneral,CodAct1,CodAct2,Pais
 	*/
@@ -142,7 +119,7 @@ END
 	FROM         (SELECT   CodCentro,CodAct1,CodAct2 ,Pais,ImporteContratado
 				  FROM     #vwWEB_Regularizaciones_Local REG
 				  WHERE    (AñoAdjudicacion = @pAño) AND (MesAdjudicacion <= @pMes) ) AS vwRegularizacionesQ INNER JOIN
-							 #Sumarigrama ON vwRegularizacionesQ.CodCentro = #Sumarigrama.CodCentro
+							 dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
 	GROUP BY NombreDirGeneral,CodAct1,CodAct2,Pais
 	
 	/*
@@ -151,7 +128,7 @@ END
 	FROM         (SELECT   CodCentro,CodAct1,CodAct2 ,Pais,ImporteContratado
 				  FROM     dbo.vwRegularizaciones
 				  WHERE    (AñoAdjudicacion = @pAño-1) AND (MesAdjudicacion <= @pMes) ) AS vwRegularizacionesQ INNER JOIN
-							 #Sumarigrama ON vwRegularizacionesQ.CodCentro = #Sumarigrama.CodCentro
+							 dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
 	GROUP BY NombreDirGeneral,CodAct1,CodAct2,Pais
 	*/
 
@@ -161,7 +138,7 @@ END
 	SELECT     NombreDirGeneral,CodAct1,CodAct2,Pais,sum(ImporteContratado),0
 	FROM         dbo.OfertasSQL INNER JOIN
                       dbo.Provincias ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO INNER JOIN
-                      #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
+                      dbo.Sumarigrama ON dbo.OfertasSQL.CodCentro = dbo.Sumarigrama.CodCentro
 	WHERE AñoAdjudicacion=@pAño AND month(FAdjudicacion) <= @pMes
 	GROUP BY NombreDirGeneral,CodAct1,CodAct2,Pais
 	
@@ -170,7 +147,7 @@ END
 	SELECT     NombreDirGeneral,CodAct1,CodAct2,Pais,0,sum(ImporteContratado)
 	FROM         dbo.OfertasSQL INNER JOIN
                       dbo.Provincias ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO INNER JOIN
-                      #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
+                      dbo.Sumarigrama ON dbo.OfertasSQL.CodCentro = dbo.Sumarigrama.CodCentro
 	WHERE AñoAdjudicacion=@pAño-1 AND month(FAdjudicacion) <= @pMes
 	GROUP BY NombreDirGeneral,CodAct1,CodAct2,Pais	
 	*/
@@ -212,7 +189,5 @@ END
 	FROM Historico_Mercado_SubActividadSQL
 	WHERE Año=@pAño-1 
 	GROUP BY Agrupacion,Mercado,CodAct2			
-
-	DROP TABLE #Sumarigrama;
 	
 END

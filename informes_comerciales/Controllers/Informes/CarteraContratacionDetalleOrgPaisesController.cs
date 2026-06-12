@@ -36,8 +36,9 @@ public class CarteraContratacionDetalleOrgPaisesController : ControllerBase
         if (mes < 1 || mes > 12)
             return BadRequest("El mes debe estar entre 1 y 12.");
 
+        var loginUsuario = User.Identity?.Name ?? "ANONIMO";
         var resultado = await _service.ObtenerInformeAsync(
-            anio, mes, nroPagina, limiteImporte, limitePaises, mercado, informe, codSubDirGeneral);
+            anio, mes, nroPagina, limiteImporte, limitePaises, mercado, informe, codSubDirGeneral, loginUsuario);
         return Ok(resultado);
     }
 }
