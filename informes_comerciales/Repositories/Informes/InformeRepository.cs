@@ -110,36 +110,158 @@ public class InformeRepository
                                                 AND r.LoginUsuario = v.LoginUsuario
                                             WHERE r.LoginUsuario = @LoginUsuario AND (r.Acumulado_Contratacion <> 0 OR r.Mensual_Contratacion <> 0)";
 
-        // SECCIÓN C: CARTERA PRODUCCIÓN (Pendiente Producir)
-        const string sqlSelectCartera = @"  SELECT Año, Mes, Concepto, ImporteInicial, ImporteActual, PorcentajeIncrementoAñoAnterior, SumarCartera, CarteraAñoAnterior
-                                            FROM CarteraActual_CJO
-                                            WHERE Año = @Anio AND Mes = @Mes";
+    string sqlSelectCartera = @"
+            IF EXISTS (SELECT 1 FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE UPPER(Usuario) = UPPER(@LoginUsuario) AND Puesto = 'DG')
+            BEGIN
+                SELECT 
+                    Año, 
+                    Mes, 
+                    Concepto, 
+                    ImporteInicial, 
+                    ImporteActual, 
+                    PorcentajeIncrementoAñoAnterior, 
+                    SumarCartera, 
+                    CarteraAñoAnterior
+                FROM dbo.CarteraActual_CJO WITH (NOLOCK)
+                WHERE Año = @Anio AND Mes = @Mes
+                  AND (
+                      SumarCartera = 1
+                      OR (
+                          SumarCartera = 0
+                          AND (ImporteInicial <> 0 OR ImporteActual <> 0)
+                      )
+                  )
+                ORDER BY 
+                    SumarCartera DESC, 
+                    CASE Concepto 
+                        WHEN 'Nacional' THEN 1 
+                        WHEN 'Internacional' THEN 2 
+                        WHEN 'Asociado a Inversión' THEN 3 
+                        ELSE 4 
+                    END;
+            END
+            ELSE
+            BEGIN
+                -- 1. Crear y poblar centros permitidos del usuario
+                CREATE TABLE #CentrosUsuario (CodCentro VARCHAR(10) PRIMARY KEY);
+                
+                INSERT INTO #CentrosUsuario (CodCentro)
+                SELECT DISTINCT CodCentro
+                FROM dbo.SumarigramaHistorico s WITH (NOLOCK)
+                INNER JOIN dbo.WEB_Usuarios u WITH (NOLOCK) ON UPPER(u.Usuario) = UPPER(@LoginUsuario)
+                WHERE s.Año = @Anio
+                  AND (
+                      (u.Puesto = 'SDG'  AND s.CodSubDirGeneral = u.CodEntidad)
+                      OR (u.Puesto = 'DN'   AND s.CodDDirNegocio = u.CodEntidad)
+                      OR (u.Puesto = 'AREA' AND s.CodSubDirNegocioArea = u.CodEntidad)
+                      OR (u.Puesto = 'DEL'  AND s.CodDelegacion = u.CodEntidad)
+                      OR (u.Puesto = 'CT'   AND s.CodCentro = u.CodEntidad)
+                  );
 
-        // SECCIÓN D: CARTERA DIFERIDA (columnas calculadas dinámicamente según @Anio)
-        // Para anio=N: ValorCart1_1=[01#01#N], ValorAnio1=[N], ValorAnio2=[N+1], ValorAnio3=[N+2]
-        string colCart1_1 = $"[01#01#{anio.ToString().Substring(2, 2)}]";
-        string colAnio1   = $"[{anio}]";
-        string colAnio2   = $"[{anio + 1}]";
-        string colAnio3   = $"[{anio + 2}]";
+                -- 2. Crear y poblar proporciones asociadas (filtrado temprano de centros)
+                CREATE TABLE #Proporciones (
+                    AnioInforme INT,
+                    MesInforme INT,
+                    CentroChar VARCHAR(10),
+                    PaisPredominante VARCHAR(20),
+                    ProporcionAsoc DECIMAL(18,6),
+                    PRIMARY KEY (AnioInforme, MesInforme, CentroChar)
+                );
 
-        string sqlSelectDiferida = $@"
-            SELECT
-                Año,
-                Mes,
-                Mercado,
-                [Cartera Diferida] AS CarteraDiferida,
-                {colCart1_1} AS ValorCart1_1,
-                Nuevos,
-                Total,
-                Contr,
-                {colAnio1} AS ValorAnio1,
-                {colAnio2} AS ValorAnio2,
-                {colAnio3} AS ValorAnio3,
-                Orden
-            FROM CarteraDiferida_CJO WITH (NOLOCK)
-            WHERE Mercado = 'Mercado'
-              AND Año = @Anio
-              AND Mes = @Mes";
+                INSERT INTO #Proporciones (AnioInforme, MesInforme, CentroChar, PaisPredominante, ProporcionAsoc)
+                SELECT 
+                    cc.AnioInforme,
+                    cc.MesInforme,
+                    cc.CentroChar,
+                    MAX(CASE WHEN cc.Pais = 'Nacional' THEN 'Nacional' ELSE 'Internacional' END),
+                    CASE WHEN SUM(cc.ImporteEUR) = 0 THEN 0 ELSE SUM(CASE WHEN oa.JVAYNB IS NOT NULL THEN cc.ImporteEUR ELSE 0 END) / SUM(cc.ImporteEUR) END
+                FROM dbo.CarterasContratacionSQL cc WITH (NOLOCK)
+                LEFT JOIN dbo.OfertaAsociadaInversion oa WITH (NOLOCK) ON cc.CodOferta = oa.JVAYNB
+                INNER JOIN #CentrosUsuario cu ON cc.CentroChar = cu.CodCentro
+                WHERE 
+                    (cc.AnioInforme = @Anio AND cc.MesInforme = @Mes)
+                    OR (cc.AnioInforme = @Anio - 1 AND cc.MesInforme = 12)
+                    OR (cc.AnioInforme = @Anio - 2 AND cc.MesInforme = 12)
+                GROUP BY cc.AnioInforme, cc.MesInforme, cc.CentroChar;
+
+                -- 3. Consulta de importes agregados por categorías usando CROSS APPLY y Agregación Condicional (Pivot)
+                WITH CTE_CarteraBase AS (
+                    SELECT 
+                        c.CodCentro,
+                        c.Año,
+                        c.Mes,
+                        c.Importe,
+                        ISNULL(p.PaisPredominante, 'Nacional') AS PaisPredominante,
+                        ISNULL(p.ProporcionAsoc, 0) AS ProporcionAsoc
+                    FROM dbo.CarteraPdteProducirSQL c WITH (NOLOCK)
+                    INNER JOIN #CentrosUsuario cu ON c.CodCentro = cu.CodCentro
+                    LEFT JOIN #Proporciones p ON c.CodCentro = p.CentroChar AND c.Año = p.AnioInforme AND c.Mes = p.MesInforme
+                    WHERE 
+                        (c.Año = @Anio AND c.Mes = @Mes)
+                        OR (c.Año = @Anio - 1 AND c.Mes = 12)
+                        OR (c.Año = @Anio - 2 AND c.Mes = 12)
+                ),
+                CTE_Categorias AS (
+                    SELECT 
+                        v.Concepto,
+                        v.SumarCartera,
+                        c.Año,
+                        c.Mes,
+                        SUM(v.ImporteCalculado) AS Importe
+                    FROM CTE_CarteraBase c
+                    CROSS APPLY (
+                        VALUES 
+                            -- 1. Nacional (Sumable)
+                            (CASE WHEN c.PaisPredominante = 'Nacional' THEN 'Nacional' END, 1, c.Importe * (1 - c.ProporcionAsoc)),
+                            -- 2. Internacional (Sumable)
+                            (CASE WHEN c.PaisPredominante = 'Internacional' THEN 'Internacional' END, 1, c.Importe * (1 - c.ProporcionAsoc)),
+                            -- 3. Asociado a Inversión (Sumable)
+                            ('Asociado a Inversión', 1, c.Importe * c.ProporcionAsoc),
+                            -- 4. Nacional (Desglose no sumable)
+                            (CASE WHEN c.PaisPredominante = 'Nacional' THEN 'Nacional' END, 0, c.Importe * c.ProporcionAsoc),
+                            -- 5. Internacional (Desglose no sumable)
+                            (CASE WHEN c.PaisPredominante = 'Internacional' THEN 'Internacional' END, 0, c.Importe * c.ProporcionAsoc)
+                    ) v(Concepto, SumarCartera, ImporteCalculado)
+                    WHERE v.Concepto IS NOT NULL
+                    GROUP BY v.Concepto, v.SumarCartera, c.Año, c.Mes
+                )
+                SELECT 
+                    @Anio AS Año,
+                    @Mes AS Mes,
+                    Concepto,
+                    SUM(CASE WHEN Año = @Anio - 1 AND Mes = 12 THEN Importe ELSE 0 END) AS ImporteInicial,
+                    SUM(CASE WHEN Año = @Anio AND Mes = @Mes THEN Importe ELSE 0 END) AS ImporteActual,
+                    CASE 
+                        WHEN SUM(CASE WHEN Año = @Anio - 1 AND Mes = 12 THEN Importe ELSE 0 END) = 0 THEN 0 
+                        ELSE (SUM(CASE WHEN Año = @Anio AND Mes = @Mes THEN Importe ELSE 0 END) - SUM(CASE WHEN Año = @Anio - 1 AND Mes = 12 THEN Importe ELSE 0 END)) / SUM(CASE WHEN Año = @Anio - 1 AND Mes = 12 THEN Importe ELSE 0 END) 
+                    END AS PorcentajeIncrementoAñoAnterior,
+                    SumarCartera,
+                    SUM(CASE WHEN Año = @Anio - 2 AND Mes = 12 THEN Importe ELSE 0 END) AS CarteraAñoAnterior
+                FROM CTE_Categorias
+                GROUP BY Concepto, SumarCartera
+                HAVING 
+                    SumarCartera = 1
+                    OR (
+                        SumarCartera = 0
+                        AND (
+                            SUM(CASE WHEN Año = @Anio - 1 AND Mes = 12 THEN Importe ELSE 0 END) <> 0
+                            OR SUM(CASE WHEN Año = @Anio AND Mes = @Mes THEN Importe ELSE 0 END) <> 0
+                        )
+                    )
+                ORDER BY 
+                    SumarCartera DESC, 
+                    CASE Concepto 
+                        WHEN 'Nacional' THEN 1 
+                        WHEN 'Internacional' THEN 2 
+                        WHEN 'Asociado a Inversión' THEN 3 
+                        ELSE 4 
+                    END OPTION (RECOMPILE);
+
+                -- 4. Limpieza de tablas temporales
+                DROP TABLE #CentrosUsuario;
+                DROP TABLE #Proporciones;
+            END";
+
 
         // SECCIÓN E: VENTAS HISTÓRICAS
         const string sqlSelectVentas = @"SELECT
@@ -170,8 +292,8 @@ public class InformeRepository
         try
         {
             // ── Ejecución Sección A: Informe Principal ──
-            var datosSp = (await _connection.QueryAsync<dynamic>(sqlExecPrincipal, parametros, transaction: transaction)).ToList();
-            await _connection.ExecuteAsync(sqlDeletePrincipal, new { LoginUsuario = loginUsuario }, transaction: transaction);
+            var datosSp = (await _connection.QueryAsync<dynamic>(sqlExecPrincipal, parametros, transaction: transaction, commandTimeout: 300)).ToList();
+            await _connection.ExecuteAsync(sqlDeletePrincipal, new { LoginUsuario = loginUsuario }, transaction: transaction, commandTimeout: 300);
             
             foreach (var fila in datosSp)
             {
@@ -187,25 +309,39 @@ public class InformeRepository
                     ImporteContratadoAcumuladoAñoAnterior = fila.ImporteContratadoAcumuladoAñoAnterior,
                     ImporteObjetivo = fila.ImporteObjetivo,
                     LoginUsuario = loginUsuario
-                }, transaction: transaction);
+                }, transaction: transaction, commandTimeout: 300);
             }
 
-            var principal = (await _connection.QueryAsync<CarteraDiferidaConsejoPoco>(sqlSelectPrincipal, parametros, transaction)).ToList();
+            var principal = (await _connection.QueryAsync<CarteraDiferidaConsejoPoco>(sqlSelectPrincipal, parametros, transaction, commandTimeout: 300)).ToList();
 
             // ── Ejecución Sección B: MercadoAI ──
-            await _connection.ExecuteAsync(sqlDeleteSub, new { LoginUsuario = loginUsuario }, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExecSub, parametros, transaction: transaction);
-            await _connection.ExecuteAsync(sqlUpdateAnioSub, parametros, transaction: transaction);
-            var mercadoAI = (await _connection.QueryAsync<MercadoAIPoco>(sqlSelectMercadoAI, parametros, transaction)).ToList();
+            await _connection.ExecuteAsync(sqlDeleteSub, new { LoginUsuario = loginUsuario }, transaction: transaction, commandTimeout: 300);
+            await _connection.ExecuteAsync(sqlInsertExecSub, parametros, transaction: transaction, commandTimeout: 300);
+            await _connection.ExecuteAsync(sqlUpdateAnioSub, parametros, transaction: transaction, commandTimeout: 300);
+            var mercadoAI = (await _connection.QueryAsync<MercadoAIPoco>(sqlSelectMercadoAI, parametros, transaction, commandTimeout: 300)).ToList();
 
             // ── Ejecución Sección C: CarteraProduccion ──
-            var cartera = (await _connection.QueryAsync<CarteraProducirPoco>(sqlSelectCartera, parametros, transaction)).ToList();
+            var cartera = (await _connection.QueryAsync<CarteraProducirPoco>(sqlSelectCartera, parametros, transaction, commandTimeout: 300)).ToList();
 
-            // ── Ejecución Sección D: CarteraDiferida ──
-            var carteraDiferida = (await _connection.QueryAsync<CarteraDiferidaPoco>(sqlSelectDiferida, parametros, transaction)).ToList();
+            // ── Ejecución Sección D: CarteraDiferida (Consolidado oficial) ──
+            string colCart1_1 = $"[01#01#{anio % 100:00}]";
+            string colAnio1 = $"[{anio}]";
+            string colAnio2 = $"[{anio + 1}]";
+            string colAnio3 = $"[{anio + 2}]";
+
+            string sqlSelectDiferida = $@"
+                SELECT 
+                    Año, Mes, Mercado, [Cartera Diferida] AS CarteraDiferida, 
+                    {colCart1_1} AS ValorCart1_1, Nuevos, Total, Contr, 
+                    {colAnio1} AS ValorAnio1, {colAnio2} AS ValorAnio2, {colAnio3} AS ValorAnio3, 
+                    Orden
+                FROM CarteraDiferida_CJO WITH (NOLOCK)
+                WHERE Año = @Anio AND Mes = @Mes AND [Cartera Diferida] IS NOT NULL";
+
+            var carteraDiferida = (await _connection.QueryAsync<CarteraDiferidaPoco>(sqlSelectDiferida, parametros, transaction, commandTimeout: 300)).ToList();
 
             // ── Ejecución Sección E: Ventas (lectura directa) ──
-            var ventas = (await _connection.QueryAsync<VentasPoco>(sqlSelectVentas, transaction: transaction)).ToList();
+            var ventas = (await _connection.QueryAsync<VentasPoco>(sqlSelectVentas, transaction: transaction, commandTimeout: 300)).ToList();
 
             transaction.Commit();
 
@@ -636,14 +772,28 @@ public class InformeRepository
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
-        const string sqlInsertExec = @"INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
-                                       EXEC spContratacion_Actividades_Ajuste @Anio, @Mes";
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear, LoginUsuario)
+                                       EXEC spContratacion_Actividades_Ajuste @Anio, @Mes, @LoginUsuario";
 
-        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad 
-                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
-                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
-
-        const string sqlSelect = @"WITH CTE_BaseActividades AS (
+        const string sqlSelect = @";WITH CTE_FiltroSumarigrama AS (
+                                        SELECT DISTINCT s.CodCentro
+                                        FROM dbo.Sumarigrama s WITH (NOLOCK)
+                                        OUTER APPLY (
+                                            SELECT TOP 1 u.Puesto, u.CodEntidad
+                                            FROM dbo.WEB_Usuarios u WITH (NOLOCK)
+                                            WHERE u.Usuario = @LoginUsuario
+                                        ) u
+                                        WHERE s.Año = @Anio
+                                          AND (@LoginUsuario IS NULL OR
+                                               u.Puesto IS NULL OR
+                                               u.Puesto = 'DG' OR
+                                               (u.Puesto = 'SDG'  AND s.CodSubDirGeneral = u.CodEntidad) OR
+                                               (u.Puesto = 'DN'   AND s.CodDDirNegocio = u.CodEntidad) OR
+                                               (u.Puesto = 'AREA' AND s.CodSubDirNegocioArea = u.CodEntidad) OR
+                                               (u.Puesto = 'DEL'  AND s.CodDelegacion = u.CodEntidad) OR
+                                               (u.Puesto = 'CT'   AND s.CodCentro = u.CodEntidad))
+                                    ),
+                                    CTE_BaseActividades AS (
                                         SELECT DISTINCT
                                             p.Pais,
                                             a.Agrupacion AS Actividad
@@ -652,16 +802,16 @@ public class InformeRepository
                                     ),
                                     CTE_Objetivos AS (
                                         SELECT
-                                            Agrupacion,
-                                            Año,
-                                            CASE WHEN Mercado = 'N' THEN 'Nacional' ELSE 'Internacional' END AS Mercados,
-                                            SUM(Importe) AS ImporteObjetivos
-                                        FROM vwObjetivosActividadesAGRUPNacionalInternacional WITH (NOLOCK)
-                                        WHERE Año = @Anio
-                                        GROUP BY
-                                            Agrupacion,
-                                            Año,
-                                            CASE WHEN Mercado = 'N' THEN 'Nacional' ELSE 'Internacional' END
+                                            a.Agrupacion,
+                                            @Anio AS Año,
+                                            CASE WHEN oa.Mercado = 'N' THEN 'Nacional' ELSE 'Internacional' END AS Mercados,
+                                            SUM(oa.Importe) AS ImporteObjetivos
+                                        FROM dbo.ObjetivosActividadSQL oa WITH (NOLOCK)
+                                        INNER JOIN CTE_FiltroSumarigrama f ON oa.CodCentro = f.CodCentro
+                                        INNER JOIN dbo.ActividadesSQL a WITH (NOLOCK) ON oa.CDAC1 = a.CDAC1 AND oa.CDAC2 = a.CDAC2
+                                        WHERE oa.Año = @Anio
+                                        GROUP BY a.Agrupacion,
+                                                 CASE WHEN oa.Mercado = 'N' THEN 'Nacional' ELSE 'Internacional' END
                                     )
                                     SELECT
                                         base.Pais,
@@ -698,7 +848,6 @@ public class InformeRepository
         {
             await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
-            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
 
             var resultado = (await _connection.QueryAsync<ActividadObjetivoPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
 
@@ -1804,15 +1953,10 @@ public class InformeRepository
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         // PASO 2: Poblar desde el SP (columnas exactas que devuelve el SP)
-        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
-                                       EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes";
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Año, LoginUsuario)
+                                       EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes, @LoginUsuario";
 
-        // PASO 3: Asignar el año y usuario a todas las filas recién insertadas (las que tienen DEFAULT ACCESS)
-        const string sqlUpdateAnio = @"UPDATE rptContratacion_GerenciaCentro 
-                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
-                                       WHERE LoginUsuario = 'ACCESS'";
-
-        // PASO 4: SELECT enriquecido con JOINs
+        // PASO 3: SELECT enriquecido con JOINs
         const string sqlSelect = @"SELECT
                                         rpt.Año,
                                         cg.SumarizaGerentes,
@@ -1859,7 +2003,6 @@ public class InformeRepository
         {
             await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction, commandTimeout: 300);
-            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction, commandTimeout: 300);
             var resultado = (await _connection.QueryAsync<GerenciasPoco>(sqlSelect, parametros, transaction, commandTimeout: 300)).ToList();
 
             transaction.Commit();
@@ -2143,7 +2286,7 @@ public class InformeRepository
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
-        const string sqlExec = "EXEC spContratacion_Actividades_SubActividades @Anio, @Mes";
+        const string sqlExec = "EXEC spContratacion_Actividades_SubActividades @Anio, @Mes, @LoginUsuario";
 
         const string sqlInsertManual = @"INSERT INTO rptContratacion_Actividad_SubActividad
                                                 (Año, Orden, CodActividad, Actividad, CodAct1, CodAct2, Pais,
@@ -2152,11 +2295,33 @@ public class InformeRepository
                                                 (@Año, @Orden, @CodActividad, @Actividad, @CodAct1, @CodAct2, @Pais,
                                                  @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @Desglose_AñoAnterior, @LoginUsuario)";
 
-        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad_SubActividad 
-                                       SET Año = @Anio 
-                                       WHERE Año IS NULL AND LoginUsuario = @LoginUsuario";
-
-        const string sqlSelect = @" ;WITH Resumen AS (
+        const string sqlSelect = @";WITH CTE_FiltroSumarigrama AS (
+                                        SELECT DISTINCT s.CodCentro
+                                        FROM dbo.Sumarigrama s WITH (NOLOCK)
+                                        OUTER APPLY (
+                                            SELECT TOP 1 u.Puesto, u.CodEntidad
+                                            FROM dbo.WEB_Usuarios u WITH (NOLOCK)
+                                            WHERE u.Usuario = @LoginUsuario
+                                        ) u
+                                        WHERE s.Año = @Anio
+                                          AND (@LoginUsuario IS NULL OR
+                                               u.Puesto IS NULL OR
+                                               u.Puesto = 'DG' OR
+                                               (u.Puesto = 'SDG'  AND s.CodSubDirGeneral = u.CodEntidad) OR
+                                               (u.Puesto = 'DN'   AND s.CodDDirNegocio = u.CodEntidad) OR
+                                               (u.Puesto = 'AREA' AND s.CodSubDirNegocioArea = u.CodEntidad) OR
+                                               (u.Puesto = 'DEL'  AND s.CodDelegacion = u.CodEntidad) OR
+                                               (u.Puesto = 'CT'   AND s.CodCentro = u.CodEntidad))
+                                    ),
+                                    CTE_ObjetivosInt AS (
+                                        SELECT a.Agrupacion, @Anio AS Año, SUM(oa.Importe) AS Importe
+                                        FROM dbo.ObjetivosActividadSQL oa WITH (NOLOCK)
+                                        INNER JOIN CTE_FiltroSumarigrama f ON oa.CodCentro = f.CodCentro
+                                        INNER JOIN dbo.ActividadesSQL a WITH (NOLOCK) ON oa.CDAC1 = a.CDAC1 AND oa.CDAC2 = a.CDAC2
+                                        WHERE oa.Año = @Anio AND oa.Mercado = 'I'
+                                        GROUP BY a.Agrupacion
+                                    ),
+                                    Resumen AS (
                                         SELECT
                                             r.Año, r.Pais, r.Actividad AS ActividadPrincipal,
                                             CAST(NULL AS NVARCHAR(255)) AS ActividadDetalle,
@@ -2166,7 +2331,7 @@ public class InformeRepository
                                             ISNULL(MAX(obj.Importe), 0) AS ImporteObjetivos,
                                             0 AS EsSubActividad
                                         FROM dbo.rptContratacion_Actividad_SubActividad r
-                                        LEFT JOIN dbo.vwObjetivosActividadesAGRUPInternacional obj
+                                        LEFT JOIN CTE_ObjetivosInt obj
                                             ON r.Actividad = obj.Agrupacion AND r.Año = obj.Año
                                         WHERE r.Desglose_AñoAnterior = 0
                                           AND r.Pais = 'internacional'
@@ -2224,7 +2389,6 @@ public class InformeRepository
                 }, transaction: transaction);
             }
 
-            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction);
             var resultado = (await _connection.QueryAsync<ActividadesInternacionalDetallePoco>(sqlSelect, parametros, transaction)).ToList();
             transaction.Commit();
             return resultado;
