@@ -108,13 +108,41 @@ async function _renderCuerpoInforme() {
     }
 
     // Renderizar SubInforme 2: Internacional Mes (Al final como solicitado)
-    if (data?.subInformes?.annoInternacionalMes?.length > 0) {
+    if (data?.subInformes?.annoInternacionalMes) {
         const u3 = data.meta?.filtros?.umbral3 ?? 10000;
-        html += _renderSubInformeGenerico(data.subInformes.annoInternacionalMes, {
-            titulo: `Mercado Internacional > ${_formatearUmbral(u3)}`,
-            mostrarMes: true,
-            claseSeccion: '' // Sin clase extra, usa la base rpt-content-block
-        });
+        const datosSub = data.subInformes.annoInternacionalMes;
+        const tieneFilas = datosSub.length > 0;
+        
+        // Obtener el nombre del mes de forma segura
+        const nombreMes = tieneFilas 
+            ? datosSub[0].meses 
+            : getNombreMes(data.meta?.filtros?.mes);
+
+        html += `
+            <div class="rpt-content-block">
+                <h3 class="rpt-section-title">Mercado Internacional > ${_formatearUmbral(u3)}</h3>
+                <div class="rpt-month-header">${nombreMes}</div>
+                ${tieneFilas ? `
+                <table class="${RPT_CLASSES.TABLE} rpt-table-contrataciones">
+                    <tbody>
+                        ${datosSub.map(item => {
+                            const badgeAI = item.ai === 'AI' ? 
+                              `<span class="rpt-badge-ai" title="Oferta Asociada a Inversión">AI</span>` : '';
+                            return `
+                            <tr class="${RPT_CLASSES.DETAIL_ROW}">
+                              <td class="rpt-col-ai rpt-align-center">${badgeAI}</td>
+                              <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
+                              <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.nombreClientes_OK)}</td>
+                              <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importeContratado_OK, 0)}</td>
+                              <td class="rpt-col-dirnegocio rpt-align-start rpt-ps-3">${escapeHtml(item.nombreDirNegocio_OK)}</td>
+                            </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+                ` : ''}
+            </div>
+        `;
     }
 
   // Renderizar SubInforme 3: Internacional Anterior (Último bloque - sin borde inferior)
