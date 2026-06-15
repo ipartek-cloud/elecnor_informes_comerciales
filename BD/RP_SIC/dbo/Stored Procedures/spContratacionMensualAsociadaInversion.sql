@@ -1,7 +1,8 @@
-﻿CREATE PROCEDURE [dbo].[spContratacionMensualAsociadaInversion]
+﻿CREATE OR ALTER PROCEDURE [dbo].[spContratacionMensualAsociadaInversion]
 	@pMercado varchar(50),
 	@pAño int,
-	@pMes int
+	@pMes int,
+	@LoginUsuario nvarchar(100) = 'ACCESS'
 	AS
 BEGIN
 	/*
@@ -42,10 +43,56 @@ BEGIN
 	--PRINT (@SQL_AS400)
 	EXEC (@SQL_AS400)
 	
----------------------------------------------------------------- hasta AQUÍ
+--------------------------------------------------------------- hasta AQUÍ
 	set nocount on 
 
-	DECLARE @ContratacionMensual float	
+    ----------------------------------------------------------
+    -- BLOQUE RLS: Filtrado de seguridad por centro del usuario
+    ----------------------------------------------------------
+    CREATE TABLE #Sumarigrama
+    (
+        Año                     smallint      not null,
+        CodDirGeneral           varchar(3),
+        NombreDirGeneral        nvarchar(100) not null,
+        CodSubDirGeneral        varchar(3),
+        NombreSubDirGeneral     nvarchar(100) not null,
+        CodDDirNegocio          varchar(3),
+        NombreDirNegocio        nvarchar(30)  not null,
+        CodSubDirNegocioArea    varchar(3),
+        NombreSubDirNegocioArea nvarchar(100) not null,
+        CodDelegacion           varchar(3),
+        NombreDelegacion        nvarchar(30)  not null,
+        CodCentro               varchar(3),
+        NombreCentro            nvarchar(30)  not null,
+        OrdenSubDirGeneral      int           not null
+    )
+
+    INSERT INTO #Sumarigrama
+    SELECT * FROM Sumarigrama
+
+    IF @LoginUsuario IS NOT NULL
+    BEGIN
+        DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
+
+        SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad
+        FROM dbo.WEB_Usuarios WITH (NOLOCK)
+        WHERE Usuario = @LoginUsuario
+
+        IF @vPuesto IS NOT NULL AND @vPuesto <> 'DG'
+        BEGIN
+            DELETE FROM #Sumarigrama
+            WHERE NOT (
+                (@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
+                (@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
+                (@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
+                (@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
+                (@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
+            )
+        END
+    END
+    -- ═══════════════════════════════════════════════════════════════
+
+	DECLARE @ContratacionMensual float
 	
 	DECLARE @ContratacionMensual_Ofertas as float
 	DECLARE @ContratacionMensual_Regularizaciones as float
@@ -66,7 +113,7 @@ BEGIN
 				 YEAR(dbo.fgConvertirFechaDMY(v.FECHAD))AS AñoAdjudicacion, MONTH(dbo.fgConvertirFechaDMY(v.FECHAD)) AS MesAdjudicacion, v.ADELE AS Adjudicada, v.PREAD AS ImporteContratado, dbo.Provincias.Pais
 			FROM  @vwOfertasAI as v  INNER JOIN dbo.Provincias ON v.PROOF = dbo.Provincias.CDPRO
 			WHERE  Provincias.Pais=@pMercado AND YEAR(dbo.fgConvertirFechaDMY(v.FECHAD))=@pAño AND MONTH(dbo.fgConvertirFechaDMY(v.FECHAD)) = @pMes AND v.ADELE='S') 
-			AS vwOfertasAsociadasInversion INNER JOIN dbo.Sumarigrama ON dbo.Sumarigrama.CodCentro = vwOfertasAsociadasInversion.CodCentro
+			AS vwOfertasAsociadasInversion INNER JOIN #Sumarigrama ON #Sumarigrama.CodCentro = vwOfertasAsociadasInversion.CodCentro
 		
 	-- REGULARIZACIONES
 	SELECT  @ContratacionMensual_Regularizaciones=sum(isnull(vwRegularizacionesQ.ImporteContratado,0))
@@ -79,17 +126,20 @@ BEGIN
 								  #vwRegularizaciones_Local Regularizaciones ON v.CDOFT = Regularizaciones.CodOferta INNER JOIN
 								  dbo.Provincias ON v.PROOF = dbo.Provincias.CDPRO                      
 					WHERE  Provincias.Pais=@pMercado AND AñoAdjudicacion=@pAño AND MesAdjudicacion = @pMes AND v.ADELE='S'		
-	) AS vwRegularizacionesQ INNER JOIN dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro							 
+	) AS vwRegularizacionesQ INNER JOIN #Sumarigrama ON #Sumarigrama.CodCentro = vwRegularizacionesQ.CodCentro							 
 
 	-- OFERTASsql
 	SELECT @ContratacionMensual_OfertasSQL=sum(isnull(ImporteContratado,0))    
 	FROM  dbo.OfertasSQL INNER JOIN
           dbo.Provincias ON dbo.OfertasSQL.CodProv = dbo.Provincias.CDPRO INNER JOIN
-          dbo.OfertaAsociadaInversion ON dbo.OfertasSQL.CodOferta = dbo.OfertaAsociadaInversion.JVAYNB
+          dbo.OfertaAsociadaInversion ON dbo.OfertasSQL.CodOferta = dbo.OfertaAsociadaInversion.JVAYNB INNER JOIN
+          #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
 	WHERE Pais=@pMercado AND AñoAdjudicacion=@pAño AND month(FAdjudicacion) = @pMes 
 	
 	SET @ContratacionMensual=(isnull(@ContratacionMensual_Ofertas,0) + isnull(@ContratacionMensual_Regularizaciones,0)+ isnull(@ContratacionMensual_OfertasSQL,0))
 	
 	SELECT isnull(@ContratacionMensual,0) as ContratacionMensual
+
+    DROP TABLE #Sumarigrama
 
 END

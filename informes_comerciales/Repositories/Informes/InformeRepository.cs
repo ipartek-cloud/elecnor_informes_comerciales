@@ -57,23 +57,32 @@ public class InformeRepository
         const string sqlInsertManualPrincipal = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo, LoginUsuario)
                                                 VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo, @LoginUsuario)";
 
-        const string sqlSelectPrincipal = @"SELECT
+        const string sqlSelectPrincipal = @"WITH CTE_Objetivos AS (
+                                                SELECT DISTINCT
+                                                    NombreDirNegocio,
+                                                    Pais,
+                                                    ImporteObjetivo
+                                                FROM rptContratacion_DG_SDG_DN_SDNA
+                                                WHERE LoginUsuario = @LoginUsuario
+                                                  AND ImporteObjetivo > 0
+                                            )
+                                            SELECT
                                                 c.Año,
                                                 c.Pais,
                                                 SUM(c.ImporteContratado)                        AS Importe_Contratado,
                                                 SUM(c.ImporteContratadoAcumulado)               AS Importe_ContratadoAcumulado,
                                                 SUM(c.ImporteContratadoAcumuladoAñoAnterior)    AS ImporteContratadoAcumuladoAñoAnterior,
-                                                o.Importe                                       AS Objetivos,
-                                                dbo.fgRedondear(o.Importe / 12, 0)              AS ObjetivosMensual  
+                                                (SELECT ISNULL(SUM(ImporteObjetivo), 0)
+                                                 FROM CTE_Objetivos
+                                                 WHERE Pais = c.Pais)                          AS Objetivos,
+                                                dbo.fgRedondear(
+                                                    (SELECT ISNULL(SUM(ImporteObjetivo), 0)
+                                                     FROM CTE_Objetivos
+                                                     WHERE Pais = c.Pais) / 12, 0)             AS ObjetivosMensual
                                             FROM
-                                                vwObjetivosSQL_Mercado AS o
-                                            INNER JOIN 
-                                                rptContratacion_DG_SDG_DN_SDNA AS c  
-                                            ON  
-                                                    o.Mercado = c.Pais
-                                                AND o.Año = c.Año
-                                            WHERE c.LoginUsuario = @LoginUsuario
-                                            GROUP BY c.Año, c.Pais, o.Importe;";
+                                                rptContratacion_DG_SDG_DN_SDNA AS c
+                                            WHERE c.LoginUsuario = @LoginUsuario AND c.Pais <> ''
+                                            GROUP BY c.Año, c.Pais;";
 
         // SECCIÓN B: ASOCIADO INVERSIÓN (MercadoAI)
         const string sqlDeleteSub = @"DELETE FROM rptContratacionAsociadoInversion 
@@ -97,9 +106,9 @@ public class InformeRepository
                                             INNER JOIN 
                                                 vwMercadoImporteContratacionAcumulado v 
                                             ON 
-                                                r.Mercado = v.Mercado
+                                                    r.Mercado = v.Mercado
                                                 AND r.LoginUsuario = v.LoginUsuario
-                                            WHERE r.LoginUsuario = @LoginUsuario";
+                                            WHERE r.LoginUsuario = @LoginUsuario AND (r.Acumulado_Contratacion <> 0 OR r.Mensual_Contratacion <> 0)";
 
         // SECCIÓN C: CARTERA PRODUCCIÓN (Pendiente Producir)
         const string sqlSelectCartera = @"  SELECT Año, Mes, Concepto, ImporteInicial, ImporteActual, PorcentajeIncrementoAñoAnterior, SumarCartera, CarteraAñoAnterior
@@ -227,7 +236,32 @@ public class InformeRepository
         const string sqlInsertManual = @"INSERT INTO rptContratacion_DG_SDG_DN_SDNA (Año, CodSubDirGeneral, NombreSubDirGeneral, NombreDirNegocio, NombreSubDirNegocioArea, Pais, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteObjetivo, LoginUsuario)
                                          VALUES (@Anio, @CodSubDirGeneral, @NombreSubDirGeneral, @NombreDirNegocio, @NombreSubDirNegocioArea, @Pais, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @ImporteObjetivo, @LoginUsuario)";
 
-        const string sqlSelect = @" SELECT
+        const string sqlSelect = @"WITH CTE_Objetivos AS (
+                                        SELECT DISTINCT
+                                            CodSubDirGeneral,
+                                            NombreDirNegocio,
+                                            Pais,
+                                            ImporteObjetivo
+                                        FROM rptContratacion_DG_SDG_DN_SDNA
+                                        WHERE LoginUsuario = @LoginUsuario
+                                          AND ImporteObjetivo > 0
+                                    ),
+                                    CTE_ObjetivosSDGPais AS (
+                                        SELECT
+                                            CodSubDirGeneral,
+                                            Pais,
+                                            SUM(ImporteObjetivo) AS ObjetivoSDGPais
+                                        FROM CTE_Objetivos
+                                        GROUP BY CodSubDirGeneral, Pais
+                                    ),
+                                    CTE_ObjetivosPais AS (
+                                        SELECT
+                                            Pais,
+                                            SUM(ImporteObjetivo) AS ObjetivoPais
+                                        FROM CTE_Objetivos
+                                        GROUP BY Pais
+                                    )
+                                    SELECT
                                         rpt.Año,
                                         MAX(sg.Orden) AS Orden,
                                         rpt.Pais,
@@ -237,19 +271,18 @@ public class InformeRepository
                                         SUM(rpt.ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
                                         SUM(rpt.ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior,
                                         MAX(ISNULL(rpt.ImporteObjetivo, 0)) AS ImporteObjetivo,
-                                        MAX(ISNULL(obj.Importe, 0)) AS ObjetivoSDGPais,
-                                        MAX(ISNULL(vw_m.Importe, 0)) AS ObjetivoPais
-                                    FROM rptContratacion_DG_SDG_DN_SDNA rpt WITH (NOLOCK)
-                                    LEFT JOIN ObjetivosSQL obj WITH (NOLOCK)
-                                        ON obj.Año = rpt.Año
-                                       AND obj.CodSubDirGeneral = rpt.CodSubDirGeneral
-                                       AND obj.Mercado = rpt.Pais
-                                    LEFT JOIN vwObjetivosMercadoSQL vw_m
-                                        ON vw_m.Año = rpt.Año
-                                       AND vw_m.Mercado = rpt.Pais
-                                    LEFT JOIN SubDirGeneral sg WITH (NOLOCK)
+                                        MAX(ISNULL(sdgPais.ObjetivoSDGPais, 0)) AS ObjetivoSDGPais,
+                                        MAX(ISNULL(pais.ObjetivoPais, 0)) AS ObjetivoPais
+                                    FROM rptContratacion_DG_SDG_DN_SDNA rpt
+                                    LEFT JOIN CTE_ObjetivosSDGPais sdgPais
+                                        ON rpt.CodSubDirGeneral = sdgPais.CodSubDirGeneral
+                                       AND rpt.Pais = sdgPais.Pais
+                                    LEFT JOIN CTE_ObjetivosPais pais
+                                        ON rpt.Pais = pais.Pais
+                                    LEFT JOIN SubDirGeneral sg
                                         ON rpt.CodSubDirGeneral = sg.CodSubDirGeneral
                                     WHERE rpt.LoginUsuario = @LoginUsuario
+                                      AND rpt.Pais <> ''
                                     GROUP BY
                                         rpt.Año, rpt.Pais, rpt.NombreSubDirGeneral, rpt.NombreDirNegocio";
 
