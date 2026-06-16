@@ -14,6 +14,7 @@
     [ImporteContratado_OK] FLOAT (53)     CONSTRAINT [DF_rptPrincipalesObrasAI_ImporteContratado_OK] DEFAULT ((0)) NOT NULL,
     [Ocultar]              BIT            CONSTRAINT [DF_rptPrincipalesObrasAI_Ocultar] DEFAULT ((0)) NOT NULL,
     [wTipo]                INT            NULL,
+    [CodCentro]            VARCHAR (3)    NULL,
     CONSTRAINT [PK_rptPrincipalesObrasAI] PRIMARY KEY CLUSTERED ([idObrs] ASC)
 );
 

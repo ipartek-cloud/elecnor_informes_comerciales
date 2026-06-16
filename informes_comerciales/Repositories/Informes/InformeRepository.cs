@@ -1201,29 +1201,27 @@ public class InformeRepository
                                          REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
                                          REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
                                          SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
-                                     FROM
-                                         rptPrincipalesObrasAI rpt WITH (NOLOCK)
-                                     INNER JOIN
-                                         Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-                                     INNER JOIN
-                                         dbo.OfertasSQL o WITH (NOLOCK) ON rpt.CodOferta = o.CodOferta
-                                     INNER JOIN
-                                         dbo.Sumarigrama S WITH (NOLOCK) ON o.CodCentro = S.CodCentro AND rpt.Año = S.Año
-                                     WHERE
-                                         rpt.Año = @Anio
-                                         AND rpt.Mes = @Mes
-                                         AND rpt.Ocultar = 0
-                                         AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
-                                         AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
-                                         AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
-                                         AND (
-                                             @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
-                                             OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
-                                             OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
-                                             OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
-                                             OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
-                                             OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-                                         )
+                                      FROM
+                                          rptPrincipalesObrasAI rpt WITH (NOLOCK)
+                                      INNER JOIN
+                                          Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                      INNER JOIN
+                                          dbo.Sumarigrama S WITH (NOLOCK) ON rpt.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                      WHERE
+                                          rpt.Año = @Anio
+                                          AND rpt.Mes = @Mes
+                                          AND rpt.Ocultar = 0
+                                          AND ISNULL(rpt.NombreCliente_OK, '') <> 'SIN'
+                                          AND ISNULL(rpt.DescripcionOferta_OK, '') <> 'SIN'
+                                          AND ISNULL(rpt.NombreDirNegocio_OK, '') <> 'SIN'
+                                          AND (
+                                              @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
+                                              OR (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad)
+                                              OR (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad)
+                                              OR (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad)
+                                              OR (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad)
+                                              OR (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
+                                          )
                                      GROUP BY
                                          rpt.Año,
                                          rpt.Pais,
@@ -1286,14 +1284,12 @@ public class InformeRepository
                                          REPLACE(rpt.DescripcionOferta_OK, '''', '') AS DescripcionOfertas_OK,
                                          REPLACE(rpt.NombreCliente_OK, '''', '') AS NombreClientes_OK,
                                          SUM(rpt.ImporteContratado_OK) AS ImporteContratado_OK
-                                     FROM
-                                         rptPrincipalesObrasAI rpt WITH (NOLOCK)
-                                     INNER JOIN
-                                         Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
-                                     INNER JOIN
-                                         dbo.OfertasSQL o WITH (NOLOCK) ON rpt.CodOferta = o.CodOferta
-                                     INNER JOIN
-                                         dbo.Sumarigrama S WITH (NOLOCK) ON o.CodCentro = S.CodCentro AND rpt.Año = S.Año
+                                      FROM
+                                          rptPrincipalesObrasAI rpt WITH (NOLOCK)
+                                      INNER JOIN
+                                          Mes m WITH (NOLOCK) ON rpt.Mes = m.Mes
+                                      INNER JOIN
+                                          dbo.Sumarigrama S WITH (NOLOCK) ON rpt.CodCentro = S.CodCentro AND rpt.Año = S.Año
                                      WHERE
                                          rpt.Año = @Anio
                                          AND rpt.Mes < @Mes

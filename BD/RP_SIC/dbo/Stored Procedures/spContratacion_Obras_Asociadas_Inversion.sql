@@ -4,25 +4,25 @@
 	AS
 BEGIN
 	
-	DECLARE @vContratacionObrasAI TABLE (NombreDirNegocio varchar(30), Pais varchar(50),NombrePais varchar(50),Año int,Mes int,CodOferta varchar(10), DescripcionOferta varchar(100),NombreCliente varchar(100), ImporteContratado float, LitMes varchar(20), wTipo int)	
+	DECLARE @vContratacionObrasAI TABLE (NombreDirNegocio varchar(30), Pais varchar(50),NombrePais varchar(50),Año int,Mes int,CodOferta varchar(10), DescripcionOferta varchar(100),NombreCliente varchar(100), ImporteContratado float, LitMes varchar(20), wTipo int, CodCentro varchar(3))	
 	
 	-- OFERTAS
-	INSERT INTO @vContratacionObrasAI(NombreDirNegocio,Pais,NombrePais,Año,Mes,CodOferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
-	SELECT NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,CodOferta,DescripcionOferta,isnull(NombreCliente,' '),dbo.fnOfertaMesActual (MesAdjudicacion, @pMes), sum(ImporteContratado) as ImporteContratado,1
+	INSERT INTO @vContratacionObrasAI(NombreDirNegocio,Pais,NombrePais,Año,Mes,CodOferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo,CodCentro)	
+	SELECT NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,CodOferta,DescripcionOferta,isnull(NombreCliente,' '),dbo.fnOfertaMesActual (MesAdjudicacion, @pMes), sum(ImporteContratado) as ImporteContratado,1,dbo.vwOfertasAICliente.CodCentro
 	FROM dbo.vwOfertasAICliente LEFT JOIN dbo.Sumarigrama
 		  ON dbo.Sumarigrama.CodCentro = dbo.vwOfertasAICliente.CodCentro
 	WHERE  AñoAdjudicacion=@pAño AND MesAdjudicacion <= @pMes 
-	GROUP BY NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,CodOferta,DescripcionOferta,NombreCliente,NombrePais,MesAdjudicacion	
+	GROUP BY NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,CodOferta,DescripcionOferta,NombreCliente,NombrePais,MesAdjudicacion,dbo.vwOfertasAICliente.CodCentro	
 
 	-- REGULARIZACIONES
 	
-	INSERT INTO @vContratacionObrasAI(NombreDirNegocio,Pais,NombrePais,Año,Mes,CodOferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
-	SELECT  NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,Codoferta,DescripcionOferta,isnull(NombreCliente,' '),dbo.fnOfertaMesActual (MesAdjudicacion, @pMes) as LitMes, sum(ImporteContratado) as ImporteContratado,2 as wTipo
+	INSERT INTO @vContratacionObrasAI(NombreDirNegocio,Pais,NombrePais,Año,Mes,CodOferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo,CodCentro)	
+	SELECT  NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,Codoferta,DescripcionOferta,isnull(NombreCliente,' '),dbo.fnOfertaMesActual (MesAdjudicacion, @pMes) as LitMes, sum(ImporteContratado) as ImporteContratado,2 as wTipo,vwRegularizacionesQ.CodCentro
 	FROM         (SELECT   Codoferta,DescripcionOferta,NombreCliente,AñoAdjudicacion,MesAdjudicacion,ImporteContratado,codCentro,Pais,NombrePais
 				  FROM     dbo.vwRegularizacionesAICliente
 				  WHERE    (AñoAdjudicacion = @pAño) AND (MesAdjudicacion <= @pMes)) AS vwRegularizacionesQ LEFT JOIN
 							 dbo.Sumarigrama ON vwRegularizacionesQ.CodCentro = dbo.Sumarigrama.CodCentro
-	GROUP BY NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,Codoferta,DescripcionOferta,NombreCliente		
+	GROUP BY NombreDirNegocio,Pais,NombrePais,AñoAdjudicacion,MesAdjudicacion,Codoferta,DescripcionOferta,NombreCliente,vwRegularizacionesQ.CodCentro		
 
 	-- OFERTASsql	
 /*	INSERT INTO @vContratacionObrasAI(NombreDirNegocio,Pais,Año,Mes,NombrePais,CodOferta,DescripcionOferta,NombreCliente,LitMes,ImporteContratado,wTipo)	
@@ -45,8 +45,9 @@ BEGIN
 				NombreCliente=isnull(w.NombreCliente,''),
 				ImporteContratado=round(w.ImporteContratado/1000,0),
 				Año=w.Año,
-				Mes=w.Mes			
-			FROM (SELECT isnull(NombreDirNegocio,'-') as NombreDirNegocio,Pais,CodOferta,DescripcionOferta,rtrim(NombreCliente) + ' ' + NombrePais as NombreCliente,Año,Mes,sum(ImporteContratado) as ImporteContratado,wTipo
+				Mes=w.Mes,
+				CodCentro=w.CodCentro
+			FROM (SELECT isnull(NombreDirNegocio,'-') as NombreDirNegocio,Pais,CodOferta,DescripcionOferta,rtrim(NombreCliente) + ' ' + NombrePais as NombreCliente,Año,Mes,sum(ImporteContratado) as ImporteContratado,wTipo,MAX(CodCentro) as CodCentro
 				  FROM @vContratacionObrasAI
 				  WHERE Año=@pAño
 				  GROUP BY isnull(NombreDirNegocio,'-'),Pais,CodOferta,DescripcionOferta,rtrim(NombreCliente) + ' ' + NombrePais,Año,Mes,wTipo 
@@ -59,8 +60,8 @@ BEGIN
 			
 			-- AÑADIMOS NUEVOS	
 
-			INSERT INTO rptPrincipalesObrasAI(NombreDirNegocio,NombreDirNegocio_OK,Pais,DescripcionOferta,DescripcionOferta_OK,NombreCliente,NombreCliente_OK,ImporteContratado,ImporteContratado_OK,Año,Mes,CodOferta,wTipo)			
-			SELECT isnull(w.NombreDirNegocio,'-'),isnull(w.NombreDirNegocio,'-'),w.Pais,w.DescripcionOferta,w.DescripcionOferta,rtrim(isnull(w.NombreCliente,'')) + ' ' + isnull(w.NombrePais,''),rtrim(isnull(w.NombreCliente,'')) + ' ' +isnull( w.NombrePais,''),round((sum(w.ImporteContratado)/1000),0) ,round((sum(w.ImporteContratado)/1000),0),w.Año,w.Mes,w.CodOferta,w.wTipo 
+			INSERT INTO rptPrincipalesObrasAI(NombreDirNegocio,NombreDirNegocio_OK,Pais,DescripcionOferta,DescripcionOferta_OK,NombreCliente,NombreCliente_OK,ImporteContratado,ImporteContratado_OK,Año,Mes,CodOferta,wTipo,CodCentro)			
+			SELECT isnull(w.NombreDirNegocio,'-'),isnull(w.NombreDirNegocio,'-'),w.Pais,w.DescripcionOferta,w.DescripcionOferta,rtrim(isnull(w.NombreCliente,'')) + ' ' + isnull(w.NombrePais,''),rtrim(isnull(w.NombreCliente,'')) + ' ' +isnull( w.NombrePais,''),round((sum(w.ImporteContratado)/1000),0) ,round((sum(w.ImporteContratado)/1000),0),w.Año,w.Mes,w.CodOferta,w.wTipo,MAX(w.CodCentro) as CodCentro
 			FROM  @vContratacionObrasAI as w LEFT OUTER JOIN dbo.rptPrincipalesObrasAI ON
 				  dbo.rptPrincipalesObrasAI.CodOferta = w.CodOferta AND 
                   dbo.rptPrincipalesObrasAI.wTipo=w.wTipo AND
