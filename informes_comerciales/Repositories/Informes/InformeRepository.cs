@@ -481,8 +481,8 @@ public class InformeRepository
     {
         using var connection = new SqlConnection(_connectionString);
 
-        string colCartPrev = $"[01#01#{(anio - 2).ToString().Substring(2)}]";
-        string colCartAct  = $"[01#01#{(anio - 1).ToString().Substring(2)}]";
+        string colCartPrev = $"[01#01#{(anio - 1).ToString().Substring(2)}]";
+        string colCartAct  = $"[01#01#{(anio).ToString().Substring(2)}]";
         string colFuturo1  = $"[{anio}]";
         string colFuturo2  = $"[{anio + 1}]";
         string colFuturo3  = $"[{anio + 2}]";
