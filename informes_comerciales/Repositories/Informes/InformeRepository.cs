@@ -700,7 +700,7 @@ public class InformeRepository
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         const string sqlInsertExec = @" INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
-                                        EXEC spContratacion_Actividades_Ajuste @Anio, @Mes";
+                                        EXEC spContratacion_Actividades_Ajuste @Anio, @Mes, @LoginUsuario";
 
         // Inyectamos el Año como campo extra (estándar del proyecto)
         const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad 
@@ -2146,7 +2146,7 @@ public class InformeRepository
                                    WHERE (AnioInforme = @Anio AND MesInforme = @Mes AND LoginUsuario = @LoginUsuario)
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
         
-        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe";
+        const string sqlExec = "EXEC spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños @Anio, @Mes, @TodoInternacional, @LimiteImporte, @LimitePaises, @Informe, @LoginUsuario";
 
         const string sqlInsert = @"INSERT INTO rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises
                                             (AnioInforme, MesInforme, Pais, NomCliente, DesOferta, ImporteCarteraOferta, ImporteContratadoOferta, ImporteCarteraPais, LoginUsuario)
