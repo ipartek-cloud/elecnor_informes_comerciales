@@ -35,7 +35,12 @@ public class InformeMercadosSGDelegacionesService
         if (datosPlanos == null || !datosPlanos.Any())
             return response;
 
-        var datosOrdenados = datosPlanos
+        // Filtrar delegaciones que no tienen contratación en el ejercicio actual (mensual y acumulado)
+        var datosFiltrados = datosPlanos
+            .Where(x => x.ImporteContratadoAcumulado != 0 || x.ImporteContratado != 0)
+            .ToList();
+
+        var datosOrdenados = datosFiltrados
             .OrderBy(x => x.OrdenSubDirGeneral)
             .ThenBy(x => x.Orden_CodDDirNegocio.GetValueOrDefault(999))
             .ThenBy(x => x.Area)
