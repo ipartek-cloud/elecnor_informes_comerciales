@@ -699,13 +699,8 @@ public class InformeRepository
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
-        const string sqlInsertExec = @" INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear)
+        const string sqlInsertExec = @" INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear, Año, LoginUsuario)
                                         EXEC spContratacion_Actividades_Ajuste @Anio, @Mes, @LoginUsuario";
-
-        // Inyectamos el Año como campo extra (estándar del proyecto)
-        const string sqlUpdateAnio = @"UPDATE rptContratacion_Actividad 
-                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
-                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
 
         const string sqlSelect = @";WITH vwActividades AS (
 	                                    SELECT DISTINCT
@@ -743,7 +738,6 @@ public class InformeRepository
         {
             await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
-            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
             
             var resultado = (await _connection.QueryAsync<ActividadPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
 
@@ -772,7 +766,7 @@ public class InformeRepository
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
-        const string sqlInsertExec = @"INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear, LoginUsuario)
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_Actividad (NombreDirGeneral, Pais, CodActividad, Actividad, Orden, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, ImporteContratadoAcumuladoLastYear, Año, LoginUsuario)
                                        EXEC spContratacion_Actividades_Ajuste @Anio, @Mes, @LoginUsuario";
 
         const string sqlSelect = @";WITH CTE_FiltroSumarigrama AS (
@@ -2023,13 +2017,11 @@ public class InformeRepository
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
-        const string sqlInsertExec = @"INSERT INTO rptContratacion_SG_Mercado
-                                            (Pais, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior)
-                                        EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes, @LoginUsuario";
+        const string sqlExecSp = @"EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes, @LoginUsuario";
 
-        const string sqlUpdateAnio = @"UPDATE rptContratacion_SG_Mercado 
-                                       SET Año = @Anio, LoginUsuario = @LoginUsuario 
-                                       WHERE Año IS NULL AND LoginUsuario = 'ACCESS'";
+        const string sqlInsert = @"INSERT INTO rptContratacion_SG_Mercado
+                                        (Pais, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Año, LoginUsuario)
+                                        VALUES (@Pais, @CodCentro, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @Año, @LoginUsuario)";
 
         const string sqlSelect = @"WITH CTE_Estructura_Delegacion AS (
                                         SELECT DISTINCT
@@ -2120,8 +2112,21 @@ public class InformeRepository
         try
         {
             await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
-            await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
-            await _connection.ExecuteAsync(sqlUpdateAnio, parametros, transaction: transaction);
+
+            var spResult = await _connection.QueryAsync<SpContratacionMensualResult>(sqlExecSp, parametros, transaction: transaction, commandTimeout: 300);
+            var insertList = spResult.Select(r => new
+            {
+                Pais = r.Pais,
+                CodCentro = r.CodCentro,
+                ImporteContratado = Convert.ToDecimal(r.ImporteContratado),
+                ImporteContratadoAcumulado = Convert.ToDecimal(r.ImporteContratadoAcumulado),
+                ImporteContratadoAcumuladoAñoAnterior = Convert.ToDecimal(r.ImporteContratadoAcumuladoAñoAnterior),
+                Año = anio,
+                LoginUsuario = loginUsuario
+            }).ToList();
+
+            if (insertList.Any())
+                await _connection.ExecuteAsync(sqlInsert, insertList, transaction: transaction, commandTimeout: 300);
 
             var resultado = (await _connection.QueryAsync<MercadoSGDelegacionPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
 
@@ -2396,5 +2401,13 @@ public class InformeRepository
         }
     }
 
+    private class SpContratacionMensualResult
+    {
+        public string Pais { get; set; } = "";
+        public string CodCentro { get; set; } = "";
+        public double ImporteContratado { get; set; }
+        public double ImporteContratadoAcumulado { get; set; }
+        public double ImporteContratadoAcumuladoAñoAnterior { get; set; }
+    }
 }
 
