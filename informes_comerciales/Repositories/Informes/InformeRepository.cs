@@ -526,7 +526,7 @@ public class InformeRepository
         // WEB: Usa spContratacion_InternacionalWEB (versión optimizada con pushdown a AS/400).
         //      El SP original spContratacion_Internacional se mantiene intacto para otras apps.
         const string sqlInsertExec = @"INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
-                                       EXEC spContratacion_InternacionalWEB @Anio, @Mes";
+                                       EXEC spContratacion_InternacionalWEB @Anio, @Mes, @LoginUsuario";
 
         // Asignamos el Año (campo extra) para que el SELECT lo encuentre
         const string sqlUpdateAnio = @"UPDATE rptContratacion_Internacional 
@@ -612,7 +612,7 @@ public class InformeRepository
  
         // ─── PASO 2: Poblado vía SP (Paises ALL: Nac + Int) ───
         const string sqlInsertExec = @"INSERT INTO rptContratacion_Internacional (codProv, Pais, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Ajuste)
-                                       EXEC spContratacion_NacIntTODO @Anio, @Mes, ''";
+                                       EXEC spContratacion_NacIntTODO @Anio, @Mes, '', @LoginUsuario";
  
         const string sqlUpdateAnio = @"UPDATE rptContratacion_Internacional 
                                        SET Año = @Anio, LoginUsuario = @LoginUsuario 
@@ -1370,10 +1370,10 @@ public class InformeRepository
                                          OR FechaCreacion < DATEADD(hour, -1, GETDATE())", 
                                     new { LoginUsuario = loginUsuario }, transaction: transaction);
 
-            // 2. Ejecutar SP (3 parámetros: Mercado, Año, Mes) y obtener resultados en memoria
+            // 2. Ejecutar SP (4 parámetros: Mercado, Año, Mes, LoginUsuario) y obtener resultados en memoria
             // El SP devuelve ImporteContratadoAcumuladoAñoAnterior en Real Euros.
-            var resultadosSp = (await conn.QueryAsync<RankingClientesSpResult>( "EXEC spContratacion_Clientes @Mercado, @Anio, @Mes",
-                                                                                    new { Mercado = mercado, Anio = anio, Mes = mes },
+            var resultadosSp = (await conn.QueryAsync<RankingClientesSpResult>( "EXEC spContratacion_Clientes @Mercado, @Anio, @Mes, @LoginUsuario",
+                                                                                    new { Mercado = mercado, Anio = anio, Mes = mes, LoginUsuario = loginUsuario },
                                                                                     transaction: transaction,
                                                                                     commandTimeout: 300
                                                                                 )).ToList();
@@ -1458,9 +1458,9 @@ public class InformeRepository
                                          OR FechaCreacion < DATEADD(hour, -1, GETDATE())", 
                                     new { LoginUsuario = loginUsuario }, transaction: transaction);
 
-            // 2. Ejecutar SP de desglose (3 parámetros: Mercado, Año, Mes)
-            var resultadosSp = (await conn.QueryAsync<RankingClientesDesgloseSpResult>( "EXEC spContratacion_Clientes_Desglose @Mercado, @Anio, @Mes",
-                                                                                            new { Mercado = mercado, Anio = anio, Mes = mes },
+            // 2. Ejecutar SP de desglose (4 parámetros: Mercado, Año, Mes, LoginUsuario)
+            var resultadosSp = (await conn.QueryAsync<RankingClientesDesgloseSpResult>( "EXEC spContratacion_Clientes_Desglose @Mercado, @Anio, @Mes, @LoginUsuario",
+                                                                                            new { Mercado = mercado, Anio = anio, Mes = mes, LoginUsuario = loginUsuario },
                                                                                             transaction: transaction,
                                                                                             commandTimeout: 300
                                                                                         )).ToList();
