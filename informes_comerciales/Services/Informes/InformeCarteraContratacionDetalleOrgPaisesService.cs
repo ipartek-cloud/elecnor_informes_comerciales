@@ -101,20 +101,20 @@ public class InformeCarteraContratacionDetalleOrgPaisesService
 
         response.Agrupaciones = agrupaciones;
 
-        // Totales: Suma de los totales únicos por País
-        var totalesPorPais = datosFiltrados
-            .GroupBy(x => new { x.NombreDirNegocio, x.Pais })
+        // Totales: Suma de los totales únicos por Dirección de Negocio (DN) para paridad de totales con Access
+        var totalesPorDN = datosFiltrados
+            .GroupBy(x => x.CodDDirNegocio)
             .Select(g => new 
             { 
-                ImporteActual = g.First().ImporteCarteraPais ?? 0,
-                ImporteAnterior = g.First().ImporteCarteraPaisAñoAnterior ?? 0
+                ImporteActual = g.First().ImporteCarteraDN ?? 0,
+                ImporteAnterior = g.First().ImporteCarteraDNAñoAnterior ?? 0
             })
             .ToList();
 
         response.Totales = new CarteraContratacionDetalleOrgPaisesTotalesDto
         {
-            SumaCarteraPais = totalesPorPais.Sum(x => x.ImporteActual),
-            SumaCarteraPaisAñoAnterior = totalesPorPais.Sum(x => x.ImporteAnterior),
+            SumaCarteraPais = totalesPorDN.Sum(x => x.ImporteActual),
+            SumaCarteraPaisAñoAnterior = totalesPorDN.Sum(x => x.ImporteAnterior),
             TotalCarteraGeneral = totalGeneral
         };
 

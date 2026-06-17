@@ -13,10 +13,10 @@
 
 /* ─── Anchos de columna ─── */
 .rpt-col-pct-ant      { width: 12%; }
-.rpt-col-contr-ant    { width: 12%; }
-.rpt-col-actividad    { width: 34%; padding-left: 8px !important; padding-right: 8px !important; text-align: left !important; }
+.rpt-col-contr-ant    { width: 10.2%; }
+.rpt-col-actividad    { width: 37.6%; padding-left: 8px !important; padding-right: 8px !important; text-align: left !important; }
 .rpt-col-objetivo     { width: 12%; }
-.rpt-col-contr-actual { width: 12%; }
+.rpt-col-contr-actual { width: 10.2%; }
 .rpt-col-ip           { width: 6%;  }
 .rpt-col-pct-actual   { width: 12%; }
 

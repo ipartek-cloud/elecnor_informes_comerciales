@@ -94,7 +94,7 @@ function _renderBloquePais(pais) {
       <th class="rpt-col-act-porc-ant rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         % s/Merc
       </th>
-      <th class="rpt-col-act-imp-ant rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-imp-ant rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Contr.
       </th>
       <th rpt-border-none></th>
@@ -102,13 +102,13 @@ function _renderBloquePais(pais) {
         <div class="rpt-act-badge">${pais.nombrePais}</div>
       </th>
       <th rpt-border-none></th>
-      <th class="rpt-col-act-obj rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-obj rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Obj.
       </th>
-      <th class="rpt-col-act-imp-act rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-imp-act rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Contr.
       </th>
-      <th class="rpt-col-act-ip rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
+      <th class="rpt-col-act-ip rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
         Ip
       </th>
       <th class="rpt-col-act-var rpt-align-end rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">

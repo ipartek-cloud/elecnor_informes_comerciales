@@ -134,16 +134,16 @@ function _renderizarPagina() {
                             <th class="rpt-text-corporate rpt-align-center rpt-fs-8pt">
                                 <div class="rpt-act-header-line">% s/Merc</div>
                             </th>
-                            <th class="rpt-text-corporate rpt-align-end rpt-fs-8pt">
+                            <th class="rpt-text-corporate rpt-align-center rpt-fs-8pt">
                                 <div class="rpt-act-header-line">Contr.</div>
                             </th>
                             <th class="rpt-text-corporate rpt-align-center rpt-fs-8pt rpt-col-internacional-header">
                                 <div class="rpt-act-header-line">Internacional</div>
                             </th>
-                            <th class="rpt-text-corporate rpt-align-end rpt-fs-8pt">
+                            <th class="rpt-text-corporate rpt-align-center rpt-fs-8pt">
                                 <div class="rpt-act-header-line">Objetivo</div>
                             </th>
-                            <th class="rpt-text-corporate rpt-align-end rpt-fs-8pt">
+                            <th class="rpt-text-corporate rpt-align-center rpt-fs-8pt">
                                 <div class="rpt-act-header-line">Contr.</div>
                             </th>
                             <th class="rpt-text-corporate rpt-align-center rpt-fs-8pt">

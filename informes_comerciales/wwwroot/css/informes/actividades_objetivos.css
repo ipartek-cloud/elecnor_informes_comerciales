@@ -187,3 +187,10 @@ table.rpt-table-actividades tr.rpt-total-row td.rpt-act-total-border-top {
   display: inline-block;
   vertical-align: baseline;
 }
+
+/* Centrado óptico de la cabecera Ip para que coincida con los números a la derecha */
+.rpt-table-actividades thead th.rpt-col-act-ip {
+  text-align: right !important;
+  padding-right: 10px !important;
+}
+
