@@ -20,7 +20,7 @@ public class TokenService
 
     public async Task<string> CreateTokenAsync(User user)
     {
-        var informesClaim = await _seguridadService.ObtenerPermisosSerializadosAsync(user.Puesto);
+        var informesClaim = await _seguridadService.ObtenerPermisosSerializadosAsync(user.Puesto, bypassCache: true);
 
         var claims = new List<Claim>
         {

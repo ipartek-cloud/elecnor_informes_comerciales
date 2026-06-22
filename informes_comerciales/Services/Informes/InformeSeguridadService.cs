@@ -21,8 +21,13 @@ public class InformeSeguridadService
     /// Obtiene toda la matriz de permisos agrupada por puesto.
     /// Retorna un diccionario donde la clave es el Puesto (DG, SDG, etc.) y el valor es un conjunto de claves "Tipo_Informe_Web|Nombre_Informe_Web" permitidas.
     /// </summary>
-    public async Task<Dictionary<string, HashSet<string>>> ObtenerMatrizPermisosAsync()
+    public async Task<Dictionary<string, HashSet<string>>> ObtenerMatrizPermisosAsync(bool bypassCache = false)
     {
+        if (bypassCache)
+        {
+            _cache.Remove(CacheKey);
+        }
+
         return await _cache.GetOrCreateAsync(CacheKey, async entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = CacheDuration;
@@ -82,10 +87,10 @@ public class InformeSeguridadService
     /// Retorna una cadena con la lista de informes permitidos en formato CSV: "Tipo|Nombre,Tipo|Nombre"
     /// útil para inyectar en el token JWT.
     /// </summary>
-    public async Task<string> ObtenerPermisosSerializadosAsync(string puesto)
+    public async Task<string> ObtenerPermisosSerializadosAsync(string puesto, bool bypassCache = false)
     {
         if (string.IsNullOrWhiteSpace(puesto)) return string.Empty;
-        var matriz = await ObtenerMatrizPermisosAsync();
+        var matriz = await ObtenerMatrizPermisosAsync(bypassCache);
         if (matriz.TryGetValue(puesto.Trim(), out var permitidos))
         {
             return string.Join(",", permitidos);

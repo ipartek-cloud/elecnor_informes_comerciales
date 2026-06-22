@@ -15,6 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const isLogged = !!sessionStorage.getItem('jwt_token');
     initUI(isLogged);
 
+    // Mostrar alerta de bienvenida si se acaba de loguear y se ha recargado la página
+    if (isLogged && sessionStorage.getItem('mostrar_bienvenida') === '1') {
+        sessionStorage.removeItem('mostrar_bienvenida');
+        const nombre = sessionStorage.getItem('jwt_NombreUsuario') || 'Usuario';
+        GlobalUI.showAlert(`Bienvenido, ${nombre}.`, 'success', 'Login OK');
+    }
+
     // Bindeo Submit Login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -37,6 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (resp.ok) {
                     const data = await resp.json();
+                    
+                    // Limpieza preventiva del sessionStorage para evitar residuos de cuentas anteriores
+                    sessionStorage.clear();
                     sessionStorage.setItem('jwt_token', data.token);
 
                     // Decodificar y almacenar claims
@@ -47,10 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         sessionStorage.setItem('jwt_Puesto', jwtPayload.Puesto);
                         sessionStorage.setItem('jwt_CodEntidad', jwtPayload.CodEntidad);
                         sessionStorage.setItem('jwt_InformesPermitidos', jwtPayload.InformesPermitidos || '');
+                        // Registrar bandera para mostrar la alerta de bienvenida tras la recarga
+                        sessionStorage.setItem('mostrar_bienvenida', '1');
                     }
 
-                    initUI(true);
-                    GlobalUI.showAlert(`Bienvenido, ${jwtPayload.NombreUsuario}.`, 'success', 'Login OK');
+                    // Forzar recarga completa de la página desde el servidor para refrescar estáticos
+                    window.location.reload();
                 } else {
                     const dataError = await resp.json();
                     errMsg.textContent = dataError.message || "Credenciales incorrectas.";
