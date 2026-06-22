@@ -1,5 +1,4 @@
 import { GlobalUI, ApiClient, decodeJwt } from './site.js';
-import { limpiarCssInformes } from './informes/informes_manager.js';
 // Script principal asociado a la vista Home/Index.cshtml
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -47,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         sessionStorage.setItem('jwt_NombreUsuario', jwtPayload.NombreUsuario);
                         sessionStorage.setItem('jwt_Puesto', jwtPayload.Puesto);
                         sessionStorage.setItem('jwt_CodEntidad', jwtPayload.CodEntidad);
+                        sessionStorage.setItem('jwt_InformesPermitidos', jwtPayload.InformesPermitidos || '');
                     }
 
                     initUI(true);
@@ -118,6 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const puesto = sessionStorage.getItem('jwt_Puesto') || '';
                 lblNombre.textContent = `${nombre} (${puesto})`;
             }
+            
+            if (typeof window.aplicarSeguridadPorPuesto === 'function') {
+                window.aplicarSeguridadPorPuesto();
+            }
         } else {
             // Mostrar modal de login
             if (modalEl) {
@@ -139,7 +143,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (modalInforme) {
         modalInforme.addEventListener('hidden.bs.modal', function () {
             // 1. Limpiar CSS inyectado para evitar colisiones de estilos
-            limpiarCssInformes();
+            if (typeof window.limpiarCssInformes === 'function') {
+                window.limpiarCssInformes();
+            }
             // 2. Limpiar contenido HTML para liberar memoria y resetear estado visual
             const contenido = document.getElementById('modalInformeContenido');
             if (contenido) {

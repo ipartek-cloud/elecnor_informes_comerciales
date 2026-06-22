@@ -47,7 +47,7 @@ public class LoginController : ControllerBase
         }
 
         // Generar token JWT
-        var token = _tokenService.CreateToken(user);
+        var token = await _tokenService.CreateTokenAsync(user);
 
         return Ok(new LoginResponseDto { Token = token });
     }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Elecnor_Informes_Comerciales.Services.Informes;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 
 [ApiController]
 [Route("api/ranking-contratacion-clientes")]
+[Authorize]
 public class RankingContratacionClientesController : ControllerBase
 {
     private readonly InformeRankingContratacionClientesService _service;

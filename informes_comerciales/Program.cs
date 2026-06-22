@@ -87,6 +87,7 @@ builder.Services.AddSingleton<HtmlAssemblerService>();
 builder.Services.AddScoped<InformePortableService>();
 builder.Services.AddSingleton<PdfPageNumberService>();
 builder.Services.AddSingleton<IPdfGeneratorService, PdfGeneratorService>();
+builder.Services.AddScoped<InformeSeguridadService>();
 Console.WriteLine("[DI] Servicios HTML Portable registrados.");
 Console.WriteLine("[DI] Servicios de PDF registrados.");
 Console.WriteLine("[DI] Servicios y repositorios registrados.");
@@ -262,6 +263,9 @@ app.UseResponseCaching();
 // 11. Habilitar Autenticación y Autorización
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Middleware de seguridad de Informes
+app.UseMiddleware<InformeSeguridadMiddleware>();
 
 // 12. Mapeo de Rutas y Controladores
 app.MapControllers();

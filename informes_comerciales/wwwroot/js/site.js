@@ -68,6 +68,13 @@ export const ApiClient = {
             headers: headers,
             body: JSON.stringify(bodyObj)
         });
+
+        if (response.status === 403) {
+            const errorData = await response.json().catch(() => ({}));
+            GlobalUI.showAlert(errorData.message || "Acceso restringido. Su puesto de trabajo no cuenta con privilegios para consultar este informe.", "danger");
+            throw new Error("ACCESO_RESTRINGIDO");
+        }
+
         return response;
     },
 
@@ -79,6 +86,13 @@ export const ApiClient = {
         }
 
         const response = await fetch(url, { method: 'GET', headers: headers });
+
+        if (response.status === 403) {
+            const errorData = await response.json().catch(() => ({}));
+            GlobalUI.showAlert(errorData.message || "Acceso restringido. Su puesto de trabajo no cuenta con privilegios para consultar este informe.", "danger");
+            throw new Error("ACCESO_RESTRINGIDO");
+        }
+
         return response;
     }
 }
@@ -88,7 +102,9 @@ export const ApiClient = {
 export function decodeJwt(token) {
     try {
         const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(atob(base64));
+        const binString = atob(base64);
+        const bytes = Uint8Array.from(binString, m => m.codePointAt(0));
+        return JSON.parse(new TextDecoder().decode(bytes));
     } catch {
         return null;
     }

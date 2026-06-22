@@ -3,27 +3,33 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Elecnor_Informes_Comerciales.Models;
+using Elecnor_Informes_Comerciales.Services.Informes;
 
 namespace Elecnor_Informes_Comerciales.Services;
 
 public class TokenService
 {
     private readonly IConfiguration _configuration;
+    private readonly InformeSeguridadService _seguridadService;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService(IConfiguration configuration, InformeSeguridadService seguridadService)
     {
         _configuration = configuration;
+        _seguridadService = seguridadService;
     }
 
-    public string CreateToken(User user)
+    public async Task<string> CreateTokenAsync(User user)
     {
+        var informesClaim = await _seguridadService.ObtenerPermisosSerializadosAsync(user.Puesto);
+
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Usuario),
             new(JwtRegisteredClaimNames.Sub, user.Usuario),
             new("NombreUsuario", user.NombreUsuario),
             new("Puesto", user.Puesto),
-            new("CodEntidad", user.CodEntidad ?? string.Empty)
+            new("CodEntidad", user.CodEntidad ?? string.Empty),
+            new("InformesPermitidos", informesClaim)
         };
 
         var jwtSettings = _configuration.GetSection("JWT");

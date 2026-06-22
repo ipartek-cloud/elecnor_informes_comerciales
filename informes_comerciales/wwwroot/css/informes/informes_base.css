@@ -974,9 +974,9 @@ ANCHOS DE COLUMNA COMPARTIDOS - P1
     white-space: nowrap !important;
 }
 
-/* Clase para el contenedor input-group del index con ancho uniforme */
+/* Clase para el contenedor input-group del index con ancho elástico que ocupa todo el ancho de su columna */
 .rpt-input-group-index {
-    width: 485px !important; /* Ancho suficiente para el literal más largo + input página */
+    width: 100% !important;
 }
 
 .rpt-btn-light {

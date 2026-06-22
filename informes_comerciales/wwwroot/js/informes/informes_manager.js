@@ -354,6 +354,32 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
         btn = null;
     }
 
+    // --- VERIFICACIÓN DE SEGURIDAD POR PUESTO (Bypass de Consola) ---
+    let btnRef = btn;
+    if (!btnRef && nombreInforme) {
+        btnRef = document.querySelector(`button[onclick*="'${nombreInforme}'"]`);
+    }
+
+    if (btnRef) {
+        const tipo = btnRef.dataset.informeTipo;
+        const nombre = btnRef.dataset.informeNombre;
+        
+        if (tipo && nombre) {
+            const permitidosStr = sessionStorage.getItem('jwt_InformesPermitidos') || '';
+            const informesPermitidos = new Set(permitidosStr ? permitidosStr.split(',') : []);
+            const key = `${tipo}|${nombre}`;
+            
+            if (!informesPermitidos.has(key)) {
+                GlobalUI.showAlert('Acceso Restringido. Su puesto de trabajo no cuenta con privilegios para consultar este informe.', 'warning');
+                return;
+            }
+        }
+    } else if (nombreInforme) {
+        // Si el botón no existe en el DOM (porque fue eliminado por no tener permisos), bloqueamos de inmediato
+        GlobalUI.showAlert('Acceso denegado a este informe.', 'danger');
+        return;
+    }
+
     const anio = document.getElementById('txtAnno').value;
     const mes  = document.getElementById('txtMes').value;
 
@@ -707,3 +733,33 @@ async function _generarHtmlPortable(btn, nombreInforme, mesesSeleccionados, labe
         GlobalUI.hideLoading();
     }
 }
+
+/**
+ * Escanea los botones de informe en el DOM y elimina los que no estén autorizados para el puesto actual del usuario.
+ */
+export function aplicarSeguridadPorPuesto() {
+    const permitidosStr = sessionStorage.getItem('jwt_InformesPermitidos') || '';
+    const informesPermitidos = new Set(permitidosStr ? permitidosStr.split(',') : []);
+    
+    // Buscar todos los botones de informe reales que tengan data-informe-nombre
+    const botones = document.querySelectorAll('button[data-informe-nombre]');
+    
+    botones.forEach(btn => {
+        const tipo = btn.dataset.informeTipo;
+        const nombre = btn.dataset.informeNombre;
+        const key = `${tipo}|${nombre}`;
+        
+        if (!informesPermitidos.has(key)) {
+            // Eliminar el contenedor input-group completo (botón + paginador)
+            const inputGroup = btn.closest('.input-group');
+            if (inputGroup) {
+                inputGroup.remove();
+            } else {
+                btn.remove();
+            }
+        }
+    });
+}
+
+window.limpiarCssInformes = limpiarCssInformes;
+window.aplicarSeguridadPorPuesto = aplicarSeguridadPorPuesto;

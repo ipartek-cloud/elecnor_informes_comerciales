@@ -609,11 +609,7 @@ body.modal-open {
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Separación intermedia de 6px para las filas de botones en las pestañas */
-#consejoAdministracionContainer,
-#reportButtonsContainer {
-    gap: 6px !important;
-}
+
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
