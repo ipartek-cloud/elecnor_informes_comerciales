@@ -376,7 +376,7 @@ BEGIN
 	
 	INSERT INTO WEB_CarteraDetalladaUsuarioCentro(Usuario,Tipo,CodOferta,DescripcionOferta,FAdjudicacion,ImporteContratado,NombreObra,FApertura,FCierre,ImporteProduccion,ImporteFactura,ImporteFot,Est,CodCliente)
 	SELECT @Usuario,TipoOferta,CDOFT CodOferta,Isnull(DescripcionOferta,''),IsNull(FAdjudicacion,''),IsNull(ImporteContratado,0),TipoOferta+[dbo].[fnObra](TipoOferta, ObrasOtrasSQL.Obra,ObrasOtrasSQL.ObraL)  +  DSOBR, replace(ObrasOtrasSQL.FAPERTURA,'/','_'),replace(ObrasOtrasSQL.FCIERRE,'/','_'),SOP,SOF,SOL,Est,CodCliente
-	FROM (SELECT * FROM WEB_CarteraDetalladaUsuarioCentro WHere Usuario=@Usuario AND CodOferta NOT IN ('1','2')) WEB_CarteraDetalladaUsuarioCentro 
+	FROM (SELECT * FROM WEB_CarteraDetalladaUsuarioCentro WHere Usuario=@Usuario AND CodOferta NOT IN ('0000000001','0000000002')) WEB_CarteraDetalladaUsuarioCentro
 			RIGHT JOIN (
 						SELECT id, RIGHT('0000000000' + IdOferta, 10) CDOFT, CentroCRM CTR, IdCentro+IdObra OBRA, '' OBRAL, Obra DSOBR, 
 								RIGHT('00'+CAST(MONTH(FechaApertura) as varchar(2)), 2) + '_' + RIGHT(CAST(YEAR(FechaApertura) AS varchar(4)), 2) FAPERTURA,

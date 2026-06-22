@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[rptContratacion_Clientes_Desglose] (
+﻿CREATE TABLE [dbo].[rptContratacion_Clientes_Desglose] (
     [idContratacionActividad]               INT             IDENTITY (1, 1) NOT NULL,
     [AI]                                    NVARCHAR (2)    NULL,
     [Año]                                   INT             NULL,
@@ -8,10 +8,12 @@ CREATE TABLE [dbo].[rptContratacion_Clientes_Desglose] (
     [ImporteContratadoAcumuladoAñoAnterior] DECIMAL (18, 2) NULL,
     [Mercado]                               NVARCHAR (50)   NULL,
     [Pais]                                  NVARCHAR (50)   NULL,
-    [LoginUsuario]                          NVARCHAR (100)  NULL DEFAULT ('ACCESS'),
-    [FechaCreacion]                         DATETIME        NULL DEFAULT (GETDATE()),
+    [LoginUsuario]                          NVARCHAR (100)  CONSTRAINT [DF_rptContrCliDesg_Login] DEFAULT ('ACCESS') NULL,
+    [FechaCreacion]                         DATETIME        CONSTRAINT [DF_rptContrCliDesg_Fecha] DEFAULT (getdate()) NULL,
     CONSTRAINT [PK_rptContratacion_Clientes_Desglose] PRIMARY KEY CLUSTERED ([idContratacionActividad] ASC)
 );
+
+
 
 
 GO

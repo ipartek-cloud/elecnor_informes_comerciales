@@ -173,6 +173,73 @@
                 ├── 802 - Deleg SS.EE. Nacional
                 ├── 803 - Proyectos Especiales
                 ├── 812 - Deleg Africa
+				
+	-- --------------------------------------------------------------------------------------------------------------------------
+				
+	DG (218)                                   Ipartek_DG_218
+	├── CodSubDirGeneral (221)                 ├── Ipartek_SDG_221
+	│   ├── CodDDirNegocio (500)               │   ├── Ipartek_DN_500
+	│   │   ├── CodSubDirNegocioArea (307)     │   │   ├── Ipartek_AREA_307
+	│   │   │   └── CodDelegacion (061)        │   │   │   └── Ipartek_DEL_061
+	│   │   │       └── CodCentro (109)        │   │   │       └── Ipartek_CT_109
+	│   │   ├── CodSubDirNegocioArea (560)     │   │   ├── Ipartek_AREA_560
+	│   │   │   └── CodDelegacion (155)        │   │   │   └── Ipartek_DEL_155
+	│   │   │       └── CodCentro (149)        │   │   │       └── Ipartek_CT_149
+	│   │   └── CodSubDirNegocioArea (578)     │   │   └── Ipartek_AREA_578
+	│   │       └── CodDelegacion (376)        │   │       └── Ipartek_DEL_376
+	│   │           └── CodCentro (375)        │   │           └── Ipartek_CT_375
+	│   ├── CodDDirNegocio (934)               │   ├── Ipartek_DN_934
+	│   │   ├── CodSubDirNegocioArea (135)     │   │   ├── Ipartek_AREA_135
+	│   │   │   └── CodDelegacion (188)        │   │   │   └── Ipartek_DEL_188
+	│   │   │       └── CodCentro (233)        │   │   │       └── Ipartek_CT_233
+	│   │   ├── CodSubDirNegocioArea (185)     │   │   ├── Ipartek_AREA_185
+	│   │   │   └── CodDelegacion (033)        │   │   │   └── Ipartek_DEL_033
+	│   │   │       └── CodCentro (037)        │   │   │       └── Ipartek_CT_037
+	│   │   ├── CodSubDirNegocioArea (600)     │   │   ├── Ipartek_AREA_600
+	│   │   │   └── CodDelegacion (039)        │   │   │   └── Ipartek_DEL_039
+	│   │   │       └── CodCentro (031)        │   │   │       └── Ipartek_CT_031
+	│   │   └── CodSubDirNegocioArea (S35)     │   │   └── Ipartek_AREA_S35
+	│   │       └── CodDelegacion (142)        │   │       └── Ipartek_DEL_142
+	│   │           └── CodCentro (034)        │   │           └── Ipartek_CT_034
+	│   ├── CodDDirNegocio (700)               │   ├── Ipartek_DN_700
+	│   │   ├── CodSubDirNegocioArea (700)     │   │   ├── Ipartek_AREA_700
+	│   │   │   └── CodDelegacion (158)        │   │   │   └── Ipartek_DEL_158
+	│   │   │       └── CodCentro (159)        │   │   │       └── Ipartek_CT_159
+	│   │   └── CodSubDirNegocioArea (713)     │   │   └── Ipartek_AREA_713
+	│   │       └── CodDelegacion (152)        │   │       └── Ipartek_DEL_152
+	│   │           └── CodCentro (153)        │   │           └── Ipartek_CT_153
+	│   └── CodDDirNegocio (290)               │   └── Ipartek_DN_290
+	│       ├── CodSubDirNegocioArea (290)     │       ├── Ipartek_AREA_290
+	│       │   └── CodDelegacion (126)        │       │   └── Ipartek_DEL_126
+	│       │       └── CodCentro (125)        │       │       └── Ipartek_CT_125
+	│       ├── CodSubDirNegocioArea (620)     │       ├── Ipartek_AREA_620
+	│       │   └── CodDelegacion (294)        │       │   └── Ipartek_DEL_294
+	│       │       └── CodCentro (293)        │       │       └── Ipartek_CT_293
+	│       └── CodSubDirNegocioArea (628)     │       └── Ipartek_AREA_628
+	│           └── CodDelegacion (292)        │           └── Ipartek_DEL_292
+	│               └── CodCentro (647)        │               └── Ipartek_CT_647
+	└── CodSubDirGeneral (286)                 └── Ipartek_SDG_286
+		├── CodDDirNegocio (090)                   ├── Ipartek_DN_090
+		│   └── CodSubDirNegocioArea (090)         │   └── Ipartek_AREA_090
+		│       └── CodDelegacion (014)            │       └── Ipartek_DEL_014
+		│           └── CodCentro (059)            │           └── Ipartek_CT_059
+		├── CodDDirNegocio (780)                   ├── Ipartek_DN_780
+		│   ├── CodSubDirNegocioArea (026)         │   ├── Ipartek_AREA_026
+		│   │   └── CodDelegacion (036)            │   │   └── Ipartek_DEL_036
+		│   │       └── CodCentro (117)            │   │       └── Ipartek_CT_117
+		│   └── CodSubDirNegocioArea (780)         │   └── Ipartek_AREA_780
+		│       └── CodDelegacion (775)            │       └── Ipartek_DEL_775
+		│           └── CodCentro (024)            │           └── Ipartek_CT_024
+		└── CodDDirNegocio (800)                   └── Ipartek_DN_800
+			├── CodSubDirNegocioArea (800)             ├── Ipartek_AREA_800
+			│   └── CodDelegacion (764)                │   └── Ipartek_DEL_764
+			│       └── CodCentro (639)                │       └── Ipartek_CT_639
+			├── CodSubDirNegocioArea (801)             ├── Ipartek_AREA_801
+			│   └── CodDelegacion (650)                │   └── Ipartek_DEL_650
+			│       └── CodCentro (829)                │       └── Ipartek_CT_829
+			└── CodSubDirNegocioArea (820)             └── Ipartek_AREA_820
+				└── CodDelegacion (200)                    └── Ipartek_DEL_200
+					└── CodCentro (020)                        └── Ipartek_CT_020
 		
 		
 	

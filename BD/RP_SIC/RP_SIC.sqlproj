@@ -913,6 +913,17 @@
     <Build Include="dbo\Tables\rptCartera_Contratacion_Resumen_SDG.sql" />
     <Build Include="dbo\Tables\CO005BPH .sql" />
     <Build Include="dbo\Tables\rptContratacion_Actividad_SubActividad.sql" />
+    <Build Include="dbo\Tables\WEB_Usuarios_Informes.sql" />
+    <Build Include="dbo\Tables\rptContratacionAsociadoInversion_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_SG_Mercado_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_Internacional_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_GerenciaCentro_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_DG_SDG_DN_SDNA_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_Clientes_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_Actividad_SubActividad_1.sql" />
+    <Build Include="dbo\Tables\rptContratacion_Actividad_1.sql" />
+    <Build Include="dbo\Tables\rptCarteraContratacionDetalle_DGDesarrolloInternacional_Paises_1.sql" />
+    <Build Include="dbo\Stored Procedures\spWEB_ContratacionAsociadoInversion_1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_RPSIC.scmp" />

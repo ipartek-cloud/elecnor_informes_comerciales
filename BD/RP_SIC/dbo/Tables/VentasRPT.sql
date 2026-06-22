@@ -22,6 +22,8 @@
     [2023]        DECIMAL (18, 2) NULL,
     [2024]        DECIMAL (18, 2) NULL,
     [2025]        DECIMAL (18, 2) NULL,
+    [2026]        DECIMAL (18, 2) NULL,
+    [2027]        DECIMAL (18, 2) NULL,
     CONSTRAINT [PK_Ventas] PRIMARY KEY CLUSTERED ([idVentasRPT] ASC)
 );
 
