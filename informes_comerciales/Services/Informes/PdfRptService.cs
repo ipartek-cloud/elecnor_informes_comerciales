@@ -37,7 +37,7 @@ public class PdfRptService
         Dictionary<string, string>? filtros,
         string loginUsuario)
     {
-        _logger.LogInformation("[PdfRptService] Solicitud para generar PDF: Tipo={Tipo}, Año={Anio}, Mes={Mes}, Usuario={Usuario}", tipoInforme, anio, mes, loginUsuario);
+        //_logger.LogInformation("[PdfRptService] Solicitud para generar PDF: Tipo={Tipo}, Año={Anio}, Mes={Mes}, Usuario={Usuario}", tipoInforme, anio, mes, loginUsuario);
 
         using var scope = _serviceProvider.CreateScope();
 
