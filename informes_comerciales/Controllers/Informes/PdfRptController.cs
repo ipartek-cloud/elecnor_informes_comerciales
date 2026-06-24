@@ -12,10 +12,10 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 [Route("api/[controller]")]
 public class PdfRptController : ControllerBase
 {
-    private readonly PdfApiService _pdfApiService;
+    private readonly PdfRptService _pdfApiService;
     private readonly ILogger<PdfRptController> _logger;
 
-    public PdfRptController(PdfApiService pdfApiService, ILogger<PdfRptController> logger)
+    public PdfRptController(PdfRptService pdfApiService, ILogger<PdfRptController> logger)
     {
         _pdfApiService = pdfApiService;
         _logger = logger;

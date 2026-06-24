@@ -182,6 +182,21 @@ public class InformeSeguridadMiddleware
                         }
                     }
                 }
+                // 2c. Caso Especial: API de Descarga HTML Portable REST
+                else if (controllerName.Equals("HtmlRpt", StringComparison.OrdinalIgnoreCase) && segments.Length >= 4)
+                {
+                    var tipoInforme = segments[3];
+                    var puesto = context.User.FindFirst("Puesto")?.Value;
+                    if (!string.IsNullOrEmpty(puesto))
+                    {
+                        bool tieneAcceso = await ValidarAccesoPorClaveTecnicaAsync(seguridadService, puesto, tipoInforme);
+                        if (!tieneAcceso)
+                        {
+                            await RetornarAccesoDenegadoAsync(context);
+                            return;
+                        }
+                    }
+                }
                 // 3. Controladores de Informes Ordinarios
                 else if (RutaAInforme.TryGetValue(controllerName, out var informesAsociados))
                 {

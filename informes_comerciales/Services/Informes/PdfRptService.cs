@@ -8,18 +8,18 @@ namespace Elecnor_Informes_Comerciales.Services.Informes;
 /// <summary>
 /// Servicio orquestador para la generación y compilación de informes PDF a nivel de servidor.
 /// </summary>
-public class PdfApiService
+public class PdfRptService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly HtmlAssemblerService _htmlAssemblerService;
     private readonly IPdfGeneratorService _pdfGeneratorService;
-    private readonly ILogger<PdfApiService> _logger;
+    private readonly ILogger<PdfRptService> _logger;
 
-    public PdfApiService(
+    public PdfRptService(
         IServiceProvider serviceProvider,
         HtmlAssemblerService htmlAssemblerService,
         IPdfGeneratorService pdfGeneratorService,
-        ILogger<PdfApiService> logger)
+        ILogger<PdfRptService> logger)
     {
         _serviceProvider = serviceProvider;
         _htmlAssemblerService = htmlAssemblerService;
@@ -37,7 +37,7 @@ public class PdfApiService
         Dictionary<string, string>? filtros,
         string loginUsuario)
     {
-        _logger.LogInformation("[PdfApiService] Solicitud para generar PDF: Tipo={Tipo}, Año={Anio}, Mes={Mes}, Usuario={Usuario}", tipoInforme, anio, mes, loginUsuario);
+        _logger.LogInformation("[PdfRptService] Solicitud para generar PDF: Tipo={Tipo}, Año={Anio}, Mes={Mes}, Usuario={Usuario}", tipoInforme, anio, mes, loginUsuario);
 
         using var scope = _serviceProvider.CreateScope();
 
@@ -50,7 +50,7 @@ public class PdfApiService
 
         if (methodObtener == null)
         {
-            _logger.LogError("[PdfApiService] Método ObtenerDatosMesAsync no encontrado en InformePortableService.");
+            _logger.LogError("[PdfRptService] Método ObtenerDatosMesAsync no encontrado en InformePortableService.");
             return null;
         }
 
@@ -69,13 +69,13 @@ public class PdfApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "[PdfApiService] Error al obtener datos para el informe {Tipo} por reflection.", tipoInforme);
+            _logger.LogError(ex, "[PdfRptService] Error al obtener datos para el informe {Tipo} por reflection.", tipoInforme);
             return null;
         }
 
         if (datosMes == null)
         {
-            _logger.LogWarning("[PdfApiService] No se devolvieron datos para el informe {Tipo} en {Anio}-{Mes}.", tipoInforme, anio, mes);
+            _logger.LogWarning("[PdfRptService] No se devolvieron datos para el informe {Tipo} en {Anio}-{Mes}.", tipoInforme, anio, mes);
             return null;
         }
 
@@ -87,13 +87,13 @@ public class PdfApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "[PdfApiService] Error al ensamblar HTML para el informe {Tipo}.", tipoInforme);
+            _logger.LogError(ex, "[PdfRptService] Error al ensamblar HTML para el informe {Tipo}.", tipoInforme);
             return null;
         }
 
         if (string.IsNullOrWhiteSpace(htmlContent))
         {
-            _logger.LogError("[PdfApiService] El HTML compilado está vacío para {Tipo}.", tipoInforme);
+            _logger.LogError("[PdfRptService] El HTML compilado está vacío para {Tipo}.", tipoInforme);
             return null;
         }
 
@@ -115,7 +115,7 @@ public class PdfApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "[PdfApiService] Error en el renderizado de Puppeteer/PDFsharp para {Tipo}.", tipoInforme);
+            _logger.LogError(ex, "[PdfRptService] Error en el renderizado de Puppeteer/PDFsharp para {Tipo}.", tipoInforme);
             return null;
         }
     }
