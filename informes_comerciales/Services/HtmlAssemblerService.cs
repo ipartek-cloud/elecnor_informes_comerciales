@@ -140,6 +140,129 @@ public class HtmlAssemblerService
     }
 
     /// <summary>
+    /// Construye el HTML del informe específicamente preparado para renderizar un PDF.
+    /// A diferencia del portable, no inyecta barra de navegación offline ni scripts interactivos de navegación multi-mes.
+    /// </summary>
+    public async Task<string> AssembleHtmlForPdfAsync(
+        string tipoInforme,
+        int anio,
+        int mes,
+        object datosMes,
+        Dictionary<string, string>? filtros)
+    {
+        var sb = new StringBuilder();
+
+        // 1. HTML Base
+        sb.AppendLine("<!DOCTYPE html>");
+        sb.AppendLine("<html lang=\"es\">");
+        sb.AppendLine("<head>");
+        sb.AppendLine("<meta charset=\"utf-8\" />");
+        sb.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />");
+        sb.AppendLine($"<title>PDF {tipoInforme} - {anio}</title>");
+
+        // CDN links para dependencias externas (Igual que en _Layout y PdfExportController)
+        sb.AppendLine("<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\">");
+        sb.AppendLine("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css\" />");
+
+        // Estilos CSS locales inline: site.css
+        var siteCss = await _assetInliningService.GetAssetContentAsync("css/site.css");
+        if (!string.IsNullOrWhiteSpace(siteCss))
+        {
+            sb.AppendLine("<style>");
+            sb.AppendLine(MinifyCss(siteCss));
+            sb.AppendLine("</style>");
+        }
+
+        // 2. Inyectar CSS base de informes
+        var cssBase = await _assetInliningService.GetAssetContentAsync("css/informes/informes_base.css");
+        sb.AppendLine("<style>");
+        sb.AppendLine(MinifyCss(cssBase));
+        sb.AppendLine("</style>");
+
+        // 3. Inyectar CSS específico del informe
+        var cssEspecifico = await _assetInliningService.GetAssetContentAsync($"css/informes/{tipoInforme}.css");
+        if (!string.IsNullOrWhiteSpace(cssEspecifico))
+        {
+            sb.AppendLine("<style>");
+            sb.AppendLine(MinifyCss(cssEspecifico));
+            sb.AppendLine("</style>");
+        }
+
+        // 4. Reglas CSS específicas para optimizar la impresión en Puppeteer PDF
+        sb.AppendLine("<style>");
+        sb.AppendLine("html, body { background-color: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }");
+        sb.AppendLine(".rpt-paper { border: none !important; box-shadow: none !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; background-color: #ffffff !important; }");
+        sb.AppendLine(".no-print, header, footer { display: none !important; }");
+        sb.AppendLine(".rpt-print-layer { display: block !important; }");
+        sb.AppendLine("</style>");
+
+        sb.AppendLine("</head>");
+        sb.AppendLine("<body>");
+
+        // 5. Contenedor principal del informe
+        sb.AppendLine("<div id=\"modalInformeContenido\" class=\"modal-body-reports rpt-print-layer\"></div>");
+
+        // 6. Datos JSON embebidos (un solo mes)
+        var datosDict = new Dictionary<int, object> { { mes, datosMes } };
+        sb.AppendLine("<script>");
+        sb.AppendLine("window.__PORTABLE_DATA__ = ");
+        sb.AppendLine(SerializeDataSafely(datosDict, anio, mes, new List<int> { mes }, tipoInforme, filtros));
+        sb.AppendLine(";");
+        sb.AppendLine("</script>");
+
+        // 7. Logo Elecnor en Base64
+        var logoBase64 = await GetLogoBase64Async();
+
+        // 8. Inyectar scripts base inline, adaptados y minificados
+        var utilsJs = await _assetInliningService.GetAssetContentAsync("js/informes/utils.js");
+        var informesUtilsJs = await _assetInliningService.GetAssetContentAsync("js/informes/informes_unificados_utils.js");
+
+        if (!string.IsNullOrWhiteSpace(utilsJs))
+        {
+            var utilsAdaptado = MinifyJs(ReplaceLogoPath(AdaptJsModuleForOffline(utilsJs), logoBase64));
+            sb.AppendLine("<script>");
+            sb.AppendLine(utilsAdaptado);
+            sb.AppendLine("</script>");
+        }
+        if (!string.IsNullOrWhiteSpace(informesUtilsJs))
+        {
+            var informesUtilsAdaptado = MinifyJs(ReplaceLogoPath(AdaptJsModuleForOffline(informesUtilsJs), logoBase64));
+            sb.AppendLine("<script>");
+            sb.AppendLine(informesUtilsAdaptado);
+            sb.AppendLine("</script>");
+        }
+
+        // 9. Adaptador Portable (Mock de ApiClient, etc.)
+        sb.AppendLine("<script>");
+        sb.AppendLine(MinifyJs(GetPortableAdapterJs()));
+        sb.AppendLine("</script>");
+
+        // 10. Script específico del informe
+        var informeJs = await _assetInliningService.GetAssetContentAsync($"js/informes/{tipoInforme}.js");
+        if (!string.IsNullOrWhiteSpace(informeJs))
+        {
+            var jsAdaptado = MinifyJs(ReplaceLogoPath(AdaptJsModuleForOffline(informeJs), logoBase64));
+            sb.AppendLine("<script>");
+            sb.AppendLine(jsAdaptado);
+            sb.AppendLine("if(typeof ejecutar!=='undefined')window.ejecutar=ejecutar");
+            sb.AppendLine("</script>");
+        }
+
+        // 11. Script de inicialización auto-ejecutable directa del mes.
+        // IMPORTANTE: nroPagina siempre se pasa como null al JS porque la numeración
+        // de páginas la realiza PDFsharp en el post-proceso (PdfPageNumberService).
+        // Si el JS pintara el span .rpt-page-number, aparecería el número dos veces.
+        sb.AppendLine("<script>");
+        sb.AppendLine($"(function() {{ if (typeof window.ejecutar === 'function') {{ window.ejecutar({{ anio: {anio}, mes: {mes}, nroPagina: null, mostrarTitulo: true }}); }} }})();");
+        sb.AppendLine("</script>");
+
+        sb.AppendLine("</body>");
+        sb.AppendLine("</html>");
+
+        return MinifyHtml(sb.ToString());
+    }
+
+    /// <summary>
     /// Adapta el código JS del módulo del informe para funcionar offline.
     /// Elimina sentencias 'import' y 'export', reemplaza referencias relativas.
     /// Soporta declaraciones multilínea (import/export que abarcan varias líneas).

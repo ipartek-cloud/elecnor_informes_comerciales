@@ -111,6 +111,23 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
         _logger.LogDebug("Abriendo nueva pestaña de Puppeteer para renderizar PDF...");
         await using var page = await browser.NewPageAsync();
 
+        page.Console += (sender, e) =>
+        {
+            if (e.Message.Type == ConsoleType.Error || e.Message.Text.Contains("Error") || e.Message.Text.Contains("exception"))
+            {
+                _logger.LogError("[Browser Console Error] {Text} at {Location}", e.Message.Text, e.Message.Location);
+            }
+            else
+            {
+                _logger.LogInformation("[Browser Console] {Text}", e.Message.Text);
+            }
+        };
+
+        page.PageError += (sender, e) =>
+        {
+            _logger.LogError("[Browser Unhandled Exception] {Message}", e.Message);
+        };
+
         // Viewport ancho para emular pantalla de escritorio y evitar
         // compresión visual en tablas de ancho fijo (1050px del informe).
         await page.SetViewportAsync(new ViewPortOptions
