@@ -134,6 +134,15 @@ document.addEventListener("DOMContentLoaded", function () {
             if (typeof window.aplicarSeguridadPorPuesto === 'function') {
                 window.aplicarSeguridadPorPuesto();
             }
+
+            // Restringir pestaña "Opciones de Generación" solo a usuarios autorizados
+            const token = sessionStorage.getItem('jwt_token');
+            const payload = token ? decodeJwt(token) : null;
+            const usuario = (payload?.sub || '').toLowerCase();
+            if (!['annruiz', 'ipartek'].includes(usuario)) {
+                document.getElementById('opciones-tab')?.closest('.nav-item')?.remove();
+                document.getElementById('opciones-pane')?.remove();
+            }
         } else {
             // Mostrar modal de login
             if (modalEl) {
