@@ -2418,6 +2418,50 @@ public class InformeRepository
         public double ImporteContratado { get; set; }
         public double ImporteContratadoAcumulado { get; set; }
         public double ImporteContratadoAcumuladoAñoAnterior { get; set; }
-    }
-}
-
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // OPCIONES DE GENERACIÓN — Sincronización de datos (spSincronizar_*)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task EjecutarSPSincronizarOfertasAsync(int anio, int mes)
+    {
+        const string sqlExec = @"EXEC spSincronizar_OfertasSQL @pAño, @pMes";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, new { pAño = anio, pMes = mes }, commandTimeout: 300);
+    }
+
+    public async Task EjecutarSPSincronizarClientesAsync()
+    {
+        const string sqlExec = @"EXEC spSincronizar_ClientesSQL";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, commandTimeout: 300);
+    }
+
+    public async Task EjecutarSPSincronizarSumarigramaAsync()
+    {
+        const string sqlExec = @"EXEC spSincronizar_Sumarigrama";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, commandTimeout: 300);
+    }
+
+    public async Task EjecutarSPSincronizarObrasAsync(int anio, int mes)
+    {
+        const string sqlExec = @"EXEC spSincronizar_ObrasActualesSQL @pAño, @pMes";
+
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+
+        await conn.ExecuteAsync(sqlExec, new { pAño = anio, pMes = mes }, commandTimeout: 300);
+    }
+
+}

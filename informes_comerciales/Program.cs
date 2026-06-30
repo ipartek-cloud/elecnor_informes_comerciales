@@ -80,6 +80,9 @@ builder.Services.AddScoped<InformeCarteraContratacionDetallePaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionResumenSDGService>();
 builder.Services.AddScoped<InformeActividadesInternacionalDetalleService>();
 
+// Opciones de Generación (Sincronización)
+builder.Services.AddScoped<OpcionesGeneracionService>();
+
 // Servicios de HTML Portable (Self-Contained)
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<AssetInliningService>();

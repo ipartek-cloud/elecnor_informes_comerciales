@@ -795,35 +795,66 @@
             <!-- PESTAÑA 3: OPCIONES DE GENERACIÓN -->
             <div class="tab-pane fade rpt-tab-pane" id="opciones-pane" role="tabpanel" aria-labelledby="opciones-tab" tabindex="0">
                 <div class="card border-0">
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-column gap-3 align-items-start p-4">
-                            <div class="d-flex align-items-center gap-2">
-                                <input class="form-check-input mt-0" type="checkbox"
-                                       id="chkGenerarRPTPrincipalesObras"
-                                       name="chkGenerarRPTPrincipalesObras">
-                                <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
-                                    Generar Contratación
-                                </label>
+                    <div class="card-body p-4">
+
+                        <!-- COLUMNA IZQUIERDA: 4 botones de sincronización apilados -->
+                        <div class="row g-3">
+                            <div class="col-md-6 d-flex flex-column gap-2">
+                                <button type="button" class="btn rpt-btn-light rpt-btn-generacion w-75"
+                                        id="btnSincronizarOfertas"
+                                        onclick="sincronizarOfertas()"
+                                        title="Reparto Ofertas y Regularizaciones Mensual --> OfertasSQL">
+                                    Ofertas y Regularizaciones --> OfertasSQL
+                                </button>
+                                <button type="button" class="btn rpt-btn-light rpt-btn-generacion w-75"
+                                        id="btnSincronizarClientes"
+                                        onclick="sincronizarClientesSQL()"
+                                        title="Sincronizar Clientes --> ClientesSQL">
+                                    Clientes --> ClientesSQL
+                                </button>
+                                <button type="button" class="btn rpt-btn-light rpt-btn-generacion w-75"
+                                        id="btnSincronizarSumarigrama"
+                                        onclick="sincronizarSumarigrama()"
+                                        title="Sincronizar Sumarigrama">
+                                    Sumarigrama
+                                </button>
+                                <button type="button" class="btn rpt-btn-light rpt-btn-generacion w-75"
+                                        id="btnSincronizarObras"
+                                        onclick="sincronizarObras()"
+                                        title="Sincronizar Obras --> ObrasActualesSQL">
+                                    Obras --> ObrasActualesSQL
+                                </button>
                             </div>
 
-                            <div class="d-flex align-items-center gap-2">
-                                <input class="form-check-input mt-0" type="checkbox"
-                                       id="chkGenerarRPTPrincipalesObrasAI"
-                                       name="chkGenerarRPTPrincipalesObrasAI">
-                                <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
-                                    Generar Contratación(AI)
-                                </label>
-                            </div>
-
-                            <div class="d-flex align-items-center gap-2">
-                                <input class="form-check-input mt-0" type="checkbox"
-                                       id="chkGenerarRPTPrincipalesContrataciones"
-                                       name="chkGenerarRPTPrincipalesContrataciones">
-                                <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
-                                    Generar Contrataciones Significativas
-                                </label>
+                            <!-- COLUMNA DERECHA: 3 checkboxes existentes apilados -->
+                            <div class="col-md-6 d-flex flex-column gap-3">
+                                <div class="form-check d-flex align-items-center gap-2">
+                                    <input class="form-check-input mt-0" type="checkbox"
+                                           id="chkGenerarRPTPrincipalesObras"
+                                           name="chkGenerarRPTPrincipalesObras">
+                                    <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObras">
+                                        Generar Contratación
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center gap-2">
+                                    <input class="form-check-input mt-0" type="checkbox"
+                                           id="chkGenerarRPTPrincipalesObrasAI"
+                                           name="chkGenerarRPTPrincipalesObrasAI">
+                                    <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesObrasAI">
+                                        Generar Contratación (AI)
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center gap-2">
+                                    <input class="form-check-input mt-0" type="checkbox"
+                                           id="chkGenerarRPTPrincipalesContrataciones"
+                                           name="chkGenerarRPTPrincipalesContrataciones">
+                                    <label class="form-check-label mb-0 rpt-checkbox-label text-muted" for="chkGenerarRPTPrincipalesContrataciones">
+                                        Generar Contrataciones Significativas
+                                    </label>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

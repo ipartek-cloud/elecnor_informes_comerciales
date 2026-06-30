@@ -179,7 +179,73 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
 });
+
+// ============================================================
+// Sincronización - Opciones de Generación
+// Llamadas onclick desde los botones de la pestaña Opciones de Generación
+// ============================================================
+
+async function ejecutarSincronizacion(endpoint, mensaje, necesitaAnioMes = false) {
+    const confirm = await GlobalUI.showConfirm(
+        `¿Desea ${mensaje}?`,
+        'ATENCIÓN',
+        'Sí, ejecutar',
+        'Cancelar'
+    );
+    if (!confirm) return;
+
+    const anio = parseInt(document.getElementById('txtAnno').value) || new Date().getFullYear();
+    const mes = parseInt(document.getElementById('txtMes').value) || new Date().getMonth() + 1;
+
+    GlobalUI.showLoading(`Sincronizando ${mensaje.toLowerCase()}...`);
+    try {
+        const payload = necesitaAnioMes ? { anio, mes } : {};
+        const resp = await ApiClient.post(endpoint, payload, true);
+        if (!resp.ok) {
+            const err = await resp.text();
+            GlobalUI.showAlert(`Error: ${err}`, 'danger');
+        } else {
+            GlobalUI.showAlert(`${mensaje} completado.`, 'success');
+        }
+    } catch (e) {
+        GlobalUI.showAlert('Error de conexión con el servidor', 'danger');
+    } finally {
+        GlobalUI.hideLoading();
+    }
+}
+
+window.sincronizarOfertas = function () {
+    ejecutarSincronizacion(
+        '/api/OpcionesGeneracion/sincronizar-ofertas',
+        'Sincronizar Ofertas y Regularizaciones',
+        true
+    );
+};
+
+window.sincronizarClientesSQL = function () {
+    ejecutarSincronizacion(
+        '/api/OpcionesGeneracion/sincronizar-clientes',
+        'Sincronizar Clientes',
+        false
+    );
+};
+
+window.sincronizarSumarigrama = function () {
+    ejecutarSincronizacion(
+        '/api/OpcionesGeneracion/sincronizar-sumarigrama',
+        'Sincronizar Sumarigrama',
+        false
+    );
+};
+
+window.sincronizarObras = function () {
+    ejecutarSincronizacion(
+        '/api/OpcionesGeneracion/sincronizar-obras',
+        'Sincronizar Obras',
+        true
+    );
+};
+
 
 
