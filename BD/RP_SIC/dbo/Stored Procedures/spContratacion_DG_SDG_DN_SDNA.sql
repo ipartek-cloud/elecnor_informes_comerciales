@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[spContratacion_DG_SDG_DN_SDNA] 		
+﻿CREATE PROCEDURE [dbo].[spContratacion_DG_SDG_DN_SDNA] 		
 	@pAño int,
 	@pMes int,
 	@pLoginUsuario nvarchar(100) = NULL

@@ -1,7 +1,8 @@
+﻿
 
 --EXEC spWEB_ContratacionAsociadoInversion 2026,3
 
-CREATE OR ALTER PROCEDURE [dbo].[spWEB_ContratacionAsociadoInversion]
+CREATE PROCEDURE [dbo].[spWEB_ContratacionAsociadoInversion]
     @pAño          INT,
     @pMes          INT,
     @LoginUsuario  NVARCHAR(100) = 'ACCESS'

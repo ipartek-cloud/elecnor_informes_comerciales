@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Utilidades comunes para el sistema de informes.
  * Módulo compartido para funciones de formateo, clasificación y UI.
  * 

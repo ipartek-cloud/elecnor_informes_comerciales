@@ -1,7 +1,0 @@
-﻿CREATE VIEW [dbo].[Ofertas_OLD]
-AS
-SELECT     *
-FROM         OPENQUERY(SIC, '
-SELECT     *
-FROM         S44DD901.ICOMERF.IC09AP 
-ORDER BY CDOFT')

@@ -11,6 +11,9 @@ WHERE        (dbo.HistoricoContratacionGrupoSQL.Año = 2018) AND (dbo.Sumarigram
                          (dbo.HistoricoContratacionGrupoSQL.Año = 2018) AND (dbo.Sumarigrama.CodSubDirGeneral = 221) AND (dbo.ActividadesSQL.CDAC1 = '08')
 GROUP BY dbo.ActividadesSQL.Orden, LEFT(dbo.HistoricoContratacionGrupoSQL.Mercado, 1), dbo.HistoricoContratacionGrupoSQL.Mes, dbo.ActividadesSQL.CDAC1, 
                          dbo.Sumarigrama.CodDDirNegocio, dbo.Sumarigrama.NombreDirNegocio
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwSDG_Contratacion Actividades_2018_0708_DN';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -152,8 +155,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwSDG_Contratacion Actividades_2018_0708_DN';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwSDG_Contratacion Actividades_2018_0708_DN';
 

@@ -10,5 +10,3 @@ UNION
 SELECT  CodCentro, CodOferta
 FROM OfertasSQL 
 WHERE  Adjudicada='S' AND AñoAdjudicacion>=2016
-
-

@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[spContratacion_InternacionalWEB]
+﻿CREATE PROCEDURE [dbo].[spContratacion_InternacionalWEB]
     @pAño INT,
     @pMes INT,
     @pLoginUsuario NVARCHAR(100) = NULL
@@ -158,9 +158,7 @@ BEGIN
         Pais,
         ISNULL(SUM(ImporteContratadoAcumulado),            0) AS ImporteContratadoAcumulado,
         ISNULL(SUM(ImporteContratadoAcumuladoAñoAnterior), 0) AS ImporteContratadoAcumuladoAñoAnterior,
-        Ajuste,
-        @pAño AS Año,
-        @pLoginUsuario AS LoginUsuario
+        Ajuste
     FROM #ContratacionInternacional
     GROUP BY CodProv, Pais, Ajuste;
 

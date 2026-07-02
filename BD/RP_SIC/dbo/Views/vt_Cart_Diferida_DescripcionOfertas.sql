@@ -3,6 +3,9 @@ AS
 SELECT        dbo.[@aOfertas].CODOFER, dbo.[@aOfertas].DESOFER, dbo.[@aOfertas].CODCLIENTE, dbo.[@aOfertas].NOMCLIENTE
 FROM            dbo.Cart_DiferidaOfertasContratos_2016SQL INNER JOIN
                          dbo.[@aOfertas] ON dbo.Cart_DiferidaOfertasContratos_2016SQL.CodOferta = dbo.[@aOfertas].CODOFER
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vt_Cart_Diferida_DescripcionOfertas';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -134,8 +137,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vt_Cart_Diferida_DescripcionOfertas';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vt_Cart_Diferida_DescripcionOfertas';
 

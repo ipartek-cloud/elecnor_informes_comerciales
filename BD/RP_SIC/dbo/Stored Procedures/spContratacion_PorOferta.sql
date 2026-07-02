@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[spContratacion_PorOferta] 		
+﻿CREATE PROCEDURE [dbo].[spContratacion_PorOferta] 		
 	@pAño int,
 	@pMes int,
 	@pLoginUsuario nvarchar(100) = NULL

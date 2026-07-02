@@ -1,4 +1,4 @@
-/* Estilos especÃ­ficos para el informe de Actividades (CONSEJO ELECNOR) */
+/* Estilos específicos para el informe de Actividades (CONSEJO ELECNOR) */
 
 /* Contenedor de bloque (Ej: Elecnor, Nacional, Internacional) */
 .rpt-bloque-actividad {
@@ -24,13 +24,13 @@
   border-radius: 0;
 }
 
-/* AlineaciÃ³n vertical para el badge en la fila de cabecera */
+/* Alineación vertical para el badge en la fila de cabecera */
 .rpt-header-align-middle {
     vertical-align: middle !important;
     position: relative;
 }
 
-/* Espacio vacÃ­o mÃ­nimo entre el aÃ±o y la cabecera tÃ©cnica */
+/* Espacio vacío mínimo entre el año y la cabecera técnica */
 .rpt-act-row-spacer th {
     height: 1px !important;
     line-height: 1px !important;
@@ -46,7 +46,7 @@
   table-layout: fixed !important;
 }
 
-/* Encabezados de aÃ±o/periodo */
+/* Encabezados de año/periodo */
 .rpt-th-year th {
   color: #00468B !important;
   font-weight: bold !important;
@@ -60,9 +60,9 @@
   border-bottom: none !important;
 }
 
-/* Celda de cabecera: EliminaciÃ³n de lÃ­neas continuas parÃ¡sitas */
+/* Celda de cabecera: Eliminación de líneas continuas parásitas */
 .rpt-th-blue th {
-  border: none !important; /* MATA LA LÃNEA CONTINUA DE BASE.CSS */
+  border: none !important; /* MATA LA LÍNEA CONTINUA DE BASE.CSS */
   color: #00468B !important;
   font-weight: bold !important;
   font-size: 8pt !important;
@@ -71,16 +71,16 @@
   vertical-align: bottom !important;
 }
 
-/* --- PATRÃ“N DE LÃNEAS SEGMENTADAS --- */
+/* --- PATRÓN DE LÍNEAS SEGMENTADAS --- */
 
-/* Div de lÃ­nea de cabecera: aplicado dentro de cada th para efecto segmentado */
+/* Div de línea de cabecera: aplicado dentro de cada th para efecto segmentado */
 .rpt-act-header-line {
   border-bottom: 0.3pt solid #00468B !important;
   margin: 0 4px;
   padding-bottom: 4px;
 }
 
-/* LÃ­nea superior opcional (actualmente oculta por peticiÃ³n de usuario) */
+/* Línea superior opcional (actualmente oculta por petición de usuario) */
 .rpt-act-line-segment {
   border: none !important;
   height: 2px !important;
@@ -96,7 +96,7 @@
   border-top: none !important;
 }
 
-/* Div de lÃ­nea de total: aplicado dentro de cada td para efecto segmentado */
+/* Div de línea de total: aplicado dentro de cada td para efecto segmentado */
 .rpt-act-total-line {
   border-top: 0.3pt solid #00468B !important;
   margin: 0 4px;
@@ -119,7 +119,7 @@
 .rpt-col-act-porc-act { width: 12%; }
 
 
-/* Ajuste de alineaciÃ³n para la columna de nombre de actividad */
+/* Ajuste de alineación para la columna de nombre de actividad */
 .rpt-col-act-nombre {
   font-weight: 500;
 }
@@ -158,7 +158,7 @@
 }
 
 /* =============================================================================
-   ESTILOS DE IMPRESIÃ“N / PDF (BLOQUE ÃšNICO)
+   ESTILOS DE IMPRESIÓN / PDF (BLOQUE ÚNICO)
    ============================================================================= */
 @media print {
   * {
@@ -172,10 +172,10 @@
     margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
-    --rpt-padding-pdf: 12mm; /* Reducido los mÃ¡rgenes fÃ­sicos del PDF de 16mm a 12mm */
+    --rpt-padding-pdf: 12mm; /* Reducido los márgenes físicos del PDF de 16mm a 12mm */
   }
 
-  /* LÃ­neas segmentadas con grosor Hairline 0.3pt estilo Access */
+  /* Líneas segmentadas con grosor Hairline 0.3pt estilo Access */
   .rpt-act-header-line {
     border-bottom: 0.3pt solid #00468B !important;
   }
@@ -184,7 +184,7 @@
     border-top: 0.3pt solid #00468B !important;
   }
 
-  /* ELIMINACIÃ“N RADICAL DE LÃNEAS CONTINUAS EN PDF */
+  /* ELIMINACIÓN RADICAL DE LÍNEAS CONTINUAS EN PDF */
   .rpt-th-blue th, 
   .rpt-total-row td,
   .rpt-th-year th {
@@ -212,7 +212,7 @@
     margin-top: 0.8rem !important;
   }
 
-  /* Forzar paridad de separaciÃ³n vertical con la versiÃ³n web y ajustar el espacio fino */
+  /* Forzar paridad de separación vertical con la versión web y ajustar el espacio fino */
   .rpt-paper[data-informe="actividades"] .report-body {
     margin-top: 0px !important;
     padding-top: 8px !important;
@@ -222,20 +222,20 @@
     page-break-inside: avoid;
   }
 
-  /* Compactar el interlineado y el padding vertical de las filas de detalle en impresiÃ³n para forzar 1 sola pÃ¡gina */
-  /* (Valores ajustables si se desea dar mÃ¡s aire o compactar mÃ¡s) */
+  /* Compactar el interlineado y el padding vertical de las filas de detalle en impresión para forzar 1 sola página */
+  /* (Valores ajustables si se desea dar más aire o compactar más) */
   .rpt-detail-row td {
     line-height: 1.15 !important;
     padding-top: 1.5px !important;
     padding-bottom: 1.5px !important;
   }
 
-  /* Reducir separaciÃ³n vertical entre subinformes (bloques) en impresiÃ³n */
+  /* Reducir separación vertical entre subinformes (bloques) en impresión */
   .rpt-bloque-actividad {
     margin-bottom: 1.2rem !important; /* Ajustado a 1.2rem (conservador, da un colchón de seguridad de unas 2 filas para futuros incrementos sin desbordar) */
   }
 
-  /* Ocultar filas invisibles de la cabecera en el PDF para ganar 24px de altura Ãºtil por tabla */
+  /* Ocultar filas invisibles de la cabecera en el PDF para ganar 24px de altura útil por tabla */
   /* (Cambiar a table-row si en el futuro se desea recuperar estas filas espaciadoras) */
   .rpt-act-line-row {
     display: none !important;

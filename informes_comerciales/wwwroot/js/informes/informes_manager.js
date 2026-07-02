@@ -37,7 +37,8 @@ const _whitelistInformes = {
     'cartera_contratacion_resumen_sdg': 'Cartera Contratación (Resumen)',
     'cartera_contratacion_detalle_org_paises': 'Cartera Contratación (Detalle Org. Países)',
     'cartera_contratacion_detalle_paises': 'Cartera Contratación (Detalle Países)',
-    'actividades_internacional_detalle': 'Detalle Actividades Internacional'
+    'actividades_internacional_detalle': 'Detalle Actividades Internacional',
+    'contratacion_mercados_sdg_dn': 'Contratacion Mercados SDG Agrupado DN'
 };
 
 const _registroModulos = {};

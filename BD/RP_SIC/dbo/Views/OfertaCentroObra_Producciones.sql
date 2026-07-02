@@ -9,7 +9,6 @@ FROM            (SELECT        CTR, OBRA, OBRAL, SOP
                              (SELECT        CDOFT, CTRO, LEFT(OBRA, 3) AS OBRA, RIGHT(OBRA, 2) AS OBRAL
                                FROM            dbo.Enlaces) AS E ON Obras.CTR = E.CTRO AND Obras.OBRA = E.OBRA
 GROUP BY E.CDOFT, Obras.CTR, Obras.OBRA
-
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
 Begin DesignProperties = 

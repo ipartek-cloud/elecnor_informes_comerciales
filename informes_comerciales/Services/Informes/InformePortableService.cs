@@ -37,7 +37,8 @@ public class InformePortableService
         { "cartera_contratacion_detalle_org_paises", (typeof(InformeCarteraContratacionDetalleOrgPaisesService), "ObtenerInformeAsync") },
         { "cartera_contratacion_detalle_paises", (typeof(InformeCarteraContratacionDetallePaisesService), "ObtenerInformeAsync") },
         { "actividades_internacional_detalle", (typeof(InformeActividadesInternacionalDetalleService), "ObtenerInformeAsync") },
-        { "cartera_diferida_consejo", (typeof(InformeCarteraDiferidaConsejoService), "ObtenerInformeAsync") }
+        { "cartera_diferida_consejo", (typeof(InformeCarteraDiferidaConsejoService), "ObtenerInformeAsync") },
+        { "contratacion_mercados_sdg_dn", (typeof(InformeContratacionMercadosSDGDNService), "ObtenerInformeAsync") }
     };
 
     public InformePortableService(

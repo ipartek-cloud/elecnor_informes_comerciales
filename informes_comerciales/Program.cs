@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,6 +79,7 @@ builder.Services.AddScoped<InformeCarteraContratacionDetalleOrgPaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetallePaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionResumenSDGService>();
 builder.Services.AddScoped<InformeActividadesInternacionalDetalleService>();
+builder.Services.AddScoped<InformeContratacionMercadosSDGDNService>();
 
 // Opciones de Generación (Sincronización)
 builder.Services.AddScoped<OpcionesGeneracionService>();

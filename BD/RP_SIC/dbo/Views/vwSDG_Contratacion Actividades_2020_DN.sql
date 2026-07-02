@@ -12,5 +12,3 @@ FROM            dbo.Sumarigrama INNER JOIN
 WHERE        (dbo.Sumarigrama.CodSubDirGeneral = 221)
 GROUP BY dbo.ActividadesSQL.Orden, dbo.ActividadesSQL.Agrupacion, LEFT(dbo.[@ContratacionGrupo2020].MERCADO, 1), dbo.[@ContratacionGrupo2020].MESAD, 
                          dbo.Sumarigrama.CodDDirNegocio, dbo.Sumarigrama.NombreDirNegocio
-
-

@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS] 		
+﻿CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS] 		
 	@pAño int,
 	@pMes int,
 	@pLoginUsuario nvarchar(100) = NULL

@@ -36,6 +36,7 @@ public class InformeSeguridadMiddleware
             ("COMITÉ", "Cartera Contratación DG (Resumen) Nacional - Internacional")
         },
         ["CarteraDiferidaConsejo"] = new() { ("CONSEJO ELECNOR", "Mercado-AI-Cart. Producción-Cart. Diferida") },
+        ["ContratacionMercadosSDGDN"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Mercado") },
         ["ContratacionesAI"] = new() { ("CONSEJO ELECNOR", "Contratación Asociada a Inversión") },
         ["Contrataciones"] = new() { ("CONSEJO ELECNOR", "Principales Contrataciones Nacionales - Internacionales") },
         ["ContratacionesSignificativas"] = new() 
@@ -76,6 +77,7 @@ public class InformeSeguridadMiddleware
     private static readonly Dictionary<string, List<(string Tipo, string Nombre)>> ClaveAInforme = new(StringComparer.OrdinalIgnoreCase)
     {
         ["cartera_diferida_consejo"] = new() { ("CONSEJO ELECNOR", "Mercado-AI-Cart. Producción-Cart. Diferida") },
+        ["contratacion_mercados_sdg_dn"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Mercado") },
         ["mercados"] = new() { ("CONSEJO ELECNOR", "Mercado-Direcciones Generales-Unidades Negocio") },
         ["mercados_dg"] = new() { ("COMITÉ", "Mercado-Direcciones Generales-Unidades Negocio") },
         ["mercados_sg_delegaciones"] = new() { ("COMITÉ", "DG - Unidades Negocio - Delegaciones") },

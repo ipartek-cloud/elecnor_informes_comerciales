@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños]
+﻿CREATE PROCEDURE [dbo].[spCarteraContratacionDetalle_DGDesarrolloInternacional_DosAños]
 	@pAño int,
 	@pMes int,
 	@pTodoInternacional int=1, -- =1 => todo / <>1 => Internacional

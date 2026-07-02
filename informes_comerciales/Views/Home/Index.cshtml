@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Informes Consejo";
+    ViewData["Title"] = "Informes Comerciales";
     int defaultMonth = DateTime.Now.Month == 1 ? 1 : DateTime.Now.Month - 1;
 }
 
@@ -60,6 +60,18 @@
                 <button class="nav-link" id="comite-tab" data-bs-toggle="tab" data-bs-target="#comite-pane" 
                         type="button" role="tab" aria-controls="comite-pane" aria-selected="false">
                     COMITÉ
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="direcciones-tab" data-bs-toggle="tab" data-bs-target="#direcciones-pane" 
+                        type="button" role="tab" aria-controls="direcciones-pane" aria-selected="false">
+                    DIRECCIONES GENERALES
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gerentes-tab" data-bs-toggle="tab" data-bs-target="#gerentes-pane" 
+                        type="button" role="tab" aria-controls="gerentes-pane" aria-selected="false">
+                    GERENTES ACTIVIDAD
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -792,6 +804,73 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- PESTAÑA: DIRECCIONES GENERALES -->
+            <div class="tab-pane fade rpt-tab-pane" id="direcciones-pane" role="tabpanel" aria-labelledby="direcciones-tab" tabindex="0">
+                <div class="card border-0">
+                    <div class="card-body p-0">
+                        <div id="direccionesContainer" class="row g-3 p-3 w-100">
+                            
+                            <!-- COLUMNA IZQUIERDA: ELECNOR SERVICIOS -->
+                            <div class="col-md-6 d-flex flex-column gap-2" id="elecnorServiciosCol">
+                                <div class="rpt-header-index-col--blue text-center w-100 mb-1">
+                                    Elecnor Servicios
+                                </div>
+
+                                <!-- DG - Unidades Negocio - Mercado (Pág. 1) -->
+                                <div class="input-group rpt-input-group-index w-100">
+                                    <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                            onclick="cargarInforme(this, 'contratacion_mercados_sdg_dn')"
+                                            data-subdireccion="221"
+                                            data-mostrar-titulo="false"
+                                            data-input-pag="inputPaginaContratacionMercadosSDGDN"
+                                            aria-label="Ver informe DG - Unidades Negocio - Mercado" data-informe-tipo="DIRECCIONES GENERALES" data-informe-nombre="DG - Unidades Negocio - Mercado">
+                                        DG - Unidades Negocio - Mercado
+                                    </button>
+                                    <input type="number" class="form-control rpt-input-page"
+                                           id="inputPaginaContratacionMercadosSDGDN"
+                                           name="inputPaginaContratacionMercadosSDGDN" value="1" min="0"
+                                           aria-label="Página" title="Página inicial">
+                                </div>
+                            </div>
+
+                            <!-- COLUMNA DERECHA: ELECNOR PROYECTOS -->
+                            <div class="col-md-6 d-flex flex-column gap-2" id="elecnorProyectosCol">
+                                <div class="rpt-header-index-col--blue text-center w-100 mb-1">
+                                    Elecnor Proyectos
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA: GERENTES ACTIVIDAD -->
+            <div class="tab-pane fade rpt-tab-pane" id="gerentes-pane" role="tabpanel" aria-labelledby="gerentes-tab" tabindex="0">
+                <div class="card border-0">
+                    <div class="card-body p-0">
+                        <div id="gerentesContainer" class="row g-3 p-3 w-100">
+                            
+                            <!-- COLUMNA IZQUIERDA: GERENCIAS -->
+                            <div class="col-md-6 d-flex flex-column gap-2" id="gerenciasCol">
+                                <div class="rpt-header-index-col--blue text-center w-100 mb-1">
+                                    Gerencias
+                                </div>
+
+                            </div>
+
+                            <!-- COLUMNA DERECHA: VACÍA (Simetría visual) -->
+                            <div class="col-md-6 d-flex flex-column gap-2">
+                                <!-- Columna vacía para preservar la simetría del grid de 2 columnas -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- PESTAÑA 3: OPCIONES DE GENERACIÓN -->
             <div class="tab-pane fade rpt-tab-pane" id="opciones-pane" role="tabpanel" aria-labelledby="opciones-tab" tabindex="0">
                 <div class="card border-0">
@@ -963,6 +1042,7 @@
     <link rel="stylesheet" href="~/css/informes/actividades_objetivos.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/cartera_contratacion_detalle.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/cartera_contratacion_resumen_sdg.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/contratacion_mercados_sdg_dn.css" asp-append-version="true" />
 }
 
 @section Scripts {

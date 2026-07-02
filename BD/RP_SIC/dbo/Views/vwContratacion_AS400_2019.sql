@@ -7,6 +7,9 @@ FROM            OPENQUERY(SIC,
                          'SELECT  AÑOAD, MESAD , CT , CODOFER, DESOFER, CODCLIENTE, NOMCLIENTE, IMPAD FROM S44DD901.ICOMERF.OFERREGU WHERE AÑOAD = 2019 AND ADJUDICADA = ''S'' ')
                           AS Contratacion_AS400_2019 LEFT OUTER JOIN
                          dbo.ClientesSQL ON Contratacion_AS400_2019.CODCLIENTE = dbo.ClientesSQL.CodCliente
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwContratacion_AS400_2019';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -139,8 +142,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwContratacion_AS400_2019';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwContratacion_AS400_2019';
 

@@ -1,4 +1,4 @@
-
+﻿
 // --- Funciones UI Globales ---
 export const GlobalUI = {
     // Muestra u oculta el Loading Overlay (bloqueo oscuro con spinner)

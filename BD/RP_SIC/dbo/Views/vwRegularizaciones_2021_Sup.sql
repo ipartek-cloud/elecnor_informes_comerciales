@@ -8,5 +8,3 @@ FROM            OPENQUERY(SIC,
 		FROM S44DD901.ICOMERF.IC10AP
                                 WHERE substr( digits(dec(19000000+FECHAR,8,0)), 1, 4 )>=2021')
                           AS vw
-
-

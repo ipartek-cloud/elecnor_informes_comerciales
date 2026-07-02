@@ -9,6 +9,27 @@ SELECT CDCEN, CDOFT, NUMRE, FECHAR, CAUS, IMPRE, CTOT, USER, WS10,
 		substr( digits(dec(19000000+FECHAR,8,0)), 7, 2 ) DD
 FROM         S44DD901.ICOMERF.IC10AP')
                           AS derivedtbl_1
+GO
+GRANT VIEW DEFINITION
+    ON OBJECT::[dbo].[Regularizaciones] TO [partnertec]
+    AS [dbo];
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[Regularizaciones] TO [partnertec]
+    AS [dbo];
+
+
+GO
+GRANT REFERENCES
+    ON OBJECT::[dbo].[Regularizaciones] TO [partnertec]
+    AS [dbo];
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Regularizaciones';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -130,26 +151,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Regularizaciones';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Regularizaciones';
-
-
-GO
-GRANT VIEW DEFINITION
-    ON OBJECT::[dbo].[Regularizaciones] TO [partnertec]
-    AS [dbo];
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[Regularizaciones] TO [partnertec]
-    AS [dbo];
-
-
-GO
-GRANT REFERENCES
-    ON OBJECT::[dbo].[Regularizaciones] TO [partnertec]
-    AS [dbo];
 

@@ -14,8 +14,3 @@ FROM            dbo.Sumarigrama INNER JOIN
 WHERE        (dbo.Sumarigrama.CodSubDirGeneral = 221)
 GROUP BY dbo.ActividadesSQL.Orden, dbo.ActividadesSQL.Agrupacion, LEFT(CG.MERCADO, 1), CG.MESAD, 
                          dbo.Sumarigrama.CodDDirNegocio, dbo.Sumarigrama.NombreDirNegocio
-
-
-
-
-

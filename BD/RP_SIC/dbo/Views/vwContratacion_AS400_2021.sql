@@ -10,5 +10,3 @@ FROM            OPENQUERY(SIC,
 						 WHERE AÑOAD = 2021 AND ADJUDICADA = ''S'' ')
                           AS Contratacion_AS400 LEFT OUTER JOIN
                          dbo.ClientesSQL ON Contratacion_AS400.CODCLIENTE = dbo.ClientesSQL.CodCliente
-
-

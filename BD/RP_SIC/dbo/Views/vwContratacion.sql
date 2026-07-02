@@ -11,4 +11,3 @@ UNION
 SELECT        CodCentro, CodOferta
 FROM            OfertasSQL
 WHERE        Adjudicada = 'S'
-

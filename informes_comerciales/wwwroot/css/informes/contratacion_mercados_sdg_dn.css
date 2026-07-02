@@ -1,0 +1,276 @@
+/* =============================================================================
+INFORME Contratacion Mercados SDG Agrupado DN (Elecnor Servicios - SDG 221).
+Estandar Print-Perfect (paridad web/PDF) + Accesibilidad (ARIA + data-label).
+Lo generico vive en informes_base.css; aqui solo lo particular del informe.
+Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
+============================================================================= */
+
+/* Scope: container queries para el layout adaptativo (resto heredado del .rpt-paper). */
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+}
+
+/* Tabla base del informe. */
+.rpt-cmsdg-tabla {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 0;
+}
+.rpt-cmsdg-tabla th {
+    white-space: nowrap;
+}
+
+/* Rejilla de 10 columnas: mensual | spacer | mercado | spacer | anual.
+   Coincidencia vertical exacta entre bloque 1 (resumen) y bloque 2 (detalle DN). */
+.rpt-cmsdg-col-obj-m     { width: 10%; }
+.rpt-cmsdg-col-contr-m   { width: 10%; }
+.rpt-cmsdg-col-spacer-1  { width: 3%; }
+.rpt-cmsdg-col-mercado   { width: 27%; }
+.rpt-cmsdg-col-spacer-2  { width: 3%; }
+.rpt-cmsdg-col-obj-a     { width: 10%; }
+.rpt-cmsdg-col-var-u     { width: 8%; }
+.rpt-cmsdg-col-contr-a   { width: 10%; }
+.rpt-cmsdg-col-ip        { width: 10%; }
+.rpt-cmsdg-col-var-r     { width: 9%; }
+
+/* Celdas y filas espaciadoras (separadores sin borde). */
+.rpt-cmsdg-spacer-cell-col {
+    width: 3%;
+    border: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+.rpt-cmsdg-spacer-row-dn { height: 18px !important; }
+.rpt-cmsdg-spacer-cell-dn {
+    border: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+/* Espaciado entre bloques. */
+.rpt-cmsdg-table-container      { margin-bottom: 20px !important; }
+.rpt-cmsdg-table-container-last { margin-bottom: 30px !important; }
+
+/* Contenedor del subinforme: mas estrecho y centrado (bloque 2).
+   max-width en % para mantener la proporcion entre web (1050px) y PDF (A4). */
+.rpt-cmsdg-subinforme-wrap {
+    max-width: 80%;
+    margin: 40px auto 0;
+}
+
+/* Mayor separacion entre encabezado y el inicio del informe principal. */
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .report-body.rpt-cmai-mt-standard {
+    margin-top: 40px !important;
+}
+
+/* -----------------------------------------------------------------------------
+   Banner azul corporativo (rejilla de "DG. Elecnor Servicios", DN headers, etc.).
+   NOTA: background/color/display viven en mercados.css, que NO se inyecta en el
+   PDF. Se replican aqui para que los banners azules se rendericen en la descarga.
+----------------------------------------------------------------------------- */
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-mercado-header-badge {
+    background-color: #00468B !important;
+    color: #ffffff !important;
+    font-size: 8pt !important;
+    padding: 4px 0 4px 16px !important;
+    margin: 0;
+    border-radius: 0;
+    text-align: left !important;
+    display: block;
+    width: 100%;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+}
+
+/* Cabeceras de columna: superheader ("Mensual" / "Acumulado") + cabeceras. */
+.rpt-cmsdg-superheader-row th {
+    padding-bottom: 2pt;
+    font-weight: bold;
+    color: #00468B;
+}
+
+.rpt-cmsdg-column-headers-row th {
+    vertical-align: bottom;
+    padding-bottom: 2pt;
+    font-weight: bold;
+    color: #00468B;
+    border-bottom: 0.5pt solid #00468B !important;
+}
+
+/* Linea horizontal bajo cabeceras interrumpida en la columna del banner
+   (spacers centrales + celda del banner), igual que en la maqueta original. */
+.rpt-cmsdg-column-headers-row th.rpt-cmsdg-spacer-cell-col,
+.rpt-cmsdg-column-headers-row th.rpt-cmsdg-header-banner-cell {
+    border-bottom: none !important;
+}
+
+/* Celda del banner en la fila de cabeceras del bloque 1: alinea con el
+   benchmark de Mercados (sin padding vertical, vertical-align bottom). */
+.rpt-cmsdg-column-headers-row th.rpt-cmsdg-header-banner-cell {
+    padding: 0 5px !important;
+    vertical-align: bottom !important;
+}
+
+/* Cabecera lateral de Direccion de Negocio (bloque 2): padding compacto. */
+.rpt-cmsdg-dn-header-row td {
+    padding: 2px 5px !important;
+    line-height: 1.25 !important;
+    vertical-align: middle !important;
+}
+
+/* Celda del badge de la DN: sin padding vertical (lo gestiona el badge),
+   texto en bold (<td> no hereda bold del navegador como el <th>) y
+   vertical-align bottom. */
+.rpt-cmsdg-dn-header-row td.rpt-text-white {
+    padding: 0 5px !important;
+    font-weight: bold !important;
+    vertical-align: bottom !important;
+}
+
+.rpt-cmsdg-dn-header-side {
+    color: #00468B !important;
+    font-weight: bold;
+    font-size: 8pt;
+    border-bottom: 0.5pt solid #00468B !important;
+}
+
+/* Filas de detalle: sin bordes horizontales intermedios (estilo Access). */
+.rpt-cmsdg-detail-row td {
+    padding: 3px 5px !important;
+    line-height: 1.25 !important;
+    font-size: 8pt;
+    color: #000;
+    border-bottom: none !important;
+}
+.rpt-cmsdg-detail-row td.rpt-cmsdg-spacer-cell-col {
+    border-bottom: none !important;
+}
+
+/* Columna umbral Var/{anioAnterior}: gris muted (tono Access).
+   Específicidad elevada para ganar a .rpt-detail-row td { color:#000 !important }. */
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-detail-row td.rpt-cmsdg-col-umbral-cell,
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-cmsdg-total-row td.rpt-cmsdg-col-umbral-cell {
+    color: #6C757D !important;
+    font-weight: normal !important;
+}
+
+/* Cabecera "Var/{anio}" en 8pt y gris. */
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-cmsdg-column-headers-row th.rpt-cmsdg-col-umbral-cell {
+    font-size: 8pt !important;
+    color: #6C757D !important;
+    font-weight: normal !important;
+}
+
+/* Columna central (Mercado) con sangrado bajo la cabecera azul. */
+.rpt-cmsdg-col-mercado-cell {
+    text-align: left !important;
+    padding-left: 20px !important;
+    color: #000;
+}
+
+/* Subtotal por Direccion de Negocio: solo linea superior azul. */
+.rpt-cmsdg-subtotal-row td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    padding: 3px 5px !important;
+    border-top: 0.5pt solid #00468B !important;
+    border-bottom: none !important;
+}
+.rpt-cmsdg-subtotal-row td.rpt-cmsdg-spacer-cell-col {
+    border-top: none !important;
+    border-bottom: none !important;
+    background-color: transparent !important;
+}
+.rpt-cmsdg-subtotal-row td.rpt-td-subtotal-spacer {
+    border-top: 0.5pt solid #00468B !important;
+    border-bottom: none !important;
+    background-color: transparent !important;
+}
+
+/* TOTAL GLOBAL: linea superior mas gruesa. */
+.rpt-cmsdg-total-row td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    vertical-align: middle !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    padding-right: 5px !important;
+    padding-left: 5px !important;
+    border-top: 0.5pt solid #00468B !important;
+    border-bottom: none !important;
+}
+
+/* Línea superior del TOTAL también se interrumpe bajo el banner "DG. Elecnor Servicios". */
+.rpt-cmsdg-total-row td.rpt-cmsdg-spacer-cell-col {
+    border-top: none !important;
+}
+
+.rpt-cmsdg-total-row td.rpt-cmsdg-spacer-cell-col {
+    border-top: none !important;
+    border-bottom: none !important;
+    background-color: transparent !important;
+}
+
+/* =============================================================================
+@media print — Print-Perfect (paridad web/PDF)
+============================================================================= */
+@media print {
+    /* Forzar renderizado de colores de fondo (refuerza la regla global del base). */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* FIX QUIRURGICO: el base.css en @media print fuerza text-align:right en
+       .rpt-number-cell, lo que rompe el centrado de la columna "Ip" (que combina
+       .rpt-number-cell + .rpt-align-center). Restauramos el centro SOLO cuando
+       ambas clases coexisten en la misma celda. */
+    .rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-number-cell.rpt-align-center {
+        text-align: center !important;
+    }
+
+    /* Reset de margenes del papel para la capa de impresion. */
+    .rpt-paper[data-informe="contratacion_mercados_sdg_dn"] {
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: var(--rpt-padding-pdf, 16mm) !important;
+    }
+
+    /* Filas de detalle compactas en impresion. */
+    .rpt-cmsdg-detail-row td {
+        padding: 1.5px 5px !important;
+        line-height: 1.2 !important;
+        border-bottom: none !important;
+    }
+    .rpt-cmsdg-detail-row td.rpt-cmsdg-spacer-cell-col {
+        border-bottom: none !important;
+    }
+
+    /* Evitar cortes dentro de filas y tras banners. */
+    .rpt-detail-row    { page-break-inside: avoid; }
+    .rpt-banner-top    { page-break-after: avoid; }
+
+    /* Permitir cortes dentro del bloque de detalle. */
+    .rpt-cmsdg-detail-block { page-break-inside: auto !important; }
+
+    /* Tipografia unificada. */
+    .rpt-cmsdg-tabla { font-size: 8pt !important; }
+
+    /* Totales y subtotales en impresion. */
+    .rpt-td-total,
+    .rpt-cmsdg-total-row td {
+        border-top: 0.5pt solid #00468B !important;
+        border-bottom: none !important;
+        padding-right: 5px !important;
+        padding-left: 5px !important;
+    }
+    .rpt-cmsdg-subtotal-row td {
+        padding-right: 5px !important;
+        padding-left: 5px !important;
+    }
+}

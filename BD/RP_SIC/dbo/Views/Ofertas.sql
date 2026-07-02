@@ -6,6 +6,27 @@ FROM            OPENQUERY(SIC,
                          'SELECT  CDCEN, CDOFT, FECHAA, DCOF, CDCLI, LOCAL, PROOF, IMAOF, CDAC1, CDAC2, DECOF, RPROF, FECHPP, PREVE, FECHAD, ADELE, PREAD, TCOS, TVEN, USER, 
                          WS10, DESPRO, BAJA FROM  S44DD901.ICOMERF.IC09AP')
                           AS vw
+GO
+GRANT VIEW DEFINITION
+    ON OBJECT::[dbo].[Ofertas] TO [partnertec]
+    AS [dbo];
+
+
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[Ofertas] TO [partnertec]
+    AS [dbo];
+
+
+GO
+GRANT REFERENCES
+    ON OBJECT::[dbo].[Ofertas] TO [partnertec]
+    AS [dbo];
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Ofertas';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -144,26 +165,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Ofertas';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Ofertas';
-
-
-GO
-GRANT REFERENCES
-    ON OBJECT::[dbo].[Ofertas] TO [partnertec]
-    AS [dbo];
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[Ofertas] TO [partnertec]
-    AS [dbo];
-
-
-GO
-GRANT VIEW DEFINITION
-    ON OBJECT::[dbo].[Ofertas] TO [partnertec]
-    AS [dbo];
 

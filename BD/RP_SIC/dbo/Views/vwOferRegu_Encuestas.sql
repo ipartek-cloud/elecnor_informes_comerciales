@@ -4,6 +4,9 @@ SELECT        CT, MERCADO, CODOFER, DESOFER, REG, CAUSA, LOCALIDAD, CODPROVINCIA
                          AÑOGRAB, MESGRAB, IMPAPROX, AÑOPRES, MESPRES, IMPPRES, ADJUDICADA, AÑOAD, MESAD, IMPAD, TIPO, OFERTAR, TOTCOSTOS, IMPTOTAL, CLIENTPROV, 
                          BAJA, AI, ORIGEN
 FROM            OPENQUERY(SIC, 'SELECT * FROM S44DD901.ICOMERF.OFERREGU WHERE REG =''0'' AND AÑOAD>=2005 ORDER BY CT,CODOFER') AS derivedtbl_1
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOferRegu_Encuestas';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -114,8 +117,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOferRegu_Encuestas';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOferRegu_Encuestas';
 

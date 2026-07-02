@@ -1,4 +1,4 @@
-import { GlobalUI, ApiClient, decodeJwt } from './site.js';
+﻿import { GlobalUI, ApiClient, decodeJwt } from './site.js';
 // Script principal asociado a la vista Home/Index.cshtml
 
 document.addEventListener("DOMContentLoaded", function () {

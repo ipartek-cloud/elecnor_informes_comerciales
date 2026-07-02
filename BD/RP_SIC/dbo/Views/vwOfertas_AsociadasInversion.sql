@@ -5,6 +5,9 @@ SELECT     CDCEN, CDOFT, FECHAA, DCOF, CDCLI, LOCAL, PROOF, IMAOF, CDAC1, CDAC2,
 FROM         OPENQUERY([SIC], 
                       'SELECT S44DD901.ICOMERF.IC09AP.*,JVAYNB as AsociadaInversion FROM S44DD901.ICOMERF.IC09AP LEFT JOIN S44DD901.ICOMERF.ICPOAI ON S44DD901.ICOMERF.IC09AP.CDOFT=S44DD901.ICOMERF.ICPOAI.JVAYNB WHERE ADELE=''S''')
                        AS vwOfertaAI
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOfertas_AsociadasInversion';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -126,8 +129,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOfertas_AsociadasInversion';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOfertas_AsociadasInversion';
 

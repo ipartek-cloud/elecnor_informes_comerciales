@@ -11,6 +11,8 @@ FROM            dbo.Sumarigrama INNER JOIN
 WHERE        (dbo.HistoricoContratacionGrupoSQL.Año = 2018) AND (dbo.Sumarigrama.CodSubDirGeneral = 221)
 GROUP BY dbo.ActividadesSQL.Orden, dbo.ActividadesSQL.Agrupacion, LEFT(dbo.HistoricoContratacionGrupoSQL.Mercado, 1), dbo.HistoricoContratacionGrupoSQL.Mes, 
                          dbo.Sumarigrama.CodDDirNegocio, dbo.Sumarigrama.NombreDirNegocio
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwSDG_Contratacion Actividades_2018_DN';
 
 
 GO
@@ -153,8 +155,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwSDG_Contratacion Actividades_2018_DN';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwSDG_Contratacion Actividades_2018_DN';
 

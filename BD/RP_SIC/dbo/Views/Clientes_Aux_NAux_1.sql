@@ -1,7 +1,0 @@
-﻿CREATE VIEW [dbo].[Clientes_Aux_NAux]
-AS
-	SELECT   AUX, NAUX 
-	FROM    OPENQUERY(SIC,'
-			SELECT AUX, NAUX  FROM S44DD901.FICOS.CGA06AP AS Clientes
-			WHERE CIA = ''001'' AND CNAUX = ''C''
-			')

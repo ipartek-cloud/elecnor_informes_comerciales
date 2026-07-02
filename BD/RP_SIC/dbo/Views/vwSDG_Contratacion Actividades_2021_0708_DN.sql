@@ -14,5 +14,3 @@ WHERE        (S.CodSubDirGeneral = 221) AND (dbo.ActividadesSQL.CDAC1 = '07') OR
                          (S.CodSubDirGeneral = 221) AND (dbo.ActividadesSQL.CDAC1 = '08')
 GROUP BY dbo.ActividadesSQL.Orden, LEFT(dbo.[@ContratacionGrupo2021].MERCADO, 1), dbo.[@ContratacionGrupo2021].MESAD, dbo.ActividadesSQL.CDAC1, 
                          S.CodDDirNegocio, S.NombreDirNegocio
-
-

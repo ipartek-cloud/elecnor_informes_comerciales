@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[rptContratacion_Actividad] (
+﻿CREATE TABLE [dbo].[rptContratacion_Actividad] (
     [idContratacionActividad]               INT             IDENTITY (1, 1) NOT NULL,
     [Actividad]                             NVARCHAR (255)  NULL,
     [Año]                                   INT             NULL,
@@ -9,11 +9,13 @@ CREATE TABLE [dbo].[rptContratacion_Actividad] (
     [Orden]                                 INT             NULL,
     [Pais]                                  NVARCHAR (255)  NULL,
     [NombreDirGeneral]                      VARCHAR (255)   NULL,
-    [LoginUsuario]                          NVARCHAR (100)  NULL DEFAULT ('ACCESS'),
-    [FechaCreacion]                         DATETIME        NULL DEFAULT (GETDATE()),
+    [LoginUsuario]                          NVARCHAR (100)  CONSTRAINT [DF_rptContrAct_Login] DEFAULT ('ACCESS') NULL,
+    [FechaCreacion]                         DATETIME        CONSTRAINT [DF_rptContrAct_Fecha] DEFAULT (getdate()) NULL,
     CONSTRAINT [PK_rptContratacion_Actividad] PRIMARY KEY CLUSTERED ([idContratacionActividad] ASC)
 );
 
+
+GO
 CREATE NONCLUSTERED INDEX [IX_rptContrAct_LoginUsuario]
     ON [dbo].[rptContratacion_Actividad]([LoginUsuario] ASC);
 

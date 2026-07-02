@@ -6,6 +6,15 @@ FROM            OPENQUERY(SIC,
 							 FROM  S44DD901.ICOMERF.IC09AP As OFCA 
 							 WHERE (substr( digits(dec(19000000+OFCA.FECHAA,8,0)), 1, 4 ) >= 2016) AND (OFCA.ADELE = ''S'' )')
                           AS vw
+GO
+GRANT SELECT
+    ON OBJECT::[dbo].[vwOfertas_Encuestas] TO [encuestas]
+    AS [dbo];
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOfertas_Encuestas';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -117,14 +126,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOfertas_Encuestas';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwOfertas_Encuestas';
-
-
-GO
-GRANT SELECT
-    ON OBJECT::[dbo].[vwOfertas_Encuestas] TO [encuestas]
-    AS [dbo];
 

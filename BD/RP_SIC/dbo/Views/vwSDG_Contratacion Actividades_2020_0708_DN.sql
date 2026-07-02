@@ -12,4 +12,3 @@ WHERE        (dbo.Sumarigrama.CodSubDirGeneral = 221) AND (dbo.ActividadesSQL.CD
                          (dbo.Sumarigrama.CodSubDirGeneral = 221) AND (dbo.ActividadesSQL.CDAC1 = '08')
 GROUP BY dbo.ActividadesSQL.Orden, LEFT(dbo.[@ContratacionGrupo2020].MERCADO, 1), dbo.[@ContratacionGrupo2020].MESAD, dbo.ActividadesSQL.CDAC1, 
                          dbo.Sumarigrama.CodDDirNegocio, dbo.Sumarigrama.NombreDirNegocio
-

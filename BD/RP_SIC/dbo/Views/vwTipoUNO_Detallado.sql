@@ -6,6 +6,8 @@ FROM OPENQUERY(SIC, '
 					FROM         S44DD901.FICOSCO.CO005BP AS Enlaces
 					WHERE        CDOFT NOT IN (''0000000001'',''0000000002'')
 				')
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwTipoUNO_Detallado';
 
 
 GO
@@ -128,8 +130,4 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwTipoUNO_Detallado';
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'vwTipoUNO_Detallado';
 

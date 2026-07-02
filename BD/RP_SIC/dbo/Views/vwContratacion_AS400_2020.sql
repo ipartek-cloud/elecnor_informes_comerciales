@@ -8,4 +8,3 @@ FROM            OPENQUERY(SIC,
                          'SELECT  AÑOAD, MESAD , CT , CODOFER, DESOFER, CODCLIENTE, NOMCLIENTE, IMPAD FROM S44DD901.ICOMERF.OFERREGU WHERE AÑOAD = 2020 AND ADJUDICADA = ''S'' ')
                           AS Contratacion_AS400 LEFT OUTER JOIN
                          dbo.ClientesSQL ON Contratacion_AS400.CODCLIENTE = dbo.ClientesSQL.CodCliente
-

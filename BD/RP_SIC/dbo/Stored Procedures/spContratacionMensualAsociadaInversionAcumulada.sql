@@ -1,4 +1,5 @@
-﻿CREATE OR ALTER PROCEDURE [dbo].[spContratacionMensualAsociadaInversionAcumulada] 	
+﻿
+CREATE PROCEDURE [dbo].[spContratacionMensualAsociadaInversionAcumulada] 	
 	@pMercado varchar(50),
 	@pAño int,
 	@pMes int,

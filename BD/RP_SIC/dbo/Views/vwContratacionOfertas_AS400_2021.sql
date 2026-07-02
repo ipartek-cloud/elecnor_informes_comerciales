@@ -7,6 +7,3 @@ SELECT       CT AS CodCentro,CODCLIENTE, CODOFER
 FROM            OPENQUERY(SIC, 
                          'SELECT DISTINCT  CT , CODOFER, CODCLIENTE FROM S44DD901.ICOMERF.OFERREGU WHERE AÑOAD = 2021 AND ADJUDICADA = ''S'' ')
                           AS Contratacion_AS400_2021
-
-
-
