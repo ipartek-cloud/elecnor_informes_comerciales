@@ -26,6 +26,7 @@ const _whitelistInformes = {
     'paises': 'Países',
     'paises_all': 'Países (Todos)',
     'actividades': 'Actividades',
+    'actividades_instalaciones_redes': 'Actividades SDG',
     'actividades_objetivos': 'Actividades Objetivos',
     'contrataciones': 'Contrataciones',
     'contrataciones_ai': 'Contrataciones AI',

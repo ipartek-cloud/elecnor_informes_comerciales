@@ -80,6 +80,7 @@ builder.Services.AddScoped<InformeCarteraContratacionDetallePaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionResumenSDGService>();
 builder.Services.AddScoped<InformeActividadesInternacionalDetalleService>();
 builder.Services.AddScoped<InformeContratacionMercadosSDGDNService>();
+builder.Services.AddScoped<InformeActividadesInstalacionesRedesService>();
 
 // Opciones de Generación (Sincronización)
 builder.Services.AddScoped<OpcionesGeneracionService>();

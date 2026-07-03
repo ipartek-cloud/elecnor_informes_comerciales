@@ -906,11 +906,9 @@
     <Build Include="dbo\Tables\rptContratacion_Actividad_SubActividad.sql" />
     <Build Include="dbo\Tables\WEB_Usuarios_Informes.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_ContratacionAsociadoInversion.sql" />
+    <Build Include="dbo\Tables\rptSDG_Actividades_SDG.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_RPSIC.scmp" />
   </ItemGroup>
 </Project>
-
-
-

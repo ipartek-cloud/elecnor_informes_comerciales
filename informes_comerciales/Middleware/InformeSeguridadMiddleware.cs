@@ -11,6 +11,7 @@ public class InformeSeguridadMiddleware
     private static readonly Dictionary<string, List<(string Tipo, string Nombre)>> RutaAInforme = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Actividades"] = new() { ("CONSEJO ELECNOR", "Actividades") },
+        ["ActividadesInstalacionesRedes"] = new() { ("DIRECCIONES GENERALES", "Actividades SDG") },
         ["ActividadesInternacionalDetalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") },
         ["ActividadesObjetivos"] = new() { ("COMITÉ", "Actividades") },
         ["CarteraContratacionDetalle"] = new() 
@@ -84,6 +85,7 @@ public class InformeSeguridadMiddleware
         ["paises"] = new() { ("CONSEJO ELECNOR", "Países"), ("CONSEJO ELECNOR", "Todos los Países"), ("COMITÉ", "Mercado Internacional por Países") },
         ["paises_all"] = new() { ("COMITÉ", "Ranking Países (Incluye España)") },
         ["actividades"] = new() { ("CONSEJO ELECNOR", "Actividades") },
+        ["actividades_instalaciones_redes"] = new() { ("DIRECCIONES GENERALES", "Actividades SDG") },
         ["actividades_objetivos"] = new() { ("COMITÉ", "Actividades") },
         ["contrataciones"] = new() { ("CONSEJO ELECNOR", "Principales Contrataciones Nacionales - Internacionales") },
         ["contrataciones_ai"] = new() { ("CONSEJO ELECNOR", "Contratación Asociada a Inversión") },
