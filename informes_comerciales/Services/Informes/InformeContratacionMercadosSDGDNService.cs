@@ -31,9 +31,10 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
         }
 
         public async Task<ContratacionMercadosSDGDNResponseDto> ObtenerInformeAsync(
-            int anio, int mes, string loginUsuario)
+            int anio, int mes, string loginUsuario, string? subdireccion = null)
         {
-            var datos = await _repository.ObtenerContratacionSDGDNAsync(anio, mes, loginUsuario);
+            var datos = await _repository.ObtenerContratacionSDGDNAsync(anio, mes, loginUsuario, subdireccion);
+            string subdir = subdireccion ?? "221";
 
             var response = new ContratacionMercadosSDGDNResponseDto
             {
@@ -41,7 +42,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 {
                     Titulo = "DG - Unidades Negocio - Mercado",
                     Descripcion = "Contratacion por Subdireccion General - Agrupado por Direccion de Negocio",
-                    Filtros = new { anio, mes, subdireccion = "221" },
+                    Filtros = new { anio, mes, subdireccion = subdir },
                     FechaGeneracion = DateTime.Now,
                     Usuario = loginUsuario,
                     MostrarNumeroPagina = true,
@@ -61,7 +62,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             // Bloque 1: Resumen por Mercado (Nacional / Internacional)
             var resumenes = datosOrdenados
                 .GroupBy(d => (d.Pais ?? string.Empty).Trim())
-                .Select(g => ConstruirResumenMercado(g.Key, g.ToList(), mes))
+                .Select(g => ConstruirResumenMercado(g.Key, g.ToList(), mes, subdir))
                 .OrderBy(r => r.Pais == "Nacional" ? 0 : 1)
                 .ToList();
             response.ResumenPorMercado.AddRange(resumenes);
@@ -104,7 +105,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 // 1) Filas de detalle (Nacional / Internacional)
                 foreach (var d in filasGrupo)
                 {
-                    var dtoDetalle = ConstruirDetalleDN(d, mes);
+                    var dtoDetalle = ConstruirDetalleDN(d, mes, subdir);
                     // Omitir filas completamente vacías (sin objetivos ni contratación)
                     if (dtoDetalle.ContratacionMensual == 0 && dtoDetalle.ContratacionAcumulado == 0 && dtoDetalle.ObjetivoAnual == 0)
                     {
@@ -133,7 +134,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                     EsSubtotal                    = true,
                     Ip                            = InformeCalculosUtils.CalcularIp(sumaContAcum, sumaObjMensual, mes),
                     VariacionContratacion         = InformeCalculosUtils.CalcularVariacionContratacion(sumaContAcumAnt, sumaContAcum),
-                    Umbral                        = 0.04m, // Genérico para el grupo
+                    Umbral                        = subdir == "286" ? 0.10m : 0.04m, // Genérico para el grupo según subdirección
                     SuperaUmbral                  = false
                 };
 
@@ -156,13 +157,23 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             return response;
         }
 
-        private ResumenMercadoDto ConstruirResumenMercado(string pais, List<ContratacionSDGDNPoco> datos, int mes)
+        private ResumenMercadoDto ConstruirResumenMercado(string pais, List<ContratacionSDGDNPoco> datos, int mes, string subdireccion)
         {
             decimal contMes     = datos.Sum(d => d.ImporteContratado) / 1000m;
             decimal contAcum    = datos.Sum(d => d.ImporteContratadoAcumulado) / 1000m;
             decimal contAcumAnt = datos.Sum(d => d.ImporteContratadoAcumuladoAnterior) / 1000m;
             decimal objAnual    = datos.Sum(d => d.Objetivo);
             decimal objMensual  = objAnual / 12m;
+
+            string umbralTexto;
+            if (subdireccion == "286")
+            {
+                umbralTexto = pais == "Nacional" ? "-10%" : "-21%";
+            }
+            else
+            {
+                umbralTexto = pais == "Nacional" ? "-4%" : "-10%";
+            }
 
             return new ResumenMercadoDto
             {
@@ -174,11 +185,11 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 ObjetivoMensual               = Math.Round(objMensual,  0, MidpointRounding.AwayFromZero),
                 Ip                            = InformeCalculosUtils.CalcularIp(contAcum, objMensual, mes),
                 VariacionContratacion         = InformeCalculosUtils.CalcularVariacionContratacion(contAcumAnt, contAcum),
-                UmbralTexto                   = pais == "Nacional" ? "-4%" : "-10%"
+                UmbralTexto                   = umbralTexto
             };
         }
 
-        private DetalleDNDto ConstruirDetalleDN(ContratacionSDGDNPoco d, int mes)
+        private DetalleDNDto ConstruirDetalleDN(ContratacionSDGDNPoco d, int mes, string subdireccion)
         {
             decimal contMes     = d.ImporteContratado / 1000m;
             decimal contAcum    = d.ImporteContratadoAcumulado / 1000m;
@@ -187,6 +198,20 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
             decimal objMensual  = objAnual / 12m;
 
             string pais = d.Pais ?? string.Empty;
+
+            decimal umbral;
+            string umbralTexto;
+
+            if (subdireccion == "286")
+            {
+                umbral = pais == "Nacional" ? 0.10m : 0.21m;
+                umbralTexto = pais == "Nacional" ? "-10%" : "-21%";
+            }
+            else
+            {
+                umbral = pais == "Nacional" ? 0.04m : 0.10m;
+                umbralTexto = pais == "Nacional" ? "-4%" : "-10%";
+            }
 
             return new DetalleDNDto
             {
@@ -203,8 +228,8 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 EsSubtotal                    = false,
                 Ip                            = InformeCalculosUtils.CalcularIp(contAcum, objMensual, mes),
                 VariacionContratacion         = InformeCalculosUtils.CalcularVariacionContratacion(contAcumAnt, contAcum),
-                Umbral                        = pais == "Nacional" ? 0.04m : 0.10m,
-                UmbralTexto                   = pais == "Nacional" ? "-4%" : "-10%",
+                Umbral                        = umbral,
+                UmbralTexto                   = umbralTexto,
                 SuperaUmbral                  = false
             };
         }

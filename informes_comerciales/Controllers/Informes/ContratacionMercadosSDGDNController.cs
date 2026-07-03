@@ -23,10 +23,11 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
         [HttpGet]
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any,
             VaryByHeader = "Authorization",
-            VaryByQueryKeys = new[] { "anio", "mes" })]
+            VaryByQueryKeys = new[] { "anio", "mes", "subdireccion" })]
         public async Task<ActionResult<ContratacionMercadosSDGDNResponseDto>> Get(
             [FromQuery] int anio,
-            [FromQuery] int mes)
+            [FromQuery] int mes,
+            [FromQuery] string? subdireccion = null)
         {
             if (anio > DateTime.Now.Year)
                 return BadRequest("El año de consulta no puede ser superior al año actual.");
@@ -36,7 +37,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes
                 return BadRequest("Mes inválido. Debe estar entre 1 y 12.");
 
             var loginUsuario = User.Identity?.Name ?? "ANONIMO";
-            var datos = await _service.ObtenerInformeAsync(anio, mes, loginUsuario);
+            var datos = await _service.ObtenerInformeAsync(anio, mes, loginUsuario, subdireccion);
             return Ok(datos);
         }
     }

@@ -13,9 +13,9 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase,
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, codSubDir, mostrarTitulo }) {
     try {
-        const url = `/api/ContratacionMercadosSDGDN?anio=${anio}&mes=${mes}&_=${Date.now()}`;
+        const url = `/api/ContratacionMercadosSDGDN?anio=${anio}&mes=${mes}&subdireccion=${codSubDir || ''}&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
@@ -55,10 +55,13 @@ function _renderizarPagina() {
 }
 
 function _getHtmlEncabezado() {
+    const subdireccion = estado.informeGlobalData?.meta?.filtros?.subdireccion;
+    const bannerText = subdireccion === '286' ? 'DG. Elecnor Proyectos' : 'DG. Elecnor Servicios';
+
     return getHtmlEncabezadoBase({
         // Span vacio: el botón Index define data-mostrar-titulo="false" para no mostrar el titulo.
         tituloCorporativo: '<span class="rpt-d-none">Consejo Elecnor</span>',
-        textoBanner1: 'DG. Elecnor Servicios',
+        textoBanner1: bannerText,
         textoBanner2: 'Mercados',
         mes: estado.informeGlobalData?.meta?.filtros?.mes,
         anio: estado.informeGlobalData?.meta?.filtros?.anio,
@@ -138,10 +141,13 @@ function _renderCabeceraColumnas(bannerCentral, mostrarUmbral = true) {
 function _renderBloqueResumen(resumenes, totalGlobal) {
     if (!resumenes || resumenes.length === 0) return '';
 
+    const subdireccion = estado.informeGlobalData?.meta?.filtros?.subdireccion;
+    const bannerText = subdireccion === '286' ? 'DG. Elecnor Proyectos' : 'DG. Elecnor Servicios';
+
     return `
     <div class="rpt-cmsdg-table-container rpt-mt-2 rpt-mb-4">
         <table class="rpt-table rpt-cmsdg-tabla rpt-w-100">
-            ${_renderCabeceraColumnas('DG. Elecnor Servicios', true)}
+            ${_renderCabeceraColumnas(bannerText, true)}
             <tbody>
                 ${resumenes.map(r => _renderFilaResumen(r)).join('')}
             </tbody>
@@ -174,6 +180,9 @@ function _renderFilaResumen(r) {
 function _renderFilaTotalGlobal(t) {
     const ipClass = getIpClass(t.ip);
     const varClass = getVarClass(t.variacionContratacion);
+    const subdir = estado.informeGlobalData?.meta?.filtros?.subdireccion;
+    const totalUmbralText = subdir === '286' ? '-17%' : '-6%';
+
     return `
     <tr class="rpt-cmsdg-total-row rpt-font-bold rpt-text-corporate">
         <td class="rpt-number-cell rpt-td-total" data-label="Total Obj. Mensual">${formatCurrency(t.objetivoMensual, 0)}</td>
@@ -182,7 +191,7 @@ function _renderFilaTotalGlobal(t) {
         <td class="rpt-td-total rpt-align-center" data-label="Total Label">&nbsp;</td>
         <td class="rpt-cmsdg-spacer-cell-col"></td>
         <td class="rpt-number-cell rpt-td-total" data-label="Total Obj. Anual">${formatCurrency(t.objetivoAnual, 0)}</td>
-        <td class="rpt-number-cell rpt-td-total rpt-cmsdg-col-umbral-cell" data-label="Total Var. Umbral">-6%</td>
+        <td class="rpt-number-cell rpt-td-total rpt-cmsdg-col-umbral-cell" data-label="Total Var. Umbral">${totalUmbralText}</td>
         <td class="rpt-number-cell rpt-td-total" data-label="Total Contr. Acum.">${formatCurrency(t.contratacionAcumulado, 0)}</td>
         <td class="rpt-number-cell rpt-align-center ${ipClass} rpt-td-total" data-label="Total IP">${formatCurrency(t.ip, 2)}</td>
         <td class="rpt-align-end ${varClass} rpt-td-total" data-label="Total Var. %">${t.variacionContratacion}</td>

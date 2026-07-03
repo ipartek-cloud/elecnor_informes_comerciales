@@ -4889,7 +4889,7 @@ public class InformeRepository
     // ====================================================================
 
     public async Task<List<ContratacionSDGDNPoco>> ObtenerContratacionSDGDNAsync(
-        int anio, int mes, string loginUsuario)
+        int anio, int mes, string loginUsuario, string? subdireccion)
     {
         // Patron atomico Elecnor: DELETE (RLS + TTL) -> INSERT EXEC -> SELECT.
         // La SP inyecta LoginUsuario/Año en su SELECT final, garantizando
@@ -4908,9 +4908,19 @@ public class InformeRepository
             DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20);
             SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad FROM dbo.WEB_Usuarios WITH (NOLOCK) WHERE Usuario = @LoginUsuario;
 
+            DECLARE @vSubDirFinal nvarchar(20);
+            IF @vPuesto = 'SDG'
+            BEGIN
+                SET @vSubDirFinal = @vCodEntidad;
+            END
+            ELSE
+            BEGIN
+                SET @vSubDirFinal = NULLIF(@Subdireccion, '');
+            END;
+
             WITH Contratacion AS (
                 SELECT
-                    rpt.CodSubDirGeneral,
+                    CASE WHEN @vSubDirFinal IS NULL THEN '' ELSE rpt.CodSubDirGeneral END AS CodSubDirGeneral,
                     rpt.Año,
                     rpt.NombreDirNegocio,
                     rpt.Pais,
@@ -4920,15 +4930,18 @@ public class InformeRepository
                 FROM dbo.rptContratacion_DG_SDG_DN_SDNA_Deleg rpt WITH (NOLOCK)
                 WHERE rpt.Año = @Anio
                   AND rpt.LoginUsuario = @LoginUsuario
-                  AND rpt.CodSubDirGeneral = '221'
+                  AND (
+                      @vSubDirFinal IS NULL 
+                      OR rpt.CodSubDirGeneral = @vSubDirFinal
+                  )
                   AND rpt.Pais <> ''
-                GROUP BY rpt.CodSubDirGeneral, rpt.Año, rpt.NombreDirNegocio, rpt.Pais
+                GROUP BY CASE WHEN @vSubDirFinal IS NULL THEN '' ELSE rpt.CodSubDirGeneral END, rpt.Año, rpt.NombreDirNegocio, rpt.Pais
             ),
             ObjetivosArea AS (
                 SELECT
                     s.Año,
-                    s.CodSubDirGeneral,
-                    s.NombreSubDirGeneral,
+                    CASE WHEN @vSubDirFinal IS NULL THEN '' ELSE s.CodSubDirGeneral END AS CodSubDirGeneral,
+                    CASE WHEN @vSubDirFinal IS NULL THEN 'Dirección General (Consolidado)' ELSE MAX(s.NombreSubDirGeneral) END AS NombreSubDirGeneral,
                     s.CodDDirNegocio,
                     s.NombreDirNegocio,
                     m.Mercado AS Pais,
@@ -4944,10 +4957,13 @@ public class InformeRepository
                         CodCentro
                     FROM dbo.Sumarigrama WITH (NOLOCK)
                     WHERE Año = @Anio
-                      AND CodSubDirGeneral = '221'
+                      AND (
+                          @vSubDirFinal IS NULL 
+                          OR CodSubDirGeneral = @vSubDirFinal
+                      )
                       AND (
                           @vPuesto = 'DG' OR @vPuesto IS NULL OR @LoginUsuario IS NULL
-                          OR (@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad)
+                          OR (@vPuesto = 'SDG' AND CodSubDirGeneral = @vCodEntidad)
                           OR (@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad)
                           OR (@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad)
                           OR (@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad)
@@ -4959,7 +4975,7 @@ public class InformeRepository
                     ON s.CodCentro = oa.CodCentro
                     AND s.Año = oa.Año
                     AND m.Mercado = (CASE WHEN oa.Mercado = 'I' THEN 'Internacional' ELSE 'Nacional' END)
-                GROUP BY s.Año, s.CodSubDirGeneral, s.NombreSubDirGeneral, s.CodDDirNegocio, s.NombreDirNegocio, m.Mercado
+                GROUP BY s.Año, CASE WHEN @vSubDirFinal IS NULL THEN '' ELSE s.CodSubDirGeneral END, s.CodDDirNegocio, s.NombreDirNegocio, m.Mercado
             ),
             OrdenDN AS (
                 SELECT CodDDirNegocio, Orden_CodDDirNegocio
@@ -4980,10 +4996,11 @@ public class InformeRepository
             LEFT JOIN Contratacion c
                 ON oa.NombreDirNegocio = c.NombreDirNegocio
                 AND oa.Pais = c.Pais
+                AND oa.CodSubDirGeneral = c.CodSubDirGeneral
             LEFT JOIN OrdenDN ord
                 ON oa.CodDDirNegocio = ord.CodDDirNegocio;";
 
-        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
+        var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario, Subdireccion = subdireccion };
 
         if (_connection.State != ConnectionState.Open)
             _connection.Open();
