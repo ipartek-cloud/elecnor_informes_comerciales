@@ -733,6 +733,7 @@
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerOfertasInternacionales.sql" />
     <Build Include="dbo\Stored Procedures\sp_SDG_por_Actividades.sql" />
     <Build Include="dbo\Stored Procedures\sp_SDG_Contratacion_por_Actividades.sql" />
+    <Build Include="dbo\Stored Procedures\sp_SDG_Contratacion_por_Actividades_WEB.sql" />
     <Build Include="dbo\Stored Procedures\spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS_NOVALE.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_GCI_ObtenerOfertasInternacionalesPaisesEstables.sql" />
     <Build Include="dbo\Stored Procedures\spWEB_OfertacionDetalladaUsuario.sql" />
