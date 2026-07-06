@@ -222,6 +222,13 @@
         border: none !important;
     }
 
+    /* Estrechar el bloque de tablas en el PDF para paridad con la web */
+    .rpt-as-wrap {
+        width: 88% !important;
+        max-width: 740px !important;
+        margin: 0 auto !important;
+    }
+
     /* Ajuste fino de espaciado en impresión */
     .rpt-as-seccion {
         margin-bottom: 20px !important; /* Separación vertical en PDF */
