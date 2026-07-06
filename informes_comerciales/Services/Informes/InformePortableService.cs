@@ -26,6 +26,7 @@ public class InformePortableService
         { "mercados_sg_delegaciones", (typeof(InformeMercadosSGDelegacionesService), "ObtenerInformeAsync") },
         { "actividades", (typeof(InformeActividadesService), "ObtenerInformeAsync") },
         { "actividades_instalaciones_redes", (typeof(InformeActividadesInstalacionesRedesService), "ObtenerInformeAsync") },
+        { "CD_Elecnor_DG_Activ_Redes", (typeof(InformeCD_Elecnor_DG_Activ_RedesService), "ObtenerInformeAsync") },
         { "actividades_objetivos", (typeof(InformeActividadesObjetivosService), "ObtenerInformeAsync") },
         { "contrataciones", (typeof(InformeContratacionesService), "ObtenerInformeCompletoAsync") },
         { "contrataciones_ai", (typeof(InformeContratacionesAIService), "ObtenerInformeCompletoAsync") },

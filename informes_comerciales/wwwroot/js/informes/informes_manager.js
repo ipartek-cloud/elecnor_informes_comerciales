@@ -27,6 +27,7 @@ const _whitelistInformes = {
     'paises_all': 'Países (Todos)',
     'actividades': 'Actividades',
     'actividades_instalaciones_redes': 'Actividades SDG',
+    'CD_Elecnor_DG_Activ_Redes': 'Actividades x DN',
     'actividades_objetivos': 'Actividades Objetivos',
     'contrataciones': 'Contrataciones',
     'contrataciones_ai': 'Contrataciones AI',
@@ -94,7 +95,7 @@ function inicializarTooltipsFiltros() {
     allBtns.forEach(btn => {
         // En HTML5, los data-* siempre se normalizan a minúsculas en el dataset
         const ds = btn.dataset;
-        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined || ds.umbral1 !== undefined || ds.contratacionanioanteriorespania !== undefined) {
+        if (ds.limiteimporte !== undefined || ds.limitepaises !== undefined || ds.umbral !== undefined || ds.numeropaises !== undefined || ds.umbral1 !== undefined || ds.contratacionanioanteriorespania !== undefined || ds.coddirnegocio !== undefined) {
             
             // Destruir instancia de Tippy previa si existe en este botón para evitar acumulaciones
             if (btn._tippy) {
@@ -243,6 +244,39 @@ function inicializarTooltipsFiltros() {
                 `;
             }
 
+            if (ds.coddirnegocio !== undefined) {
+                const subdir = ds.subdireccion;
+                const opcionesDN = subdir === '286'
+                    ? [
+                        { value: '090', label: 'Grandes Redes' },
+                        { value: '780', label: 'Renovables, Gas y Agua' },
+                        { value: '800', label: 'Energía' }
+                      ]
+                    : [
+                        { value: '500', label: 'Centro' },
+                        { value: '934', label: 'Este' },
+                        { value: '700', label: 'Sur' },
+                        { value: '290', label: 'Norteamérica' }
+                      ];
+                const defaultCodDN = ds.coddirnegocio || opcionesDN[0].value;
+                const radiosHtml = opcionesDN.map(o => `
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pop-coddirnegocio"
+                               id="pop-coddirnegocio-${o.value}" value="${o.value}"
+                               ${o.value === defaultCodDN ? 'checked' : ''}>
+                        <label class="form-check-label" for="pop-coddirnegocio-${o.value}" style="font-size: 0.8rem;">
+                            ${o.label}
+                        </label>
+                    </div>
+                `).join('');
+                content += `
+                    <div class="mb-2">
+                        <label class="small fw-bold d-block mb-1 text-muted">Dirección de Negocio:</label>
+                        ${radiosHtml}
+                    </div>
+                `;
+            }
+
             content += `
                 <button class="btn btn-primary btn-sm w-100 mt-2 rpt-btn-pop-aceptar" id="btn-pop-aceptar">
                     <i class="fas fa-play me-1"></i> Generar Informe
@@ -295,6 +329,7 @@ function inicializarTooltipsFiltros() {
                     const umbral3 = box.querySelector('#pop-umbral3')?.value;
                     const umbral4 = box.querySelector('#pop-umbral4')?.value;
                     const contratacionAnioAnteriorEspana = box.querySelector('#pop-contratacion-anio-anterior-espana')?.value;
+                    const codDirNegocio = box.querySelector('input[name="pop-coddirnegocio"]:checked')?.value;
                     
                     const nombreInforme = instance.reference.dataset.nombreInforme;
                     const esContratacionesAI = nombreInforme === 'contrataciones_ai';
@@ -325,7 +360,8 @@ function inicializarTooltipsFiltros() {
                         umbral2: u2Val,
                         umbral3: desformatearMiles(umbral3),
                         umbral4: desformatearMiles(umbral4),
-                        contratacionAnioAnteriorEspana: desformatearMiles(contratacionAnioAnteriorEspana)
+                        contratacionAnioAnteriorEspana: desformatearMiles(contratacionAnioAnteriorEspana),
+                        codDirNegocio: codDirNegocio || null
                     });
                 };
 
@@ -457,6 +493,13 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
         contratacionAnioAnteriorEspanaFinal = btn?.dataset?.contratacionanioanteriorespania ? parseFloat(btn.dataset.contratacionanioanteriorespania) : 1950280;
     }
 
+    let codDirNegocioFinal;
+    if (filtrosManuales && filtrosManuales.codDirNegocio !== undefined && filtrosManuales.codDirNegocio !== null) {
+        codDirNegocioFinal = filtrosManuales.codDirNegocio;
+    } else {
+        codDirNegocioFinal = btn?.dataset?.coddirnegocio || '500';
+    }
+
     // 0. Verificar si está activado el modo HTML Portable
     const chkPortable = document.getElementById('chkGenerarHtmlPortable');
     if (chkPortable && chkPortable.checked) {
@@ -535,7 +578,8 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
                 umbral2: umbral2Final,
                 umbral3: umbral3Final,
                 umbral4: umbral4Final,
-                contratacionAnioAnteriorEspana: contratacionAnioAnteriorEspanaFinal
+                contratacionAnioAnteriorEspana: contratacionAnioAnteriorEspanaFinal,
+                codDirNegocio: codDirNegocioFinal
             };
 
             await modulo.ejecutar(parametros);

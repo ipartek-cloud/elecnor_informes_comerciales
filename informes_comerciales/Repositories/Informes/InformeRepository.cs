@@ -13,6 +13,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.Paises;
 using Elecnor_Informes_Comerciales.Models.Informes.Actividades;
 
 using Elecnor_Informes_Comerciales.Models.Informes.ActividadesInstalacionesRedes;
+using Elecnor_Informes_Comerciales.Models.Informes.CD_Elecnor_DG_Activ_Redes;
 
 using Elecnor_Informes_Comerciales.Models.Informes.ActividadesObjetivos;
 
@@ -5089,6 +5090,72 @@ public class InformeRepository
 
             // 3) SELECT tipado.
             var resultado = (await _connection.QueryAsync<SdgActividadesPoco>(sqlSelect, new { Anio = anio, LoginUsuario = loginUsuario }, transaction)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+
+    // ====================================================================
+    // INFORME: Actividades x DN (CD_Elecnor_DG_Activ_Redes)
+    // Variante filtrada por CodDirNegocio del informe Actividades SDG.
+    // ====================================================================
+
+    public async Task<List<SdgActividadesDNPoco>> ObtenerSdgActividadesDNAsync(
+        int anio, int mes, string loginUsuario, string? subdireccion, string? codDirNegocio)
+    {
+        string subdir = string.IsNullOrWhiteSpace(subdireccion) ? "221" : subdireccion;
+        string codDN = string.IsNullOrWhiteSpace(codDirNegocio) ? "500" : codDirNegocio;
+
+        const string sqlDelete = @"DELETE FROM rptSDG_Actividades_SDG
+                                   WHERE LoginUsuario = @LoginUsuario
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
+
+        const string sqlInsertExec = @"INSERT INTO rptSDG_Actividades_SDG
+                                        (Orden, CodDirNegocio, NombreDirNegocio, Agrupacion, ACT1,
+                                         Mercado, Objetivos, Contrat, Contrat_1, Año, LoginUsuario)
+                                        EXEC sp_SDG_Contratacion_por_Actividades_WEB
+                                            @pAnio, @pMes, @pCodSubDirGeneral, @pLoginUsuario";
+
+        const string sqlSelect = @"SELECT rpt.Año, rpt.Agrupacion, rpt.Mercado,
+                                        rpt.CodDirNegocio, rpt.NombreDirNegocio, rpt.Orden,
+                                        rpt.Contrat, rpt.ACT1, rpt.Contrat_1, rpt.Objetivos,
+                                        rpt.LoginUsuario, rpt.FechaCreacion
+                                    FROM dbo.rptSDG_Actividades_SDG rpt WITH (NOLOCK)
+                                    WHERE rpt.Año = @Anio
+                                      AND rpt.LoginUsuario = @LoginUsuario
+                                      AND rpt.Agrupacion IS NOT NULL
+                                      AND LTRIM(RTRIM(rpt.Agrupacion)) <> ''
+                                      AND (ISNULL(rpt.Contrat, 0) + ISNULL(rpt.Contrat_1, 0) + ISNULL(rpt.Objetivos, 0) <> 0)
+                                      AND rpt.CodDirNegocio = @CodDirNegocio";
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
+
+            using (var cmd = (SqlCommand)_connection.CreateCommand())
+            {
+                cmd.Transaction = (SqlTransaction)transaction;
+                cmd.CommandText = sqlInsertExec;
+                cmd.CommandTimeout = 300;
+                cmd.Parameters.Add(new SqlParameter("@pAnio", SqlDbType.Int) { Value = anio });
+                cmd.Parameters.Add(new SqlParameter("@pMes", SqlDbType.Int) { Value = mes });
+                cmd.Parameters.Add(new SqlParameter("@pCodSubDirGeneral", SqlDbType.VarChar, 3) { Value = subdir });
+                cmd.Parameters.Add(new SqlParameter("@pLoginUsuario", SqlDbType.NVarChar, 100) { Value = loginUsuario });
+                await cmd.ExecuteNonQueryAsync();
+            }
+
+            var resultado = (await _connection.QueryAsync<SdgActividadesDNPoco>(sqlSelect,
+                new { Anio = anio, LoginUsuario = loginUsuario, CodDirNegocio = codDN }, transaction)).ToList();
 
             transaction.Commit();
             return resultado;

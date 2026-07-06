@@ -12,6 +12,7 @@ public class InformeSeguridadMiddleware
     {
         ["Actividades"] = new() { ("CONSEJO ELECNOR", "Actividades") },
         ["ActividadesInstalacionesRedes"] = new() { ("DIRECCIONES GENERALES", "Actividades SDG") },
+        ["CD_Elecnor_DG_Activ_Redes"] = new() { ("DIRECCIONES GENERALES", "Actividades x DN") },
         ["ActividadesInternacionalDetalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") },
         ["ActividadesObjetivos"] = new() { ("COMITÉ", "Actividades") },
         ["CarteraContratacionDetalle"] = new() 
@@ -86,6 +87,7 @@ public class InformeSeguridadMiddleware
         ["paises_all"] = new() { ("COMITÉ", "Ranking Países (Incluye España)") },
         ["actividades"] = new() { ("CONSEJO ELECNOR", "Actividades") },
         ["actividades_instalaciones_redes"] = new() { ("DIRECCIONES GENERALES", "Actividades SDG") },
+        ["CD_Elecnor_DG_Activ_Redes"] = new() { ("DIRECCIONES GENERALES", "Actividades x DN") },
         ["actividades_objetivos"] = new() { ("COMITÉ", "Actividades") },
         ["contrataciones"] = new() { ("CONSEJO ELECNOR", "Principales Contrataciones Nacionales - Internacionales") },
         ["contrataciones_ai"] = new() { ("CONSEJO ELECNOR", "Contratación Asociada a Inversión") },
