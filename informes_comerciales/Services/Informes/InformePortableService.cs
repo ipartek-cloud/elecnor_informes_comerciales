@@ -271,6 +271,8 @@ public class InformePortableService
                     args.Add(subdireccion);
                 else if (filtros != null && filtros.TryGetValue("codSubDir", out var codSubDir))
                     args.Add(codSubDir);
+                else if (filtros != null && filtros.TryGetValue("codSubDirGeneral", out var codSubDirGeneral))
+                    args.Add(codSubDirGeneral);
                 else
                     args.Add(param.HasDefaultValue ? param.DefaultValue : "221");
                 continue;

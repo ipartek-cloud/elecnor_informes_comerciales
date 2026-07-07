@@ -15,9 +15,9 @@ public class InformeMercadosSGDelegacionesService
         _repository = repository;
     }
 
-    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina, string loginUsuario)
+    public async Task<MercadosSGDelegacionesResponseDto> ObtenerInformeAsync(int anio, int mes, int? nroPagina, string loginUsuario, string? codSubDirGeneral = null)
     {
-        var datosPlanos = await _repository.ObtenerMercadosSGDelegacionesAsync(anio, mes, loginUsuario, CodSdgOrdenDel);
+        var datosPlanos = await _repository.ObtenerMercadosSGDelegacionesAsync(anio, mes, loginUsuario, CodSdgOrdenDel, codSubDirGeneral);
 
         var response = new MercadosSGDelegacionesResponseDto
         {

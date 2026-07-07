@@ -22,7 +22,7 @@ public class MercadosSGDelegacionesController : ControllerBase
 
     [HttpGet]
     [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
-    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina = null)
+    public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] int? nroPagina = null, [FromQuery] string? codSubDirGeneral = null)
     {
         try
         {
@@ -30,7 +30,7 @@ public class MercadosSGDelegacionesController : ControllerBase
                 return BadRequest("El año de consulta no puede ser superior al año actual.");
 
             var loginUsuario = User.Identity?.Name ?? "ANONIMO";
-            var result = await _service.ObtenerInformeAsync(anio, mes, nroPagina, loginUsuario);
+            var result = await _service.ObtenerInformeAsync(anio, mes, nroPagina, loginUsuario, codSubDirGeneral);
 
             if (result == null || result.SubDireccionesGenerales.Count == 0)
                 return NotFound("No se encontraron resultados para el periodo seleccionado.");

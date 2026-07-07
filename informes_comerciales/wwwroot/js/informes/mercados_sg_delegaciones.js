@@ -3,10 +3,11 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyle
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, codSubDir }) {
     try {
         let url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
+        if (codSubDir) url += `&codSubDirGeneral=${codSubDir}`;
         url += `&_=${Date.now()}`;
 
         estado.nroPagina = nroPagina;
