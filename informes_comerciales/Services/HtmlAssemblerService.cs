@@ -253,7 +253,7 @@ public class HtmlAssemblerService
         // de páginas la realiza PDFsharp en el post-proceso (PdfPageNumberService).
         // Si el JS pintara el span .rpt-page-number, aparecería el número dos veces.
         sb.AppendLine("<script>");
-        sb.AppendLine($"(function() {{ if (typeof window.ejecutar === 'function') {{ window.ejecutar({{ anio: {anio}, mes: {mes}, nroPagina: null, mostrarTitulo: true }}); }} }})();");
+        sb.AppendLine($"(function() {{ if (typeof window.ejecutar === 'function') {{ window.ejecutar({{ anio: {anio}, mes: {mes}, nroPagina: null, mostrarTitulo: true, isPdf: true }}); }} }})();");
         sb.AppendLine("</script>");
 
         sb.AppendLine("</body>");

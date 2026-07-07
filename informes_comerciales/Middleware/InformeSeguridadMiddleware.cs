@@ -58,7 +58,11 @@ public class InformeSeguridadMiddleware
         ["Gerencias"] = new() { ("COMITÉ", "Gerencias DG Servicios") },
         ["Mercados"] = new() { ("CONSEJO ELECNOR", "Mercado-Direcciones Generales-Unidades Negocio") },
         ["MercadosDG"] = new() { ("COMITÉ", "Mercado-Direcciones Generales-Unidades Negocio") },
-        ["MercadosSGDelegaciones"] = new() { ("COMITÉ", "DG - Unidades Negocio - Delegaciones") },
+        ["MercadosSGDelegaciones"] = new() 
+        { 
+            ("COMITÉ", "DG - Unidades Negocio - Delegaciones"),
+            ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Delegaciones")
+        },
         ["Paises"] = new() 
         { 
             ("CONSEJO ELECNOR", "Países"), 
@@ -82,7 +86,11 @@ public class InformeSeguridadMiddleware
         ["contratacion_mercados_sdg_dn"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Mercado") },
         ["mercados"] = new() { ("CONSEJO ELECNOR", "Mercado-Direcciones Generales-Unidades Negocio") },
         ["mercados_dg"] = new() { ("COMITÉ", "Mercado-Direcciones Generales-Unidades Negocio") },
-        ["mercados_sg_delegaciones"] = new() { ("COMITÉ", "DG - Unidades Negocio - Delegaciones") },
+        ["mercados_sg_delegaciones"] = new() 
+        { 
+            ("COMITÉ", "DG - Unidades Negocio - Delegaciones"),
+            ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Delegaciones")
+        },
         ["paises"] = new() { ("CONSEJO ELECNOR", "Países"), ("CONSEJO ELECNOR", "Todos los Países"), ("COMITÉ", "Mercado Internacional por Países") },
         ["paises_all"] = new() { ("COMITÉ", "Ranking Países (Incluye España)") },
         ["actividades"] = new() { ("CONSEJO ELECNOR", "Actividades") },

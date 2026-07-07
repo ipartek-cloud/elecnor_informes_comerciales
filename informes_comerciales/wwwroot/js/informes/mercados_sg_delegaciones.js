@@ -3,7 +3,7 @@ import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyle
 
 const estado = crearEstadoInforme();
 
-export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, codSubDir }) {
+export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, codSubDir, isPdf }) {
     try {
         let url = `/api/MercadosSGDelegaciones?anio=${anio}&mes=${mes}`;
         if (nroPagina) url += `&nroPagina=${nroPagina}`;
@@ -13,6 +13,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, codSubDir 
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
+        estado.isPdf = isPdf;
 
         await inicializarInforme({
             url, estado,
@@ -39,6 +40,37 @@ function _renderizarPagina() {
     
     const data = estado.informeGlobalData;
     if (!data || !data.subDireccionesGenerales) return;
+
+    if (estado.isPdf) {
+        const styleVars = getStyleVars(estado.margenes);
+        container.innerHTML = `
+        <div class="${RPT_CLASSES.PAPER} rpt-paper--print" data-informe="mercados_sg_delegaciones"${styleVars}>
+            <table class="rpt-print-outer-table">
+                <thead>
+                    <tr>
+                        <td class="rpt-print-td-header">
+                            ${_getHtmlEncabezadoBase()}
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rpt-print-td-body">
+                            <div class="report-body rpt-cmai-mt-standard">
+                                ${data.subDireccionesGenerales.map((sdg, idx) => {
+                                    const htmlSDG = _renderSDG(sdg);
+                                    return idx < data.subDireccionesGenerales.length - 1 
+                                        ? `${htmlSDG}<div class="rpt-page-break"></div>` 
+                                        : htmlSDG;
+                                }).join('')}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>`;
+        return;
+    }
 
     // Renderizamos TODAS las Subdirecciones una tras otra
     const cuerpoHtml = data.subDireccionesGenerales.map((sdg, idx) => {
