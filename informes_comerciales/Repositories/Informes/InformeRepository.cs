@@ -2928,4 +2928,150 @@ public class InformeRepository
             throw;
         }
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: CD_Elecnor_DG_Centros_DGRI_Nuevo (Centros)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<Elecnor_Informes_Comerciales.Models.Informes.DGCentros.DGCentrosPoco>> ObtenerDGCentrosDGRINuevoAsync(int anio, int mes, string loginUsuario, string? codSubDirGeneral = null)
+    {
+        const string sqlDelete = @"DELETE FROM rptContratacion_SG_Mercado 
+                                   WHERE LoginUsuario = @LoginUsuario 
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
+
+        const string sqlExecSp = @"EXEC spContratacion_Mensual_Acumulada_AñoAnterior_SG_Mercado @Anio, @Mes, @LoginUsuario";
+
+        const string sqlInsert = @"INSERT INTO rptContratacion_SG_Mercado
+                                   (Pais, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Año, LoginUsuario)
+                                    VALUES (@Pais, @CodCentro, @ImporteContratado, @ImporteContratadoAcumulado, @ImporteContratadoAcumuladoAñoAnterior, @Año, @LoginUsuario)";
+
+        const string sqlSelect = @"
+            WITH CTE_Estructura AS (
+                SELECT DISTINCT
+                    S.OrdenSubDirGeneral,
+                    S.CodSubDirGeneral,
+                    S.NombreSubDirGeneral,
+                    ONeg.Orden_CodDDirNegocio,
+                    S.CodDDirNegocio,
+                    S.NombreDirNegocio,
+                    S.CodDelegacion,
+                    S.NombreDelegacion,
+                    S.CodCentro,
+                    S.NombreCentro
+                FROM dbo.Sumarigrama S WITH (NOLOCK)
+                INNER JOIN dbo.Orden_CodDDirNegocio ONeg WITH (NOLOCK) ON S.CodDDirNegocio = ONeg.CodDDirNegocio
+                WHERE S.Año = @Anio
+            ),
+            CTE_Contratacion AS (
+                SELECT 
+                    CodCentro,
+                    Pais,
+                    SUM(ImporteContratado) AS ImporteContratado,
+                    SUM(ImporteContratadoAcumulado) AS ImporteContratadoAcumulado,
+                    SUM(ImporteContratadoAcumuladoAñoAnterior) AS ImporteContratadoAcumuladoAñoAnterior
+                FROM dbo.rptContratacion_SG_Mercado WITH (NOLOCK)
+                WHERE Año = @Anio AND LoginUsuario = @LoginUsuario
+                GROUP BY CodCentro, Pais
+            ),
+            CTE_Objetivos AS (
+                SELECT 
+                    CodCentro,
+                    CASE WHEN Mercado = 'I' THEN 'Internacional' ELSE 'Nacional' END AS Pais,
+                    SUM(Importe) AS Objetivos
+                FROM dbo.ObjetivosActividadSQL WITH (NOLOCK)
+                WHERE Año = @Anio
+                GROUP BY CodCentro, Mercado
+            ),
+            CTE_ActividadCentroPais AS (
+                SELECT CodCentro, Pais FROM CTE_Contratacion
+                UNION
+                SELECT CodCentro, Pais FROM CTE_Objetivos
+            ),
+            CTE_Cartera AS (
+                SELECT 
+                    S.CodCentro,
+                    SUM(ISNULL(Act.CarteraPdteAñoActual, 0)) AS CarteraPdteAñoActual,
+                    SUM(ISNULL(Ant.CarteraPdteAñoAnterior, 0)) AS CarteraPdteAñoAnterior
+                FROM dbo.Sumarigrama S WITH (NOLOCK)
+                LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) Act ON S.CodCentro = Act.CodCentro AND S.Año = @Anio
+                LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) Ant ON S.CodCentro = Ant.CodCentro AND S.Año = @Anio
+                WHERE S.Año = @Anio
+                GROUP BY S.CodCentro
+            )
+            SELECT
+                E.OrdenSubDirGeneral,
+                E.CodSubDirGeneral,
+                E.NombreSubDirGeneral,
+                E.Orden_CodDDirNegocio,
+                E.CodDDirNegocio,
+                E.NombreDirNegocio AS NomDirNegocio,
+                E.CodDelegacion,
+                E.NombreDelegacion,
+                E.CodCentro,
+                E.NombreCentro,
+                ISNULL(A.Pais, 'Nacional') AS Pais,
+                ISNULL(C.ImporteContratado, 0) AS ImporteContratado,
+                ISNULL(C.ImporteContratadoAcumulado, 0) AS ImporteContratadoAcumulado,
+                ISNULL(C.ImporteContratadoAcumuladoAñoAnterior, 0) AS ImporteContratadoAcumuladoAñoAnterior,
+                ISNULL(OBJ.Objetivos, 0) AS Objetivos,
+                ISNULL(CART.CarteraPdteAñoActual, 0) AS CarteraPdteAñoActual,
+                ISNULL(CART.CarteraPdteAñoAnterior, 0) AS CarteraPdteAñoAnterior
+            FROM CTE_Estructura E
+            LEFT JOIN CTE_ActividadCentroPais A ON E.CodCentro = A.CodCentro
+            LEFT JOIN CTE_Contratacion C ON E.CodCentro = C.CodCentro AND A.Pais = C.Pais
+            LEFT JOIN CTE_Objetivos OBJ ON E.CodCentro = OBJ.CodCentro AND A.Pais = OBJ.Pais
+            LEFT JOIN CTE_Cartera CART ON E.CodCentro = CART.CodCentro
+            WHERE (@CodSubDirGeneral IS NULL OR @CodSubDirGeneral = '' OR E.CodSubDirGeneral = @CodSubDirGeneral)
+            ORDER BY E.OrdenSubDirGeneral, E.Orden_CodDDirNegocio, E.CodDelegacion, E.NombreCentro;";
+
+        var parametros = new
+        {
+            Anio = anio,
+            Mes = mes,
+            LoginUsuario = loginUsuario,
+            CodSubDirGeneral = codSubDirGeneral
+        };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+
+        try
+        {
+            // 1. Limpieza de registros antiguos e inactivación de la sesión actual
+            await _connection.ExecuteAsync(sqlDelete, new { LoginUsuario = loginUsuario }, transaction: transaction);
+
+            // 2. Ejecución del Stored Procedure de extracción (AS400/SIC legacy)
+            var spResult = await _connection.QueryAsync<SpContratacionMensualResult>(sqlExecSp, parametros, transaction: transaction, commandTimeout: 300);
+
+            // 3. Mapeo en lote de los resultados devueltos por el mainframe
+            var insertList = spResult.Select(r => new
+            {
+                Pais = r.Pais,
+                CodCentro = r.CodCentro,
+                ImporteContratado = Convert.ToDecimal(r.ImporteContratado),
+                ImporteContratadoAcumulado = Convert.ToDecimal(r.ImporteContratadoAcumulado),
+                ImporteContratadoAcumuladoAñoAnterior = Convert.ToDecimal(r.ImporteContratadoAcumuladoAñoAnterior),
+                Año = anio,
+                LoginUsuario = loginUsuario
+            }).ToList();
+
+            // 4. Inserción masiva en la tabla física de trabajo (con soporte de RLS por LoginUsuario)
+            if (insertList.Any())
+                await _connection.ExecuteAsync(sqlInsert, insertList, transaction: transaction, commandTimeout: 300);
+
+            // 5. Consulta final jerárquica con CTEs cruzando Sumarigrama, Objetivos y Cartera
+            var resultado = (await _connection.QueryAsync<Elecnor_Informes_Comerciales.Models.Informes.DGCentros.DGCentrosPoco>(sqlSelect, parametros, transaction: transaction)).ToList();
+
+            transaction.Commit();
+
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
 }

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -82,6 +82,8 @@ builder.Services.AddScoped<InformeActividadesInternacionalDetalleService>();
 builder.Services.AddScoped<InformeContratacionMercadosSDGDNService>();
 builder.Services.AddScoped<InformeActividadesInstalacionesRedesService>();
 builder.Services.AddScoped<InformeCD_Elecnor_DG_Activ_RedesService>();
+builder.Services.AddScoped<CD_Elecnor_DG_Centros_DGRI_NuevoService>();
+
 
 // Opciones de Generación (Sincronización)
 builder.Services.AddScoped<OpcionesGeneracionService>();

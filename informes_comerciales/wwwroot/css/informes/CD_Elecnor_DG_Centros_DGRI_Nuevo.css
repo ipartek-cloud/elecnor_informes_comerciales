@@ -1,0 +1,253 @@
+/* CSS para CD_Elecnor_DG_Centros_DGRI_Nuevo - Estándar Print-Perfect por Centros */
+
+/* Contenedor principal */
+.rpt-paper[data-informe="CD_Elecnor_DG_Centros_DGRI_Nuevo"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+}
+
+/* Título de Subdirección General */
+.rpt-dg-sdg-titulo {
+    color: #E38631;
+    font-size: 10pt;
+    font-weight: bold;
+    text-align: left;
+    padding: 0;
+    margin-top: 12pt;
+    margin-left: 0;
+    line-height: 1.2;
+}
+
+/* Etiqueta de Dirección de Negocio en el Subheader (Naranja, estilo SDG) */
+.rpt-dg-dn-subheader-label {
+    color: #E38631 !important;
+    font-weight: bold !important;
+    font-size: 10pt !important;
+}
+
+/* Cabeceras de subsección Mensual/Acumulado/Var */
+.rpt-dg-subheaders-row th {
+    text-align: center;
+    padding-bottom: 1pt;
+    vertical-align: bottom;
+}
+
+.rpt-dg-subheader-label {
+    color: #00468B;
+    font-weight: bold;
+    font-size: 8pt;
+}
+
+.rpt-table-delegaciones {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 0;
+}
+
+/* Columna fantasma de separación (Gutter) */
+.rpt-dg-col-sep {
+    width: 4px !important;
+    min-width: 4px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Anchos de columna optimizados (Paridad mercados_sg_delegaciones) */
+.rpt-dg-col-obj-m { width: 8.5%; }
+.rpt-dg-col-contr-m { width: 9%; }
+.rpt-dg-col-centro { width: 33%; }
+.rpt-dg-col-obj-a { width: 9%; }
+.rpt-dg-col-contr-a { width: 9%; }
+.rpt-dg-col-ip { width: 7.5%; }
+.rpt-dg-col-spacer { width: 3%; }
+.rpt-dg-col-var-contr { width: 8%; }
+.rpt-dg-col-var-cart { width: 10%; }
+
+/* Cabeceras de columna nivel 1 */
+.rpt-dg-th-columns th {
+    color: #00468B;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 2pt 1pt;
+    vertical-align: bottom;
+}
+
+/* Celda de nombre de Delegación (Azul Elecnor sobre Barra) */
+.rpt-dg-th-columns th.rpt-dg-header-delegacion-name,
+.rpt-dg-header-delegacion-name,
+.rpt-dg-header-center-name {
+    text-align: left;
+    padding: 1pt 1pt 1pt 4pt !important;
+    vertical-align: bottom;
+    background-color: #00468B;
+    color: white !important;
+    border: 0.3pt solid #00468B;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.rpt-dg-header-line { 
+    border-bottom: 0.3pt solid #00468B; 
+    margin: 0; 
+}
+
+/* Filas de detalle (Centros) */
+.rpt-dg-detail-row td {
+    padding: 3px 2pt !important;
+    line-height: 1.25 !important;
+    font-size: 8pt;
+    color: #000;
+}
+
+.rpt-dg-col-centro { 
+    text-align: left; 
+    padding-left: 4pt !important; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Fila de Totales */
+.rpt-dg-total-row td {
+    color: #00468B;
+    font-weight: bold !important;
+    vertical-align: middle !important;
+    padding-top: 2pt !important;
+    padding-bottom: 2pt !important;
+    line-height: 1 !important;
+}
+
+.rpt-dg-total-border-top { 
+    border-top: 0.3pt solid #00468B !important; 
+}
+
+.rpt-td-total {
+    border-top: 0.3pt solid #00468B !important;
+}
+
+/* Filas de resumen Nacional/Internacional */
+.rpt-dg-resumen-row td {
+    padding: 3px 2pt !important;
+    font-size: 8pt;
+    color: #00468B !important;
+    font-weight: bold;
+    line-height: 1.25 !important;
+    vertical-align: middle;
+}
+
+.rpt-dg-resumen-nacional td { 
+    padding-top: 4pt; 
+}
+
+.rpt-spacer-row-resumen td {
+    height: 8pt !important;
+    line-height: 8pt !important;
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.rpt-dg-resumen-label { 
+    text-align: left; 
+    padding-left: 4pt !important; 
+    color: #00468B !important; 
+}
+
+.rpt-bloque-delegacion {
+    margin-top: 6pt !important;
+    margin-bottom: 4pt !important;
+    page-break-inside: avoid;
+}
+
+.rpt-bloque-dn { 
+    margin-top: 4pt !important; 
+    margin-bottom: 4pt !important; 
+    page-break-inside: avoid;
+}
+
+.rpt-page-break { 
+    page-break-after: always; 
+}
+
+/* Alineaciones y espaciados */
+.rpt-table-delegaciones th:not(.rpt-dg-header-delegacion-name):not([colspan]),
+.rpt-table-delegaciones td:not(.rpt-dg-col-centro):not(.rpt-dg-col-sep) { 
+    padding-right: 5px !important; 
+}
+
+.rpt-table-delegaciones th { 
+    white-space: nowrap !important; 
+}
+
+.rpt-table-delegaciones thead th.rpt-dg-col-ip:not([colspan]) { 
+    padding-right: 15px !important; 
+}
+
+.rpt-dg-subheaders-row.rpt-print-only-row { 
+    display: none !important; 
+}
+
+.rpt-print-only { 
+    display: none !important; 
+}
+
+/* @media print */
+@media print {
+    .rpt-print-only { 
+        display: block !important; 
+    }
+    
+    .rpt-paper[data-informe="CD_Elecnor_DG_Centros_DGRI_Nuevo"].rpt-paper--print { 
+        padding: 0 !important; 
+    }
+    
+    .rpt-print-outer-table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        border: none; 
+    }
+    
+    .rpt-print-td-header { 
+        padding: 16mm 16mm 8pt 16mm !important; 
+        border: none; 
+    }
+    
+    .rpt-print-td-body { 
+        padding: 0 16mm !important; 
+        border: none; 
+        vertical-align: top; 
+    }
+    
+    .rpt-print-td-footer { 
+        padding: 0 16mm 16mm 16mm !important; 
+        border: none; 
+    }
+    
+    .rpt-print-outer-table thead { 
+        display: table-header-group !important; 
+    }
+    
+    .rpt-dg-header-line { 
+        border-bottom: 0.3pt solid #00468B !important; 
+    }
+    
+    .rpt-dg-detail-row { 
+        page-break-inside: avoid !important; 
+    }
+    
+    .rpt-dg-th-columns, .rpt-dg-subheaders-row { 
+        page-break-after: avoid !important; 
+    }
+    
+    .rpt-dg-subheaders-row.rpt-print-only-row { 
+        display: table-row !important; 
+    }
+    
+    .rpt-print-page-break-before { 
+        page-break-before: always !important; 
+        break-before: page !important; 
+    }
+}
+
+

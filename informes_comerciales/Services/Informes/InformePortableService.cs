@@ -40,8 +40,10 @@ public class InformePortableService
         { "cartera_contratacion_detalle_paises", (typeof(InformeCarteraContratacionDetallePaisesService), "ObtenerInformeAsync") },
         { "actividades_internacional_detalle", (typeof(InformeActividadesInternacionalDetalleService), "ObtenerInformeAsync") },
         { "cartera_diferida_consejo", (typeof(InformeCarteraDiferidaConsejoService), "ObtenerInformeAsync") },
-        { "contratacion_mercados_sdg_dn", (typeof(InformeContratacionMercadosSDGDNService), "ObtenerInformeAsync") }
+        { "contratacion_mercados_sdg_dn", (typeof(InformeContratacionMercadosSDGDNService), "ObtenerInformeAsync") },
+        { "CD_Elecnor_DG_Centros_DGRI_Nuevo", (typeof(CD_Elecnor_DG_Centros_DGRI_NuevoService), "ObtenerInformeAsync") }
     };
+
 
     public InformePortableService(
         IServiceProvider serviceProvider,

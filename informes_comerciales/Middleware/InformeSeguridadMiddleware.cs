@@ -13,6 +13,7 @@ public class InformeSeguridadMiddleware
         ["Actividades"] = new() { ("CONSEJO ELECNOR", "Actividades") },
         ["ActividadesInstalacionesRedes"] = new() { ("DIRECCIONES GENERALES", "Actividades SDG") },
         ["CD_Elecnor_DG_Activ_Redes"] = new() { ("DIRECCIONES GENERALES", "Actividades x DN") },
+        ["CD_Elecnor_DG_Centros_DGRI_Nuevo"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Delegaciones - Centros") },
         ["ActividadesInternacionalDetalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") },
         ["ActividadesObjetivos"] = new() { ("COMITÉ", "Actividades") },
         ["CarteraContratacionDetalle"] = new() 
@@ -127,7 +128,8 @@ public class InformeSeguridadMiddleware
             ("COMITÉ", "Cartera Contratación DG Proyectos (Detalle) Nacional - Internacional")
         },
         ["cartera_contratacion_detalle_paises"] = new() { ("COMITÉ", "Cartera Contratación Paises (Detalle) Internacional"), ("COMITÉ", "Cartera Contratación Paises (Detalle) Nacional - Internacional") },
-        ["actividades_internacional_detalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") }
+        ["actividades_internacional_detalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") },
+        ["CD_Elecnor_DG_Centros_DGRI_Nuevo"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Delegaciones - Centros") }
     };
 
     public InformeSeguridadMiddleware(RequestDelegate next)

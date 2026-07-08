@@ -59,20 +59,14 @@ BEGIN
     END
     ----------------------------------------------------------
 
-/*
----------------------------------------------------------------- desde AQUÍ
-		Paco 2021-11-15
-
-		Creo una copia temporal de los datos de la vista vwWEB_OFERTAS que es la que tarda al acceder a datos del AS400.
-		De esta forma las condiciones de filtro que luego aplicabamos en el SQL SERVER sobre las vistas definidas se realizan directamente en el AS400 
-		y así se devuelven los datos filtrados
-	*/
-	-- Copia en local y filtrada de los datos de la vista vwWEB_OFERTAS (acceso al AS400)
-	DECLARE @SQL_AS400_select as varchar(1000)
+    ----------------------------------------------------------
+    -- Extrae OFERTAS y Regularizaciones del AS400 vía OPENQUERY
+    -- con JOIN a Provincias para obtener el país (Nacional/Internacional)
+    DECLARE @SQL_AS400_select as varchar(1000)
 	DECLARE @SQL_AS400_from as varchar(1000)
 	DECLARE @SQL_AS400 as varchar(max)
 
-	-- No se muy bien pero el EXEC no me funciona con SELECT INTO. POr eso lo hago con CREATE TABLE + INSERT INTO
+	-- CREATE TABLE + INSERT (no funciona SELECT INTO con EXEC dinámico)
 	CREATE TABLE #vwWEB_OFERTAS_Local  (CodCentro varchar(3),CodOferta varchar(10), 
 										DescripcionOferta varchar(100), 
 										CodCliente varchar(100), 
@@ -139,7 +133,7 @@ BEGIN
 	--PRINT (@SQL_AS400)
 	EXEC (@SQL_AS400)
 
----------------------------------------------------------------- hasta AQUÍ
+    ----------------------------------------------------------
 
 	DECLARE @vContratacion TABLE (Pais varchar(100),CodCentro varchar(3),ImporteContratado float,ImporteContratadoAcumulado float, ImporteContratadoAcumuladoAñoanterior float)
 
@@ -171,10 +165,8 @@ BEGIN
 			sum(dbo.fnImporteContratacion_Acumulado(FAdjudicacion,@pAño,@pMes,ImporteContratado)) as ImporteContratadoAcumulado,
 			0
 	FROM         dbo.OfertasSQL INNER JOIN
--- Paco 2021/11/15 Incluido el COLLATE Latin1_General_BIN porque la combinacion del INNER JOIN ewntre la vista Provincias (del AS400)
--- y la tabla OfertasSQL no devolvía correectamente lo que tenía que devolver.
--- el orden de la informacion es diferente en unaa caso y en otro
-				dbo.Provincias ON dbo.OfertasSQL.CodProv  COLLATE Latin1_General_BIN = dbo.Provincias.CDPRO  COLLATE Latin1_General_BIN
+				-- COLLATE necesario para coincidir collations entre OfertasSQL (SQL Server) y Provincias (AS400)
+				dbo.Provincias ON dbo.OfertasSQL.CodProv COLLATE Latin1_General_BIN = dbo.Provincias.CDPRO COLLATE Latin1_General_BIN
 					INNER JOIN #Sumarigrama ON dbo.OfertasSQL.CodCentro = #Sumarigrama.CodCentro
 	WHERE  (year(FAdjudicacion)=@pAño ) AND month(FAdjudicacion) <= @pMes 
 	GROUP BY Pais,OfertasSQL.CodCentro
