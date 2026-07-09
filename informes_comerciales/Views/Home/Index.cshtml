@@ -898,6 +898,24 @@
                                            name="inputPaginaDGCentros_221" value="5" min="0"
                                            aria-label="Página" title="Página inicial">
                                 </div>
+
+                                <!-- Gerencias (Resumen) Nacional - Internacional (Pág. 6) -->
+                                <div class="input-group rpt-input-group-index w-100">
+                                    <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                            onclick="cargarInforme(this, 'gerencias_nacional_internacional')"
+                                            data-subdireccion="221"
+                                            data-mostrar-titulo="false"
+                                            data-input-pag="inputPaginaGerenciasNacionalInternacional"
+                                            aria-label="Ver informe Gerencias (Resumen) Nacional - Internacional"
+                                            data-informe-tipo="DIRECCIONES GENERALES"
+                                            data-informe-nombre="Gerencias (Resumen) Nacional - Internacional">
+                                        Gerencias (Resumen) Nacional - Internacional
+                                    </button>
+                                    <input type="number" class="form-control rpt-input-page"
+                                           id="inputPaginaGerenciasNacionalInternacional"
+                                           name="inputPaginaGerenciasNacionalInternacional" value="6" min="0"
+                                           aria-label="Página" title="Página inicial">
+                                </div>
                             </div>
 
                             <!-- COLUMNA DERECHA: ELECNOR PROYECTOS -->
@@ -1152,6 +1170,7 @@
     <link rel="stylesheet" href="~/css/informes/ranking_contratacion_clientes.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/mercados_dg.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/gerencias.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/gerencias_nacional_internacional.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/actividades_objetivos.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/cartera_contratacion_detalle.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/cartera_contratacion_resumen_sdg.css" asp-append-version="true" />

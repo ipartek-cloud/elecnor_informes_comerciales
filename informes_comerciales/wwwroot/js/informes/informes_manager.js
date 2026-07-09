@@ -41,7 +41,8 @@ const _whitelistInformes = {
     'cartera_contratacion_detalle_paises': 'Cartera Contratación (Detalle Países)',
     'actividades_internacional_detalle': 'Detalle Actividades Internacional',
     'contratacion_mercados_sdg_dn': 'Contratacion Mercados SDG Agrupado DN',
-    'CD_Elecnor_DG_Centros_DGRI_Nuevo': 'DG - Unidades Negocio - Delegaciones - Centros'
+    'CD_Elecnor_DG_Centros_DGRI_Nuevo': 'DG - Unidades Negocio - Delegaciones - Centros',
+    'gerencias_nacional_internacional': 'Gerencias (Resumen) Nacional - Internacional'
 };
 
 const _registroModulos = {};

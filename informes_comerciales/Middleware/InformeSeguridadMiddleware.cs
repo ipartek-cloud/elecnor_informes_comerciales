@@ -57,6 +57,10 @@ public class InformeSeguridadMiddleware
             ("COMITÉ", "Contrataciones Significativas Internacionales")
         },
         ["Gerencias"] = new() { ("COMITÉ", "Gerencias DG Servicios") },
+        ["GerenciasNacionalInternacional"] = new()
+        {
+            ("DIRECCIONES GENERALES", "Gerencias (Resumen) Nacional - Internacional")
+        },
         ["Mercados"] = new() { ("CONSEJO ELECNOR", "Mercado-Direcciones Generales-Unidades Negocio") },
         ["MercadosDG"] = new() { ("COMITÉ", "Mercado-Direcciones Generales-Unidades Negocio") },
         ["MercadosSGDelegaciones"] = new() 
@@ -118,6 +122,10 @@ public class InformeSeguridadMiddleware
             ("COMITÉ", "Ranking Clientes Internacionales")
         },
         ["gerencias"] = new() { ("COMITÉ", "Gerencias DG Servicios") },
+        ["gerencias_nacional_internacional"] = new()
+        {
+            ("DIRECCIONES GENERALES", "Gerencias (Resumen) Nacional - Internacional")
+        },
         ["cartera_contratacion_detalle"] = new() { ("COMITÉ", "Cartera Contratación (Detalle) – Internacional"), ("COMITÉ", "Cartera Contratación (Detalle) Nacional - Internacional") },
         ["cartera_contratacion_resumen_sdg"] = new() { ("COMITÉ", "Cartera Contratación x DG (Resumen) – Internacional"), ("COMITÉ", "Cartera Contratación DG (Resumen) Nacional - Internacional") },
         ["cartera_contratacion_detalle_org_paises"] = new() 

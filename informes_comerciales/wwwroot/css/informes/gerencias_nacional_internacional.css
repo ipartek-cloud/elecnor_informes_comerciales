@@ -1,0 +1,299 @@
+/*
+ * ESTILOS ESPECÍFICOS: Informe Gerencias Nacional/Internacional
+ * Layout Central: [Mensual 2col] | [Gerencia] | [Acumulado 3col] | [Var 2col]
+ * Patrón visual alineado con gerencias.css (sin líneas horizontales intermedias).
+ */
+
+.rpt-paper[data-informe="gerencias_nacional_internacional"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+}
+
+.rpt-paper[data-informe="gerencias_nacional_internacional"] .report-body.rpt-cmai-mt-standard {
+    margin-top: 80px !important;
+}
+
+/* ELIMINACIÓN DE LÍNEAS CONTINUAS (Sobrescribe informes_base.css) */
+.rpt-gni-layout thead tr,
+.rpt-gni-layout thead th,
+.rpt-gni-layout .rpt-th-blue,
+.rpt-gni-layout .rpt-th-blue th {
+    border: none !important;
+}
+
+/* Contenedor de cada bloque (Total, Nacional, Internacional) */
+.rpt-gni-table-container {
+    margin-bottom: 16px !important;
+}
+
+.rpt-gni-table-container:last-child {
+    margin-bottom: 20px !important;
+}
+
+/* Base de tabla */
+.rpt-gni-layout {
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-family: Verdana, Geneva, sans-serif !important;
+}
+
+/* PROPORCIONES DE COLUMNAS (Total 100%) */
+.rpt-gni-col-m       { width: 11%; }
+.rpt-gni-col-desc    { width: 30%; }
+.rpt-gni-col-a       { width: 11.5%; }
+.rpt-gni-col-ip      { width: 7%; }
+.rpt-gni-col-v-contr { width: 7.5%; }
+.rpt-gni-col-v-cart  { width: 11.5%; }
+
+/* ============================================================
+   LÍNEAS SEGMENTADAS DE CABECERA (headerLine)
+   ============================================================ */
+.rpt-gni-header-line {
+    border-bottom: 0.3pt solid #00468B !important;
+    color: #00468B !important;
+    margin: 0 3.75pt;
+    padding-bottom: 2.25pt;
+}
+
+/* ============================================================
+   LÍNEAS SEGMENTADAS DE TOTALES (totalCell)
+   ============================================================ */
+.rpt-gni-total-cell {
+    border-top: 0.3pt solid #00468B !important;
+    margin: 0 3pt !important;
+    margin-top: 0 !important;
+    padding-top: 3.75pt;
+    color: #00468B !important;
+    display: block;
+    line-height: 1.4 !important;
+}
+
+/* Clases para unificar segmentos de líneas */
+.rpt-gni-line-union-start { margin-right: 0 !important; }
+.rpt-gni-line-union-mid   { margin-left: 0 !important; margin-right: 0 !important; }
+.rpt-gni-line-union-end   { margin-left: 0 !important; }
+
+/* ============================================================
+   ENCABEZADOS DE BLOQUE
+   ============================================================ */
+.rpt-gni-group-header {
+    padding-bottom: 2.25pt !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+}
+
+/* Badge "Gerencia"/"Gerencia Nacional"/"Gerencia Internacional" —
+   Réplica exacta de gerencias.css: fondo azul con texto blanco,
+   ocupa el 100% de la columna central. */
+.rpt-gni-badge {
+    background-color: #00468B !important;
+    color: white !important;
+    font-size: 8pt;
+    font-weight: bold;
+    padding: 1pt 0;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+/* ============================================================
+   FILAS DE DATOS
+   ============================================================ */
+
+/* Fila de detalle normal (sin negrita, color negro) */
+.rpt-gni-detail-row td {
+    padding: 2px 5px !important;
+    line-height: 1.3 !important;
+    font-size: 8pt;
+    color: #000;
+    border: none !important;
+}
+
+/* Fila de cabecera de grupo (solo para grupos con sub-gerencias):
+   color negro, normal weight, SIN border-top o azul */
+.rpt-gni-group-header-row td {
+    background-color: transparent !important;
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 8pt !important;
+    padding: 2px 5px !important;
+    line-height: 1.3 !important;
+    border: none !important;
+}
+
+.rpt-gni-group-name-cell {
+    padding-left: 2pt !important;
+    text-align: left;
+}
+
+/* Sub-gerencias indentadas con especificidad fuerte */
+.rpt-gni-layout td.rpt-gni-detail-indented {
+    padding-left: 20pt !important;
+    color: #000000 !important;
+}
+
+/* Indentación de la etiqueta Total en el pie */
+.rpt-gni-layout td .rpt-gni-total-literal {
+    padding-left: 20pt !important;
+}
+
+/* Fila de total del bloque */
+.rpt-gni-total-row {
+    color: #00468B !important;
+    font-weight: bold !important;
+}
+
+/* Celda numérica con padding derecho */
+.rpt-number-cell {
+    padding-right: 6pt !important;
+}
+
+/* Desplazamiento a la izquierda de los literales numéricos en cabeceras */
+.rpt-gni-layout thead .rpt-gni-header-row-sub th:nth-child(1) .rpt-gni-header-line,
+.rpt-gni-layout thead .rpt-gni-header-row-sub th:nth-child(2) .rpt-gni-header-line,
+.rpt-gni-layout thead .rpt-gni-header-row-sub th:nth-child(4) .rpt-gni-header-line,
+.rpt-gni-layout thead .rpt-gni-header-row-sub th:nth-child(5) .rpt-gni-header-line {
+    padding-right: 6px !important;
+}
+
+/* ============================================================
+   PRINT-PERFECT
+   ============================================================ */
+@media print {
+    .rpt-paper[data-informe="gerencias_nacional_internacional"],
+    .rpt-paper--print {
+        padding: var(--rpt-padding-pdf, 16mm) !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Forzar colores corporativos en impresión */
+    .rpt-text-orange-council { color: #E38631 !important; }
+    .rpt-cmai-subtitulo { color: #00468B !important; }
+    .rpt-text-corporate, .rpt-gni-group-header { color: #00468B !important; }
+    .rpt-banner-top { background-color: #00468B !important; color: white !important; }
+
+    /* Tipografía PDF */
+    .rpt-gni-layout {
+        font-size: 7.5pt !important;
+        font-family: Verdana, Geneva, sans-serif !important;
+    }
+
+    .rpt-gni-layout thead th,
+    .rpt-gni-group-header {
+        font-size: 8pt !important;
+        font-weight: bold !important;
+        color: #00468B !important;
+        font-family: Verdana, Geneva, sans-serif !important;
+    }
+
+    .rpt-gni-header-line {
+        border-bottom: 0.3pt solid #00468B !important;
+        margin: 0 3pt;
+        padding-bottom: 2pt;
+        display: block;
+        color: #00468B !important;
+    }
+
+    .rpt-gni-total-cell {
+        border-top: 0.3pt solid #00468B !important;
+        margin: 0 3pt;
+        padding-top: 2pt;
+        display: block;
+        color: #00468B !important;
+    }
+
+    .rpt-gni-detail-row td {
+        font-size: 7.5pt !important;
+        font-family: Verdana, Geneva, sans-serif !important;
+        line-height: 1.15 !important;
+        padding: 1px 4px !important;
+        border: none !important;
+    }
+
+    .rpt-gni-group-header-row td {
+        font-size: 7.5pt !important;
+        line-height: 1.15 !important;
+        padding: 1.5px 4px !important;
+        border: none !important;
+        color: #000000 !important;
+        font-weight: normal !important;
+    }
+
+    /* Sub-gerencias indentadas con especificidad fuerte en impresión */
+    .rpt-gni-layout td.rpt-gni-detail-indented {
+        padding-left: 20pt !important;
+        color: #000000 !important;
+    }
+
+    /* Indentación de la etiqueta Total en el pie en impresión */
+    .rpt-gni-layout td .rpt-gni-total-literal {
+        padding-left: 20pt !important;
+    }
+
+    .rpt-gni-total-row td {
+        font-size: 7.5pt !important;
+        line-height: 1.15 !important;
+        padding: 2px 4px !important;
+    }
+
+    .rpt-gni-badge {
+        font-size: 8.5pt !important;
+        padding: 1.5pt 6pt !important;
+        background-color: #00468B !important;
+        color: #ffffff !important;
+    }
+
+    /* Forzado de unión de líneas segmentadas en impresión */
+    .rpt-gni-layout th .rpt-gni-line-union-start,
+    .rpt-gni-layout td .rpt-gni-line-union-start {
+        margin-right: 0 !important;
+    }
+    .rpt-gni-layout th .rpt-gni-line-union-mid,
+    .rpt-gni-layout td .rpt-gni-line-union-mid {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .rpt-gni-layout th .rpt-gni-line-union-end,
+    .rpt-gni-layout td .rpt-gni-line-union-end {
+        margin-left: 0 !important;
+    }
+
+    .rpt-gni-table-container {
+        margin-bottom: 8px !important;
+    }
+
+    .rpt-gni-table-container:last-child {
+        margin-bottom: 10px !important;
+    }
+
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 14pt !important;
+        font-weight: normal !important;
+    }
+
+    body .rpt-paper--gerencias_nacional_internacional .report-body {
+        margin-top: 80px !important;
+    }
+}
+
+/* Container queries */
+@container rpt-paper (max-width: 700px) {
+    .rpt-gni-detail-row td {
+        padding: 2px 3px !important;
+        font-size: 7pt !important;
+    }
+}
+
+.rpt-gni-layout th {
+    white-space: nowrap !important;
+}

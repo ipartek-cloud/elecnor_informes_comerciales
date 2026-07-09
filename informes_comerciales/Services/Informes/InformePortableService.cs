@@ -34,6 +34,7 @@ public class InformePortableService
         { "contrataciones_significativas_ri", (typeof(InformeContratacionesSignificativasRiService), "ObtenerInformeAsync") },
         { "ranking_contratacion_clientes", (typeof(InformeRankingContratacionClientesService), "ObtenerRankingAsync") },
         { "gerencias", (typeof(InformeGerenciasService), "ObtenerInformeGerenciasAsync") },
+        { "gerencias_nacional_internacional", (typeof(InformeGerenciasNacionalInternacionalService), "ObtenerInformeAsync") },
         { "cartera_contratacion_detalle", (typeof(InformeCarteraContratacionDetalleService), "ObtenerInformeAsync") },
         { "cartera_contratacion_resumen_sdg", (typeof(InformeCarteraContratacionResumenSDGService), "ObtenerInformeAsync") },
         { "cartera_contratacion_detalle_org_paises", (typeof(InformeCarteraContratacionDetalleOrgPaisesService), "ObtenerInformeAsync") },

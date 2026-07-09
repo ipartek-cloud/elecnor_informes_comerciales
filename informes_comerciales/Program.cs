@@ -74,6 +74,7 @@ builder.Services.AddScoped<InformeRankingContratacionClientesService>();
 builder.Services.AddScoped<InformeContratacionesSignificativasService>();
 builder.Services.AddScoped<InformeContratacionesSignificativasRiService>();
 builder.Services.AddScoped<InformeGerenciasService>();
+builder.Services.AddScoped<InformeGerenciasNacionalInternacionalService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetalleService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetalleOrgPaisesService>();
 builder.Services.AddScoped<InformeCarteraContratacionDetallePaisesService>();
