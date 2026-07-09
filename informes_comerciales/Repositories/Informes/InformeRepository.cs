@@ -2088,23 +2088,20 @@ public class InformeRepository
     public async Task<List<GerenciasPoco>> ObtenerGerenciasAsync(int anio, int mes, string loginUsuario)
     {
         // PASO 1: Vaciar tabla de trabajo
-
         const string sqlDelete = @"DELETE FROM rptContratacion_GerenciaCentro 
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
         // PASO 2: Poblar desde el SP (columnas exactas que devuelve el SP)
-
-        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, CodCentro, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Año, LoginUsuario)
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, SumarizaGerentes, CodCentro, Mercado, Orden, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Objetivos, Año, LoginUsuario)
                                        EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes, @LoginUsuario";
 
         // PASO 3: SELECT enriquecido con JOINs
-
         const string sqlSelect = @"SELECT
                                         rpt.Año,
-                                        cg.SumarizaGerentes,
+                                        rpt.SumarizaGerentes,
                                         rpt.NombreGerente AS Actividad,
-                                        cg.Orden,
+                                        rpt.Orden,
                                         SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
                                         SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
                                         SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
@@ -2114,10 +2111,6 @@ public class InformeRepository
                                     FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
                                     INNER JOIN Sumarigrama s WITH (NOLOCK)
                                         ON rpt.CodCentro = s.CodCentro
-                                    INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
-                                        ON rpt.Año = cg.Año
-                                        AND rpt.CodCentro = cg.CodCentro
-                                        AND rpt.NombreGerente = cg.NombreGerente
                                     LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
                                         ON rpt.CodCentro = act.CodCentro
                                     LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
@@ -2128,9 +2121,9 @@ public class InformeRepository
                                     WHERE rpt.LoginUsuario = @LoginUsuario
                                     GROUP BY
                                         rpt.Año,
-                                        cg.SumarizaGerentes,
+                                        rpt.SumarizaGerentes,
                                         rpt.NombreGerente,
-                                        cg.Orden";
+                                        rpt.Orden";
 
         var parametros = new { 
             Anio = anio, 

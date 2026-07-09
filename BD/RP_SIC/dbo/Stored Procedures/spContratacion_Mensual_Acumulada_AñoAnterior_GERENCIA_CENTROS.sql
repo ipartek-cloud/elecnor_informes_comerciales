@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS] 		
+CREATE PROCEDURE [dbo].[spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS] 		
 	@pAño int,
 	@pMes int,
 	@pLoginUsuario nvarchar(100) = NULL
@@ -165,12 +165,14 @@ BEGIN
 	WHERE  h.Año=@pAño-1 AND h.Mes <= @pMes 
 	GROUP BY h.CodCentro
 	
-	SELECT cg.NombreGerente, cg.CodCentro, sum(isnull(c.ImporteContratado,0)) as ImporteContratado, Sum(isnull(c.ImporteContratadoAcumulado,0)) as ImporteContratadoAcumulado, sum(isnull(c.ImporteContratadoAcumuladoAñoAnterior,0)) as ImporteContratadoAcumuladoAñoAnterior, @pAño AS Año, @pLoginUsuario AS LoginUsuario 
+	SELECT cg.NombreGerente, cg.SumarizaGerentes, cg.CodCentro, cg.Mercado, cg.Orden, sum(isnull(c.ImporteContratado,0)) as ImporteContratado, Sum(isnull(c.ImporteContratadoAcumulado,0)) as ImporteContratadoAcumulado, sum(isnull(c.ImporteContratadoAcumuladoAñoAnterior,0)) as ImporteContratadoAcumuladoAñoAnterior, sum(isnull(obj.Importe,0)) as Objetivos, @pAño AS Año, @pLoginUsuario AS LoginUsuario 
 	FROM dbo.CentrosGerentesSQL cg
 	LEFT JOIN #Sumarigrama s ON cg.CodCentro = s.CodCentro
 	LEFT JOIN @vContratacion c ON c.CodCentro = cg.CodCentro AND cg.Año = @pAño
-	WHERE (@vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL OR s.CodCentro IS NOT NULL)
-	GROUP BY cg.NombreGerente, cg.CodCentro
+	LEFT JOIN dbo.vwObjetivosActividadSQL_Nacional_Internacional obj ON cg.CodCentro = obj.CodCentro AND obj.Año = @pAño
+	WHERE cg.Año = @pAño
+	  AND (@vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL OR s.CodCentro IS NOT NULL)
+	GROUP BY cg.NombreGerente, cg.SumarizaGerentes, cg.CodCentro, cg.Mercado, cg.Orden
 	ORDER BY cg.CodCentro;
 
 	DROP TABLE #Sumarigrama;
