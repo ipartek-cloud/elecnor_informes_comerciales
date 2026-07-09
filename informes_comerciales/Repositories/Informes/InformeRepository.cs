@@ -2163,7 +2163,7 @@ public class InformeRepository
     // └─ Método: ObtenerGerenciasNacionalInternacionalAsync()
     // ═══════════════════════════════════════════════════════════════════════════
 
-        public async Task<(List<GerenciasNacionalInternacionalPoco> Total, List<GerenciasNacionalInternacionalPoco> Nacional, List<GerenciasNacionalInternacionalPoco> Internacional)> ObtenerGerenciasNacionalInternacionalAsync(
+    public async Task<List<GerenciasNacionalInternacionalPoco>> ObtenerGerenciasNacionalInternacionalAsync(
         int anio, int mes, string loginUsuario)
     {
         const string sqlDelete = @"DELETE FROM rptContratacion_GerenciaCentro
@@ -2176,99 +2176,38 @@ public class InformeRepository
              Año, LoginUsuario)
             EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes, @LoginUsuario";
 
-        const string sqlSelectTotal = @"SELECT
-                                            rpt.Año,
-                                            cg.SumarizaGerentes,
-                                            rpt.NombreGerente AS Actividad,
-                                            cg.Orden,
-                                            'T' AS Mercado,
-                                            SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
-                                            SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
-                                            SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
-                                            SUM(ISNULL(vw.Importe, 0))                                 AS Objetivos,
-                                            SUM(ISNULL(act.CarteraPdteAñoActual, 0))                  AS CarteraPdteAñoActual,
-                                            SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                AS CarteraPdteAñoAnterior
-                                        FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
-                                        INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
-                                            ON rpt.CodCentro = cg.CodCentro
-                                           AND rpt.NombreGerente = cg.NombreGerente
-                                           AND cg.Año = rpt.Año
-                                        LEFT JOIN vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
-                                            ON rpt.CodCentro = vw.CodCentro
-                                           AND rpt.Año = vw.Año
-                                        LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
-                                            ON rpt.CodCentro = act.CodCentro
-                                        LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
-                                            ON rpt.CodCentro = ant.CodCentro
-                                        WHERE rpt.LoginUsuario = @LoginUsuario
-                                          AND rpt.Año = @Anio
-                                        GROUP BY
-                                            rpt.Año,
-                                            cg.SumarizaGerentes,
-                                            rpt.NombreGerente,
-                                            cg.Orden";
-
-        const string sqlSelectNacional = @"SELECT
-                                                rpt.Año,
-                                                cg.SumarizaGerentes,
-                                                rpt.NombreGerente AS Actividad,
-                                                cg.Orden,
-                                                'N' AS Mercado,
-                                                SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
-                                                SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
-                                                SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
-                                                SUM(ISNULL(vw.Importe, 0))                                 AS Objetivos,
-                                                SUM(ISNULL(act.CarteraPdteAñoActual, 0))                  AS CarteraPdteAñoActual,
-                                                SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                AS CarteraPdteAñoAnterior
-                                            FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
-                                            INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
-                                                ON rpt.CodCentro = cg.CodCentro
-                                                AND rpt.NombreGerente = cg.NombreGerente
-                                            LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
-                                                ON rpt.CodCentro = act.CodCentro
-                                            LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
-                                                ON rpt.CodCentro = ant.CodCentro
-                                            LEFT JOIN vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
-                                                ON rpt.CodCentro = vw.CodCentro
-                                                AND rpt.Año = vw.Año
-                                            WHERE rpt.LoginUsuario = @LoginUsuario
-                                              AND cg.Mercado = 'N'
-                                            GROUP BY
-                                                rpt.Año,
-                                                cg.SumarizaGerentes,
-                                                rpt.NombreGerente,
-                                                cg.Orden";
-
-        const string sqlSelectInternacional = @"SELECT
-                                                    rpt.Año,
-                                                    cg.SumarizaGerentes,
-                                                    rpt.NombreGerente AS Actividad,
-                                                    cg.Orden,
-                                                    'I' AS Mercado,
-                                                    SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
-                                                    SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
-                                                    SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
-                                                    SUM(ISNULL(vw.Importe, 0))                                 AS Objetivos,
-                                                    SUM(ISNULL(act.CarteraPdteAñoActual, 0))                  AS CarteraPdteAñoActual,
-                                                    SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                AS CarteraPdteAñoAnterior
-                                                FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
-                                                INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
-                                                    ON rpt.CodCentro = cg.CodCentro
-                                                    AND rpt.NombreGerente = cg.NombreGerente
-                                                LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
-                                                    ON rpt.CodCentro = act.CodCentro
-                                                LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
-                                                    ON rpt.CodCentro = ant.CodCentro
-                                                LEFT JOIN vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
-                                                    ON rpt.CodCentro = vw.CodCentro
-                                                    AND rpt.Año = vw.Año
-                                                WHERE rpt.LoginUsuario = @LoginUsuario
-                                                  AND cg.Mercado = 'I'
-                                                GROUP BY
-                                                    rpt.Año,
-                                                    cg.SumarizaGerentes,
-                                                    rpt.NombreGerente,
-                                                    cg.Orden";
+        const string sqlSelect = @"SELECT
+                                        rpt.Año,
+                                        cg.SumarizaGerentes,
+                                        rpt.NombreGerente AS Actividad,
+                                        cg.Orden,
+                                        cg.Mercado,
+                                        SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
+                                        SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
+                                        SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
+                                        SUM(ISNULL(vw.Importe, 0))                                 AS Objetivos,
+                                        SUM(ISNULL(act.CarteraPdteAñoActual, 0))                  AS CarteraPdteAñoActual,
+                                        SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                AS CarteraPdteAñoAnterior
+                                    FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
+                                    INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
+                                        ON rpt.CodCentro = cg.CodCentro
+                                       AND rpt.NombreGerente = cg.NombreGerente
+                                       AND cg.Año = rpt.Año
+                                    LEFT JOIN vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
+                                        ON rpt.CodCentro = vw.CodCentro
+                                       AND rpt.Año = vw.Año
+                                    LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
+                                        ON rpt.CodCentro = act.CodCentro
+                                    LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
+                                        ON rpt.CodCentro = ant.CodCentro
+                                    WHERE rpt.LoginUsuario = @LoginUsuario
+                                      AND rpt.Año = @Anio
+                                    GROUP BY
+                                        rpt.Año,
+                                        cg.SumarizaGerentes,
+                                        rpt.NombreGerente,
+                                        cg.Orden,
+                                        cg.Mercado";
 
         var parametros = new { Anio = anio, Mes = mes, LoginUsuario = loginUsuario };
 
@@ -2283,24 +2222,17 @@ public class InformeRepository
 
             await _connection.ExecuteAsync(sqlInsertExec, parametros, transaction: transaction, commandTimeout: 300);
 
-            var totalTask = _connection.QueryAsync<GerenciasNacionalInternacionalPoco>(
-                sqlSelectTotal, parametros, transaction: transaction, commandTimeout: 300);
-
-            var nacionalTask = _connection.QueryAsync<GerenciasNacionalInternacionalPoco>(
-                sqlSelectNacional, parametros, transaction: transaction, commandTimeout: 300);
-
-            var internacionalTask = _connection.QueryAsync<GerenciasNacionalInternacionalPoco>(
-                sqlSelectInternacional, parametros, transaction: transaction, commandTimeout: 300);
-
-            await Task.WhenAll(totalTask, nacionalTask, internacionalTask);
+            var resultado = await _connection.QueryAsync<GerenciasNacionalInternacionalPoco>(
+                sqlSelect, parametros, transaction: transaction, commandTimeout: 300);
 
             transaction.Commit();
 
-            return (totalTask.Result.ToList(), nacionalTask.Result.ToList(), internacionalTask.Result.ToList());
+            return resultado.ToList();
         }
         catch
         {
             transaction.Rollback();
+
             throw;
         }
     }

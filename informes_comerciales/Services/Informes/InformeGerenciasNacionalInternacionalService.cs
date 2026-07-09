@@ -23,8 +23,36 @@ public class InformeGerenciasNacionalInternacionalService
     {
         _mesActual = mes;
 
-        var (total, nacional, internacional) = await _informeRepository
+        var datos = await _informeRepository
             .ObtenerGerenciasNacionalInternacionalAsync(anio, mes, loginUsuario);
+
+        var datosValidos = datos
+            .Where(r => r.ImporteContratado != 0
+                     || r.ImporteContratadoAcumulado != 0
+                     || r.ImporteContratadoAcumuladoAñoAnterior != 0
+                     || r.Objetivos != 0)
+            .ToList();
+
+        var nacional = datosValidos.Where(r => r.Mercado == "N").ToList();
+        var internacional = datosValidos.Where(r => r.Mercado == "I").ToList();
+        var total = datosValidos
+            .Where(r => r.Mercado == "N" || r.Mercado == "I")
+            .GroupBy(r => new { r.Año, r.SumarizaGerentes, r.Actividad, r.Orden })
+            .Select(g => new GerenciasNacionalInternacionalPoco
+            {
+                Año = g.Key.Año,
+                SumarizaGerentes = g.Key.SumarizaGerentes,
+                Actividad = g.Key.Actividad,
+                Orden = g.Key.Orden,
+                Mercado = "T",
+                ImporteContratado = g.Sum(r => r.ImporteContratado),
+                ImporteContratadoAcumulado = g.Sum(r => r.ImporteContratadoAcumulado),
+                ImporteContratadoAcumuladoAñoAnterior = g.Sum(r => r.ImporteContratadoAcumuladoAñoAnterior),
+                Objetivos = g.Sum(r => r.Objetivos),
+                CarteraPdteAñoActual = g.Sum(r => r.CarteraPdteAñoActual),
+                CarteraPdteAñoAnterior = g.Sum(r => r.CarteraPdteAñoAnterior)
+            })
+            .ToList();
 
         var response = new GerenciasNacionalInternacionalResponseDto
         {
