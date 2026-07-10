@@ -28,10 +28,9 @@ const estado = crearEstadoInforme();
 const NOMBRE_INFORME = 'gerencias_nacional_internacional';
 
 const MARGENES_PROPIOS = {
-    top: '6mm',
-    bottom: '6mm',
-    left: '10mm',
-    right: '10mm'
+    web: '6mm 10mm',
+    pdf: '6mm 10mm',
+    maxWidth: '1050px'
 };
 
 export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
@@ -84,7 +83,7 @@ function _getHtmlEncabezado(bloque) {
     const linea1 = bloque?.linea1 || 'S.G. Instalaciones y Redes';
     const linea2 = bloque?.linea2 || 'Gerencias';
     return getHtmlEncabezadoBase({
-        tituloCorporativo: `<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container">Informe de Contratación</span>`,
+        tituloCorporativo: `<span class="rpt-text-orange-council rpt-fs-14pt rpt-cmai-titulo-container rpt-d-none">Consejo Elecnor</span> <span class="rpt-cmai-margin-left rpt-cmai-subtitulo rpt-cmai-titulo-container">Informe de Contratación</span>`,
         textoBanner1: linea1,
         textoBanner2: linea2,
         mes: estado.informeGlobalData?.meta?.filtros?.mes,

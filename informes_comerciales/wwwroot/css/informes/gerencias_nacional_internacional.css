@@ -10,7 +10,7 @@
 }
 
 .rpt-paper[data-informe="gerencias_nacional_internacional"] .report-body.rpt-cmai-mt-standard {
-    margin-top: 80px !important;
+    margin-top: 40px !important;
 }
 
 /* ELIMINACIÓN DE LÍNEAS CONTINUAS (Sobrescribe informes_base.css) */
@@ -23,11 +23,11 @@
 
 /* Contenedor de cada bloque (Total, Nacional, Internacional) */
 .rpt-gni-table-container {
-    margin-bottom: 16px !important;
+    margin-bottom: 48px !important;
 }
 
 .rpt-gni-table-container:last-child {
-    margin-bottom: 20px !important;
+    margin-bottom: 56px !important;
 }
 
 /* Base de tabla */
@@ -268,11 +268,11 @@
     }
 
     .rpt-gni-table-container {
-        margin-bottom: 8px !important;
+        margin-bottom: 24px !important;
     }
 
     .rpt-gni-table-container:last-child {
-        margin-bottom: 10px !important;
+        margin-bottom: 28px !important;
     }
 
     .rpt-banner-top {
@@ -282,7 +282,7 @@
     }
 
     body .rpt-paper--gerencias_nacional_internacional .report-body {
-        margin-top: 80px !important;
+        margin-top: 40px !important;
     }
 }
 
