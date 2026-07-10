@@ -2093,16 +2093,19 @@ public class InformeRepository
                                    WHERE LoginUsuario = @LoginUsuario 
                                       OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
 
-        // PASO 2: Poblar desde el SP (columnas exactas que devuelve el SP)
-        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro (NombreGerente, SumarizaGerentes, CodCentro, Mercado, Orden, ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior, Objetivos, Año, LoginUsuario)
-                                       EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes, @LoginUsuario";
+        // PASO 2: Poblar desde el SP (columnas exactas que devuelve el SP y existen en la tabla)
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro
+            (NombreGerente, CodCentro,
+             ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior,
+             Año, LoginUsuario)
+            EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes, @LoginUsuario";
 
-        // PASO 3: SELECT enriquecido con JOINs
+        // PASO 3: SELECT enriquecido con JOINs (SumarizaGerentes/Orden vienen de CentrosGerentesSQL, Objetivos de la vista)
         const string sqlSelect = @"SELECT
                                         rpt.Año,
-                                        rpt.SumarizaGerentes,
+                                        cg.SumarizaGerentes,
                                         rpt.NombreGerente AS Actividad,
-                                        rpt.Orden,
+                                        cg.Orden,
                                         SUM(ISNULL(rpt.ImporteContratado, 0))                     AS ImporteContratado,
                                         SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))            AS ImporteContratadoAcumulado,
                                         SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0)) AS ImporteContratadoAcumuladoAñoAnterior,
@@ -2110,8 +2113,10 @@ public class InformeRepository
                                         SUM(ISNULL(act.CarteraPdteAñoActual, 0))                  AS CarteraPdteAñoActual,
                                         SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                AS CarteraPdteAñoAnterior
                                     FROM rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
-                                    INNER JOIN Sumarigrama s WITH (NOLOCK)
-                                        ON rpt.CodCentro = s.CodCentro
+                                    INNER JOIN CentrosGerentesSQL cg WITH (NOLOCK)
+                                        ON rpt.CodCentro = cg.CodCentro
+                                       AND rpt.NombreGerente = cg.NombreGerente
+                                       AND cg.Año = rpt.Año
                                     LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
                                         ON rpt.CodCentro = act.CodCentro
                                     LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
@@ -2122,9 +2127,9 @@ public class InformeRepository
                                     WHERE rpt.LoginUsuario = @LoginUsuario
                                     GROUP BY
                                         rpt.Año,
-                                        rpt.SumarizaGerentes,
+                                        cg.SumarizaGerentes,
                                         rpt.NombreGerente,
-                                        rpt.Orden";
+                                        cg.Orden";
 
         var parametros = new { 
             Anio = anio, 
