@@ -24,27 +24,61 @@ BEGIN
 		[CodDelegacion] VARCHAR (3) NULL
 	);
 
-	IF @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-	BEGIN
-		-- Visión global total para DG o si no se provee login
-		INSERT INTO #Sumarigrama (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion)
-		SELECT Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion
-		FROM dbo.Sumarigrama WHERE Año = @pAño
-	END
+	CREATE TABLE #SumarigramaAnioAnterior (
+		[Año] SMALLINT NOT NULL,
+		[CodCentro] VARCHAR (3) NULL,
+		[CodSubDirGeneral] VARCHAR (3) NULL,
+		[CodDDirNegocio] VARCHAR (3) NULL,
+		[CodSubDirNegocioArea] VARCHAR (3) NULL,
+		[CodDelegacion] VARCHAR (3) NULL
+	);
+
+	-- CARGA DINÁMICA DEL SUMARIGRAMA ACTUAL
+	DECLARE @SQL_Sumarigrama as nvarchar(max)
+	DECLARE @TablaSumarigrama as varchar(100)
+	SET @TablaSumarigrama = 'Sumarigrama'+CAST(@pAño as varchar(4))
+
+	IF OBJECT_ID(@TablaSumarigrama, 'U') IS NOT NULL
+		SET @SQL_Sumarigrama = 'INSERT INTO #Sumarigrama (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion) SELECT Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion FROM ' + QUOTENAME(@TablaSumarigrama)
 	ELSE
+		SET @SQL_Sumarigrama = 'INSERT INTO #Sumarigrama (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion) SELECT Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion FROM dbo.Sumarigrama WHERE Año = @pAño'
+
+	EXEC sp_executesql @SQL_Sumarigrama, N'@pAño int', @pAño = @pAño
+
+	-- CARGA DINÁMICA DEL SUMARIGRAMA ANTERIOR
+	DECLARE @SQL_SumarigramaAnioAnterior as nvarchar(max)
+	DECLARE @TablaSumarigramaAnioAnterior as varchar(100)
+	SET @TablaSumarigramaAnioAnterior = 'Sumarigrama'+CAST((@pAño - 1) as varchar(4))
+
+	IF OBJECT_ID(@TablaSumarigramaAnioAnterior, 'U') IS NOT NULL
+		SET @SQL_SumarigramaAnioAnterior = 'INSERT INTO #SumarigramaAnioAnterior (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion) SELECT Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion FROM ' + QUOTENAME(@TablaSumarigramaAnioAnterior)
+	ELSE
+		SET @SQL_SumarigramaAnioAnterior = 'INSERT INTO #SumarigramaAnioAnterior (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion) SELECT Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion FROM dbo.Sumarigrama WHERE Año = @pAño - 1'
+
+	EXEC sp_executesql @SQL_SumarigramaAnioAnterior, N'@pAño int', @pAño = @pAño
+
+	-- RLS sobre ambas tablas
+	IF @vPuesto IS NOT NULL AND @vPuesto <> 'DG'
 	BEGIN
-		-- Visión restringida (RLS) según jerarquía
-		INSERT INTO #Sumarigrama (Año, CodCentro, CodSubDirGeneral, CodDDirNegocio, CodSubDirNegocioArea, CodDelegacion)
-		SELECT S.Año, S.CodCentro, S.CodSubDirGeneral, S.CodDDirNegocio, S.CodSubDirNegocioArea, S.CodDelegacion
-		FROM dbo.Sumarigrama S 
-		WHERE S.Año = @pAño
-		  AND (
-			  (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-			  (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-			  (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-			  (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-			  (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-		  )
+		-- RLS sobre Año Actual
+		DELETE FROM #Sumarigrama
+		WHERE NOT (
+			(@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
+			(@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
+			(@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
+			(@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
+			(@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
+		)
+
+		-- RLS sobre Año Anterior
+		DELETE FROM #SumarigramaAnioAnterior
+		WHERE NOT (
+			(@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
+			(@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
+			(@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
+			(@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
+			(@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
+		)
 	END
 	-- ═══════════════════════════════════════════════════════════════
 
@@ -161,7 +195,7 @@ BEGIN
 	INSERT INTO @vContratacion(CodCentro,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
 	SELECT h.CodCentro,0, 0,sum(h.Importe) 
 	FROM dbo.HistoricoContratacionGrupoSQL h
-	INNER JOIN #Sumarigrama s ON h.CodCentro = s.CodCentro
+	INNER JOIN #SumarigramaAnioAnterior s ON h.CodCentro = s.CodCentro
 	WHERE  h.Año=@pAño-1 AND h.Mes <= @pMes 
 	GROUP BY h.CodCentro
 	
@@ -175,5 +209,6 @@ BEGIN
 	ORDER BY cg.CodCentro;
 
 	DROP TABLE #Sumarigrama;
+	DROP TABLE #SumarigramaAnioAnterior;
 		
 END

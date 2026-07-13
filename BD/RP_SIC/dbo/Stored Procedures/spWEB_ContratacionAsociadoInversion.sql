@@ -1,4 +1,4 @@
-﻿
+
 
 --EXEC spWEB_ContratacionAsociadoInversion 2026,3
 
@@ -53,8 +53,47 @@ BEGIN
         OrdenSubDirGeneral      int           not null
     )
 
-    INSERT INTO #Sumarigrama
-    SELECT * FROM Sumarigrama
+    CREATE TABLE #SumarigramaAnioAnterior
+    (
+        Año                     smallint      not null,
+        CodDirGeneral           varchar(3),
+        NombreDirGeneral        nvarchar(100) not null,
+        CodSubDirGeneral        varchar(3),
+        NombreSubDirGeneral     nvarchar(100) not null,
+        CodDDirNegocio          varchar(3),
+        NombreDirNegocio        nvarchar(30)  not null,
+        CodSubDirNegocioArea    varchar(3),
+        NombreSubDirNegocioArea nvarchar(100) not null,
+        CodDelegacion           varchar(3),
+        NombreDelegacion        nvarchar(30)  not null,
+        CodCentro               varchar(3),
+        NombreCentro            nvarchar(30)  not null,
+        OrdenSubDirGeneral      int           not null
+    )
+
+    -- CARGA DINÁMICA DEL SUMARIGRAMA ACTUAL
+    DECLARE @SQL_Sumarigrama as nvarchar(max)
+    DECLARE @TablaSumarigrama as varchar(100)
+    SET @TablaSumarigrama = 'Sumarigrama'+CAST(@pAño as varchar(4))
+    
+    IF OBJECT_ID(@TablaSumarigrama, 'U') IS NOT NULL
+        SET @SQL_Sumarigrama = 'INSERT INTO #Sumarigrama SELECT * FROM ' + QUOTENAME(@TablaSumarigrama)
+    ELSE
+        SET @SQL_Sumarigrama = 'INSERT INTO #Sumarigrama SELECT * FROM Sumarigrama'
+
+    EXEC sp_executesql @SQL_Sumarigrama
+
+    -- CARGA DINÁMICA DEL SUMARIGRAMA ANTERIOR
+    DECLARE @SQL_SumarigramaAnioAnterior as nvarchar(max)
+    DECLARE @TablaSumarigramaAnioAnterior as varchar(100)
+    SET @TablaSumarigramaAnioAnterior = 'Sumarigrama'+CAST((@pAño - 1) as varchar(4))
+    
+    IF OBJECT_ID(@TablaSumarigramaAnioAnterior, 'U') IS NOT NULL
+        SET @SQL_SumarigramaAnioAnterior = 'INSERT INTO #SumarigramaAnioAnterior SELECT * FROM ' + QUOTENAME(@TablaSumarigramaAnioAnterior)
+    ELSE
+        SET @SQL_SumarigramaAnioAnterior = 'INSERT INTO #SumarigramaAnioAnterior SELECT * FROM Sumarigrama'
+
+    EXEC sp_executesql @SQL_SumarigramaAnioAnterior
 
     IF @LoginUsuario IS NOT NULL
     BEGIN
@@ -66,7 +105,18 @@ BEGIN
 
         IF @vPuesto IS NOT NULL AND @vPuesto <> 'DG'
         BEGIN
+            -- RLS sobre Año Actual
             DELETE FROM #Sumarigrama
+            WHERE NOT (
+                (@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
+                (@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
+                (@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
+                (@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
+                (@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
+            )
+
+            -- RLS sobre Año Anterior
+            DELETE FROM #SumarigramaAnioAnterior
             WHERE NOT (
                 (@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
                 (@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
@@ -130,7 +180,7 @@ BEGIN
         SELECT @vContratacionAcumulada_Nacional_AsociadaInversion_AnoAnterior =
                dbo.fgRedondear(ISNULL(SUM(hc.Importe), 0) / 1000.0, 0)
         FROM   dbo.HistoricoContratacionGrupoSQL hc
-               INNER JOIN #Sumarigrama s ON hc.CodCentro = s.CodCentro
+               INNER JOIN #SumarigramaAnioAnterior s ON hc.CodCentro = s.CodCentro
                INNER JOIN dbo.OfertaAsociadaInversion oa ON hc.CodOferta = oa.JVAYNB
         WHERE  hc.Año = @pAño - 1
           AND  hc.Mes <= @pMes
@@ -139,7 +189,7 @@ BEGIN
         SELECT @vContratacionAcumulada_Internacional_AsociadaInversion_AnoAnterior =
                dbo.fgRedondear(ISNULL(SUM(hc.Importe), 0) / 1000.0, 0)
         FROM   dbo.HistoricoContratacionGrupoSQL hc
-               INNER JOIN #Sumarigrama s ON hc.CodCentro = s.CodCentro
+               INNER JOIN #SumarigramaAnioAnterior s ON hc.CodCentro = s.CodCentro
                INNER JOIN dbo.OfertaAsociadaInversion oa ON hc.CodOferta = oa.JVAYNB
         WHERE  hc.Año = @pAño - 1
           AND  hc.Mes <= @pMes
@@ -180,6 +230,8 @@ BEGIN
         DROP TABLE #tResultado
     IF OBJECT_ID('tempdb..#Sumarigrama') IS NOT NULL
         DROP TABLE #Sumarigrama
+    IF OBJECT_ID('tempdb..#SumarigramaAnioAnterior') IS NOT NULL
+        DROP TABLE #SumarigramaAnioAnterior
 
     RAISERROR('Error %d: %s', 16, 1, @ErrNum, @ErrMsg)
     RETURN
@@ -189,5 +241,7 @@ IF OBJECT_ID('tempdb..#tResultado') IS NOT NULL
     DROP TABLE #tResultado
 IF OBJECT_ID('tempdb..#Sumarigrama') IS NOT NULL
     DROP TABLE #Sumarigrama
+IF OBJECT_ID('tempdb..#SumarigramaAnioAnterior') IS NOT NULL
+    DROP TABLE #SumarigramaAnioAnterior
 
 END

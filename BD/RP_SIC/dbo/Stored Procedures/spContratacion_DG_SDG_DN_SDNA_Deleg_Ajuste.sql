@@ -10,14 +10,11 @@ CREATE PROCEDURE [dbo].[spContratacion_DG_SDG_DN_SDNA_Deleg_Ajuste]
 BEGIN
 	SET NOCOUNT ON;
 
-	-- RLS: filtrado de #Sumarigrama por permisos de usuario.
-	DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
-
-	SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad
-	FROM dbo.WEB_Usuarios WITH (NOLOCK)
-	WHERE Usuario = @pLoginUsuario
-
-	CREATE TABLE #Sumarigrama (
+	-- ═══════════════════════════════════════════════════════════════
+	-- TABLA TEMPORAL PARA EL AÑO CONSULTADO (@pAño)
+	-- ═══════════════════════════════════════════════════════════════
+	CREATE TABLE #Sumarigrama
+	(
 		[Año]                     SMALLINT       NOT NULL,
 		[CodDirGeneral]           VARCHAR (3)    NULL,
 		[NombreDirGeneral]        NVARCHAR (100) NULL,
@@ -32,27 +29,92 @@ BEGIN
 		[CodCentro]               VARCHAR (3)    NULL,
 		[NombreCentro]            NVARCHAR (30)  NULL,
 		[OrdenSubDirGeneral]      INT            NULL
-	);
+	)
 
-	IF @vPuesto = 'DG' OR @vPuesto IS NULL OR @pLoginUsuario IS NULL
-	BEGIN
-		INSERT INTO #Sumarigrama
-		SELECT * FROM dbo.Sumarigrama WITH (NOLOCK) WHERE Año = @pAño
-	END
+	-- ═══════════════════════════════════════════════════════════════
+	-- TABLA TEMPORAL PARA EL AÑO ANTERIOR (@pAño - 1)
+	-- ═══════════════════════════════════════════════════════════════
+	CREATE TABLE #SumarigramaAnioAnterior
+	(
+		[Año]                     SMALLINT       NOT NULL,
+		[CodDirGeneral]           VARCHAR (3)    NULL,
+		[NombreDirGeneral]        NVARCHAR (100) NULL,
+		[CodSubDirGeneral]        VARCHAR (3)    NULL,
+		[NombreSubDirGeneral]     NVARCHAR (100) NULL,
+		[CodDDirNegocio]          VARCHAR (3)    NULL,
+		[NombreDirNegocio]        NVARCHAR (30)  NULL,
+		[CodSubDirNegocioArea]    VARCHAR (3)    NULL,
+		[NombreSubDirNegocioArea] NVARCHAR (100) NULL,
+		[CodDelegacion]           VARCHAR (3)    NULL,
+		[NombreDelegacion]        NVARCHAR (30)  NULL,
+		[CodCentro]               VARCHAR (3)    NULL,
+		[NombreCentro]            NVARCHAR (30)  NULL,
+		[OrdenSubDirGeneral]      INT            NULL
+	)
+
+	-- ═══════════════════════════════════════════════════════════════
+	-- CARGA DINÁMICA DEL SUMARIGRAMA ACTUAL
+	-- ═══════════════════════════════════════════════════════════════
+	DECLARE @SQL_Sumarigrama AS nvarchar(max)
+	DECLARE @TablaSumarigrama AS varchar(100)
+	SET @TablaSumarigrama = 'Sumarigrama' + CAST(@pAño AS varchar(4))
+
+	IF OBJECT_ID(@TablaSumarigrama, 'U') IS NOT NULL
+		SET @SQL_Sumarigrama = 'INSERT INTO #Sumarigrama SELECT * FROM ' + QUOTENAME(@TablaSumarigrama)
 	ELSE
+		SET @SQL_Sumarigrama = 'INSERT INTO #Sumarigrama SELECT * FROM Sumarigrama'
+
+	EXEC sp_executesql @SQL_Sumarigrama
+
+	-- ═══════════════════════════════════════════════════════════════
+	-- CARGA DINÁMICA DEL SUMARIGRAMA ANTERIOR
+	-- ═══════════════════════════════════════════════════════════════
+	DECLARE @SQL_SumarigramaAnioAnterior AS nvarchar(max)
+	DECLARE @TablaSumarigramaAnioAnterior AS varchar(100)
+	SET @TablaSumarigramaAnioAnterior = 'Sumarigrama' + CAST((@pAño - 1) AS varchar(4))
+
+	IF OBJECT_ID(@TablaSumarigramaAnioAnterior, 'U') IS NOT NULL
+		SET @SQL_SumarigramaAnioAnterior = 'INSERT INTO #SumarigramaAnioAnterior SELECT * FROM ' + QUOTENAME(@TablaSumarigramaAnioAnterior)
+	ELSE
+		SET @SQL_SumarigramaAnioAnterior = 'INSERT INTO #SumarigramaAnioAnterior SELECT * FROM Sumarigrama'
+
+	EXEC sp_executesql @SQL_SumarigramaAnioAnterior
+
+	-- ═══════════════════════════════════════════════════════════════
+	-- BLOQUE RLS: Filtrado de seguridad sobre ambas tablas
+	-- ═══════════════════════════════════════════════════════════════
+	IF @pLoginUsuario IS NOT NULL
 	BEGIN
-		INSERT INTO #Sumarigrama
-		SELECT S.*
-		FROM dbo.Sumarigrama S WITH (NOLOCK)
-		WHERE S.Año = @pAño
-		  AND (
-			  (@vPuesto = 'SDG'  AND S.CodSubDirGeneral = @vCodEntidad) OR
-			  (@vPuesto = 'DN'   AND S.CodDDirNegocio = @vCodEntidad) OR
-			  (@vPuesto = 'AREA' AND S.CodSubDirNegocioArea = @vCodEntidad) OR
-			  (@vPuesto = 'DEL'  AND S.CodDelegacion = @vCodEntidad) OR
-			  (@vPuesto = 'CT'   AND S.CodCentro = @vCodEntidad)
-		  )
+		DECLARE @vPuesto nvarchar(10), @vCodEntidad nvarchar(20)
+
+		SELECT @vPuesto = Puesto, @vCodEntidad = CodEntidad
+		FROM dbo.WEB_Usuarios WITH (NOLOCK)
+		WHERE Usuario = @pLoginUsuario
+
+		IF @vPuesto IS NOT NULL AND @vPuesto <> 'DG'
+		BEGIN
+			-- RLS sobre Año Actual
+			DELETE FROM #Sumarigrama
+			WHERE NOT (
+				(@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
+				(@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
+				(@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
+				(@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
+				(@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
+			)
+
+			-- RLS sobre Año Anterior
+			DELETE FROM #SumarigramaAnioAnterior
+			WHERE NOT (
+				(@vPuesto = 'SDG'  AND CodSubDirGeneral = @vCodEntidad) OR
+				(@vPuesto = 'DN'   AND CodDDirNegocio = @vCodEntidad) OR
+				(@vPuesto = 'AREA' AND CodSubDirNegocioArea = @vCodEntidad) OR
+				(@vPuesto = 'DEL'  AND CodDelegacion = @vCodEntidad) OR
+				(@vPuesto = 'CT'   AND CodCentro = @vCodEntidad)
+			)
+		END
 	END
+	-- ═══════════════════════════════════════════════════════════════
 
 	/*
 ---------------------------------------------------------------- desde AQUÍ
@@ -215,8 +277,8 @@ BEGIN
 	-- CONTRATACION AÑO ANTERIOR de HISTORICO
 	INSERT INTO @vContratacionMensualInfraEstructuras(CodSubDirGeneral,NombreSubDirGeneral,CodDDirNegocio,NombreDirNegocio,CodSubDirNegocioArea,NombreSubDirNegocioArea,CodDelegacion,NombreDelegacion, Pais,ImporteContratado,ImporteContratadoAcumulado,ImporteContratadoAcumuladoAñoanterior)	
 	SELECT CodSubDirGeneral,NombreSubDirGeneral,CodDDirNegocio,NombreDirNegocio,CodSubDirNegocioArea,NombreSubDirNegocioArea,CodDelegacion,NombreDelegacion, Mercado,0, 0,sum(Importe) 
-	FROM #Sumarigrama INNER JOIN
-		 dbo.HistoricoContratacionGrupoSQL ON #Sumarigrama.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
+	FROM #SumarigramaAnioAnterior S INNER JOIN
+		 dbo.HistoricoContratacionGrupoSQL ON S.CodCentro = dbo.HistoricoContratacionGrupoSQL.CodCentro
 	WHERE  dbo.HistoricoContratacionGrupoSQL.Año=@pAño-1 AND Mes <= @pMes 
 	GROUP BY CodSubDirGeneral,NombreSubDirGeneral,CodDDirNegocio,NombreDirNegocio,CodSubDirNegocioArea,NombreSubDirNegocioArea,CodDelegacion,NombreDelegacion, Mercado	
 	
@@ -241,4 +303,5 @@ BEGIN
 	GROUP BY CodSubDirGeneral,NombreSubDirGeneral,CodDDirNegocio,NombreDirNegocio,CodSubDirNegocioArea,NombreSubDirNegocioArea,CodDelegacion,NombreDelegacion, Pais
 
 	DROP TABLE #Sumarigrama;
+	DROP TABLE #SumarigramaAnioAnterior;
 END
