@@ -18,12 +18,6 @@ import {
 const estado = crearEstadoInforme();
 const NOMBRE_INFORME = 'gerencias_totales_cruces';
 
-const MARGENES_PROPIOS = {
-    web: '6mm 10mm',
-    pdf: '6mm 10mm',
-    maxWidth: '1050px'
-};
-
 export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, codSubDir, isPdf }) {
     try {
         const sdg = codSubDir || '221';
@@ -43,7 +37,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo, codSubDir,
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: MARGENES_PROPIOS
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         console.error('Error al ejecutar Gerencias Totales Cruces:', error);
@@ -78,6 +72,13 @@ function _renderizarPagina() {
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="rpt-print-td-footer">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         `;
@@ -367,7 +368,7 @@ function _registrarEventos() {
 }
 
 async function _imprimirInforme() {
-    const styleVars = getStyleVars(MARGENES_PROPIOS);
+    const styleVars = getStyleVars(MARGENES_ESTANDAR);
     
     // Crear capa de impresión manual para usar la técnica de Outer Table
     const capaPrint = document.createElement('div');
@@ -393,6 +394,13 @@ async function _imprimirInforme() {
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="rpt-print-td-footer">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     `;

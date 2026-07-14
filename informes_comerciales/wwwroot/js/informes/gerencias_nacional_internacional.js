@@ -27,11 +27,7 @@ import {
 const estado = crearEstadoInforme();
 const NOMBRE_INFORME = 'gerencias_nacional_internacional';
 
-const MARGENES_PROPIOS = {
-    web: '6mm 10mm',
-    pdf: '6mm 10mm',
-    maxWidth: '1050px'
-};
+
 
 export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
     try {
@@ -50,7 +46,7 @@ export async function ejecutar({ anio, mes, nroPagina, mostrarTitulo }) {
             inicializarEventListeners: _registrarEventos,
             prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
-            margenes: MARGENES_PROPIOS
+            margenes: MARGENES_ESTANDAR
         });
     } catch (error) {
         console.error('Error al ejecutar Gerencias N/I:', error);
@@ -104,7 +100,7 @@ async function _imprimirInforme() {
         getHtmlEncabezado: _getHtmlEncabezado,
         renderContenido: () => _renderContenido(true),
         modoAgrupacion: 'NONE',
-        margenes: MARGENES_PROPIOS,
+        margenes: MARGENES_ESTANDAR,
         nombreInforme: NOMBRE_INFORME
     });
 }

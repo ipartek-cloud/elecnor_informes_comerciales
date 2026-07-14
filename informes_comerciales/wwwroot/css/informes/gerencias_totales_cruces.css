@@ -209,18 +209,18 @@
     }
 
     .rpt-print-td-header {
-        padding: 16mm 10mm 8pt 10mm !important; /* Margen superior 16mm para cabecera repetida en todas las páginas */
+        padding: 16mm 16mm 8pt 16mm !important; /* Margen superior 16mm para cabecera repetida en todas las páginas */
         border: none;
     }
 
     .rpt-print-td-body {
-        padding: 0 10mm !important;
+        padding: 0 16mm !important;
         border: none;
         vertical-align: top;
     }
 
     .rpt-print-td-footer {
-        padding: 0 10mm 16mm 10mm !important;
+        padding: 0 16mm 16mm 16mm !important;
         border: none;
     }
 
