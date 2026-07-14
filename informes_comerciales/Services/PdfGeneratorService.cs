@@ -119,7 +119,7 @@ public class PdfGeneratorService : IPdfGeneratorService, IAsyncDisposable
             }
             else
             {
-                _logger.LogInformation("[Browser Console] {Text}", e.Message.Text);
+                _logger.LogDebug("[Browser Console] {Text}", e.Message.Text);
             }
         };
 

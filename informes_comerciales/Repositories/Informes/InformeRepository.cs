@@ -22,6 +22,7 @@ using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetalleOrg
 using Elecnor_Informes_Comerciales.Models.Informes.CarteraContratacionDetallePaises;
 using Elecnor_Informes_Comerciales.Models.Informes.ActividadesInternacionalDetalle;
 using Elecnor_Informes_Comerciales.Models.Informes.ContratacionMercadosSDGDN;
+using Elecnor_Informes_Comerciales.Models.Informes.GerenciasTotalesCruces;
 using Elecnor_Informes_Comerciales.DTOs.Informes;
 
 namespace Elecnor_Informes_Comerciales.Repositories.Informes;
@@ -2168,8 +2169,7 @@ public class InformeRepository
     // └─ Método: ObtenerGerenciasNacionalInternacionalAsync()
     // ═══════════════════════════════════════════════════════════════════════════
 
-    public async Task<List<GerenciasNacionalInternacionalPoco>> ObtenerGerenciasNacionalInternacionalAsync(
-        int anio, int mes, string loginUsuario)
+    public async Task<List<GerenciasNacionalInternacionalPoco>> ObtenerGerenciasNacionalInternacionalAsync(int anio, int mes, string loginUsuario)
     {
         const string sqlDelete = @"DELETE FROM rptContratacion_GerenciaCentro
                                    WHERE LoginUsuario = @LoginUsuario
@@ -2238,6 +2238,99 @@ public class InformeRepository
         {
             transaction.Rollback();
 
+            throw;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INFORME: Gerencias Totales Cruces (Detalle x DN x Delegaciones)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<List<GerenciasTotalesCrucesPoco>> ObtenerGerenciasTotalesCrucesAsync(int anio, int mes, string loginUsuario, string codSubDirGeneral)
+    {
+        const string sqlDelete = @"DELETE FROM rptContratacion_GerenciaCentro
+                                   WHERE LoginUsuario = @LoginUsuario
+                                      OR FechaCreacion < DATEADD(hour, -1, GETDATE())";
+
+        const string sqlInsertExec = @"INSERT INTO rptContratacion_GerenciaCentro
+            (NombreGerente, CodCentro,
+             ImporteContratado, ImporteContratadoAcumulado, ImporteContratadoAcumuladoAñoAnterior,
+             Año, LoginUsuario)
+            EXEC spContratacion_Mensual_Acumulada_AñoAnterior_GERENCIA_CENTROS @Anio, @Mes, @LoginUsuario";
+
+        const string sqlSelect = @"SELECT
+            rpt.Año                                                           AS Año,
+            cg.Orden                                                          AS Orden,
+            rpt.NombreGerente                                                 AS NombreGerente,
+            s.CodDDirNegocio                                                  AS CodDDirNegocio,
+            s.NombreDirNegocio                                                AS NombreDirNegocio,
+            rpt.CodCentro                                                     AS CodCentro,
+            s.NombreCentro                                                    AS NombreCentro,
+            CASE cg.Mercado WHEN 'I' THEN 'Internacional' ELSE 'Nacional' END AS Mercado,
+            ocdn.Orden_CodDDirNegocio                                         AS OrdenCodDDirNegocio,
+            SUM(ISNULL(rpt.ImporteContratado, 0))                             AS ImporteContratado,
+            SUM(ISNULL(rpt.ImporteContratadoAcumulado, 0))                    AS ImporteContratadoAcumulado,
+            SUM(ISNULL(rpt.ImporteContratadoAcumuladoAñoAnterior, 0))         AS ImporteContratadoAcumuladoAñoAnterior,
+            SUM(ISNULL(vw.Importe, 0))                                        AS Objetivos,
+            SUM(ISNULL(act.CarteraPdteAñoActual, 0))                          AS CarteraPdteAñoActual,
+            SUM(ISNULL(ant.CarteraPdteAñoAnterior, 0))                        AS CarteraPdteAñoAnterior
+        FROM dbo.rptContratacion_GerenciaCentro rpt WITH (NOLOCK)
+            INNER JOIN dbo.Sumarigrama s WITH (NOLOCK)
+                ON rpt.CodCentro = s.CodCentro
+               AND rpt.Año       = s.Año
+            INNER JOIN dbo.CentrosGerentesSQL cg WITH (NOLOCK)
+                ON rpt.CodCentro     = cg.CodCentro
+               AND rpt.NombreGerente = cg.NombreGerente
+               AND rpt.Año            = cg.Año
+            LEFT JOIN dbo.Orden_CodDDirNegocio ocdn WITH (NOLOCK)
+                ON s.CodDDirNegocio = ocdn.CodDDirNegocio
+            LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioActual(@Anio, @Mes) act
+                ON rpt.CodCentro = act.CodCentro
+            LEFT JOIN dbo.fn_veCarteraPdteProducirSQL_AnioAnterior(@Anio, @Mes) ant
+                ON rpt.CodCentro = ant.CodCentro
+            LEFT JOIN dbo.vwObjetivosActividadSQL_Nacional_Internacional vw WITH (NOLOCK)
+                ON rpt.CodCentro = vw.CodCentro
+               AND rpt.Año       = vw.Año
+        WHERE rpt.LoginUsuario   = @LoginUsuario
+          AND rpt.Año            = @Anio
+          AND s.CodSubDirGeneral = @CodSubDirGeneral
+        GROUP BY
+            rpt.Año, cg.Orden, rpt.NombreGerente,
+            s.CodDDirNegocio, s.NombreDirNegocio,
+            rpt.CodCentro, s.NombreCentro,
+            CASE cg.Mercado WHEN 'I' THEN 'Internacional' ELSE 'Nacional' END,
+            ocdn.Orden_CodDDirNegocio";
+
+        var parametros = new
+        {
+            Anio = anio,
+            Mes = mes,
+            LoginUsuario = loginUsuario,
+            CodSubDirGeneral = codSubDirGeneral
+        };
+
+        if (_connection.State != ConnectionState.Open)
+            _connection.Open();
+
+        using var transaction = _connection.BeginTransaction();
+
+        try
+        {
+            await _connection.ExecuteAsync(sqlDelete,
+                new { LoginUsuario = loginUsuario }, transaction: transaction);
+
+            await _connection.ExecuteAsync(sqlInsertExec, parametros,
+                transaction: transaction, commandTimeout: 300);
+
+            var resultado = (await _connection.QueryAsync<GerenciasTotalesCrucesPoco>(
+                sqlSelect, parametros, transaction: transaction, commandTimeout: 300)).ToList();
+
+            transaction.Commit();
+            return resultado;
+        }
+        catch
+        {
+            transaction.Rollback();
             throw;
         }
     }

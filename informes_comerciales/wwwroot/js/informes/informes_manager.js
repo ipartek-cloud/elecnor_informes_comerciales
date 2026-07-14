@@ -42,7 +42,8 @@ const _whitelistInformes = {
     'actividades_internacional_detalle': 'Detalle Actividades Internacional',
     'contratacion_mercados_sdg_dn': 'Contratacion Mercados SDG Agrupado DN',
     'CD_Elecnor_DG_Centros_DGRI_Nuevo': 'DG - Unidades Negocio - Delegaciones - Centros',
-    'gerencias_nacional_internacional': 'Gerencias (Resumen) Nacional - Internacional'
+    'gerencias_nacional_internacional': 'Gerencias (Resumen) Nacional - Internacional',
+    'gerencias_totales_cruces': 'Gerencias Totales Cruces'
 };
 
 const _registroModulos = {};

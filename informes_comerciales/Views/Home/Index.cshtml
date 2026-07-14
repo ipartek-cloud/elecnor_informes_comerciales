@@ -916,6 +916,24 @@
                                            name="inputPaginaGerenciasNacionalInternacional" value="6" min="0"
                                            aria-label="Página" title="Página inicial">
                                 </div>
+
+                                <!-- Gerencias (Detalle) x DN x Delegaciones (Pág. 7) -->
+                                <div class="input-group rpt-input-group-index w-100">
+                                    <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                            onclick="cargarInforme(this, 'gerencias_totales_cruces')"
+                                            data-subdireccion="221"
+                                            data-mostrar-titulo="false"
+                                            data-input-pag="inputPaginaGerenciasTotalesCruces"
+                                            aria-label="Ver informe Gerencias (Detalle) x DN x Delegaciones"
+                                            data-informe-tipo="DIRECCIONES GENERALES"
+                                            data-informe-nombre="Gerencias (Detalle) x DN x Delegaciones">
+                                        Gerencias (Detalle) x DN x Delegaciones
+                                    </button>
+                                    <input type="number" class="form-control rpt-input-page"
+                                           id="inputPaginaGerenciasTotalesCruces"
+                                           name="inputPaginaGerenciasTotalesCruces" value="7" min="0"
+                                           aria-label="Página" title="Página inicial">
+                                </div>
                             </div>
 
                             <!-- COLUMNA DERECHA: ELECNOR PROYECTOS -->
@@ -1177,6 +1195,7 @@
     <link rel="stylesheet" href="~/css/informes/contratacion_mercados_sdg_dn.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/actividades_instalaciones_redes.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/CD_Elecnor_DG_Activ_Redes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/gerencias_totales_cruces.css" asp-append-version="true" />
 }
 
 @section Scripts {

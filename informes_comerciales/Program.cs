@@ -84,6 +84,7 @@ builder.Services.AddScoped<InformeContratacionMercadosSDGDNService>();
 builder.Services.AddScoped<InformeActividadesInstalacionesRedesService>();
 builder.Services.AddScoped<InformeCD_Elecnor_DG_Activ_RedesService>();
 builder.Services.AddScoped<CD_Elecnor_DG_Centros_DGRI_NuevoService>();
+builder.Services.AddScoped<InformeGerenciasTotalesCrucesService>();
 
 
 // Opciones de Generación (Sincronización)
