@@ -49,7 +49,9 @@ public class InformeSeguridadMiddleware
             ("CONSEJO ELECNOR", "Contratación Significativa Internacional DG Servicios"),
             ("CONSEJO ELECNOR", "Contratación Significativa Internacional DG Proyectos"),
             ("COMITÉ", "Contratación Significativa Internacional DG Servicios"),
-            ("COMITÉ", "Contratación Significativa Internacional DG Proyectos")
+            ("COMITÉ", "Contratación Significativa Internacional DG Proyectos"),
+            ("DIRECCIONES GENERALES", "Contratación Significativa Nacional DG"),
+            ("DIRECCIONES GENERALES", "Contratación Significativa Internacional DG")
         },
         ["ContratacionesSignificativasRi"] = new() 
         { 
@@ -112,7 +114,9 @@ public class InformeSeguridadMiddleware
             ("CONSEJO ELECNOR", "Contratación Significativa Internacional DG Servicios"),
             ("CONSEJO ELECNOR", "Contratación Significativa Internacional DG Proyectos"),
             ("COMITÉ", "Contratación Significativa Internacional DG Servicios"),
-            ("COMITÉ", "Contratación Significativa Internacional DG Proyectos")
+            ("COMITÉ", "Contratación Significativa Internacional DG Proyectos"),
+            ("DIRECCIONES GENERALES", "Contratación Significativa Nacional DG"),
+            ("DIRECCIONES GENERALES", "Contratación Significativa Internacional DG")
         },
         ["contrataciones_significativas_ri"] = new() { ("COMITÉ", "Contrataciones Significativas Nacionales"), ("COMITÉ", "Contrataciones Significativas Internacionales") },
         ["ranking_contratacion_clientes"] = new() 
