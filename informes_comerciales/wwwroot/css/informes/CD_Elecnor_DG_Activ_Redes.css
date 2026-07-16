@@ -123,7 +123,7 @@
     font-size: 8pt !important;
     font-weight: bold !important;
     text-align: right !important;
-    border-bottom: 0.6pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 .rpt-as-column-headers-row th:first-child {
@@ -180,7 +180,7 @@
     background-color: transparent !important;
     color: #00468B !important;
     font-weight: bold !important;
-    border-top: 0.6pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important;
     padding: 4px 5px !important;
     line-height: 1.3 !important;

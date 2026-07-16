@@ -261,3 +261,32 @@
 .rpt-table-delegaciones thead th.rpt-dg-col-ip:not([colspan]) {
     padding-right: 15px !important;
 }
+
+/* ==========================================================================
+   Container Queries — Responsivo en Pantallas Pequeñas
+   ========================================================================== */
+@container rpt-paper (max-width: 600px) {
+    .rpt-table-delegaciones {
+        font-size: 7.5pt !important;
+    }
+    .rpt-table-delegaciones td,
+    .rpt-table-delegaciones th {
+        padding: 2px 3px !important;
+        font-size: 7.5pt !important;
+    }
+    .rpt-dg-th-columns th {
+        font-size: 7.5pt !important;
+        padding: 2px 2pt !important;
+    }
+    .rpt-dg-subheaders-row th {
+        font-size: 7.5pt !important;
+    }
+    .rpt-dg-detail-row td {
+        padding: 2px 2pt !important;
+        font-size: 7.5pt !important;
+    }
+    .rpt-dg-sdg-titulo {
+        font-size: 9pt !important;
+        margin-left: 0 !important;
+    }
+}

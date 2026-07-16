@@ -336,3 +336,19 @@
         border-width: 0 !important;
     }
 }
+
+/* ==========================================================================
+   Phantom <th> — Columnas fantasma de la Tabla Maestra.
+   Estas celdas existen para forzar el ancho de columna en tablas anidadas
+   sin ser visibles. Reemplazan los estilos inline anteriormente repetidos.
+   ========================================================================== */
+.rpt-phantom-tr {
+    height: 0 !important;
+    line-height: 0 !important;
+}
+
+.rpt-phantom-th {
+    height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}

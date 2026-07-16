@@ -97,7 +97,7 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     padding-bottom: 2pt;
     font-weight: bold;
     color: #00468B;
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 /* Linea horizontal bajo cabeceras interrumpida en la columna del banner
@@ -134,7 +134,7 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     color: #00468B !important;
     font-weight: bold;
     font-size: 8pt;
-    border-bottom: 0.5pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 /* Filas de detalle: sin bordes horizontales intermedios (estilo Access). */
@@ -176,7 +176,7 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     color: #00468B !important;
     font-weight: bold !important;
     padding: 3px 5px !important;
-    border-top: 0.5pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important;
 }
 .rpt-cmsdg-subtotal-row td.rpt-cmsdg-spacer-cell-col {
@@ -185,12 +185,12 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     background-color: transparent !important;
 }
 .rpt-cmsdg-subtotal-row td.rpt-td-subtotal-spacer {
-    border-top: 0.5pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important;
     background-color: transparent !important;
 }
 
-/* TOTAL GLOBAL: linea superior mas gruesa. */
+/* TOTAL GLOBAL: linea superior unificada. */
 .rpt-cmsdg-total-row td {
     color: #00468B !important;
     font-weight: bold !important;
@@ -199,7 +199,7 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     padding-bottom: 3px !important;
     padding-right: 5px !important;
     padding-left: 5px !important;
-    border-top: 0.5pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important;
 }
 
@@ -214,6 +214,13 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     background-color: transparent !important;
 }
 
+/* FIX QUIRURGICO: el base.css fuerza text-align:right en .rpt-number-cell,
+   lo que rompe el centrado de la columna "Ip" (que combina .rpt-number-cell + .rpt-align-center).
+   Restauramos el centro tanto en web como en PDF (impresión) cuando coexisten ambas clases. */
+.rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-number-cell.rpt-align-center {
+    text-align: center !important;
+}
+
 /* =============================================================================
 @media print — Print-Perfect (paridad web/PDF)
 ============================================================================= */
@@ -222,14 +229,6 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-    }
-
-    /* FIX QUIRURGICO: el base.css en @media print fuerza text-align:right en
-       .rpt-number-cell, lo que rompe el centrado de la columna "Ip" (que combina
-       .rpt-number-cell + .rpt-align-center). Restauramos el centro SOLO cuando
-       ambas clases coexisten en la misma celda. */
-    .rpt-paper[data-informe="contratacion_mercados_sdg_dn"] .rpt-number-cell.rpt-align-center {
-        text-align: center !important;
     }
 
     /* Reset de margenes del papel para la capa de impresion. */
@@ -264,7 +263,7 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     /* Totales y subtotales en impresion. */
     .rpt-td-total,
     .rpt-cmsdg-total-row td {
-        border-top: 0.5pt solid #00468B !important;
+        border-top: 0.3pt solid #00468B !important;
         border-bottom: none !important;
         padding-right: 5px !important;
         padding-left: 5px !important;
@@ -272,5 +271,33 @@ Prefijo rpt-cmsdg- para evitar colision con la rejilla global.
     .rpt-cmsdg-subtotal-row td {
         padding-right: 5px !important;
         padding-left: 5px !important;
+    }
+}
+
+/* ==========================================================================
+   Container Queries — Responsivo en Pantallas Pequeñas
+   ========================================================================== */
+@container rpt-paper (max-width: 600px) {
+    .rpt-cmsdg-tabla {
+        font-size: 7.5pt !important;
+    }
+    .rpt-cmsdg-tabla td,
+    .rpt-cmsdg-tabla th {
+        padding: 2px 3px !important;
+        font-size: 7.5pt !important;
+    }
+    .rpt-cmsdg-column-headers-row th {
+        font-size: 7.5pt !important;
+    }
+    .rpt-cmsdg-superheader-row th {
+        font-size: 7.5pt !important;
+    }
+    .rpt-cmsdg-detail-row td {
+        padding: 2px 3px !important;
+        font-size: 7.5pt !important;
+    }
+    .rpt-cmsdg-subinforme-wrap {
+        max-width: 100% !important;
+        margin: 20px auto 0 !important;
     }
 }

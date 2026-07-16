@@ -58,7 +58,7 @@
 
 /* Contenedor del badge superior (Nacional e Internacional) */
 .rpt-as-badge-container {
-    border-bottom: 0.6pt solid #00468B;
+    border-bottom: 0.3pt solid #00468B;
     margin-bottom: 5px;
     margin-top: 30px; /* Mayor separación vertical de la sección anterior */
     display: flex;
@@ -105,7 +105,7 @@
     font-size: 8pt !important;
     font-weight: bold !important;
     text-align: right !important;
-    border-bottom: 0.6pt solid #00468B !important;
+    border-bottom: 0.3pt solid #00468B !important;
 }
 
 .rpt-as-column-headers-row th:first-child {
@@ -170,7 +170,7 @@
     background-color: transparent !important; /* Fila transparente en Access */
     color: #00468B !important;
     font-weight: bold !important;
-    border-top: 0.6pt solid #00468B !important;
+    border-top: 0.3pt solid #00468B !important;
     border-bottom: none !important; /* Quitar la línea horizontal inferior */
     padding: 4px 5px !important;
     line-height: 1.3 !important;

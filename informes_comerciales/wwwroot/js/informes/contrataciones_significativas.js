@@ -306,11 +306,11 @@ function _renderTablaMaestraNacional() {
                                 <col class="rpt-col-mes-importe">
                             </colgroup>
                             <thead>
-                                <tr style="height: 0 !important; line-height: 0 !important;">
-                                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                <tr class="rpt-phantom-tr">
+                                    <th class="rpt-col-mes-cliente rpt-phantom-th"></th>
+                                    <th class="rpt-col-mes-oferta rpt-phantom-th"></th>
+                                    <th class="rpt-col-10px rpt-phantom-th"></th>
+                                    <th class="rpt-col-mes-importe rpt-phantom-th"></th>
                                 </tr>
                                 <tr class="rpt-cont-sig-anterior-label">
                                     <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
@@ -344,11 +344,11 @@ function _renderTablaMaestraNacional() {
                 <col class="rpt-col-mes-importe">
             </colgroup>
             <thead class="rpt-print-thead-corporate">
-                <tr style="height: 0 !important; line-height: 0 !important;">
-                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                <tr class="rpt-phantom-tr">
+                    <th class="rpt-col-mes-cliente rpt-phantom-th"></th>
+                    <th class="rpt-col-mes-oferta rpt-phantom-th"></th>
+                    <th class="rpt-col-10px rpt-phantom-th"></th>
+                    <th class="rpt-col-mes-importe rpt-phantom-th"></th>
                 </tr>
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
@@ -440,11 +440,11 @@ function _renderTablaMaestraInternacional() {
                                 <col class="rpt-col-mes-importe">
                             </colgroup>
                             <thead>
-                                <tr style="height: 0 !important; line-height: 0 !important;">
-                                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                                <tr class="rpt-phantom-tr">
+                                    <th class="rpt-col-mes-cliente rpt-phantom-th"></th>
+                                    <th class="rpt-col-mes-oferta rpt-phantom-th"></th>
+                                    <th class="rpt-col-10px rpt-phantom-th"></th>
+                                    <th class="rpt-col-mes-importe rpt-phantom-th"></th>
                                 </tr>
                                 <tr class="rpt-cont-sig-anterior-label">
                                     <td colspan="4" class="rpt-text-muted-gray">Anterior</td>
@@ -476,11 +476,11 @@ function _renderTablaMaestraInternacional() {
                 <col class="rpt-col-mes-importe">
             </colgroup>
             <thead class="rpt-print-thead-corporate">
-                <tr style="height: 0 !important; line-height: 0 !important;">
-                    <th class="rpt-col-mes-cliente" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                    <th class="rpt-col-mes-oferta" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                    <th class="rpt-col-10px" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
-                    <th class="rpt-col-mes-importe" style="height: 0 !important; padding: 0 !important; border: none !important;"></th>
+                <tr class="rpt-phantom-tr">
+                    <th class="rpt-col-mes-cliente rpt-phantom-th"></th>
+                    <th class="rpt-col-mes-oferta rpt-phantom-th"></th>
+                    <th class="rpt-col-10px rpt-phantom-th"></th>
+                    <th class="rpt-col-mes-importe rpt-phantom-th"></th>
                 </tr>
                 <tr class="rpt-print-thead-row">
                     <th colspan="4" class="rpt-print-thead-cell">
