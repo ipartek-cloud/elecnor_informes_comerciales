@@ -17,7 +17,7 @@ const estado = crearEstadoInforme();
 /**
  * Punto de entrada del informe.
  */
-export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true, limiteImporte = 1000 }) {
+export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umbral, codSubDir = '221', mostrarTitulo = true, limiteImporte = 1000, isPdf = false }) {
     try {
         const chkGenerar = document.getElementById('chkGenerarRPTPrincipalesContrataciones');
         if (chkGenerar?.checked) {
@@ -35,6 +35,7 @@ export async function ejecutar({ anio, mes, nroPagina, mercado = 'Nacional', umb
         const subDir = codSubDir || '221';
         const url = `/api/ContratacionesSignificativas?anio=${anio}&mes=${mes}&mercado=${encodeURIComponent(mercado)}&codSubDirGeneral=${encodeURIComponent(subDir)}&limiteImporte=${limiteImporte}&_=${Date.now()}`;
 
+        estado.isPdf = isPdf;
         estado.nroPagina = nroPagina;
         estado.mostrarNumeroPagina = (nroPagina !== null && nroPagina !== undefined);
         estado.mostrarTitulo = mostrarTitulo;
@@ -66,13 +67,24 @@ async function _renderizarPagina(index = 0) {
     const data = estado.informeGlobalData;
     const esInternacional = data?.meta?.filtros?.mercado === 'Internacional';
 
+    if (estado.isPdf) {
+        const styleVars = getStyleVars(estado.margenes);
+        const contenidoHtml = esInternacional ? _renderTablaMaestraInternacional() : _renderTablaMaestraNacional();
+        container.innerHTML = `
+            <div class="${RPT_CLASSES.PAPER} rpt-paper--print" data-informe="contrataciones_significativas" data-mercado="${esInternacional ? 'Internacional' : 'Nacional'}" ${styleVars}>
+                <div class="report-body rpt-cmai-mt-medium">
+                    ${contenidoHtml}
+                </div>
+            </div>`;
+        container.scrollTop = 0;
+        return;
+    }
+
     let cuerpoHtml = '';
 
     if (esInternacional) {
-        // MODO WEB INTERNACIONAL: Solo la primera dirección muestra los literales de columna.
         cuerpoHtml = data.datos.map((dir, idx) => _renderTablaDireccion(dir, idx === 0)).join('<div class="rpt-page-break"></div>');
     } else {
-        // MODO WEB NACIONAL: Una dirección por página (siempre muestra literales).
         const direccion = data.datos[index];
         cuerpoHtml = direccion ? _renderTablaDireccion(direccion, true) : '<div class="rpt-text-center rpt-p-5 rpt-text-muted-gray">No hay registros disponibles.</div>';
     }
