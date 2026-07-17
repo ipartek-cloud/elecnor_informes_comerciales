@@ -33,6 +33,7 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, mostrarTitulo })
             estado,
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
+            prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
             margenes: MARGENES_ESTANDAR
         });
@@ -54,7 +55,7 @@ async function _renderizarPagina() {
     const cuerpoHtml = _renderCuerpoInforme();
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="ranking_contratacion_clientes" role="main"${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="ranking_contratacion_clientes" role="document"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body">
                 ${cuerpoHtml}
@@ -110,12 +111,12 @@ function _renderCuerpoInforme() {
         // Fila principal del cliente
         let html = `
             <tr class="${RPT_CLASSES.DETAIL_ROW}">
-                <td class="rpt-col-row">${item.row}</td>
-                <td class="rpt-col-cliente">${escapeHtml(item.cliente)}</td>
-                <td class="rpt-col-num rpt-font-monospace">${formatCurrency((item.importe || 0) / 1000, 0)}</td>
-                <td class="rpt-col-pct rpt-font-monospace">${formatPercentage(item.porcentajeSobreTotal, 1)}</td>
+                <td class="rpt-col-row" data-label="Posición">${item.row}</td>
+                <td class="rpt-col-cliente" data-label="Cliente">${escapeHtml(item.cliente)}</td>
+                <td class="rpt-col-num rpt-font-monospace" data-label="Contr.">${formatCurrency((item.importe || 0) / 1000, 0)}</td>
+                <td class="rpt-col-pct rpt-font-monospace" data-label="%">${formatPercentage(item.porcentajeSobreTotal, 1)}</td>
                 ${!esInternacional ? `
-                    <td class="rpt-col-ant rpt-font-monospace">
+                    <td class="rpt-col-ant rpt-font-monospace" data-label="Anterior">
                         ${item.importeAnterior ? formatCurrency(item.importeAnterior / 1000, 0) : ''}
                     </td>
                 ` : ''}
@@ -128,11 +129,11 @@ function _renderCuerpoInforme() {
                 html += `
                     <tr class="rpt-desglose-row">
                         <td class="rpt-col-row"></td>
-                        <td class="rpt-col-cliente rpt-ps-4">${escapeHtml(sub.clienteDesglose)}</td>
-                        <td class="rpt-col-num rpt-font-monospace">${formatCurrency(sub.importeContratadoAcumulado / 1000, 0)}</td>
-                        <td class="rpt-col-pct rpt-font-monospace">${formatPercentage(sub.porcentajeSobreTotal, 1)}</td>
+                        <td class="rpt-col-cliente rpt-ps-4" data-label="Cliente Desglose">${escapeHtml(sub.clienteDesglose)}</td>
+                        <td class="rpt-col-num rpt-font-monospace" data-label="Contr. Desglose">${formatCurrency(sub.importeContratadoAcumulado / 1000, 0)}</td>
+                        <td class="rpt-col-pct rpt-font-monospace" data-label="% Desglose">${formatPercentage(sub.porcentajeSobreTotal, 1)}</td>
                         ${!esInternacional ? `
-                            <td class="rpt-col-ant rpt-font-monospace">${sub.importeContratadoAnterior ? formatCurrency(sub.importeContratadoAnterior / 1000, 0) : ''}</td>
+                            <td class="rpt-col-ant rpt-font-monospace" data-label="Anterior Desglose">${sub.importeContratadoAnterior ? formatCurrency(sub.importeContratadoAnterior / 1000, 0) : ''}</td>
                         ` : ''}
                     </tr>
                 `;

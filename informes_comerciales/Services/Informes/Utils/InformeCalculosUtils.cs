@@ -39,7 +39,7 @@ public static class InformeCalculosUtils
         if (v > 10 || anterior < 0) return ">1000%";
         if (v < -10) return "<-1000%";
         
-        return $"{(v * 100):N0}%";
+        return $"{Math.Round(v * 100, 0, MidpointRounding.AwayFromZero):N0}%";
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ public static class InformeCalculosUtils
         if (v > 10 || anterior < 0) return "-*%";
         if (v < -10) return "<-100%";
         
-        return $"{(v * 100):N0}%";
+        return $"{Math.Round(v * 100, 0, MidpointRounding.AwayFromZero):N0}%";
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public static class InformeCalculosUtils
         decimal v = (actual - anterior) / anterior;
 
         // Retornar formateado con N0 (sin decimales, con separador de miles)
-        return $"{(v * 100):N0}%";
+        return $"{Math.Round(v * 100, 0, MidpointRounding.AwayFromZero):N0}%";
     }
 
     /// <summary>

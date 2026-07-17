@@ -36,6 +36,7 @@ export async function ejecutar({ anio, mes, nroPagina, mercado, umbral, mostrarT
             estado,
             renderizarPagina: _renderizarPagina,
             inicializarEventListeners: _registrarEventos,
+            prefijoPaginacion: '',
             claveAgrupacion: 'NONE',
             margenes: MARGENES_ESTANDAR
         });
@@ -102,10 +103,10 @@ async function _renderCuerpoInforme() {
         const mesNombre = getNombreMes(data.meta.filtros.mes);
         const filas = data.datos.map(item => `
         <tr class="${RPT_CLASSES.DETAIL_ROW}">
-          <td class="rpt-col-ai rpt-align-center rpt-text-small rpt-text-muted">${item.mercado}</td>
-          <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
-          <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
-          <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
+          <td class="rpt-col-ai rpt-align-center rpt-text-small rpt-text-muted" data-label="Mercado">${item.mercado}</td>
+          <td class="rpt-col-desc rpt-align-start" data-label="Descripción">${escapeHtml(item.descripcion)}</td>
+          <td class="rpt-col-cliente rpt-align-start" data-label="Cliente">${escapeHtml(item.cliente)}</td>
+          <td class="rpt-col-importe rpt-align-end rpt-font-mono" data-label="Importe">${formatCurrency(item.importe, 0)}</td>
         </tr>
       `).join('');
 
@@ -131,10 +132,10 @@ async function _renderCuerpoInforme() {
         const u2 = data.meta?.filtros?.umbral2 ?? 700;
         const filasAnt = data.datosAnterior.map(item => `
         <tr class="${RPT_CLASSES.DETAIL_ROW}">
-          <td class="rpt-col-ai rpt-align-center rpt-text-small">${item.mercado}</td>
-          <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcion)}</td>
-          <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.cliente)}</td>
-          <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importe, 0)}</td>
+          <td class="rpt-col-ai rpt-align-center rpt-text-small" data-label="Mercado">${item.mercado}</td>
+          <td class="rpt-col-desc rpt-align-start" data-label="Descripción">${escapeHtml(item.descripcion)}</td>
+          <td class="rpt-col-cliente rpt-align-start" data-label="Cliente">${escapeHtml(item.cliente)}</td>
+          <td class="rpt-col-importe rpt-align-end rpt-font-mono" data-label="Importe">${formatCurrency(item.importe, 0)}</td>
         </tr>
       `).join('');
 

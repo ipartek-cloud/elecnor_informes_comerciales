@@ -4,7 +4,7 @@
  * 
  * Basado en la metodología unificada de Informes_Subinformes.md (Sección 19)
  */
-import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, getNombreMes, getMesCorto, getMesAnterior, actualizarEstadoPaginacion, inicializarEventListenersBase, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 import { ApiClient } from '../site.js';
 
@@ -185,13 +185,13 @@ function _renderTripleBlock(agrup) {
             <div class="rpt-block-mensual">
                 <table class="rpt-block-table">
                     <tr class="rpt-detail-row">
-                        <td class="rpt-number-cell rpt-w-50">${scaleObjetivo(d.objetivoMensual)}</td>
-                        <td class="rpt-number-cell rpt-w-50">${scaleContratado(d.importeContratadoMensual)}</td>
+                        <td class="rpt-number-cell rpt-w-50" data-label="Objetivo Mensual">${scaleObjetivo(d.objetivoMensual)}</td>
+                        <td class="rpt-number-cell rpt-w-50" data-label="Contratado Mensual">${scaleContratado(d.importeContratadoMensual)}</td>
                     </tr>
                 </table>
             </div>
             <div class="rpt-block-labels">
-                <div class="rpt-label-row-data">${d.pais}</div>
+                <div class="rpt-label-row-data">${escapeHtml(d.pais)}</div>
             </div>
             <div class="rpt-block-acumulado">
                 <table class="rpt-block-table">
@@ -203,11 +203,11 @@ function _renderTripleBlock(agrup) {
                         <col class="rpt-col-width-20">
                     </colgroup>
                     <tr class="rpt-detail-row">
-                        <td class="rpt-number-cell">${scaleObjetivo(d.objetivoAnual)}</td>
-                        <td class="rpt-number-cell rpt-font-small rpt-text-muted-value">${d.pais === 'Nacional' ? '-7%' : '4%'}</td>
-                        <td class="rpt-number-cell">${scaleContratado(d.importeContratadoAcumulado)}</td>
-                        <td class="rpt-number-cell">${formatCurrency(d.indiceProduccion / 1000, 2)}</td>
-                        <td class="rpt-number-cell">${d.variacion}</td>
+                        <td class="rpt-number-cell" data-label="Objetivo Anual">${scaleObjetivo(d.objetivoAnual)}</td>
+                        <td class="rpt-number-cell rpt-font-small rpt-text-muted-value" data-label="Porcentaje">${d.pais === 'Nacional' ? '-7%' : '4%'}</td>
+                        <td class="rpt-number-cell" data-label="Contratado Acumulado">${scaleContratado(d.importeContratadoAcumulado)}</td>
+                        <td class="rpt-number-cell" data-label="IP">${formatCurrency(d.indiceProduccion / 1000, 2)}</td>
+                        <td class="rpt-number-cell" data-label="Variación">${d.variacion}</td>
                     </tr>
                 </table>
             </div>

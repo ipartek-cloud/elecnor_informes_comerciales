@@ -21,7 +21,7 @@ public class ContratacionesSignificativasRiController : ControllerBase
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> Get([FromQuery] int anio, [FromQuery] int mes, [FromQuery] string mercado = "Nacional", [FromQuery] string codSubDirGeneral = "221", [FromQuery] int? nroPagina = null, [FromQuery] decimal limiteImporte = 2000m)
     {
         if (anio > DateTime.Now.Year)

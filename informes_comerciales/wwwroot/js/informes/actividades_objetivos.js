@@ -3,7 +3,7 @@
  * Módulo para renderizado dinámico del informe de actividades con objetivos e IP.
  */
 
-import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, getVarClass } from './utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, getVarClass, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -41,7 +41,7 @@ function _renderizarPagina() {
   if (!container) return;
 
   container.innerHTML = `
-  <div class="${RPT_CLASSES.PAPER} rpt-paper--actividades_objetivos" data-informe="actividades_objetivos" role="main" ${getStyleVars(estado.margenes)}>
+  <div class="${RPT_CLASSES.PAPER} rpt-paper--actividades_objetivos" data-informe="actividades_objetivos" role="document" ${getStyleVars(estado.margenes)}>
     ${_getHtmlEncabezado()}
     <div class="report-body rpt-cmai-mt-standard">
       ${_renderCuerpoInforme()}
@@ -99,7 +99,7 @@ function _renderBloquePais(pais) {
       </th>
       <th rpt-border-none></th>
       <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-p-0">
-        <div class="rpt-act-badge">${pais.nombrePais}</div>
+        <div class="rpt-act-badge">${escapeHtml(pais.nombrePais)}</div>
       </th>
       <th rpt-border-none></th>
       <th class="rpt-col-act-obj rpt-align-center rpt-act-th-border-bottom rpt-fs-8pt rpt-font-bold">
@@ -126,7 +126,7 @@ function _renderBloquePais(pais) {
       <td class="rpt-col-act-porc-ant rpt-align-end">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
       <td class="rpt-col-act-imp-ant rpt-align-end rpt-number-cell">${formatCurrency(d.importeAnterior, 0)}</td>
       <td rpt-border-none></td>
-      <td class="rpt-col-act-nombre rpt-ps-3">${d.actividad}</td>
+      <td class="rpt-col-act-nombre rpt-ps-3">${escapeHtml(d.actividad)}</td>
       <td rpt-border-none></td>
       <td class="rpt-col-act-obj rpt-align-end rpt-number-cell">${formatCurrency(d.importeObjetivos, 0)}</td>
       <td class="rpt-col-act-imp-act rpt-align-end rpt-number-cell">${formatCurrency(d.importeActual / 1000, 0)}</td>

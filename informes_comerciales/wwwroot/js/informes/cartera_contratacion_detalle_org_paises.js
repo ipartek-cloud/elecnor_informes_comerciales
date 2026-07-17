@@ -54,7 +54,7 @@ function _renderizarPagina() {
     ).join('<div class="rpt-page-break"></div>');
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_contratacion_detalle_org_paises" role="main" ${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_contratacion_detalle_org_paises" role="document" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body rpt-cmai-mt-standard">
                 ${gruposHtml}

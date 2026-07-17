@@ -130,11 +130,11 @@ async function _renderCuerpoInforme() {
                               `<span class="rpt-badge-ai" title="Oferta Asociada a Inversión">AI</span>` : '';
                             return `
                             <tr class="${RPT_CLASSES.DETAIL_ROW}">
-                              <td class="rpt-col-ai rpt-align-center">${badgeAI}</td>
-                              <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
-                              <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.nombreClientes_OK)}</td>
-                              <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importeContratado_OK, 0)}</td>
-                              <td class="rpt-col-dirnegocio rpt-align-start rpt-ps-3">${escapeHtml(item.nombreDirNegocio_OK)}</td>
+                              <td class="rpt-col-ai rpt-align-center" data-label="AI">${badgeAI}</td>
+                              <td class="rpt-col-desc rpt-align-start" data-label="Descripción">${escapeHtml(item.descripcionOfertas_OK)}</td>
+                              <td class="rpt-col-cliente rpt-align-start" data-label="Cliente">${escapeHtml(item.nombreClientes_OK)}</td>
+                              <td class="rpt-col-importe rpt-align-end rpt-font-mono" data-label="Importe">${formatCurrency(item.importeContratado_OK, 0)}</td>
+                              <td class="rpt-col-dirnegocio rpt-align-start rpt-ps-3" data-label="Dirección de Negocio">${escapeHtml(item.nombreDirNegocio_OK)}</td>
                             </tr>
                             `;
                         }).join('')}
@@ -171,11 +171,11 @@ function _renderSubInformeGenerico(datos, config) {
 
     return `
     <tr class="${RPT_CLASSES.DETAIL_ROW}">
-      <td class="rpt-col-ai rpt-align-center">${badgeAI}</td>
-      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
-      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.nombreClientes_OK)}</td>
-      <td class="rpt-col-importe rpt-align-end rpt-font-mono">${formatCurrency(item.importeContratado_OK, 0)}</td>
-      <td class="rpt-col-dirnegocio rpt-align-start rpt-ps-3">${escapeHtml(item.nombreDirNegocio_OK)}</td>
+      <td class="rpt-col-ai rpt-align-center" data-label="AI">${badgeAI}</td>
+      <td class="rpt-col-desc rpt-align-start" data-label="Descripción">${escapeHtml(item.descripcionOfertas_OK)}</td>
+      <td class="rpt-col-cliente rpt-align-start" data-label="Cliente">${escapeHtml(item.nombreClientes_OK)}</td>
+      <td class="rpt-col-importe rpt-align-end rpt-font-mono" data-label="Importe">${formatCurrency(item.importeContratado_OK, 0)}</td>
+      <td class="rpt-col-dirnegocio rpt-align-start rpt-ps-3" data-label="Dirección de Negocio">${escapeHtml(item.nombreDirNegocio_OK)}</td>
     </tr>
     `;
   }).join('');
@@ -221,11 +221,11 @@ function _renderCabeceraMes(data) {
 function _renderTablaContrataciones(data) {
   const filas = data.datos.map(item => `
     <tr class="${RPT_CLASSES.DETAIL_ROW}">
-      <td class="rpt-col-ai"></td>
-      <td class="rpt-col-desc rpt-align-start">${escapeHtml(item.descripcionOfertas_OK)}</td>
-      <td class="rpt-col-cliente rpt-align-start">${escapeHtml(item.nombreClientes_OK)}</td>
-      <td class="rpt-col-importe rpt-align-end">${formatCurrency(item.importeContratado_OK, 0)}</td>
-      <td class="rpt-col-dirnegocio"></td>
+      <td class="rpt-col-ai" data-label="AI"></td>
+      <td class="rpt-col-desc rpt-align-start" data-label="Descripción">${escapeHtml(item.descripcionOfertas_OK)}</td>
+      <td class="rpt-col-cliente rpt-align-start" data-label="Cliente">${escapeHtml(item.nombreClientes_OK)}</td>
+      <td class="rpt-col-importe rpt-align-end" data-label="Importe">${formatCurrency(item.importeContratado_OK, 0)}</td>
+      <td class="rpt-col-dirnegocio" data-label="Dirección de Negocio"></td>
     </tr>
   `).join('');
 

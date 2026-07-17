@@ -3,7 +3,7 @@
  * Módulo para renderizado dinámico del informe de actividades por país.
  */
 
-import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, getNombreMes, getVarClass } from './utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, getNombreMes, getVarClass, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 // ============================================================
@@ -112,7 +112,7 @@ function _renderBloquePais(pais) {
         <div class="rpt-act-header-line">Contr.</div>
       </th>
       <th class="rpt-col-act-nombre rpt-align-start rpt-header-align-middle rpt-p-0">
-        <div class="rpt-act-badge">${pais.nombrePais}</div>
+        <div class="rpt-act-badge">${escapeHtml(pais.nombrePais)}</div>
       </th>
       <th class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">
         <div class="rpt-act-header-line">Contr.</div>
@@ -129,12 +129,12 @@ function _renderBloquePais(pais) {
 
     const filasHtml = pais.detalle.map(d => `
     <tr class="rpt-detail-row">
-      <td class="rpt-col-act-porc-ant rpt-align-center">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
-      <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">${formatCurrency(d.importeAnterior / 1000, 0)}</td>
-      <td class="rpt-col-act-nombre rpt-ps-3">${d.actividad}</td>
-      <td class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">${formatCurrency(d.importeActual / 1000, 0)}</td>
-      <td class="rpt-col-act-var rpt-align-center ${getVarClass(d.variacionPorcentaje)}">${d.variacionPorcentaje}</td>
-      <td class="rpt-col-act-porc-act rpt-align-center">${formatPercentage(d.porcentajeActualMercado, 0)}</td>
+      <td class="rpt-col-act-porc-ant rpt-align-center" data-label="% s/Merc Anterior">${formatPercentage(d.porcentajeAnteriorMercado, 0)}</td>
+      <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15" data-label="Contr. Anterior">${formatCurrency(d.importeAnterior / 1000, 0)}</td>
+      <td class="rpt-col-act-nombre rpt-ps-3" data-label="Actividad">${escapeHtml(d.actividad)}</td>
+      <td class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15" data-label="Contr. Actual">${formatCurrency(d.importeActual / 1000, 0)}</td>
+      <td class="rpt-col-act-var rpt-align-center ${getVarClass(d.variacionPorcentaje)}" data-label="Var. %">${d.variacionPorcentaje}</td>
+      <td class="rpt-col-act-porc-act rpt-align-center" data-label="% s/Merc Actual">${formatPercentage(d.porcentajeActualMercado, 0)}</td>
     </tr>
   `).join('');
 
@@ -143,22 +143,22 @@ function _renderBloquePais(pais) {
       <td colspan="6" class="rpt-spacer-cell-totales"></td>
     </tr>
     <tr class="rpt-total-row">
-      <td class="rpt-col-act-porc-ant rpt-align-center">
+      <td class="rpt-col-act-porc-ant rpt-align-center" data-label="Total % Anterior">
         <div class="rpt-act-total-line">100%</div>
       </td>
-      <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15">
+      <td class="rpt-col-act-imp-ant rpt-align-end rpt-pad-right-15" data-label="Total Contr. Anterior">
         <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeAnterior / 1000, 0)}</div>
       </td>
-      <td class="rpt-col-act-nombre">
+      <td class="rpt-col-act-nombre" data-label="Total">
         <div class="rpt-act-total-line rpt-act-total-line-text">&nbsp;</div>
       </td>
-      <td class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15">
+      <td class="rpt-col-act-imp-act rpt-align-end rpt-pad-right-15" data-label="Total Contr. Actual">
         <div class="rpt-act-total-line">${formatCurrency(pais.totales.importeActual / 1000, 0)}</div>
       </td>
-      <td class="rpt-col-act-var rpt-align-center">
+      <td class="rpt-col-act-var rpt-align-center" data-label="Total Var.">
         <div class="rpt-act-total-line"></div>
       </td>
-      <td class="rpt-col-act-porc-act rpt-align-center">
+      <td class="rpt-col-act-porc-act rpt-align-center" data-label="Total % Actual">
         <div class="rpt-act-total-line">100%</div>
       </td>
     </tr>

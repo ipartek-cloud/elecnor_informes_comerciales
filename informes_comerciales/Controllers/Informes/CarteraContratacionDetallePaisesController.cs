@@ -20,7 +20,7 @@ public class CarteraContratacionDetallePaisesController : ControllerBase
     /// Obtiene el informe Cartera Contratación Países (Detalle) Nacional - Internacional.
     /// </summary>
     [HttpGet]
-    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" }, VaryByHeader = "Authorization")]
     public async Task<IActionResult> Get(
         [FromQuery] int anio,
         [FromQuery] int mes,

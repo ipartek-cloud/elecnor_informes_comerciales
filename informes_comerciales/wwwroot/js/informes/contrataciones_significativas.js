@@ -152,10 +152,10 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
 
     rowsHtml += contratosMes.map(item => `
         <tr class="rpt-detail-row">
-            <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
-            <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
+            <td class="rpt-col-mes-cliente" data-label="Cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
+            <td class="rpt-col-mes-oferta" data-label="Oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
             <td rpt-border-none></td>
-            <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+            <td class="rpt-col-mes-importe rpt-number-cell" data-label="Importe">${formatCurrency(item.importeContratado, 0)}</td>
         </tr>`).join('');
 
     if (contratosAnt.length > 0) {
@@ -168,10 +168,10 @@ function _renderTablaDireccion(direccion, mostrarHeader = true) {
             </tr>`;
         rowsHtml += contratosAnt.map(item => `
             <tr class="rpt-detail-row rpt-cont-sig-hist-row">
-                <td class="rpt-col-mes-cliente">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
-                <td class="rpt-col-mes-oferta">${escapeHtml(item.descripcionOferta_OK)}</td>
+                <td class="rpt-col-mes-cliente" data-label="Cliente Anterior">${escapeHtml(item.nombreCliente_OK.replace(/^ZZ_/, ''))}</td>
+                <td class="rpt-col-mes-oferta" data-label="Oferta Anterior">${escapeHtml(item.descripcionOferta_OK)}</td>
                 <td rpt-border-none></td>
-                <td class="rpt-col-mes-importe rpt-number-cell">${formatCurrency(item.importeContratado, 0)}</td>
+                <td class="rpt-col-mes-importe rpt-number-cell" data-label="Importe Anterior">${formatCurrency(item.importeContratado, 0)}</td>
             </tr>`).join('');
     }
 

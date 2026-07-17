@@ -178,7 +178,7 @@ namespace Elecnor_Informes_Comerciales.Services.Informes
                 }
                 else
                 {
-                    seccion.Variacion = Math.Round(vContratacion * 100, 0).ToString() + "%";
+                    seccion.Variacion = Math.Round(vContratacion * 100, 0, MidpointRounding.AwayFromZero).ToString() + "%";
                 }
             }
         }

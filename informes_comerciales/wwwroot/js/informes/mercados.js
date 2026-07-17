@@ -2,7 +2,7 @@
  * Módulo para el informe Mercados.
  * Renderiza el informe completo en una sola página tal y como requiere el diseño.
  */
-import { RPT_CLASSES, formatCurrency, formatPercentage, getIpClass, getVarClass, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, getIpClass, getVarClass, actualizarEstadoPaginacion, inicializarEventListenersBase, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -116,7 +116,7 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = t
   <th rpt-border-none></th>`}
 
   <th class="rpt-align-start rpt-text-start rpt-text-white rpt-mercado-header-align">
-  <div class="rpt-mercado-header-badge">${tituloCentral}</div>
+  <div class="rpt-mercado-header-badge">${escapeHtml(tituloCentral)}</div>
   </th>
 
   <th rpt-border-none></th>
@@ -133,8 +133,8 @@ function _renderCabeceraCompartida(tituloCentral = 'Mercado', mostrarMensual = t
 function _renderRptBanner(txtIzquierda, txtDerecha = "") {
     return `
         <div class="${RPT_CLASSES.BANNER} rpt-banner-dg rpt-d-flex rpt-justify-between rpt-px-3 rpt-mt-4 rpt-mb-3">
-            <span>${txtIzquierda}</span>
-            <span>${txtDerecha}</span>
+            <span>${escapeHtml(txtIzquierda)}</span>
+            <span>${escapeHtml(txtDerecha)}</span>
         </div>
     `;
 }
@@ -220,7 +220,7 @@ function _construirHtmlFila(tituloFila, mens, acu, esTotal = false) {
     return `<div class="${align} rpt-font-bold rpt-text-corporate">${val}</div>`;
   };
 
-  let midCellContent = tituloFila;
+  let midCellContent = escapeHtml(tituloFila);
   let midCellClass = tituloFila ? '' : 'rpt-font-bold';
 
   if (esTotal) {

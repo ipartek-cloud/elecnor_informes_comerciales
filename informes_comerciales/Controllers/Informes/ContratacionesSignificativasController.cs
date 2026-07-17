@@ -7,7 +7,7 @@ namespace Elecnor_Informes_Comerciales.Controllers.Informes;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "anio", "mes", "mercado", "codSubDirGeneral", "limiteImporte" }, VaryByHeader = "Authorization")]
 public class ContratacionesSignificativasController : ControllerBase
 {
     private readonly InformeContratacionesSignificativasService _service;

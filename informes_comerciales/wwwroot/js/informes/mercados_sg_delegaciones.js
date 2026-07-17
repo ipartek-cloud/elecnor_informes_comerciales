@@ -1,4 +1,4 @@
-import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -82,7 +82,7 @@ function _renderizarPagina() {
     }).join('');
 
     container.innerHTML = `
-    <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_sg_delegaciones" role="main"${getStyleVars(estado.margenes)}>
+    <div class="${RPT_CLASSES.PAPER}" data-informe="mercados_sg_delegaciones" role="document"${getStyleVars(estado.margenes)}>
         ${_getHtmlEncabezadoBase()}
         <div class="report-body rpt-cmai-mt-standard">${cuerpoHtml}</div>
     </div>`;
@@ -127,9 +127,9 @@ function _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader) {
 
     let titleHtml = '';
     if (isFirstDN) {
-        titleHtml = `<div class="rpt-dg-sdg-titulo">${nombreSDG}</div>`;
+        titleHtml = `<div class="rpt-dg-sdg-titulo">${escapeHtml(nombreSDG)}</div>`;
     } else if (isPrintOnlyHeader) {
-        titleHtml = `<div class="rpt-dg-sdg-titulo rpt-print-only">${nombreSDG}</div>`;
+        titleHtml = `<div class="rpt-dg-sdg-titulo rpt-print-only">${escapeHtml(nombreSDG)}</div>`;
     }
 
     let subheadersHtml = '';
@@ -164,7 +164,7 @@ function _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader) {
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Objet.</th>
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
                 <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 1 -->
-                <th class="rpt-dg-header-center-name">${dn.nombreDirNegocio}</th>
+                <th class="rpt-dg-header-center-name">${escapeHtml(dn.nombreDirNegocio)}</th>
                 <th class="rpt-dg-col-sep" rpt-border-none></th> <!-- Sep 2 -->
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Objet.</th>
                 <th class="rpt-align-end rpt-text-corporate rpt-fs-8pt">Contr.</th>
@@ -193,7 +193,7 @@ function _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader) {
                 <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(area.mensual.objetivos, 0)}</td>
                 <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(area.mensual.contratacion, 0)}</td>
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
-                <td class="rpt-dg-col-centro">${area.area}</td>
+                <td class="rpt-dg-col-centro">${escapeHtml(area.area)}</td>
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(area.acumulado.objetivos, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(area.acumulado.contratacion / 1000, 0)}</td>
@@ -210,7 +210,7 @@ function _renderDN(dn, sdg, isFirstDN, isPrintOnlyHeader) {
                 <td class="rpt-dg-col-obj-m rpt-number-cell">${formatCurrency(del.mensual.objetivos, 0)}</td>
                 <td class="rpt-dg-col-contr-m rpt-number-cell">${formatCurrency(del.mensual.contratacion, 0)}</td>
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 1 -->
-                <td class="rpt-dg-col-centro">${del.nombreDelegacion}</td>
+                <td class="rpt-dg-col-centro">${escapeHtml(del.nombreDelegacion)}</td>
                 <td class="rpt-dg-col-sep"></td> <!-- Sep 2 -->
                 <td class="rpt-dg-col-obj-a rpt-number-cell">${formatCurrency(del.acumulado.objetivos, 0)}</td>
                 <td class="rpt-dg-col-contr-a rpt-number-cell">${formatCurrency(del.acumulado.contratacion / 1000, 0)}</td>

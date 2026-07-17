@@ -65,7 +65,7 @@ function _renderizarPagina() {
     const tablaHtml = _renderTabla(data);
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_contratacion_resumen_sdg" role="main" ${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="cartera_contratacion_resumen_sdg" role="document" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body rpt-cmai-mt-standard">
                 <div class="rpt-ccrsdg-subinforme-wrapper">

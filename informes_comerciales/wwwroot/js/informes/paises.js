@@ -5,7 +5,7 @@
  * - umbral = 0: Muestra todos los países con importe > 0
  * - umbral = 100000: Muestra solo países con importe >= 100000 (Relevantes)
  */
-import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { RPT_CLASSES, formatCurrency, formatPercentage, actualizarEstadoPaginacion, inicializarEventListenersBase, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -137,37 +137,37 @@ function _renderTablaPaises() {
     `;
 
     data.paises.forEach(p => {
-        const porcAnterior = p.porcentajeSobreInternacionalAnterior != null ? p.porcentajeSobreInternacionalAnterior.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
-        const porcActual = p.porcentajeSobreInternacionalActual != null ? p.porcentajeSobreInternacionalActual.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
+        const porcAnterior = p.porcentajeSobreInternacionalAnterior != null ? p.porcentajeSobreInternacionalAnterior.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
+        const porcActual = p.porcentajeSobreInternacionalActual != null ? p.porcentajeSobreInternacionalActual.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
         
         html += `
             <tr class="rpt-detail-row">
-                <td class="rpt-paises-porc-cell">${porcAnterior}%</td>
-                <td class="rpt-paises-num-cell">${formatCurrency(p.importeAnterior, 0)}</td>
-                <td class="rpt-paises-pos-cell">${p.posicionAnterior || ''}</td>
+                <td class="rpt-paises-porc-cell" data-label="% Anterior">${porcAnterior}%</td>
+                <td class="rpt-paises-num-cell" data-label="Contr. Anterior">${formatCurrency(p.importeAnterior, 0)}</td>
+                <td class="rpt-paises-pos-cell" data-label="Pos. Anterior">${p.posicionAnterior || ''}</td>
                 <td rpt-border-none></td>
-                <td class="rpt-paises-pais-cell">
+                <td class="rpt-paises-pais-cell" data-label="País">
                     <div class="rpt-paises-pais-wrapper">
                         <span class="rpt-paises-asterisk-container">
                             ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}
                         </span>
-                        <span>${p.pais}</span>
+                        <span>${escapeHtml(p.pais)}</span>
                     </div>
                 </td>
                 <td rpt-border-none></td>
-                <td class="rpt-paises-pos-cell">${p.posicionActual || ''}</td>
-                <td class="rpt-paises-num-cell">${formatCurrency(p.importeActual / 1000, 0)}</td>
-                <td class="rpt-paises-porc-cell">${porcActual}%</td>
+                <td class="rpt-paises-pos-cell" data-label="Pos. Actual">${p.posicionActual || ''}</td>
+                <td class="rpt-paises-num-cell" data-label="Contr. Actual">${formatCurrency(p.importeActual / 1000, 0)}</td>
+                <td class="rpt-paises-porc-cell" data-label="% Actual">${porcActual}%</td>
             </tr>
         `;
     });
 
     // FILA 1 de totales: Subtotal de los países visibles en pantalla
     const subtotalPorcAnterior = data.totales.subtotalPorcentajeAnterior != null
-        ? data.totales.subtotalPorcentajeAnterior.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+        ? data.totales.subtotalPorcentajeAnterior.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
         : '0';
     const subtotalPorcActual = data.totales.subtotalPorcentajeActual != null
-        ? data.totales.subtotalPorcentajeActual.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+        ? data.totales.subtotalPorcentajeActual.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
         : '0';
 
     html += `
@@ -178,26 +178,26 @@ function _renderTablaPaises() {
                 <td colspan="9" class="rpt-spacer-cell-totales"></td>
             </tr>
             <tr>
-                <td class="rpt-paises-porc-cell rpt-paises-total-line">${subtotalPorcAnterior}%</td>
-                <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
+                <td class="rpt-paises-porc-cell rpt-paises-total-line" data-label="Subtotal % Anterior">${subtotalPorcAnterior}%</td>
+                <td class="rpt-paises-num-cell rpt-paises-total-line" data-label="Subtotal Contr. Anterior">${formatCurrency(data.totales.subtotalImporteAnterior, 0)}</td>
                 <td></td>
                 <td rpt-border-none></td>
                 <td class="rpt-paises-total-line"></td>
                 <td rpt-border-none></td>
                 <td></td>
-                <td class="rpt-paises-num-cell rpt-paises-total-line">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
-                <td class="rpt-paises-porc-cell rpt-paises-total-line">${subtotalPorcActual}%</td>
+                <td class="rpt-paises-num-cell rpt-paises-total-line" data-label="Subtotal Contr. Actual">${formatCurrency(data.totales.subtotalImporteActual / 1000, 0)}</td>
+                <td class="rpt-paises-porc-cell rpt-paises-total-line" data-label="Subtotal % Actual">${subtotalPorcActual}%</td>
             </tr>
             <!-- Fila 2: Total Internacional Global -->
             <tr class="rpt-paises-total-global">
                 <td></td>
-                <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
+                <td class="rpt-paises-num-cell" data-label="Total Anterior">${formatCurrency(data.totales.totalInternacionalAnterior, 0)}</td>
                 <td></td>
                 <td rpt-border-none></td>
-                <td class="rpt-paises-pais-cell rpt-paises-total-label-blue">Total Internacional</td>
+                <td class="rpt-paises-pais-cell rpt-paises-total-label-blue" data-label="Etiqueta">Total Internacional</td>
                 <td rpt-border-none></td>
                 <td></td>
-                <td class="rpt-paises-num-cell">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
+                <td class="rpt-paises-num-cell" data-label="Total Actual">${formatCurrency(data.totales.totalInternacionalActual / 1000, 0)}</td>
                 <td class="rpt-paises-total-label-blue rpt-paises-total-label-left">Miles de Euros</td>
             </tr>
             </tfoot>

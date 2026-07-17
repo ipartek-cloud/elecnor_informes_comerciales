@@ -5,7 +5,7 @@
  * Título: "Mercado por Países" (sin "Mercado Internacional").
  * Umbral fijo: 100000 (relevantes).
  */
-import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase } from './utils.js';
+import { RPT_CLASSES, formatCurrency, actualizarEstadoPaginacion, inicializarEventListenersBase, escapeHtml } from './utils.js';
 import { crearEstadoInforme, inicializarInforme, getHtmlEncabezadoBase, imprimirInformeUnificado, getStyleVars, MARGENES_ESTANDAR } from './informes_unificados_utils.js';
 
 const estado = crearEstadoInforme();
@@ -49,7 +49,7 @@ function _renderizarPagina() {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="${RPT_CLASSES.PAPER}" data-informe="paises_all" role="main"${getStyleVars(estado.margenes)}>
+        <div class="${RPT_CLASSES.PAPER}" data-informe="paises_all" role="document"${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
             <div class="report-body rpt-cmai-mt-standard">
                 ${_renderTablaPaises()}
@@ -139,8 +139,8 @@ function _renderTablaPaises() {
     `;
 
     data.paises.forEach(p => {
-        const porcAnterior = p.porcentajeSobreInternacionalAnterior != null ? p.porcentajeSobreInternacionalAnterior.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
-        const porcActual = p.porcentajeSobreInternacionalActual != null ? p.porcentajeSobreInternacionalActual.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
+        const porcAnterior = p.porcentajeSobreInternacionalAnterior != null ? p.porcentajeSobreInternacionalAnterior.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
+        const porcActual = p.porcentajeSobreInternacionalActual != null ? p.porcentajeSobreInternacionalActual.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '0';
 
         html += `
             <tr class="rpt-detail-row">
@@ -151,7 +151,7 @@ function _renderTablaPaises() {
                 <td rpt-border-none></td>
 
                 <td class="rpt-paises-pais-cell ${p.esNuevo ? 'rpt-hanging-indent' : ''}">
-                    ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}${p.pais}
+                    ${p.esNuevo ? '<span class="rpt-paises-new-flag">*</span>' : ''}${escapeHtml(p.pais)}
                 </td>
 
                 <td rpt-border-none></td>
@@ -165,10 +165,10 @@ function _renderTablaPaises() {
 
     // FILA 1 de totales: Subtotal de los países visibles en pantalla
     const subtotalPorcAnterior = data.totales.subtotalPorcentajeAnterior != null
-        ? data.totales.subtotalPorcentajeAnterior.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+        ? data.totales.subtotalPorcentajeAnterior.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
         : '0';
     const subtotalPorcActual = data.totales.subtotalPorcentajeActual != null
-        ? data.totales.subtotalPorcentajeActual.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+        ? data.totales.subtotalPorcentajeActual.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
         : '0';
 
     html += `

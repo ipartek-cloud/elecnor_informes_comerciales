@@ -67,7 +67,7 @@ async function _renderizarPagina() {
         container.innerHTML = `
             <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
                 ${_getHtmlEncabezado()}
-                <div class="report-body rpt-cmai-mt-medium rpt-text-center rpt-p-5 rpt-text-muted">No se han encontrado registros.</div>
+                <div class="report-body rpt-cmai-mt-standard rpt-text-center rpt-p-5 rpt-text-muted">No se han encontrado registros.</div>
             </div>`;
         ocultarControlesPaginacion();
         return;
@@ -76,7 +76,7 @@ async function _renderizarPagina() {
     container.innerHTML = `
         <div class="${RPT_CLASSES.PAPER}" data-informe="contrataciones_significativas_ri" ${getStyleVars(estado.margenes)}>
             ${_getHtmlEncabezado()}
-            <div class="report-body rpt-cmai-mt-medium">${_renderCuerpoInforme(direccionesConDatos)}</div>
+            <div class="report-body rpt-cmai-mt-standard">${_renderCuerpoInforme(direccionesConDatos)}</div>
         </div>`;
 
     container.scrollTop = 0;
