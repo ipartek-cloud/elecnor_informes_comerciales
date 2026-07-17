@@ -219,7 +219,7 @@
    ============================================================================= */
 @media print {
     .rpt-paper--print[data-informe="contrataciones_significativas"] {
-        padding: 0 !important;
+        padding-top: 0 !important;
         max-width: none !important;
         box-shadow: none !important;
         border: none !important;
