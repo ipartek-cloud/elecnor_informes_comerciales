@@ -43,7 +43,8 @@ const _whitelistInformes = {
     'contratacion_mercados_sdg_dn': 'Contratacion Mercados SDG Agrupado DN',
     'CD_Elecnor_DG_Centros_DGRI_Nuevo': 'DG - Unidades Negocio - Delegaciones - Centros',
     'gerencias_nacional_internacional': 'Gerencias (Resumen) Nacional - Internacional',
-    'gerencias_totales_cruces': 'Gerencias Totales Cruces'
+    'gerencias_totales_cruces': 'Gerencias Totales Cruces',
+    'gerencias_actividad': 'Gerentes Actividad - Electricidad'
 };
 
 const _registroModulos = {};
@@ -564,7 +565,8 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
 
         if (modulo && modulo.ejecutar) {
             const _codSubDir = btn?.dataset?.subdireccion || null;
-            
+            const _nombreGerente = btn?.dataset?.nombregerente || null;
+
             const parametros = {
                 anio: anio,
                 mes: mes,
@@ -573,6 +575,7 @@ window.cargarInforme = async function (btn, nombreInforme, filtrosManuales = nul
                 umbral: umbralFinal,
                 numeroPaises: numeroPaisesFinal,
                 codSubDir: _codSubDir,
+                nombreGerente: _nombreGerente,
                 mostrarTitulo: mostrarTitulo,
                 limiteImporte: limiteImporteFinal,
                 limitePaises: limitePaisesFinal,

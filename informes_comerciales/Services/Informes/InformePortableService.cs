@@ -43,7 +43,8 @@ public class InformePortableService
         { "cartera_diferida_consejo", (typeof(InformeCarteraDiferidaConsejoService), "ObtenerInformeAsync") },
         { "contratacion_mercados_sdg_dn", (typeof(InformeContratacionMercadosSDGDNService), "ObtenerInformeAsync") },
         { "CD_Elecnor_DG_Centros_DGRI_Nuevo", (typeof(CD_Elecnor_DG_Centros_DGRI_NuevoService), "ObtenerInformeAsync") },
-        { "gerencias_totales_cruces", (typeof(InformeGerenciasTotalesCrucesService), "ObtenerInformeAsync") }
+        { "gerencias_totales_cruces", (typeof(InformeGerenciasTotalesCrucesService), "ObtenerInformeAsync") },
+        { "gerencias_actividad", (typeof(InformeGerenciasActividadService), "ObtenerInformeAsync") }
     };
 
 
@@ -371,6 +372,25 @@ public class InformePortableService
                 else
                 {
                     args.Add(1950280m);
+                }
+                continue;
+            }
+
+            // Parámetro: nombreGerente (gerencias_actividad)
+            // El atributo del botón es 'data-nombregerente' (sin tilde, minúsculas).
+            // La query param se inyecta como 'filtros[nombregerente]=...'.
+            if (paramName == "nombregerente" || paramName == "nombreGerente")
+            {
+                if (filtros != null
+                    && (filtros.TryGetValue("nombregerente", out var ngLow)
+                        || filtros.TryGetValue("nombreGerente", out ngLow))
+                    && !string.IsNullOrWhiteSpace(ngLow))
+                {
+                    args.Add(ngLow);
+                }
+                else
+                {
+                    args.Add(ResolveDefaultValue(param));
                 }
                 continue;
             }

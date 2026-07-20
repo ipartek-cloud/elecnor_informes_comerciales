@@ -1044,6 +1044,22 @@
                                     Gerencias
                                 </div>
 
+                                <!-- Gerentes Actividad - Electricidad (Pág. 1) -->
+                                <div class="input-group rpt-input-group-index w-100">
+                                    <button class="btn rpt-btn-light rpt-btn-index flex-fill text-start" type="button"
+                                            onclick="cargarInforme(this, 'gerencias_actividad')"
+                                            data-nombregerente="Electricidad"
+                                            data-mostrar-titulo="false"
+                                            data-input-pag="inputPaginaGerentesActividadElectricidad"
+                                            aria-label="Ver informe Gerentes Actividad - Electricidad" data-informe-tipo="GERENTES ACTIVIDAD" data-informe-nombre="Gerentes Actividad - Electricidad">
+                                        Gerentes Actividad - Electricidad
+                                    </button>
+                                    <input type="number" class="form-control rpt-input-page"
+                                           id="inputPaginaGerentesActividadElectricidad"
+                                           name="inputPaginaGerentesActividadElectricidad" value="1" min="0"
+                                           aria-label="Página" title="Página inicial">
+                                </div>
+
                             </div>
 
                             <!-- COLUMNA DERECHA: VACÍA (Simetría visual) -->
@@ -1232,6 +1248,7 @@
     <link rel="stylesheet" href="~/css/informes/actividades_instalaciones_redes.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/CD_Elecnor_DG_Activ_Redes.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/informes/gerencias_totales_cruces.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/informes/gerencias_actividad.css" asp-append-version="true" />
 }
 
 @section Scripts {

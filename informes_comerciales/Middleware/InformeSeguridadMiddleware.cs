@@ -84,7 +84,8 @@ public class InformeSeguridadMiddleware
             ("COMITÉ", "Ranking Clientes Nacionales"), 
             ("COMITÉ", "Ranking Clientes Internacionales")
         },
-        ["GerenciasTotalesCruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") }
+        ["GerenciasTotalesCruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") },
+        ["GerenciasActividad"] = new() { ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad") }
     };
 
     // Mapeo: Clave técnica JS -> Lista de posibles (Tipo_Pestaña, Nombre_Comercial)
@@ -143,7 +144,8 @@ public class InformeSeguridadMiddleware
         ["cartera_contratacion_detalle_paises"] = new() { ("COMITÉ", "Cartera Contratación Paises (Detalle) Internacional"), ("COMITÉ", "Cartera Contratación Paises (Detalle) Nacional - Internacional") },
         ["actividades_internacional_detalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") },
         ["CD_Elecnor_DG_Centros_DGRI_Nuevo"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Delegaciones - Centros") },
-        ["gerencias_totales_cruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") }
+        ["gerencias_totales_cruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") },
+        ["gerencias_actividad"] = new() { ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad") }
     };
 
     public InformeSeguridadMiddleware(RequestDelegate next)

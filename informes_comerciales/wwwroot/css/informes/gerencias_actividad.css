@@ -1,0 +1,482 @@
+/*
+ * ESTILOS ESPECÍFICOS: Informe Gerencias Actividad
+ * Layout: [Mensual 2col] | [Centro (Cod+Nombre)] | [Acumulado 2col + Ip] | [Var 2col] | [Mes Ant]
+ * Jerárquico: Gerente → Mercado → DN → Centro con subtotales por DN, por Mercado y Gran Total.
+ * Adaptado de gerencias_totales_cruces.css (mismo layout base, prefijo rpt-gtc-* → rpt-ga-*).
+ * Patrón: Híbrido A + B (sábana única web + Tabla Maestra PDF).
+ */
+
+/* ============================================================
+   LAYOUT PRINCIPAL
+   ============================================================ */
+
+.rpt-paper[data-informe="gerencias_actividad"] {
+    container-type: inline-size;
+    container-name: rpt-paper;
+}
+
+.rpt-paper[data-informe="gerencias_actividad"] .report-body.rpt-cmai-mt-standard {
+    margin-top: 40px !important;
+}
+
+.rpt-ga-layout thead tr,
+.rpt-ga-layout thead th {
+    border: none;
+}
+
+.rpt-ga-table-container {
+    margin-bottom: 40px !important;
+}
+
+.rpt-ga-subtotal-mercado-container {
+    margin-top: -20px !important;
+    margin-bottom: 20px !important;
+}
+
+.rpt-ga-gran-total-container {
+    margin-top: -20px !important;
+    margin-bottom: 28px !important;
+}
+
+.rpt-ga-layout {
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-family: Verdana, Geneva, sans-serif !important;
+    font-size: 8pt;
+}
+
+/* Anchos de columna (11 columnas con separadores) */
+.rpt-ga-col-obj-m      { width: 9.5%; }
+.rpt-ga-col-contr-m    { width: 9.5%; }
+.rpt-ga-col-sep {
+    width: 3px !important;
+    min-width: 3px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+.rpt-ga-col-centro     { width: 34.5%; }
+.rpt-ga-col-obj-a      { width: 9.5%; }
+.rpt-ga-col-contr-a    { width: 9.5%; }
+.rpt-ga-col-ip         { width: 5.5%; }
+.rpt-ga-col-spacer     { width: 1%; }
+.rpt-ga-col-var-contr  { width: 8%; }
+.rpt-ga-col-var-cart   { width: 8%; }
+
+.rpt-ga-col-centro-hdr-empty {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Cabecera azul para el nombre de la DN en la columna Centro (solo 1 fila) */
+.rpt-ga-dn-banner-cell {
+    background-color: #00468B !important;
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    font-size: 8pt !important;
+    padding: 3px 5px !important;
+    border: none !important;
+    line-height: 1.2 !important;
+}
+
+.rpt-ga-dn-banner-text {
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    font-size: 8pt;
+    text-align: center;
+}
+
+.rpt-ga-cod-centro-hdr,
+.rpt-ga-nombre-centro-hdr {
+    display: none;
+}
+
+.rpt-ga-header-line {
+    border-bottom: 0.3pt solid #00468B !important;
+    height: 1px !important;
+    line-height: 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rpt-ga-group-header {
+    padding-bottom: 2.25pt !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+}
+
+/* ============================================================
+   NOMBRE DEL GERENTE (badge verde / naranja según benchmark)
+   ============================================================ */
+
+.rpt-ga-gerente-name {
+    color: #E38631 !important;
+    font-size: 10pt;
+    font-weight: bold;
+    text-align: left;
+    padding: 0;
+    margin-top: 12pt;
+    margin-bottom: 14pt;
+    line-height: 1.2;
+}
+
+/* ============================================================
+   DETALLE DE CENTRO
+   ============================================================ */
+
+.rpt-ga-cell-centro {
+    text-align: left;
+    padding-left: 30px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rpt-ga-cod-centro {
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: normal;
+    color: #000;
+}
+
+.rpt-ga-nombre-centro {
+    display: inline;
+    color: #000;
+}
+
+.rpt-ga-cell-mes-ant {
+    background-color: transparent;
+    border: none !important;
+}
+
+.rpt-ga-detail-row td {
+    padding: 2px 10px !important;
+    line-height: 1.3 !important;
+    font-size: 8pt;
+    color: #000;
+    border: none !important;
+}
+
+/* ============================================================
+   SUBTOTAL DN (sin etiqueta visible, sin bordes)
+   ============================================================ */
+
+.rpt-ga-subtotal-dn-row td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    border: none;
+    padding: 2px 10px !important;
+    line-height: 1.3 !important;
+    font-size: 8pt;
+}
+
+.rpt-ga-subtotal-dn-label {
+    text-align: left;
+    padding-left: 30px !important;
+    font-weight: normal !important;
+    color: #000 !important;
+}
+
+/* ============================================================
+   SUBTOTAL MERCADO (texto azul corporativo, sin fondo, sin bordes)
+   ============================================================ */
+
+.rpt-ga-subtotal-mercado-row td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 3px 10px !important;
+    line-height: 1.3 !important;
+    font-size: 8pt;
+}
+
+.rpt-ga-subtotal-mercado-label {
+    text-align: center !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+    font-size: 8.5pt !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+/* ============================================================
+   NOTA DN 800 (italic)
+   ============================================================ */
+
+.rpt-ga-note-dn800-row td {
+    font-style: italic;
+    font-size: 8pt;
+    color: #000;
+    padding: 1pt 5pt !important;
+    background-color: transparent;
+}
+
+.rpt-ga-note-dn800-cell {
+    text-align: left;
+    padding-left: 30px !important;
+}
+
+/* ============================================================
+   GRAN TOTAL (texto azul corporativo, sin fondo, sin bordes)
+   ============================================================ */
+
+.rpt-ga-gran-total-row td {
+    color: #00468B !important;
+    font-weight: bold !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 3px 5px !important;
+    line-height: 1.3 !important;
+    font-size: 8pt;
+}
+
+.rpt-ga-gran-total-label {
+    text-align: center !important;
+    color: #00468B !important;
+    font-weight: bold !important;
+    font-size: 8.5pt !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.rpt-ga-total-border-top {
+    border-top: 0.3pt solid #00468B !important;
+    border-bottom: none !important;
+}
+
+/* Celda sin ningún borde (usada en la tercera fila de la cabecera) */
+.rpt-ga-total-no-border {
+    border: none !important;
+}
+
+/* Bordes para celdas numéricas del total de Dirección de Negocio (DN) */
+.rpt-paper[data-informe="gerencias_actividad"] .rpt-td-total {
+    border-top: 0.3pt solid #00468B !important;
+    border-bottom: none !important;
+}
+
+/* Exención exclusiva: Subtotal Mercado y Gran Total NO llevan bordes horizontales */
+.rpt-paper[data-informe="gerencias_actividad"] .rpt-ga-subtotal-mercado-row td,
+.rpt-paper[data-informe="gerencias_actividad"] .rpt-ga-gran-total-row td {
+    border: none !important;
+}
+
+.rpt-number-cell {
+    padding-right: 6pt !important;
+    text-align: right;
+}
+
+/* ============================================================
+   ALINEACIÓN DE CABECERAS
+   ============================================================ */
+
+.rpt-ga-th-num {
+    padding-right: 12px !important;
+    text-align: right !important;
+}
+
+.rpt-ga-th-mes-ant {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Unificar el padding-right en celdas numéricas */
+.rpt-ga-layout td:not(.rpt-ga-cell-centro):not(.rpt-ga-col-sep):not(.rpt-ga-col-spacer):not(.rpt-ga-subtotal-dn-label):not(.rpt-ga-subtotal-mercado-label):not(.rpt-ga-gran-total-label):not(.rpt-ga-note-dn800-cell):not(.rpt-ga-dn-banner-cell) {
+    padding-right: 5px !important;
+}
+
+.rpt-ga-layout th {
+    white-space: nowrap !important;
+}
+
+/* ============================================================
+   PRINT-PERFECT (Patrón B: Tabla Maestra con Outer Table)
+   ============================================================ */
+
+@media print {
+    .rpt-paper[data-informe="gerencias_actividad"],
+    .rpt-paper--print {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .rpt-print-outer-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: none;
+    }
+
+    .rpt-print-td-header {
+        padding: 16mm 16mm 8pt 16mm !important;
+        border: none;
+    }
+
+    .rpt-print-td-body {
+        padding: 0 16mm !important;
+        border: none;
+        vertical-align: top;
+    }
+
+    .rpt-print-td-footer {
+        padding: 0 16mm 16mm 16mm !important;
+        border: none;
+    }
+
+    .rpt-print-outer-table thead {
+        display: table-header-group !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .rpt-text-orange-council { color: #E38631 !important; }
+    .rpt-cmai-subtitulo { color: #00468B !important; }
+    .rpt-text-corporate, .rpt-ga-group-header { color: #00468B !important; }
+    .rpt-banner-top { background-color: #00468B !important; color: white !important; }
+
+    .rpt-ga-layout {
+        font-size: 7.5pt !important;
+        font-family: Verdana, Geneva, sans-serif !important;
+    }
+
+    .rpt-ga-layout thead th,
+    .rpt-ga-group-header {
+        font-size: 8pt !important;
+        font-weight: bold !important;
+        color: #00468B !important;
+    }
+
+    .rpt-ga-layout thead th.rpt-ga-dn-banner-cell {
+        font-size: 8pt !important;
+        font-weight: bold !important;
+        color: #FFFFFF !important;
+    }
+
+    .rpt-ga-header-line {
+        border-bottom: 0.3pt solid #00468B !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 1px !important;
+        line-height: 1px !important;
+    }
+
+    .rpt-ga-detail-row td {
+        font-size: 7.5pt !important;
+        line-height: 1.25 !important;
+        padding: 3px 10px !important;
+        border: none !important;
+    }
+
+    .rpt-ga-dn-banner-cell {
+        background-color: #00468B !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    .rpt-ga-dn-banner-text {
+        color: #FFFFFF !important;
+    }
+
+    .rpt-ga-gerente-name {
+        font-size: 10pt !important;
+    }
+
+    .rpt-ga-subtotal-dn-row td {
+        font-size: 7.5pt !important;
+        line-height: 1.25 !important;
+        padding: 3px 10px !important;
+    }
+
+    .rpt-ga-subtotal-mercado-row td {
+        font-size: 7.5pt !important;
+        line-height: 1.25 !important;
+        padding: 3px 10px !important;
+        background-color: transparent !important;
+        color: #00468B !important;
+        font-weight: bold !important;
+        border: none !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    .rpt-ga-gran-total-row td {
+        font-size: 7.5pt !important;
+        line-height: 1.15 !important;
+        padding: 3px 10px !important;
+        background-color: transparent !important;
+        color: #00468B !important;
+        font-weight: bold !important;
+        border: none !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    .rpt-ga-table-container {
+        margin-bottom: 18px !important;
+    }
+
+    .rpt-ga-subtotal-mercado-container {
+        margin-top: -9px !important;
+        margin-bottom: 9px !important;
+    }
+
+    .rpt-ga-gran-total-container {
+        margin-top: -9px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .rpt-banner-top {
+        height: 25px !important;
+        font-size: 14pt !important;
+        font-weight: normal !important;
+    }
+
+    .rpt-detail-row {
+        page-break-inside: avoid;
+    }
+
+    .rpt-banner-top {
+        page-break-after: avoid;
+    }
+
+    .rpt-paper[data-informe="gerencias_actividad"] .rpt-td-total {
+        border-top: 0.3pt solid #00468B !important;
+        border-bottom: none !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    .rpt-paper[data-informe="gerencias_actividad"] .rpt-ga-subtotal-mercado-row td,
+    .rpt-paper[data-informe="gerencias_actividad"] .rpt-ga-gran-total-row td {
+        border: none !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    .rpt-ga-th-num {
+        padding-right: 12px !important;
+        text-align: right !important;
+    }
+
+    .rpt-ga-layout td:not(.rpt-ga-cell-centro):not(.rpt-ga-col-sep):not(.rpt-ga-col-spacer):not(.rpt-ga-subtotal-dn-label):not(.rpt-ga-subtotal-mercado-label):not(.rpt-ga-gran-total-label):not(.rpt-ga-note-dn800-cell):not(.rpt-ga-dn-banner-cell) {
+        padding-right: 5px !important;
+    }
+}
+
+/* ============================================================
+   CONTAINER QUERIES RESPONSIVE
+   ============================================================ */
+
+@container rpt-paper (max-width: 700px) {
+    .rpt-ga-detail-row td {
+        padding: 2px 3px !important;
+        font-size: 7pt !important;
+    }
+    .rpt-ga-header-line {
+        font-size: 7pt !important;
+    }
+}
