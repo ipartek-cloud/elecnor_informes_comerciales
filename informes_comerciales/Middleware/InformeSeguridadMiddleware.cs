@@ -85,7 +85,20 @@ public class InformeSeguridadMiddleware
             ("COMITÉ", "Ranking Clientes Internacionales")
         },
         ["GerenciasTotalesCruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") },
-        ["GerenciasActividad"] = new() { ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad") }
+        ["GerenciasActividad"] = new() 
+        { 
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Construcción"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Fotovoltaica"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Gas"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Infraestructuras Telecom."),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Instalaciones"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Sistemas Telecom."),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Mantenimiento"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Medio Ambiente"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Eólica"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Agua")
+        }
     };
 
     // Mapeo: Clave técnica JS -> Lista de posibles (Tipo_Pestaña, Nombre_Comercial)
@@ -145,7 +158,20 @@ public class InformeSeguridadMiddleware
         ["actividades_internacional_detalle"] = new() { ("COMITÉ", "Detalle Actividades Internacional") },
         ["CD_Elecnor_DG_Centros_DGRI_Nuevo"] = new() { ("DIRECCIONES GENERALES", "DG - Unidades Negocio - Delegaciones - Centros") },
         ["gerencias_totales_cruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") },
-        ["gerencias_actividad"] = new() { ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad") }
+        ["gerencias_actividad"] = new() 
+        { 
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Construcción"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Fotovoltaica"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Gas"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Infraestructuras Telecom."),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Instalaciones"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Sistemas Telecom."),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Mantenimiento"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Medio Ambiente"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Eólica"),
+            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Agua")
+        }
     };
 
     public InformeSeguridadMiddleware(RequestDelegate next)

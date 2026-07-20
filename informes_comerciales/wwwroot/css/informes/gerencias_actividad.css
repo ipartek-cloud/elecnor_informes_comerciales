@@ -34,7 +34,7 @@
 }
 
 .rpt-ga-gran-total-container {
-    margin-top: -20px !important;
+    margin-top: 15px !important;
     margin-bottom: 28px !important;
 }
 
@@ -427,7 +427,7 @@
     }
 
     .rpt-ga-gran-total-container {
-        margin-top: -9px !important;
+        margin-top: 10px !important;
         margin-bottom: 12px !important;
     }
 
@@ -445,7 +445,8 @@
         page-break-after: avoid;
     }
 
-    .rpt-paper[data-informe="gerencias_actividad"] .rpt-td-total {
+    .rpt-paper[data-informe="gerencias_actividad"] .rpt-td-total,
+    .rpt-paper[data-informe="gerencias_actividad"] .rpt-ga-total-border-top {
         border-top: 0.3pt solid #00468B !important;
         border-bottom: none !important;
         -webkit-print-color-adjust: exact !important;
