@@ -44,7 +44,7 @@ const _whitelistInformes = {
     'CD_Elecnor_DG_Centros_DGRI_Nuevo': 'DG - Unidades Negocio - Delegaciones - Centros',
     'gerencias_nacional_internacional': 'Gerencias (Resumen) Nacional - Internacional',
     'gerencias_totales_cruces': 'Gerencias Totales Cruces',
-    'gerencias_actividad': 'Gerentes Actividad - Electricidad'
+    'gerencias_actividad': 'Electricidad'
 };
 
 const _registroModulos = {};

@@ -39,7 +39,7 @@ public class InformeGerenciasActividadService
         {
             Meta = new MetaInformeDto
             {
-                Titulo = $"Gerentes Actividad - {nombreGerente}",
+                Titulo = $"Gerencias - {nombreGerente}",
                 Descripcion = "Contratación, Objetivos y Cartera por Gerencia × Mercado × DN × Centro",
                 Filtros = new { Anio = anio, Mes = mes, NombreGerente = nombreGerente },
                 FechaGeneracion = DateTime.Now,

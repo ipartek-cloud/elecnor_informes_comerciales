@@ -87,17 +87,17 @@ public class InformeSeguridadMiddleware
         ["GerenciasTotalesCruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") },
         ["GerenciasActividad"] = new() 
         { 
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Construcción"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Fotovoltaica"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Gas"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Infraestructuras Telecom."),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Instalaciones"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Sistemas Telecom."),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Mantenimiento"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Medio Ambiente"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Eólica"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Agua")
+            ("GERENTES ACTIVIDAD", "Electricidad"),
+            ("GERENTES ACTIVIDAD", "Construcción"),
+            ("GERENTES ACTIVIDAD", "Fotovoltaica"),
+            ("GERENTES ACTIVIDAD", "Gas"),
+            ("GERENTES ACTIVIDAD", "Infraestructuras Telecom."),
+            ("GERENTES ACTIVIDAD", "Instalaciones"),
+            ("GERENTES ACTIVIDAD", "Sistemas Telecom."),
+            ("GERENTES ACTIVIDAD", "Mantenimiento"),
+            ("GERENTES ACTIVIDAD", "Medio Ambiente"),
+            ("GERENTES ACTIVIDAD", "Eólica"),
+            ("GERENTES ACTIVIDAD", "Agua")
         }
     };
 
@@ -160,17 +160,17 @@ public class InformeSeguridadMiddleware
         ["gerencias_totales_cruces"] = new() { ("DIRECCIONES GENERALES", "Gerencias (Detalle) x DN x Delegaciones") },
         ["gerencias_actividad"] = new() 
         { 
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Electricidad"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Construcción"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Fotovoltaica"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Gas"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Infraestructuras Telecom."),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Instalaciones"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Sistemas Telecom."),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Mantenimiento"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Medio Ambiente"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Eólica"),
-            ("GERENTES ACTIVIDAD", "Gerentes Actividad - Agua")
+            ("GERENTES ACTIVIDAD", "Electricidad"),
+            ("GERENTES ACTIVIDAD", "Construcción"),
+            ("GERENTES ACTIVIDAD", "Fotovoltaica"),
+            ("GERENTES ACTIVIDAD", "Gas"),
+            ("GERENTES ACTIVIDAD", "Infraestructuras Telecom."),
+            ("GERENTES ACTIVIDAD", "Instalaciones"),
+            ("GERENTES ACTIVIDAD", "Sistemas Telecom."),
+            ("GERENTES ACTIVIDAD", "Mantenimiento"),
+            ("GERENTES ACTIVIDAD", "Medio Ambiente"),
+            ("GERENTES ACTIVIDAD", "Eólica"),
+            ("GERENTES ACTIVIDAD", "Agua")
         }
     };
 
