@@ -100,6 +100,7 @@ builder.Services.AddSingleton<PdfPageNumberService>();
 builder.Services.AddSingleton<IPdfGeneratorService, PdfGeneratorService>();
 builder.Services.AddScoped<PdfRptService>();
 builder.Services.AddScoped<HtmlRptService>();
+builder.Services.AddScoped<JsonRptService>();
 builder.Services.AddScoped<InformeSeguridadService>();
 Console.WriteLine("[DI] Servicios HTML Portable registrados.");
 Console.WriteLine("[DI] Servicios de PDF registrados.");

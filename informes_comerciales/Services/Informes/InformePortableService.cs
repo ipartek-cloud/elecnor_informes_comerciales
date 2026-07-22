@@ -132,6 +132,32 @@ public class InformePortableService
     }
 
     /// <summary>
+    /// Indica si el tipo de informe está soportado por el orquestador (existe en el mapa de servicios).
+    /// </summary>
+    public static bool EsTipoSoportado(string tipoInforme)
+    {
+        return !string.IsNullOrWhiteSpace(tipoInforme) && _serviceMap.ContainsKey(tipoInforme);
+    }
+
+    /// <summary>
+    /// Obtiene los datos crudos (DTO) de un informe para un mes específico.
+    /// Expone públicamente la resolución dinámica de servicios para consumidores que
+    /// solo necesitan los datos sin ensamblado HTML/PDF (p. ej. la API REST de JSON).
+    /// Gestiona su propio scope de inyección de dependencias.
+    /// </summary>
+    public async Task<object?> ObtenerDatosInformeMesAsync(
+        string tipoInforme, int anio, int mes, Dictionary<string, string>? filtros, string loginUsuario)
+    {
+        if (!EsTipoSoportado(tipoInforme))
+        {
+            return null;
+        }
+
+        using var scope = _serviceProvider.CreateScope();
+        return await ObtenerDatosMesAsync(scope, tipoInforme, anio, mes, filtros, loginUsuario);
+    }
+
+    /// <summary>
     /// Obtiene los datos de un mes específico invocando dinámicamente al servicio correspondiente.
     /// </summary>
     private async Task<object?> ObtenerDatosMesAsync(
@@ -387,6 +413,23 @@ public class InformePortableService
                     && !string.IsNullOrWhiteSpace(ngLow))
                 {
                     args.Add(ngLow);
+                }
+                else
+                {
+                    args.Add(ResolveDefaultValue(param));
+                }
+                continue;
+            }
+
+            // Parámetro: codDirNegocio / coddirnegocio (CD_Elecnor_DG_Activ_Redes)
+            if (paramName == "coddirnegocio" || paramName == "codDirNegocio")
+            {
+                if (filtros != null
+                    && (filtros.TryGetValue("coddirnegocio", out var cdn)
+                        || filtros.TryGetValue("codDirNegocio", out cdn))
+                    && !string.IsNullOrWhiteSpace(cdn))
+                {
+                    args.Add(cdn);
                 }
                 else
                 {
